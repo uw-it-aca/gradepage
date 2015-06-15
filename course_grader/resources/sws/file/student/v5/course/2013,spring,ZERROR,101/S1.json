@@ -1,0 +1,125 @@
+{
+    "GradingSystem": "standard",
+    "CourseTitle": "INTRO TO SUBMISSION ERRORS",
+    "Auditors": "0",
+    "FinalExam": {
+        "Building": "KNE",
+        "MeetingStatus": "3",
+        "RoomNumber": "012",
+        "StartTime": "13:30",
+        "Date": "2013-06-14",
+        "EndTime": "16:20"
+    },
+    "PrimarySection": {
+        "CurriculumAbbreviation": "ZERROR",
+        "SectionID": "S",
+        "Href": "/student/v5/course/2013,spring,ZERROR,101/S.json",
+        "Year": "2013",
+        "Quarter": "spring",
+        "CourseNumber": "101"
+    },
+    "CourseDescription": null,
+    "LimitEstimateEnrollmentIndicator": "limit",
+    "Curriculum": {
+        "TimeScheduleLinkAbbreviation": ""
+    },
+    "HonorsCourse": false,
+    "Term": {
+        "Quarter": "spring",
+        "Href": "/student/v5/term/2013,spring.json",
+        "Year": "2013"
+    },
+    "LimitEstimateEnrollment": "5",
+    "CourseTitleLong": "INTRO TO SUBMISSION ERRORS",
+    "DuplicateEnrollmentAllowed": false,
+    "CourseCampus": "Seattle",
+    "Registrations": {
+        "CurriculumAbbreviation": "ZERROR",
+        "PageSize": null,
+        "SectionID": "S1",
+        "InstructorRegID": null,
+        "Href": "/student/v5/registration.json?year=2013&quarter=spring&curriculum_abbreviation=ZERROR&course_number=101§ion_id=S®_id=&is_active=on&instructor_reg_id=",
+        "Year": "2013",
+        "RegID": null,
+        "PageStart": null,
+        "Quarter": "spring",
+        "CourseNumber": "101",
+        "IsActive": "on"
+    },
+    "SLN": "13901",
+    "LinkedSectionTypes": [],
+    "ServiceLearning": false,
+    "SectionType": "lecture",
+    "SectionID": "S1",
+    "Meetings": [
+        {
+            "Building": "*",
+            "MeetingIndex": "1",
+            "RoomNumber": "*",
+            "Instructors": [
+                {
+                    "Person": {
+                        "RegID": "FBB38FE46A7C11D5A4AE0004AC494FFE",
+                        "Href": "/student/v5/person/FBB38FE46A7C11D5A4AE0004AC494FFE.json",
+                        "Name": "TEACHER, BILL AVERAGE"
+                    },
+                    "TSPrint": false,
+                    "FacultySequenceNumber": "",
+                    "GradeRoster": {
+                        "Href": "/student/v5/graderoster/2013,spring,ZERROR,101,S1,FBB38FE46A7C11D5A4AE0004AC494FFE"
+                    }
+                }
+            ],
+            "DaysOfWeek": {
+                "Text": "M W",
+                "Days": [
+                    {
+                        "Name": "Monday"
+                    },
+                    {
+                        "Name": "Wednesday"
+                    }
+                ]
+            },
+            "MeetingType": "lecture",
+            "RoomToBeArranged": true,
+            "StartTime": "08:30",
+            "DaysOfWeekToBeArranged": false,
+            "EndTime": "09:20",
+            "BuildingToBeArranged": true
+        }
+    ],
+    "DeleteFlag": "active",
+    "GeneralEducationRequirements": {
+        "NaturalWorld": false,
+        "Writing": false,
+        "QuantitativeAndSymbolicReasoning": false,
+        "EnglishComposition": false,
+        "IndividualsAndSocieties": false,
+        "VisualLiteraryAndPerformingArts": true
+    },
+    "springTerm": "B-term",
+    "Course": {
+        "CourseTitleLong": "INTRO TO SUBMISSION ERRORS",
+        "CurriculumAbbreviation": "ZERROR",
+        "CourseTitle": "INTRO TO SUBMISSION ERRORS",
+        "Href": "/student/v5/course/2013,spring,ZERROR,101.json",
+        "Year": "2013",
+        "Quarter": "spring",
+        "CourseNumber": "101"
+    },
+    "ResearchCredit": false,
+    "GradeSubmissionDelegates": [
+        {
+            "DelegateLevel": "curriculum",
+            "Person": {
+                "RegID": "6DF0A9206A7D11D5A4AE0004AC494FFE",
+                "Href": "/student/v5/person/6DF0A9206A7D11D5A4AE0004AC494FFE.json",
+                "Name": "TEACHER, FRED AVERAGE"
+            }
+        }
+    ],
+    "SecondaryGradingOption": true,
+    "ClassWebsiteUrl": "",
+    "CurrentEnrollment": "1"
+}
