@@ -2,20 +2,26 @@
 Custom exceptions used by GradePage.
 """
 
+from django.conf import settings
 from django.utils.translation import ugettext as _
 
 
 class InvalidUser(Exception):
-    pass
+    def __str__(self):
+        return _("grading_not_permitted")
 
 
 class InvalidTerm(Exception):
     def __str__(self):
-        return _("term_not_available")
+        return _(
+            "term_not_available %(support_phone)s %(support_email)s"
+        ) % {"support_phone": settings.REGISTRAR_SUPPORT_PHONE,
+             "support_email": settings.REGISTRAR_SUPPORT_EMAIL}
 
 
 class InvalidSection(Exception):
-    pass
+    def __str__(self):
+        return _("section_not_found")
 
 
 class MissingInstructorParam(Exception):

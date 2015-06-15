@@ -1,4 +1,3 @@
-from django.utils.translation import ugettext as _
 from course_grader.models import GradeImport, ImportConversion
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import all_viewable_terms
@@ -51,14 +50,11 @@ class ImportGrades(GradeFormHandler):
             logger.info("Grading for %s not permitted for %s" % (
                 ex.section, ex.person))
             return self.error_response(403, "%s" % ex)
-        except (SecondaryGradingEnabled, GradingPeriodNotOpen) as ex:
+        except (SecondaryGradingEnabled, GradingPeriodNotOpen,
+                InvalidTerm, InvalidUser, OverrideNotPermitted) as ex:
             return self.error_response(403, "%s" % ex)
-        except InvalidUser as ex:
-            return self.error_response(403, _("grading_not_permitted"))
-        except InvalidTerm as ex:
+        except InvalidSection as ex:
             return self.error_response(404, "%s" % ex)
-        except OverrideNotPermitted as ex:
-            return self.error_response(403, "%s" % ex)
         except Exception as ex:
             logger.exception(ex)
             if hasattr(ex, "status"):

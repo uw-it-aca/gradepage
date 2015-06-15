@@ -26,8 +26,8 @@ class Sections(RESTDispatch):
         except InvalidUser:
             content = self.response_content(sections=[], **kwargs)
             return self.json_response(content)
-        except InvalidTerm:
-            return self.error_response(404, "Invalid term")
+        except InvalidTerm as ex:
+            return self.error_response(404, "%s" % ex)
         except Exception as ex:
             logger.exception(ex)
             return self.error_response(500, _("sws_not_available"))

@@ -1,5 +1,4 @@
 from django.db.models import Max, F
-from django.utils.translation import ugettext as _
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import all_viewable_terms
 from course_grader.models import GradeImport, ImportConversion
@@ -19,7 +18,7 @@ class ConversionScales(GradeFormHandler):
             self.all_terms = all_viewable_terms()
 
         except InvalidUser as ex:
-            return self.error_response(403, _("grading_not_permitted"))
+            return self.error_response(403, "%s" % ex)
         except Exception as ex:
             logger.exception(ex)
             return self.error_response(500, "%s" % ex)

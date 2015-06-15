@@ -1,11 +1,11 @@
 from django.core.context_processors import csrf
-from django.utils.translation import ugettext as _
 from course_grader.models import SubmittedGradeRoster, Grade, GradeImport
 from course_grader.dao.graderoster import graderoster_for_section
 from course_grader.dao.section import section_from_param, is_grader_for_section
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import all_viewable_terms
-from course_grader.views import clean_section_id, grade_submission_deadline_params
+from course_grader.views import clean_section_id
+from course_grader.views import grade_submission_deadline_params
 from course_grader.views import display_section_name, display_person_name
 from course_grader.views.api import GradeFormHandler
 from course_grader.exceptions import *
@@ -54,14 +54,11 @@ class GradeRoster(GradeFormHandler):
             logger.info("Grading for %s not permitted for %s" % (
                 ex.section, ex.person))
             return self.error_response(403, "%s" % ex)
-        except (SecondaryGradingEnabled, GradingPeriodNotOpen) as ex:
+        except (SecondaryGradingEnabled, GradingPeriodNotOpen,
+                InvalidTerm, InvalidUser, OverrideNotPermitted) as ex:
             return self.error_response(403, "%s" % ex)
-        except InvalidUser as ex:
-            return self.error_response(403, _("grading_not_permitted"))
-        except (InvalidSection, InvalidTerm, ReceiptNotFound) as ex:
+        except (InvalidSection, ReceiptNotFound) as ex:
             return self.error_response(404, "%s" % ex)
-        except OverrideNotPermitted as ex:
-            return self.error_response(403, "%s" % ex)
         except Exception as ex:
             logger.exception(ex)
             err = ex.msg if hasattr(ex, "msg") else ex

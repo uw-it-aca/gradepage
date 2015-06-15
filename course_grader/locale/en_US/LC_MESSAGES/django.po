@@ -1,0 +1,195 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-04-30 13:04-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: exceptions.py:10
+msgid "term_not_available %(support_phone)s %(support_email)s"
+msgstr ""
+"Grades are not available for this term. To retrieve grades for this section, "
+"please contact the Graduation and Academic Records (GARS) office at "
+"%(support_phone)s or <a href=\"mailto:%(support_email)s\">%(support_email)s</a>."
+
+#: exceptions.py:19
+msgid "sws_not_available"
+msgstr "The Student Web Service is not available. Please try again later."
+
+msgid "section_not_found"
+msgstr "Section not found."
+
+#: exceptions.py:24
+msgid "receipt_not_found"
+msgstr "No submission information available"
+
+#: exceptions.py:29
+msgid "grading_period_not_open"
+msgstr "Grade submission is not open for this section."
+
+#: exceptions.py:34
+msgid "secondary_grading_enabled"
+msgstr ""
+"Secondary grading is enabled for this course. Final grades must be "
+"submitted separately for each secondary section."
+
+#: exceptions.py:43
+msgid "grading_not_permitted"
+msgstr "You are not authorized to submit grades for this section."
+
+#: templates/home.html:8 templates/section.html:12
+#, python-format
+msgid "grades_due_alert %(quarter)s %(year)s %(date)s"
+msgstr "%(quarter)s %(year)s grades are due on <strong>%(date)s.</strong>"
+
+#: templates/home.html:15 templates/section.html:19
+msgid "hours_remaining_alert_short %(remaining)s"
+msgstr "The grading period closes %(remaining)s!"
+
+#: templates/home.html:15 templates/section.html:19
+msgid "hours_remaining_alert_long %(remaining)s"
+msgstr ""
+"The grading period closes %(remaining)s! Grades cannot be submitted "
+"online after deadline."
+
+#: templates/home.html:22
+msgid "back_to_current_quarter_link"
+msgstr "Back to current quarter"
+
+#: templates/home.html:39 templates/home.html.py:49
+#, python-format
+msgid "grade_submission_opens %(quarter)s %(year)s %(date)s"
+msgstr ""
+"Grade submission for <strong>%(quarter)s %(year)s</strong> opens on %(date)s."
+
+#: templates/home.html:41 templates/home.html.py:46
+#, python-format
+msgid "grade_submission_closed %(quarter)s %(year)s %(date)s"
+msgstr ""
+"Grade submission for <strong>%(quarter)s %(year)s</strong> closed on "
+"%(date)s. %(quarter)s %(year)s grades can no longer be submitted online."
+
+#: templates/home.html:42 templates/home.html.py:47
+msgid "grade_submission_closed_link"
+msgstr "What can I do now?"
+
+#: templates/section.html:33
+msgid "submit_grades_for"
+msgstr "Submit grades for"
+
+msgid "btn_print_this_page"
+msgstr "Print this page"
+
+#: templates/email/failure.html:3 templates/email/failure.txt:3
+#, python-format
+msgid "email_body_submission_failure %(name)s %(text_count)s %(date)s"
+msgid_plural "email_body_submissions_failure %(name)s %(text_count)s %(date)s"
+msgstr[0] ""
+"%(name)s unsuccessfully submitted a grade for %(text_count)s student to "
+"the Registrar on %(date)s. There was a problem processing "
+"this grade and it has not been submitted."
+msgstr[1] ""
+"%(name)s unsuccessfully submitted grades for %(text_count)s students to "
+"the Registrar on %(date)s. There was a problem processing "
+"these grades and they have not been submitted."
+
+#: templates/email/failure.html:3 templates/email/partial.html:5
+#, python-format
+msgid "email_body_view_receipt_html %(url)s"
+msgstr ""
+"For more information, see the grade submission receipt: <a href=\"%(url)s"
+"\"></a>"
+
+#: templates/email/failure.html:5 templates/email/failure.txt:5
+#: templates/email/partial.html:7 templates/email/success.html:7
+msgid "email_body_change_grade_html"
+msgstr ""
+"No changes can be made through GradePage.  To change submitted grades, use "
+"the <a href=\"https://depts.washington.edu/registra/staffFaculty/gradeChange/"
+"\">Change of Grade form</a>."
+
+#: templates/email/failure.html:8 templates/email/partial.html:12
+#: templates/email/success.html:12
+#, python-format
+msgid "email_body_submission_deadline_html %(date)s"
+msgstr "All grades must be submitted by <strong>%(date)s</strong>."
+
+#: templates/email/failure.txt:3 templates/email/partial.txt:5
+#, python-format
+msgid "email_body_view_receipt %(url)s"
+msgstr "For more information, see the grade submission receipt: %(url)s"
+
+#: templates/email/failure.txt:8 templates/email/partial.txt:12
+#: templates/email/success.txt:12
+#, python-format
+msgid "email_body_submission_deadline %(date)s"
+msgstr "All grades must be submitted by %(date)s."
+
+#: templates/email/partial.html:3 templates/email/partial.txt:3
+#: templates/email/success.html:3 templates/email/success.txt:3
+#, python-format
+msgid "email_body_submission_success %(name)s %(text_count)s %(date)s"
+msgid_plural "email_body_submissions_success %(name)s %(text_count)s %(date)s"
+msgstr[0] ""
+"%(name)s submitted a grade for %(text_count)s student to "
+"the Registrar on %(date)s.  This grade has been successfully processed "
+"and will be available to the student via MyUW."
+msgstr[1] ""
+"%(name)s submitted grades for %(text_count)s students to "
+"the Registrar on %(date)s.  These grades have been successfully processed "
+"and will be available to the students via MyUW."
+
+#: templates/email/partial.html:5 templates/email/partial.txt:5
+#, python-format
+msgid "email_body_submission_partial %(text_count)s"
+msgid_plural "email_body_submissions_partial %(text_count)s"
+msgstr[0] "However, %(text_count)s grade failed to be submitted successfully."
+msgstr[1] "However, %(text_count)s grades failed to be submitted successfully."
+
+#: templates/email/partial.html:9 templates/email/success.html:9
+#, python-format
+msgid "email_body_submit_more_html %(url)s"
+msgstr ""
+"To submit more grades for a different class, return to <a href=\"%(url)s"
+"\">GradePage</a>."
+
+#: templates/email/partial.txt:7 templates/email/success.txt:7
+msgid "email_body_change_grade"
+msgstr ""
+"No changes can be made through GradePage.  To change submitted grades use "
+"the Change of Grade form: https://depts.washington.edu/registra/staffFaculty/"
+"gradeChange/"
+
+#: templates/email/partial.txt:9 templates/email/success.txt:9
+#, python-format
+msgid "email_body_submit_more %(url)s"
+msgstr ""
+"To submit more grades for a different class, return to GradePage: %(url)s"
+
+#: views/email.py:39 views/email.py:45
+#, python-format
+msgid "email_subject_submission_failure %(section)s"
+msgstr "Failed grade submission attempt for %(section)s"
+
+#: views/email.py:51
+#, python-format
+msgid "email_subject_submission_success %(name)s %(count)s %(section)s"
+msgid_plural "email_subject_submissions_success %(name)s %(count)s %(section)s"
+msgstr[0] "%(name)s submitted %(count)s grade for %(section)s"
+msgstr[1] "%(name)s submitted %(count)s grades for %(section)s"
+
+#: views/api/graderoster.py:33
+msgid "no_override_submit"
+msgstr "Cannot submit grades while using admin override."
