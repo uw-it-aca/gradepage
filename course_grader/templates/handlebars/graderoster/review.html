@@ -1,0 +1,24 @@
+{% load templatetag_handlebars %}
+{% tplhandlebars "review-tmpl" %}
+    <div class="container">
+    	<div class="gp-edit-subhead gp-review-subhead">{{ trans "please_review_grades" }}</div>
+         {{# if has_duplicate_codes }}<div class="gp-duplicate-code" style="padding-bottom:1em;"><span class="label label-default">&nbsp;&nbsp;</span><span class="sr-only">{{trans "duplicate_code_long"}}</span>{{ trans "duplicate_code" }}</div> {{/if}}
+        <ol class="list-group gp-roster-list">
+            {{# each students}}
+            <li class="clearfix list-group-item gp-roster-list-item" aria-labelledby="student-{{ item_id }}">
+                {{> student}}                
+                {{> grade}}
+            </li>
+            {{/each}}
+        </ol>
+        <div role="alert">
+            <i class="fa fa-exclamation-circle" style="color:#EBDD5A;"></i> {{ trans "review_warning" }}
+        </div>
+        <div class="clearfix gp-course-submit">
+            <div class="pull-right">
+                <button type="submit" class="btn btn-default gp-btn-back" title="Go back and edit grades for {{ section_name }}"><i class="fa fa-caret-left" style="color:#108BCC;"></i> {{ trans "btn_review_back" }}</button>
+                <button type="submit" class="btn gp-btn gp-btn-submit">{{ trans "btn_submit_grades" }}</button>
+            </div>
+        </div>
+    </div>
+{% endtplhandlebars %}

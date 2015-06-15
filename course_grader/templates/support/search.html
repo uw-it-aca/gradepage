@@ -1,0 +1,95 @@
+{% extends 'supporttools/base.html' %}
+
+{% load staticfiles %}
+{% load i18n %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css" />
+{% endblock extra_css %}
+
+{% block content %}
+
+<h2>Search Submitted Graderosters</h2>
+<form method="get">
+<div class="well">
+    <div>
+        <label for="gp-term-select">Term:</label>
+        <select id="gp-term-select" name="term">
+            {% for term in terms %}
+            <option value="{{ term.value }}" title="Select {{ term.quarter }} {{ term.year }}"{% if term.is_selected %} selected="selected"{% endif %}>{{ term.quarter }} {{ term.year }}</option>
+            {% endfor %}
+        </select>&nbsp;&nbsp;
+        <input id="gp-unsubmitted" type="checkbox" name="unsubmitted" value="1" {% if unsubmitted %}checked="checked"{% endif %}/>
+        <label for="gp-unsubmitted">Failed submissions only</label>
+        <table style="margin-bottom: 10px">
+            <tr>
+                <td>
+                    <h3>Filter by curriculum or course</h3>
+
+                    <label for="gp-curriculum-abbr">Curriculum:</label>
+                    <input id="gp-curriculum-abbr" type="text" name="curriculum_abbr" value="{{ curriculum_abbr }}" size="7" maxlength="7" />
+                    {% if errors.curriculum_abbr %}<span class="text-danger">{{ errors.curriculum_abbr }}</span>{% endif %}
+
+                    <label for="gp-course-num">Course Number:</label>
+                    <input type="text" id="gp-course-num" name="course_num" value="{{ course_num }}" size="3" maxlength="3"/>
+                    {% if errors.course_num %}<span class="text-danger">{{ errors.course_num }}</span>{% endif %}
+                </td>
+                <td style="padding-left: 80px">
+                    <h3>Filter by submitter/instructor</h3>
+
+                    <label for="gp-submitter">UWNetID:</label>
+                    <input type="text" id="gp-submitter" name="submitter" value="{{ submitter }}" size="10" maxlength="10"/>
+                    {% if errors.submitter %}<span class="text-danger">{{ errors.submitter }}</span>{% endif %}
+                </td>
+            </tr>
+        </table>
+        <input type="submit" value="Search"/>
+    </div>
+</div>
+</form>
+<h3>Results: {% if graderosters|length %}<span style="font-weight:normal; font-size:.75em; color:#888;">{{ graderosters|length }} grade rosters</span>{% endif %}</h3>
+
+{% if graderosters|length %}
+<div id="submission-chart"></div>
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Section (Instructor)</th>
+                <th>Submitted by</th>
+                <th>Submitted</th>
+                <th>Status</th>
+                <th>Download</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for graderoster in graderosters %}
+            <tr>
+                <td><strong>{{ graderoster.section_name }}</strong> ({{ graderoster.instructor }})<span class="text-success"></span>
+                <td>{{ graderoster.submitted_by }} ({{ graderoster.submitter_netid }})</td>
+                <td>{{ graderoster.submitted_date }}</td>
+                <td><span class="{% if graderoster.status_code == '200' %}text-success{% else %}text-danger{% endif %}">{{ graderoster.status_code }}</span></td>
+                <td>{% if graderoster.status_code != '200' %}<a href="{% url 'course_grader.views.support.download.graderoster' graderoster.id %}" class="btn btn-primary btn-small" style="font-size:.75em;"><i class="fa fa-download"></i>&nbsp;CSV</a>{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div style="color:#ccc; text-align:center; margin-bottom:3em;">There are no submitted graderosters matching your search.</div>
+{% endif %}
+{% endblock content %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    window.gradepage = {
+        grading_period_open: '{{ grading_period_open|date:"c" }}',
+        grade_submission_deadline: '{{ grade_submission_deadline|date:"c" }}',
+        chart_data: [{% for data in chart_data %}[Date.parse('{{ data.0 }}'), {{ data.1 }}]{% if not forloop.last %},{% endif %}{% endfor %}]
+    };
+</script>
+<script src="//code.highcharts.com/highcharts.js"></script>
+<script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+<script src="{% static "course_grader/js/search.js" %}"></script>
+{% endblock extra_js %}

@@ -1,0 +1,37 @@
+{% load templatetag_handlebars %}
+{% tplhandlebars "import-tmpl" %}
+{{# if grade_count }}
+    <p>{{{ trans "One grade found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>." "%(grade_count)s total grades found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>." grade_count }}}</p>
+
+    {{# if muted_assignment_count }}
+    <div role="alert" class="alert alert-danger alert-muted-assignment">
+        <i class="fa fa-exclamation-circle"></i> <p>{{{ trans "You have <strong>one muted assignment</strong> in this Canvas Gradebook." "You have <strong>%(muted_assignment_count)s muted assignments</strong> in this Canvas Gradebook." muted_assignment_count }}} {{ trans "The grade for this assignment WILL NOT be represented in the imported grade." "Grades for these assignments WILL NOT be represented in the imported grade." muted_assignment_count }}
+        <a target="_blank" href="http://www.washington.edu/itconnect/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/">{{ trans "learn_more" }}</a>.</p>
+        <ul>{{{ trans "The muted assignment for <strong>%(section_name)s</strong> is:" "The muted assignments for <strong>%(section_name)s</strong> are:" muted_assignment_count }}}
+                {{# each muted_assignments}}
+                <li>{{ name }}</li>{{/each}}
+            </ul>
+    </div>
+    {{/if}}
+
+    {{# if has_valid_percentages }}
+        <p>{{ trans "import_conversion_required" }}</p>
+        <fieldset>
+            <legend>{{ trans "import_conversion_required_select" }}</legend>
+                <ul>
+                    <li ><button id="gp-convert-scale-ug" type="button" class="btn btn-default btn-block">{{ trans "conversion_scale_ug" }}</button></li>
+                    <li><button id="gp-convert-scale-gr" type="button" class="btn btn-default btn-block">{{ trans "conversion_scale_gr" }}</button></li>
+                    <li><button id="gp-convert-scale-cnc" type="button" class="btn btn-default btn-block">{{ trans "conversion_scale_cnc" }}</button></li>
+                    <li><button id="gp-convert-scale-pf" type="button" class="btn btn-default btn-block">{{ trans "conversion_scale_pf" }}</button></li>
+                    <li><button id="gp-convert-scale-hpf" type="button" class="btn btn-default btn-block">{{ trans "conversion_scale_hpf" }}</button></li>
+        </ul>
+        </fieldset>
+    {{else}}
+        {{# if has_valid_grades }}
+        {{/if}}
+        <button type="button" class="btn btn-primary gp-import-save-import">{{ trans "import_save_grades" }}</button>
+    {{/if}}
+{{else}}
+    <p>{{{ trans "import_no_grades_found" }}}</p>
+{{/if}}
+{% endtplhandlebars %}

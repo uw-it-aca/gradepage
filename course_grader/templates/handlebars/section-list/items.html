@@ -1,0 +1,23 @@
+{% load templatetag_handlebars %}
+{% tplhandlebars "section-list-tmpl" %}
+        {{# if sections }}
+        <ol class="list-group gp-section-list">
+            {{# each sections}}
+            <li id="section-{{section_id}}" class="list-group-item gp-section-list-item container">
+                {{> section}}
+                {{# if secondary_sections}}
+                <ol class="list-group gp-section-list">
+                    {{# each secondary_sections}}
+                    <li id="section-{{section_id}}" class="list-group-item gp-section-list-item gp-secondary-section container">                    	
+                        {{> section}}
+                    </li>
+                    {{/each}}
+                </ol>
+                {{/if}}
+            </li>
+            {{/each}}
+        </ol>
+        {{else}}
+        <div class="well">{{{ trans "no_classes_to_grade" }}}</div>
+        {{/if}}
+{% endtplhandlebars %}

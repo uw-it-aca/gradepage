@@ -1,0 +1,35 @@
+{% load templatetag_handlebars %}                                               
+{% tplhandlebars "grade-tmpl" %}
+{{# if is_auditor }}
+    <div class="gp-grading-status">
+        <span class="gp-grade-status-msg">{{ trans "auditor" }}</span>
+    </div>
+{{else}}
+{{# if is_withdrawn }}
+    <div class="gp-grading-status">
+        <span class="gp-grade-status-msg">{{# if withdrawn_week }}{{ trans "withdrawn_week %(withdrawn_week)s" }}{{else}}{{ trans "withdrawn" }}{{/if}}</span>
+    </div>
+{{else}}
+<div class="pull-right gp-grade-entered">
+    {{# if has_writing_credit }}<span class="gp-review-writing" style="font-family:Verdana, Geneva, sans-serif;"><abbr title="Writing credit">W</abbr></span>{{/if}}
+    {{# if has_incomplete }}
+        <span class="gp-review-incomplete-letter"><span class="sr-only">{{ trans "submitted_grade" }}:</span><strong><abbr title="Incomplete">I</abbr></strong></span>
+        <div class="gp-review-default-grade">{{ trans "default_grade_label %(grade)s" }}</div>
+    {{else}}
+        {{# if no_grade_now }}
+        <span class="gp-review-grade"><span class="sr-only">{{ trans "submitted_grade" }}:</span><strong>X</strong></span>
+        <div class="gp-review-default-grade">{{ trans "no_grade_now" }}</div>
+        {{else}}
+        <span class="gp-review-grade"><span class="sr-only">{{ trans "submitted_grade" }}:</span><strong>{{ grade }}</strong></span>
+        {{/if}}
+    {{/if}}
+    {{# if date_graded }}
+    <div class="gp-review-default-grade gp-submitted-grade">{{ trans "grade_submitted %(date_graded)s" }}</div>
+    {{/if}}
+    {{# if grade_status }}
+    <div class="gp-review-default-grade">{{ trans "grade_submitted_status %(grade_status)s" }}</div>
+    {{/if}}
+</div>
+{{/if}}
+{{/if}}
+{% endtplhandlebars %}

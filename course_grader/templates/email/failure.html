@@ -1,0 +1,11 @@
+{% load i18n %}                                                                 
+{% load humanize %}
+<p>{% blocktrans with name=submitted_by text_count=submitted_count|apnumber date=submitted_date count count=submitted_count %}email_body_submission_failure {{ name }} {{ text_count }} {{ date }}{% plural %}email_body_submissions_failure {{ name }} {{ text_count }} {{ date }}{% endblocktrans %} {% blocktrans with url=section_url %}email_body_view_receipt_html {{ url }}{% endblocktrans %}</p>
+
+<p>{% blocktrans %}email_body_change_grade_html{% endblocktrans %}</p>
+
+{% if grading_window_open %}
+<p>{% blocktrans with url=gradepage_url %}email_body_submit_more_html {{ url }}{% endblocktrans %}</p>
+
+<p>{% blocktrans with date=grade_submission_deadline %}email_body_submission_deadline_html {{ date }}{% endblocktrans %}</p>
+{% endif %}

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+    <div role="main" aria-labelledby="submit-grade">
+        {% if now_quarter != selected_quarter or now_year != selected_year %}
+        <div class="container">
+    		<div class="gp-back-link"><a href="/"><i class="fa fa-long-arrow-left"></i> {% trans "back_to_current_quarter_link" %}</a></div>
+        </div>
+        {% endif %}
+        <h2 id="submit-grade" class="gp-page-header container"><span class="sr-only">Grades for </span>{{ selected_quarter }} {{ selected_year }}
+        </h2>
+
+        <span class="gp-styled-select">
+        <select id="gp-term-select">
+        	{% for term in terms %}
+            <option value="{{ term.url }}" title="Select {{ term.quarter }} {{ term.year }}"{% if term.is_selected %} selected="selected"{% endif %}>{{ term.quarter }} {{ term.year }}</option>
+        	{% endfor %}
+        </select>
+        </span>
+
+        {% if not grading_window_open %}
+        {% if in_current_quarter %}
+        <div class="alert alert-info" role="alert">
+            {% blocktrans with quarter=next_quarter year=next_year date=next_window_open_date %}grade_submission_opens {{ quarter }} {{ year }} {{ date }}{% endblocktrans %}
+            <br />
+            {% blocktrans with quarter=prev_quarter year=prev_year date=prev_window_close_date %}grade_submission_closed {{ quarter }} {{ year }} {{ date }}{% endblocktrans %}
+            <a href="http://www.washington.edu/itconnect/learn/tools/catalyst-web-tools/gradebook/gradepage/change-submitted-grades/" target="_blank" title="submitting_late_grades_title">{% trans "grade_submission_closed_link" %}</a>
+        </div>
+        {% else %}
+        <div class="alert alert-danger" role="alert">
+            {% blocktrans with quarter=prev_quarter year=prev_year date=prev_window_close_date %}grade_submission_closed {{ quarter }} {{ year }} {{ date }}{% endblocktrans %}
+            <a href="http://www.washington.edu/itconnect/learn/tools/catalyst-web-tools/gradebook/gradepage/change-submitted-grades/" target="_blank" title="submitting_late_grades_title">{% trans "grade_submission_closed_link" %}</a>
+            <br />
+            {% blocktrans with quarter=next_quarter year=next_year date=next_window_open_date %}grade_submission_opens {{ quarter }} {{ year }} {{ date }}{% endblocktrans %}
+        </div>
+        {% endif %}
+        {% endif %}
+
+        <div class="container gp-class-chooser">
+            <div id="section-list">
+            </div>
+        </div>
+    </div>
+
+    {% include "handlebars/section-list/items.html" %}
+    {% include "handlebars/section-list/loading.html" %}
+    {% include "handlebars/section-list/section.html" %}
+
+{% endblock content %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        window.gradepage = {
+            sections_url: "{{ sections_url }}",
+            is_mobile: {% if request.is_mobile %}true{% else %}false{% endif %},
+            is_tablet: {% if request.is_tablet %}true{% else %}false{% endif %},
+            is_desktop: {% if not request.is_mobile and not request.is_tablet %}true{% else %}false{% endif %}
+        };
+    </script>
+{% endblock extra_js %}

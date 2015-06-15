@@ -1,0 +1,52 @@
+{% load templatetag_handlebars %}
+{% tplhandlebars "confirmation-tmpl" %}
+
+    <div class="container">
+        {% verbatim %}
+        {{# if is_submission_confirmation}}        
+                {{# if has_failed_submissions}}
+                    {{# if has_successful_submissions}}
+                    	<div class="alert alert-warning gp-confirmation-alert" role="status">
+						<span class="gp-submit-success-message"><i class="fa fa-exclamation-circle"></i>
+                        {{ trans "Grades submitted, but one grade had an error." "Grades submitted, but %(failed_submission_count)s grades had errors." failed_submission_count }}
+                    {{else}}
+                    	<div class="alert alert-danger gp-confirmation-alert" role="status">
+						<span class="gp-submit-success-message"><i class="fa fa-times-circle"></i>
+                        {{ trans "Grade submitted with error." "Grades submitted with errors." failed_submission_count }}
+                    {{/if}}
+                {{else}}
+                	<div class="alert alert-success gp-confirmation-alert" role="status">
+						<span class="gp-submit-success-message"><i class="fa fa-check-circle"></i>
+                    {{ trans "grade_submission_successful" }}						
+                {{/if}}
+						</span>
+						<p>{{ trans "more_grades_to_submit" }} <a href="/">{{ trans "return_classes_to_grade" }}</a></p>
+					</div>
+        {{else}}
+        {{# if has_inprogress_submissions}}
+        <div class="alert alert-info gp-inprogress-alert" role="status">
+            <span class="gp-submit-success-message"><i class="fa fa-refresh"></i> {{ trans "grade_submission_inprogress" }}</span>
+            <p>{{ trans "in_progress_submission_email" }}</p>
+            <p>{{ trans "more_grades_to_submit" }} <a href="/">{{ trans "return_classes_to_grade" }}</a></p>
+        </div>
+        {{/if}}
+        {{/if}}
+        <div class="gp-receipt-message" role="status">
+            {{# each submissions}}
+            <p><i class="fa fa-check-circle" style="color:#63AD45;"></i> {{# if section_id}} {{ trans "section" }} {{section_id}}: {{/if}}<strong>{{submitted_count}}</strong> {{ trans "grades_submitted_to_registrar_by" }} <strong>{{submitted_by}}</strong> on {{format_long_datetime submitted_date}}. <a title="Change submitted grades" target="_blank" href="http://www.washington.edu/itconnect/learn/tools/catalyst-web-tools/gradebook/gradepage/change-submitted-grades/">Change submitted grades?</a></p>
+            {{/each}}
+            {{# unless is_submission_confirmation }}<p><i class="fa fa-exclamation-circle" style="color:#EBDD5A;"></i>	 {{ trans "confirmation_alert_warning" }} <a href="http://depts.washington.edu/registra/learning/online-grading-faq/#past" target="_blank" class="hidden-print">More info.</a></p>{{/unless}}
+        </div>
+
+        {{# if has_duplicate_codes }}<div class="gp-duplicate-code" style="padding-bottom:1em;"><span class="label label-default">&nbsp;&nbsp;</span><span class="sr-only">{{trans "duplicate_code_long"}}</span>{{ trans "duplicate_code" }}</div>{{/if}}
+        <ol class="list-group gp-roster-list gp-receipt-list">
+            {{# each students}}
+            <li class="clearfix list-group-item gp-roster-list-item" aria-labelledby="student-{{ item_id }}">
+                {{> student}}
+                {{> grade}}
+            </li>
+            {{/each}}
+        </ol>
+        {% endverbatim %}
+    </div>
+{% endtplhandlebars %}

@@ -1,0 +1,32 @@
+{% extends 'supporttools/base.html' %}
+
+{% load staticfiles %}
+{% load i18n %}
+{% block content %}
+
+<h2>GradePage Status for {{ selected_quarter }} {{ selected_year }}</h2>
+<div class="well">
+    <div>
+        Grading Period Open: {{ grading_period_open|date:"D, M j Y g:i A T" }}<br/>
+        Grade Submission Deadline: {{ grade_submission_deadline|date:"D, M j Y g:i A T" }}<br/>
+        Sections submitted: {{ graderosters|length }}
+    </div>
+</div>
+
+{% if graderosters|length %}
+<div id="submission-chart"></div>
+{% endif %}
+
+{% endblock content %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    window.gradepage = {
+        grading_period_open: '{{ grading_period_open|date:"c" }}',
+        grade_submission_deadline: '{{ grade_submission_deadline|date:"c" }}',
+        charts: {{ chart_data|safe }}
+    };
+</script>
+<script src="//code.highcharts.com/highcharts.js"></script>
+<script src="{% static "course_grader/js/status.js" %}"></script>
+{% endblock extra_js %}

@@ -1,0 +1,28 @@
+{% load templatetag_handlebars %}
+{% tplhandlebars "convert-tmpl" %}
+<div class="container">
+    <div class="gp-import-conversion">
+        <div class="gp-conversion-instructions">
+            <h3>{{ trans "conversion_header" }}</h3>
+            <p>{{ trans "conversion_instructions" }}</p>
+        </div>
+        <div id="gp-select-previous">
+            <label for="select-previous-scale" class="sr-only">{{ trans "previous_scale_label_sr" }}</label>
+            <select id="select-previous-scale">
+                <option role="presentation" value="0" selected disabled>{{ trans "previous_scale_label" }} &gt;</option>
+            </select>
+        </div>
+        <div id="grade-calculator-container"></div>
+    </div>
+</div>
+{% endtplhandlebars %}
+
+{% tplhandlebars "convert-optgroup-tmpl" %}
+    {{# each terms }}
+    <optgroup label="{{ quarter }} {{ year }}">
+        {{# each conversion_scales }}
+        <option value="{{ id }}">{{ section }}</option>
+        {{/each}}
+    </optgroup>
+    {{/each}}
+{% endtplhandlebars %}

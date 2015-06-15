@@ -1,0 +1,17 @@
+{% load templatetag_handlebars %}                                               
+{% tplhandlebars "import-modal-tmpl" %}
+<div class="modal fade" id="gp-import-modal" tabindex="-1" role="dialog" aria-labelledby="gp-import-modal-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="gp-import-modal-title">{{ trans "import_grades" }}</h2>
+            </div>
+            <div class="modal-body" id="gp-import-modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="pull-left btn btn-link" data-dismiss="modal">{{ trans "cancel" }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endtplhandlebars %}

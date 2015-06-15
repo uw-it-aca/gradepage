@@ -1,0 +1,105 @@
+{% extends 'supporttools/base.html' %}
+
+{% load staticfiles %}
+{% load i18n %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css" />
+{% endblock extra_css %}
+
+{% block content %}
+
+<h2>Search Grade Imports</h2>
+<form method="get">
+<div class="well">
+    <div>
+        <label for="gp-term-select">Term:</label>
+        <select id="gp-term-select" name="term">
+            {% for term in terms %}
+            <option value="{{ term.value }}" title="Select {{ term.quarter }} {{ term.year }}"{% if term.is_selected %} selected="selected"{% endif %}>{{ term.quarter }} {{ term.year }}</option>
+            {% endfor %}
+        </select>
+        <table style="margin-bottom: 10px">
+            <tr>
+                <td>
+                    <h3>Filter by curriculum or course</h3>
+
+                    <label for="gp-curriculum-abbr">Curriculum:</label>
+                    <input id="gp-curriculum-abbr" type="text" name="curriculum_abbr" value="{{ curriculum_abbr }}" size="7" maxlength="7" />
+                    {% if errors.curriculum_abbr %}<span class="text-danger">{{ errors.curriculum_abbr }}</span>{% endif %}
+
+                    <label for="gp-course-num">Course Number:</label>
+                    <input type="text" id="gp-course-num" name="course_num" value="{{ course_num }}" size="3" maxlength="3"/>
+                    {% if errors.course_num %}<span class="text-danger">{{ errors.course_num }}</span>{% endif %}
+                </td>
+                <td style="padding-left: 80px">
+                    <h3>Filter by instructor</h3>
+
+                    <label for="gp-submitter">UWNetID:</label>
+                    <input type="text" id="gp-submitter" name="submitter" value="{{ submitter }}" size="10" maxlength="10"/>
+                    {% if errors.submitter %}<span class="text-danger">{{ errors.submitter }}</span>{% endif %}
+                </td>
+            </tr>
+        </table>
+        <input type="submit" value="Search"/>
+    </div>
+</div>
+</form>
+
+<h3>Results: {% if grade_imports|length %}<span style="font-weight:normal; font-size:.75em; color:#888;">{{ grade_imports|length }} grade imports</span>{% endif %}</h3>
+
+{% if grade_imports|length %}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Section (Instructor)</th>
+                <th>Imported by</th>
+                <th>Imported</th>
+                <th>Source</th>
+                <th>Status</th>
+                <th>Imported grades</th>
+                <th>Conversion scale</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grade_import in grade_imports %}
+            <tr>
+                <td><strong>{{ grade_import.section_name }}</strong> ({{ grade_import.instructor_name }})<span class="text-success"></span>
+                <td>{{ grade_import.importer_name }} ({{ grade_import.importer_netid }})</td>
+                <td>{{ grade_import.imported_date }}</td>
+                <td>{{ grade_import.source_name }}</td>
+                <td><span class="{% if grade_import.status_code == '200' %}text-success{% else %}text-danger{% endif %}">{{ grade_import.status_code }}</span></td>
+                <td></td>
+                <td>{% if grade_import.import_conversion.grade_scale|length %}
+                    <a class="gp-conv-scale-open" href="#">View</a>
+                    <table border="1" style="display: none;">
+                    <th>Min Percentage</th><th>Grade</th>
+                    {% for item in grade_import.import_conversion.grade_scale %}
+                    <tr><td>{{ item.min_percentage }}</td><td>{{ item.grade }}</td></tr>
+                    {% endfor %}
+                    </table>{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div style="color:#ccc; text-align:center; margin-bottom:3em;">There are no grade imports matching your search.</div>
+
+{% endif %}
+{% endblock content %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    window.gradepage = {
+        grading_period_open: '{{ grading_period_open|date:"c" }}',
+        grade_submission_deadline: '{{ grade_submission_deadline|date:"c" }}',
+        chart_data: [{% for data in chart_data %}[Date.parse('{{ data.0 }}'), {{ data.1 }}]{% if not forloop.last %},{% endif %}{% endfor %}]
+    };
+</script>
+<script src="//code.highcharts.com/highcharts.js"></script>
+<script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+<script src="{% static "course_grader/js/search.js" %}"></script>
+{% endblock extra_js %}
