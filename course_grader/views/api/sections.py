@@ -7,7 +7,6 @@ from course_grader.views import clean_section_id, section_url_token
 from course_grader.views import display_section_name, display_person_name
 from course_grader.views.rest_dispatch import RESTDispatch
 from course_grader.exceptions import InvalidUser, InvalidTerm
-from restclients.exceptions import DataFailureException
 import logging
 import re
 
@@ -34,15 +33,13 @@ class Sections(RESTDispatch):
 
         try:
             sections = all_gradable_sections(self.user, self.term)
-        except DataFailureException as ex:
-            logger.exception(ex)
-            if ex.status == 401 or ex.status == 404:
+        except Exception as ex:
+            if (hasattr(ex, "status") and
+                    (ex.status == 401 or ex.status == 404)): 
                 sections = []
             else:
+                logger.exception(ex)
                 return self.error_response(500, _("sws_not_available"))
-        except Exception as ex:
-            logger.exception(ex)
-            return self.error_response(500, _("sws_not_available"))
 
         content = self.response_content(sections, **kwargs)
         return self.json_response(content)

@@ -36,8 +36,11 @@ def home(request):
         return HttpResponseRedirect("/")
 
     except Exception as ex:
-        logger.exception(ex)
-        raise
+        if (hasattr(ex, "status") and ex.status == 503):
+            return render_to_response("503.html", {}, RequestContext(request))
+        else:
+            logger.exception(ex)
+            raise
 
     opt_terms = []
     for opt_term in all_terms:

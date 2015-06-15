@@ -13,7 +13,6 @@ from course_grader.views import display_section_name, display_person_name
 from course_grader.views import grade_submission_deadline_params
 from course_grader.exceptions import MissingInstructorParam
 from restclients.catalyst.gradebook import valid_gradebook_id
-from restclients.exceptions import DataFailureException
 import logging
 import re
 
@@ -29,21 +28,24 @@ def section(request, url_token):
         (section, instructor) = section_from_param(url_token)
         now_term = current_term()
 
-    except DataFailureException as ex:
-        logger.exception(ex)
-        if ex.status == 404:
-            return response_404(request)
-        else:
-            raise
-
     except MissingInstructorParam as ex:
         # MyUW doesn't supply an instructor regid, add the user
         section_url = "/section/%s-%s" % (url_token, user.uwregid)
         return HttpResponseRedirect(section_url)
 
     except Exception as ex:
-        logger.exception(ex)
-        return response_404(request)
+        if hasattr(ex, "status"):
+            if ex.status == 404:
+                return error_response(request, status=404)
+            elif ex.status == 503:
+                return render_to_response("503.html", {},
+                                          RequestContext(request))
+            else:
+                logger.exception(ex)
+                raise
+        else:
+            logger.exception(ex)
+            return error_response(request, status=404)
 
     if (not section.is_grading_period_open() and
             not section.term.is_grading_period_past()):
@@ -81,7 +83,8 @@ def section(request, url_token):
     return render_to_response("section.html", params, RequestContext(request))
 
 
-def response_404(request):
-    response = render_to_response("404.html", {}, RequestContext(request))
-    response.status_code = 404
+def error_response(request, status=500):
+    template = "%s.html" % status
+    response = render_to_response(template, {}, RequestContext(request))
+    response.status_code = status
     return response
