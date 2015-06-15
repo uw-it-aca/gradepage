@@ -22,7 +22,8 @@ class ImportGrades(GradeFormHandler):
         try:
             self.user = person_from_user()
 
-            (section, instructor) = section_from_param(kwargs.get("section_id"))
+            section_id = kwargs.get("section_id")
+            (section, instructor) = section_from_param(section_id)
             self.section = section
             self.instructor = instructor
 
@@ -90,14 +91,15 @@ class ImportGrades(GradeFormHandler):
         except Exception as ex:
             return self.error_response(400, "Invalid import")
 
-        conversion_data = put_data.get("conversion_scale", None)
-        if conversion_data is not None:
+        conv_data = put_data.get("conversion_scale", None)
+        if conv_data is not None:
             try:
+                calculator_values = conv_data.get("calculator_values")
                 import_conversion = ImportConversion(
-                    scale=conversion_data.get("scale"),
-                    grade_scale=json.dumps(conversion_data.get("grade_scale")),
-                    calculator_values=json.dumps(conversion_data.get("calculator_values")),
-                    lowest_valid_grade=conversion_data.get("lowest_valid_grade")
+                    scale=conv_data.get("scale"),
+                    grade_scale=json.dumps(conv_data.get("grade_scale")),
+                    calculator_values=json.dumps(calculator_values),
+                    lowest_valid_grade=conv_data.get("lowest_valid_grade")
                 )
                 import_conversion.save()
                 grade_import.import_conversion = import_conversion
@@ -107,7 +109,8 @@ class ImportGrades(GradeFormHandler):
 
         import_data = grade_import.json_data()
         converted_grades = put_data.get("converted_grades", {})
-        secondary_section = getattr(self.graderoster, "secondary_section", None)
+        secondary_section = getattr(self.graderoster, "secondary_section",
+                                    None)
         for item in self.graderoster.items:
             if (secondary_section is not None and
                     secondary_section.section_id != item.section_id):
@@ -169,7 +172,8 @@ class ImportGrades(GradeFormHandler):
         imported_grades = return_data.pop("imported_grades", [])
         return_data["students"] = []
 
-        secondary_section = getattr(self.graderoster, "secondary_section", None)
+        secondary_section = getattr(self.graderoster, "secondary_section",
+                                    None)
         for item in self.sorted_students():
             if (secondary_section is not None and
                     secondary_section.section_id != item.section_id):

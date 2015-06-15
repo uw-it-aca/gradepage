@@ -1,9 +1,8 @@
-from django.conf import settings
 from django.utils.timezone import get_default_timezone, localtime
 from django.utils.timezone import is_naive, make_aware
-from course_grader.dao.term import current_datetime
+from course_grader.dao.term import submission_deadline_warning
 from nameparser import HumanName
-from datetime import datetime, timedelta
+from datetime import datetime
 import re
 
 
@@ -48,13 +47,9 @@ def display_section_name(section):
 
 
 def grade_submission_deadline_params(term):
-    hours = getattr(settings, "SUBMISSION_DEADLINE_WARNING_HOURS", 48)
-    warning_start = term.grade_submission_deadline - timedelta(hours=hours)
-    is_warning = True if (current_datetime() >= warning_start) else False
-
     return {
         "deadline_year": term.year,
         "deadline_quarter": term.get_quarter_display(),
         "grade_submission_deadline": term.grade_submission_deadline,
-        "deadline_warning": is_warning,
+        "deadline_warning": submission_deadline_warning(term),
     }

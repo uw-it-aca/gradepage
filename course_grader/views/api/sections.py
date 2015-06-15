@@ -35,7 +35,7 @@ class Sections(RESTDispatch):
             sections = all_gradable_sections(self.user, self.term)
         except Exception as ex:
             if (hasattr(ex, "status") and
-                    (ex.status == 401 or ex.status == 404)): 
+                    (ex.status == 401 or ex.status == 404)):
                 sections = []
             else:
                 logger.exception(ex)

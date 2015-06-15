@@ -6,7 +6,7 @@ from django.conf import settings
 from restclients.sws.term import get_term_by_year_and_quarter, get_term_by_date
 from restclients.sws.term import get_term_before, get_term_after
 from course_grader.exceptions import InvalidTerm
-from datetime import datetime
+from datetime import datetime, timedelta
 import re
 
 
@@ -16,6 +16,12 @@ def current_datetime():
         return datetime.strptime(override_dt, "%Y-%m-%d %H:%M:%S")
     else:
         return datetime.now()
+
+
+def submission_deadline_warning(term):
+    hours = getattr(settings, "SUBMISSION_DEADLINE_WARNING_HOURS", 48)
+    warning_start = term.grade_submission_deadline - timedelta(hours=hours)
+    return (current_datetime() >= warning_start)
 
 
 def term_from_param(param):
