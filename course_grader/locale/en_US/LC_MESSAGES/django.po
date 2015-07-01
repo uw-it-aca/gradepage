@@ -89,6 +89,9 @@ msgstr "What can I do now?"
 msgid "submit_grades_for"
 msgstr "Submit grades for"
 
+msgid "writing_course_note"
+msgstr "<strong>Note:</strong> Writing credit automatically credited to all students with a passing grade in this course."
+
 msgid "btn_print_this_page"
 msgstr "Print this page"
 
