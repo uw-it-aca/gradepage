@@ -173,6 +173,12 @@ msgstr "Saved"
 msgid "enter_grades"
 msgstr "Enter grades for"
 
+msgid "writing_course_note"
+msgstr "<strong>Note:</strong> Writing credit automatically given to all students with a passing grade in this course."
+
+msgid "writing_course_note_receipt"
+msgstr "Writing credit automatically given to all students with a passing grade in this course."
+
 msgid "duplicate_code"
 msgstr "Duplicate code"
 

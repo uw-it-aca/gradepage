@@ -225,6 +225,7 @@ class GradeRoster(GradeFormHandler):
                 "import_choices": [],
                 "grade_choices": [],
                 "submissions": [],
+                "is_writing_section": not allows_writing_credit,
                 "has_duplicate_codes": False,
                 "has_successful_submissions": False,
                 "has_failed_submissions": False,

@@ -350,6 +350,7 @@ abbr[title], acronym[title] {
         
         .gp-page-header { margin-top: 0; margin-bottom: 0; font-size:1.85em;}
         .gp-course-meta { margin-bottom: 0; font-size:.9em; }
+        .gp-course-meta-note { margin-bottom: 0; font-size:.9em; padding-top: 3px; }
         
                 
         /* content */
@@ -369,10 +370,11 @@ abbr[title], acronym[title] {
     		.gp-fine-print {font-size:75%;padding-top:10px;}
             
             .gp-duplicate-code {font-weight: 200; font-size: 80%;position:relative; top:10px;width:50%;}
-                .label { font-size: 60%; line-height: 1.3; border-radius:1em;}
-	            .label-default {background-color:#aaa;margin: 0 5px 0 0;}
+            .label { font-size: 60%; line-height: 1.3; border-radius:1em;}
+	        .label-default {background-color:#aaa;margin: 0 5px 0 0;}
                 
-            .gp-edit-subhead { margin: .5em 0;height:35px;
+            .gp-edit-subhead { margin: .5em 0; min-height:35px;
+                .gp-duplicate-code {margin-bottom:15px;}
 	            &.gp-review-subhead {height: auto;}
             }
             /*.gp-saved {font-size:80%;text-transform:none; font-weight:normal;color:@success;}*/

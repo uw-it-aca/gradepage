@@ -12,6 +12,7 @@
 	        </select>
         </div>
 
+        {{# if is_writing_section }}<div class="gp-course-meta-note">{{{ trans "writing_course_note" }}}</div>{{/if}}
         {{# if has_duplicate_codes }}<div class="gp-duplicate-code"><span class="label label-default">&nbsp;&nbsp;</span><span class="sr-only">{{trans "duplicate_code_long"}}</span>{{ trans "duplicate_code" }}</div>{{/if}}
         </div>
         <ol aria-controls="grades_left" class="list-group gp-roster-list">
