@@ -37,7 +37,7 @@
             {{/each}}
             {{# unless is_submission_confirmation }}<p><i class="fa fa-exclamation-circle" style="color:#EBDD5A;"></i>	 {{ trans "confirmation_alert_warning" }} <a href="http://depts.washington.edu/registra/learning/online-grading-faq/#past" target="_blank" class="hidden-print">More info.</a></p>{{/unless}}
         </div>
-
+        {{# if is_writing_section }}<div class="gp-course-meta-note">{{{ trans "writing_course_note" }}}</div>{{/if}}
         {{# if has_duplicate_codes }}<div class="gp-duplicate-code" style="padding-bottom:1em;"><span class="label label-default">&nbsp;&nbsp;</span><span class="sr-only">{{trans "duplicate_code_long"}}</span>{{ trans "duplicate_code" }}</div>{{/if}}
         <ol class="list-group gp-roster-list gp-receipt-list">
             {{# each students}}
