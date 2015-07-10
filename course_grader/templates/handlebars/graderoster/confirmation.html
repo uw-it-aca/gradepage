@@ -47,9 +47,22 @@
             </li>
             {{/each}}
         </ol>
-        <div style="margin-bottom: 10px; font-size: 0.9em;" class="pull-right">
-        Grades calculated using a grade conversion scale. <a href="#">View scale.</a>
+        <div style="margin-bottom: 10px; font-size: 0.9em; text-align: right;" >
+        <span>Grades calculated using a grade conversion scale.</span> <a style="white-space: nowrap;" href="#" aria-controls="import_grade_scale_diplay">View scale.</a>
+        
+        <div id="import_grade_scale_diplay">
+            <ol style="list-style: none; float: right; padding: 0;">
+                <li class="import-scale-range" style="padding: 5px 0;"><span class="percentile-range" style="float:left;"><span class="percentage-container">98%</span> - <span class="percentage-container">100%</span> =</span><span class="percentage-container">4.0</span></li>
+                <li class="import-scale-range"style="padding: 5px 0;"><span class="percentile-range" style="float:left;"><span class="percentage-container">95%</span> - <span class="percentage-container">97%</span> = </span><span class="percentage-container" >3.9</span></li>
+                <li class="import-scale-range" style="padding: 5px 0;"><span class="percentile-range" style="float:left;"><span class="percentage-container">72%</span> - <span class="percentage-container">94%</span> = </span><span class="percentage-container">3.8</span></li>
+                <li class="import-scale-range" style="padding: 5px 0;"><span class="percentile-range" style="float:left;"><span class="percentage-container">0%</span> - <span class="percentage-container">71%</span> = </span><span class="percentage-container">0.7</span></li>  
+            </ol>  
         </div>
+        
+        </div>
+
+        
+        
         {% endverbatim %}
     </div>
 {% endtplhandlebars %}
