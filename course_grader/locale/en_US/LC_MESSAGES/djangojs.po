@@ -291,6 +291,25 @@ msgstr "Submitted grade may differ from official final grade."
 msgid "more_info"
 msgstr "More info"
 
+msgid "conversion_scale_mssg"
+msgstr "Grades calculated using a grade conversion scale."
+
+msgid "conversion_scale_view"
+msgstr "View scale."
+
+msgid "conversion_scale_hide"
+msgstr "Hide scale."
+
+msgid "conversion_scale_view_title"
+msgstr "Show grade conversion scale that was used."
+
+msgid "conversion_scale_hide_title"
+msgstr "Hide grade conversion scale."
+
+msgid "conversion_scale_header"
+msgstr "Grade Conversion Scale"
+
+
 ############### Status ###############
 
 msgid "auditor"
