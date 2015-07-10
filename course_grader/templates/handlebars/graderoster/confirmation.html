@@ -47,19 +47,20 @@
             </li>
             {{/each}}
         </ol>
+        {{# if has_import_scale}}
         <div class="conversion-receipt-container" >
         {{trans "conversion_scale_mssg"}} <a href="#" title="{{trans "conversion_scale_view_title"}}" aria-controls="import_grade_scale_diplay">{{trans "conversion_scale_view"}}</a>
-        <div id="import_grade_scale_diplay">
-            <h2 id="receipt_conversion_scale" class="sr-only">{{trans "conversion_scale_header"}}</h2>
-            <ol aria-labelledby="receipt_conversion_scale">
-                <li><span class="percentile-range"><span class="import-value-container">98%</span> - <span class="import-value-container">100%</span> = </span><span class="import-value-container">4.0</span></li>
-                <li><span class="percentile-range"><span class="import-value-container">95%</span> - <span class="import-value-container">97%</span> = </span><span class="import-value-container" >3.9</span></li>
-                <li><span class="percentile-range"><span class="import-value-container">72%</span> - <span class="import-value-container">94%</span> = </span><span class="import-value-container">3.8</span></li>
-                <li><span class="percentile-range"><span class="import-value-container">0%</span> - <span class="import-value-container">71%</span> = </span><span class="import-value-container">0.7</span></li>  
-            </ol>  
+            <div id="import_grade_scale_diplay">
+                <h2 id="receipt_conversion_scale" class="sr-only">{{trans "conversion_scale_header"}}</h2>
+                <ol aria-labelledby="receipt_conversion_scale">
+                    <li><span class="percentile-range"><span class="import-value-container">98%</span> - <span class="import-value-container">100%</span> = </span><span class="import-value-container">4.0</span></li>
+                    <li><span class="percentile-range"><span class="import-value-container">95%</span> - <span class="import-value-container">97%</span> = </span><span class="import-value-container" >3.9</span></li>
+                    <li><span class="percentile-range"><span class="import-value-container">72%</span> - <span class="import-value-container">94%</span> = </span><span class="import-value-container">3.8</span></li>
+                    <li><span class="percentile-range"><span class="import-value-container">0%</span> - <span class="import-value-container">71%</span> = </span><span class="import-value-container">0.7</span></li>  
+                </ol>  
+            </div>
         </div>
-        
-        </div>
+        {{/if}}
         {% endverbatim %}
     </div>
 {% endtplhandlebars %}
