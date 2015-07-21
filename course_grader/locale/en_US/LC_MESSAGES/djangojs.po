@@ -306,6 +306,16 @@ msgstr "Show grade conversion scale that was used."
 msgid "conversion_scale_hide_title"
 msgstr "Hide grade conversion scale."
 
+
+msgid "multi_conversion_scale_option_view"
+msgstr "View Scale"
+
+msgid "multi_conversion_scale_mssg"
+msgstr "Grades calculated using grade conversion scales."
+
+msgid "multi_conversion_scale_view"
+msgstr "Select grade conversion scale to view:"
+
 msgid "conversion_scale_header"
 msgstr "Grade Conversion Scale"
 
