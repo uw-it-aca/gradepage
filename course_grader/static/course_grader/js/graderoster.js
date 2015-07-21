@@ -403,6 +403,9 @@ GradePage.GradeRoster = (function ($) {
         var template = Handlebars.compile($("#confirmation-tmpl").html());
         Handlebars.registerPartial("student", $("#student-tmpl").html());
         Handlebars.registerPartial("grade", $("#grade-tmpl").html());
+        Handlebars.registerHelper("multiple_grade_imports", function(count, options) {
+            return (count > 1) ? options.fn(this) : options.inverse(this);
+        });
 
         $(".gp-grade-roster-state").text(gettext("submitted_grades"));
         $(".gp-btn-print-container").show();  // Print button

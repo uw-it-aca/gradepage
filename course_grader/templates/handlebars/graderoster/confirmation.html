@@ -3,7 +3,7 @@
 
     <div class="container">
         {% verbatim %}
-        {{# if is_submission_confirmation}}        
+        {{# if is_submission_confirmation}}
                 {{# if has_failed_submissions}}
                     {{# if has_successful_submissions}}
                     	<div class="alert alert-warning gp-confirmation-alert" role="status">
@@ -17,7 +17,7 @@
                 {{else}}
                 	<div class="alert alert-success gp-confirmation-alert" role="status">
 						<span class="gp-submit-success-message"><i class="fa fa-check-circle"></i>
-                    {{ trans "grade_submission_successful" }}						
+                    {{ trans "grade_submission_successful" }}
                 {{/if}}
 						</span>
 						<p>{{ trans "more_grades_to_submit" }} <a href="/">{{ trans "return_classes_to_grade" }}</a></p>
@@ -47,32 +47,25 @@
             </li>
             {{/each}}
         </ol>
-        
-        {{# if has_import_scale}}
-            <div class="conversion-receipt-container" >
-            {{# if multiple_import_scales}}
-                {{trans "multi_conversion_scale_mssg"}} 
-                <label for="import_section_select" class="sr-only">{{trans "multi_conversion_scale_view"}}</label>
-                <select id="import_section_select" aria-controls="import_grade_scale_diplay">
-                    <option selected disabled>{{trans "multi_conversion_scale_option_view"}}</option>
-                    <option>Class Section</option>
-                    <option>Class Section A</option>
-                    <option>Class Section AB</option>
-                </select>
+
+        {{# if has_grade_imports}}
+        <div class="conversion-receipt-container" >
+            {{#multiple_grade_imports grade_import_count}}
+            {{trans "multi_conversion_scale_msg"}}
+            <label for="gp-import-section-select" class="sr-only">{{trans "multi_conversion_scale_view"}}</label>
+            <select id="gp-import-section-select" aria-controls="gp-import-scale-diplay">
+                <option selected disabled>{{trans "multi_conversion_scale_option_view"}}</option>
+                {{# each submissions}}
+                {{# if grade_import}}
+                <option value="{{ id }}">{{ section_id }}</option>{{/if}}
+                {{/each}}
+            </select>
             {{else}}
-                <div class="conversion-receipt-container" >
-                {{trans "conversion_scale_mssg"}} <a href="#" title="{{trans "conversion_scale_view_title"}}" aria-controls="import_grade_scale_diplay">{{trans "conversion_scale_view"}}</a>
-            {{/if}}
-                <div id="import_grade_scale_diplay">
-                    <h2 id="receipt_conversion_scale" class="sr-only">{{trans "conversion_scale_header"}}</h2>
-                    <ol aria-labelledby="receipt_conversion_scale">
-                        <li><span class="percentile-range"><span class="import-value-container">98%</span> - <span class="import-value-container">100%</span> = </span><span class="import-value-container">4.0</span></li>
-                        <li><span class="percentile-range"><span class="import-value-container">95%</span> - <span class="import-value-container">97%</span> = </span><span class="import-value-container" >3.9</span></li>
-                        <li><span class="percentile-range"><span class="import-value-container">72%</span> - <span class="import-value-container">94%</span> = </span><span class="import-value-container">3.8</span></li>
-                        <li><span class="percentile-range"><span class="import-value-container">0%</span> - <span class="import-value-container">71%</span> = </span><span class="import-value-container">0.7</span></li>  
-                    </ol>  
-                </div>
-            </div>
+            <div class="conversion-receipt-container" >
+            {{trans "conversion_scale_msg"}} <a href="#" title="{{trans "conversion_scale_view_title"}}" aria-controls="import_grade_scale_diplay">{{trans "conversion_scale_view"}}</a>
+            {{/multiple_grade_imports}}
+            <div id="gp-import-scale-diplay"></div>
+        </div>
         {{/if}}
         {% endverbatim %}
     </div>
