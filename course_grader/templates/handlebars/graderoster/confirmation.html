@@ -52,19 +52,19 @@
         <div class="conversion-receipt-container" >
             {{#multiple_grade_imports grade_import_count}}
             {{trans "multi_conversion_scale_msg"}}
-            <label for="gp-import-section-select" class="sr-only">{{trans "multi_conversion_scale_view"}}</label>
-            <select id="gp-import-section-select" aria-controls="gp-import-scale-diplay">
+            <label for="gp-select-scale" class="sr-only">{{trans "multi_conversion_scale_view"}}</label>
+            <select id="gp-select-scale" aria-controls="gp-import-scale-display">
                 <option selected disabled>{{trans "multi_conversion_scale_option_view"}}</option>
                 {{# each submissions}}
                 {{# if grade_import}}
-                <option value="{{ id }}">{{ section_id }}</option>{{/if}}
+                <option value="{{@index}}">Section {{ section_id }}</option>{{/if}}
                 {{/each}}
             </select>
             {{else}}
             <div class="conversion-receipt-container" >
-            {{trans "conversion_scale_msg"}} <a href="#" title="{{trans "conversion_scale_view_title"}}" aria-controls="import_grade_scale_diplay">{{trans "conversion_scale_view"}}</a>
+            {{trans "conversion_scale_msg"}} <a id="gp-view-scale" href="#" title="{{trans "conversion_scale_view_title"}}" aria-controls="gp-import-scale-display">{{trans "conversion_scale_view"}}</a>
             {{/multiple_grade_imports}}
-            <div id="gp-import-scale-diplay"></div>
+            <div id="gp-import-scale-display" style="display: none;"></div>
         </div>
         {{/if}}
         {% endverbatim %}
