@@ -9,7 +9,8 @@ from course_grader.dao.person import person_from_user, person_from_regid
 from course_grader.dao.section import is_grader_for_section
 from course_grader.exceptions import GradingNotPermitted, ReceiptNotFound
 from course_grader.exceptions import GradingPeriodNotOpen
-from course_grader.models import SubmittedGradeRoster
+from course_grader.models import SubmittedGradeRoster, GradeImport
+import re
 
 
 def graderoster_for_section(section, instructor):
@@ -41,14 +42,12 @@ def graderoster_for_section(section, instructor):
         ret_graderoster.submissions = {}
 
     # Look for a submission receipt in the SubmittedGradeRoster table
+    kwargs = {"section_id": section.section_label()}
     if secondary_section is not None:
         args = (Q(secondary_section_id=secondary_section.section_label()) |
                 Q(secondary_section_id__isnull=True),)
-        kwargs = {"section_id": section.section_label()}
-
     else:
         args = ()
-        kwargs = {"section_id": section.section_label()}
         if section.is_independent_study:
             kwargs["instructor_id"] = instructor.uwregid
 
@@ -68,6 +67,18 @@ def graderoster_for_section(section, instructor):
         graderoster = graderoster_from_xhtml(model.document, section,
                                              people[instructor_id])
 
+        grade_import = None
+        if model.submitted_date is not None:
+            imp_section_id = "-".join([re.sub(r"[,/]", "-", model.section_id),
+                                       model.instructor_id])
+            try:
+                grade_import = GradeImport.objects.filter(
+                    section_id=imp_section_id,
+                    import_conversion__isnull=False,
+                    status_code="200").order_by("-imported_date")[0:1].get()
+            except GradeImport.DoesNotExist:
+                pass
+
         graderoster.submission_id = model.submission_id()
         graderoster.submissions = {
             graderoster.submission_id: {
@@ -75,6 +86,7 @@ def graderoster_for_section(section, instructor):
                 "submitted_by": people[model.submitted_by],
                 "accepted_date": model.accepted_date,
                 "status_code": model.status_code,
+                "grade_import": grade_import,
             }
         }
 
