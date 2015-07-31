@@ -23,6 +23,7 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+STATIC_ROOT = ''
 
 # Application definition
 
