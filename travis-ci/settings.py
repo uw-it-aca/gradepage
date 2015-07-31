@@ -33,7 +33,16 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'compressor',
+    'templatetag_handlebars',
+    'handlebars_i18n',
+    'supporttools',
+    'restclients',
+    'userservice',
+    'authz_group',
     'course_grader',
+    'grade_conversion_calculator',
 )
 
 MIDDLEWARE_CLASSES = (
