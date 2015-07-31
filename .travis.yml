@@ -1,0 +1,22 @@
+sudo: false
+language: python
+python:
+  - "2.7"
+  - "2.6"
+install:
+  - if [[ $TRAVIS_PYTHON_VERSION == 2.6* ]]; then pip install -r travis-ci/python-2.6-require-django-1.6.txt; fi
+  - pip install .
+before_script:
+  - pip install coverage
+  - pip install python-coveralls
+  - pip install pep8
+  - cp travis-ci/manage.py manage.py
+script:
+  - pep8 course_grader/
+  - coverage run --source=course_grader/ manage.py test course_grader
+after_script:
+  - coveralls
+notifications:
+  webhooks:
+      urls:
+        - https://yarn.cac.washington.edu/rest/botalyst/v1/travis-ci
