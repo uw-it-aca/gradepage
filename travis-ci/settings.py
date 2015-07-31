@@ -42,7 +42,6 @@ INSTALLED_APPS = (
     'userservice',
     'authz_group',
     'course_grader',
-    'grade_conversion_calculator',
 )
 
 MIDDLEWARE_CLASSES = (
