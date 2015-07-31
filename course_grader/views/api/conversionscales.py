@@ -50,8 +50,8 @@ class ConversionScales(GradeFormHandler):
 
                 conversion_data = grade_import.import_conversion.json_data()
 
-                if (self.scale is not None
-                        and self.scale != conversion_data["scale"]):
+                if (self.scale is not None and
+                        self.scale != conversion_data["scale"]):
                     # Wrong scale type
                     continue
 
