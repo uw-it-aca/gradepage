@@ -36,11 +36,8 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'compressor',
     'templatetag_handlebars',
-    'handlebars_i18n',
-    'supporttools',
     'restclients',
     'userservice',
-    'authz_group',
     'course_grader',
 )
 
