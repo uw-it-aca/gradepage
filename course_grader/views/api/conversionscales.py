@@ -1,4 +1,3 @@
-from django.db.models import Max, F
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import all_viewable_terms
 from course_grader.models import GradeImport, ImportConversion
@@ -37,6 +36,7 @@ class ConversionScales(GradeFormHandler):
         grade_imports = GradeImport.objects.filter(
             imported_by=self.user.uwregid,
             import_conversion__isnull=False,
+            status_code="200"
         ).order_by("section_id", "-imported_date")
 
         seen_sections = {}
@@ -50,8 +50,8 @@ class ConversionScales(GradeFormHandler):
 
                 conversion_data = grade_import.import_conversion.json_data()
 
-                if (self.scale is not None
-                        and self.scale != conversion_data["scale"]):
+                if (self.scale is not None and
+                        self.scale != conversion_data["scale"]):
                     # Wrong scale type
                     continue
 

@@ -173,6 +173,12 @@ msgstr "Saved"
 msgid "enter_grades"
 msgstr "Enter grades for"
 
+msgid "writing_course_note"
+msgstr "<strong>Note:</strong> Writing credit automatically given to all students with a passing grade in this course."
+
+msgid "writing_course_note_receipt"
+msgstr "Writing credit automatically given to all students with a passing grade in this course."
+
 msgid "duplicate_code"
 msgstr "Duplicate code"
 
@@ -284,6 +290,35 @@ msgstr "Submitted grade may differ from official final grade."
 
 msgid "more_info"
 msgstr "More info"
+
+msgid "conversion_scale_msg"
+msgstr "Grades calculated using a grade conversion scale."
+
+msgid "conversion_scale_view"
+msgstr "View scale."
+
+msgid "conversion_scale_hide"
+msgstr "Hide scale."
+
+msgid "conversion_scale_view_title"
+msgstr "Show grade conversion scale that was used."
+
+msgid "conversion_scale_hide_title"
+msgstr "Hide grade conversion scale."
+
+
+msgid "multi_conversion_scale_option_view"
+msgstr "View Scale"
+
+msgid "multi_conversion_scale_msg"
+msgstr "Grades calculated using grade conversion scales."
+
+msgid "multi_conversion_scale_view"
+msgstr "Select grade conversion scale to view:"
+
+msgid "conversion_scale_header"
+msgstr "Grade Conversion Scale"
+
 
 ############### Status ###############
 

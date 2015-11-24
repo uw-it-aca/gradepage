@@ -225,11 +225,14 @@ class GradeRoster(GradeFormHandler):
                 "import_choices": [],
                 "grade_choices": [],
                 "submissions": [],
+                "is_writing_section": not allows_writing_credit,
                 "has_duplicate_codes": False,
                 "has_successful_submissions": False,
                 "has_failed_submissions": False,
                 "failed_submission_count": 0,
-                "has_inprogress_submissions": False}
+                "has_inprogress_submissions": False,
+                "has_grade_imports": False,
+                "grade_import_count": 0}
 
         secondary_section = getattr(self.graderoster, "secondary_section",
                                     None)
@@ -241,6 +244,9 @@ class GradeRoster(GradeFormHandler):
             submission_status["section_id"] = sid
             if submission_status["accepted_date"] is None:
                 data["has_inprogress_submissions"] = True
+            if submission_status["grade_import"] is not None:
+                data["has_grade_imports"] = True
+                data["grade_import_count"] += 1
             data["submissions"].append(submission_status)
 
         if grading_period_open:
@@ -405,10 +411,13 @@ class GradeRoster(GradeFormHandler):
                 submitted_date = submission["submitted_date"]
                 submitted_by = submission["submitted_by"]
                 accepted_date = submission["accepted_date"]
+                grade_import = submission["grade_import"]
                 data["submitted_date"] = submitted_date.isoformat()
                 data["accepted_date"] = accepted_date.isoformat() if (
                     accepted_date is not None) else None
                 data["submitted_by"] = display_person_name(submitted_by)
+                data["grade_import"] = grade_import.json_data() if (
+                    grade_import is not None) else None
 
         data["submitted_count"] = submitted_count
         data["unsubmitted_count"] = unsubmitted_count

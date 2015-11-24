@@ -2,7 +2,8 @@
 {% tplhandlebars "review-tmpl" %}
     <div class="container">
     	<div class="gp-edit-subhead gp-review-subhead">{{ trans "please_review_grades" }}</div>
-         {{# if has_duplicate_codes }}<div class="gp-duplicate-code" style="padding-bottom:1em;"><span class="label label-default">&nbsp;&nbsp;</span><span class="sr-only">{{trans "duplicate_code_long"}}</span>{{ trans "duplicate_code" }}</div> {{/if}}
+        {{# if is_writing_section }}<div class="gp-course-meta-note">{{{ trans "writing_course_note" }}}</div>{{/if}} 
+        {{# if has_duplicate_codes }}<div class="gp-duplicate-code" style="padding-bottom:1em;"><span class="label label-default">&nbsp;&nbsp;</span><span class="sr-only">{{trans "duplicate_code_long"}}</span>{{ trans "duplicate_code" }}</div> {{/if}}
         <ol class="list-group gp-roster-list">
             {{# each students}}
             <li class="clearfix list-group-item gp-roster-list-item" aria-labelledby="student-{{ item_id }}">

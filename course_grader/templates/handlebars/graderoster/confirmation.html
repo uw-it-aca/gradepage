@@ -3,7 +3,7 @@
 
     <div class="container">
         {% verbatim %}
-        {{# if is_submission_confirmation}}        
+        {{# if is_submission_confirmation}}
                 {{# if has_failed_submissions}}
                     {{# if has_successful_submissions}}
                     	<div class="alert alert-warning gp-confirmation-alert" role="status">
@@ -17,7 +17,7 @@
                 {{else}}
                 	<div class="alert alert-success gp-confirmation-alert" role="status">
 						<span class="gp-submit-success-message"><i class="fa fa-check-circle"></i>
-                    {{ trans "grade_submission_successful" }}						
+                    {{ trans "grade_submission_successful" }}
                 {{/if}}
 						</span>
 						<p>{{ trans "more_grades_to_submit" }} <a href="/">{{ trans "return_classes_to_grade" }}</a></p>
@@ -35,9 +35,9 @@
             {{# each submissions}}
             <p><i class="fa fa-check-circle" style="color:#63AD45;"></i> {{# if section_id}} {{ trans "section" }} {{section_id}}: {{/if}}<strong>{{submitted_count}}</strong> {{ trans "grades_submitted_to_registrar_by" }} <strong>{{submitted_by}}</strong> on {{format_long_datetime submitted_date}}. <a title="Change submitted grades" target="_blank" href="http://www.washington.edu/itconnect/learn/tools/catalyst-web-tools/gradebook/gradepage/change-submitted-grades/">Change submitted grades?</a></p>
             {{/each}}
+            {{# if is_writing_section }}<p><i class="fa fa-check-circle" style="color:#63AD45;"></i> {{{ trans "writing_course_note_receipt" }}}</p>{{/if}}
             {{# unless is_submission_confirmation }}<p><i class="fa fa-exclamation-circle" style="color:#EBDD5A;"></i>	 {{ trans "confirmation_alert_warning" }} <a href="http://depts.washington.edu/registra/learning/online-grading-faq/#past" target="_blank" class="hidden-print">More info.</a></p>{{/unless}}
         </div>
-
         {{# if has_duplicate_codes }}<div class="gp-duplicate-code" style="padding-bottom:1em;"><span class="label label-default">&nbsp;&nbsp;</span><span class="sr-only">{{trans "duplicate_code_long"}}</span>{{ trans "duplicate_code" }}</div>{{/if}}
         <ol class="list-group gp-roster-list gp-receipt-list">
             {{# each students}}
@@ -47,6 +47,26 @@
             </li>
             {{/each}}
         </ol>
+
+        {{# if has_grade_imports}}
+        <div class="conversion-receipt-container" >
+            {{#multiple_grade_imports grade_import_count}}
+            {{trans "multi_conversion_scale_msg"}}
+            <label for="gp-select-scale" class="sr-only">{{trans "multi_conversion_scale_view"}}</label>
+            <select id="gp-select-scale" aria-controls="gp-import-scale-display">
+                <option selected disabled>{{trans "multi_conversion_scale_option_view"}}</option>
+                {{# each submissions}}
+                {{# if grade_import}}
+                <option value="{{@index}}">Section {{ section_id }}</option>{{/if}}
+                {{/each}}
+            </select>
+            {{else}}
+            <div class="conversion-receipt-container" >
+            {{trans "conversion_scale_msg"}} <a id="gp-view-scale" href="#" title="{{trans "conversion_scale_view_title"}}" aria-controls="gp-import-scale-display">{{trans "conversion_scale_view"}}</a>
+            {{/multiple_grade_imports}}
+            <div id="gp-import-scale-display" style="display: none;"></div>
+        </div>
+        {{/if}}
         {% endverbatim %}
     </div>
 {% endtplhandlebars %}

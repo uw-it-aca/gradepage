@@ -6,7 +6,8 @@ GradePage.GradeRoster = (function ($) {
     // Grades that are incompatible with incomplete
     var incomplete_blacklist,
         inprogress_save_grade_id,
-        remaining_template;
+        remaining_template,
+        import_scale_template;
 
     // Override the default autocomplete filter function to search only from
     // the beginning of the string
@@ -399,15 +400,59 @@ GradePage.GradeRoster = (function ($) {
         $(this).change(save_grade);
     }
 
+    function toggle_view_scale(ev) {
+        var submissions = $(this).data("submissions"),
+            container = $("#gp-import-scale-display"),
+            i,
+            len;
+        ev.preventDefault();
+
+        if (container.is(":visible")) {
+            $(this).attr("title", gettext("conversion_scale_view_title"))
+                   .text(gettext("conversion_scale_view"));
+            container.hide();
+        } else {
+            $(this).attr("title", gettext("conversion_scale_hide_title"))
+                   .text(gettext("conversion_scale_hide"));
+
+            for (i = 0, len = submissions.length; i < len; i++) {
+                if (submissions[i].grade_import !== null) {
+                    container.html(import_scale_template(submissions[i].grade_import))
+                             .show();
+                    break;
+                }
+            }
+        }
+    }
+
+    function select_view_scale() {
+        var submissions = $(this).data("submissions"),
+            container = $("#gp-import-scale-display");
+        container.html(import_scale_template(submissions[$(this).val()].grade_import))
+                 .show();
+    }
+
     function draw_submitted_graderoster(data) {
         var template = Handlebars.compile($("#confirmation-tmpl").html());
         Handlebars.registerPartial("student", $("#student-tmpl").html());
         Handlebars.registerPartial("grade", $("#grade-tmpl").html());
+        Handlebars.registerHelper("multiple_grade_imports", function (count, options) {
+            return (count > 1) ? options.fn(this) : options.inverse(this);
+        });
 
         $(".gp-grade-roster-state").text(gettext("submitted_grades"));
         $(".gp-btn-print-container").show();  // Print button
         $("#graderoster-content").html(template(data.graderoster));
         $(".gp-submitted-grade").empty();
+
+        // View grade import scales
+        if (data.graderoster.has_grade_imports) {
+            import_scale_template = Handlebars.compile($("#import-scale-tmpl").html());
+            $("#gp-view-scale").data("submissions", data.graderoster.submissions)
+                               .click(toggle_view_scale);
+            $("#gp-select-scale").data("submissions", data.graderoster.submissions)
+                                 .change(select_view_scale);
+        }
         $(window).on("scroll", show_fixed_header);
     }
 

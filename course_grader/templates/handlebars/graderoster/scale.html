@@ -1,0 +1,12 @@
+{% load templatetag_handlebars %}
+{% tplhandlebars "import-scale-tmpl" %}
+<h2 id="gp-receipt-conversion-scale" class="sr-only">{{trans "conversion_scale_header"}}</h2>
+<ol aria-labelledby="gp-receipt-conversion-scale">
+    {{#each import_conversion.grade_scale}}
+    <li><span class="percentile-range">≥ <span class="import-value-container">{{min_percentage}}%</span> = </span><span class="import-value-container">{{grade}}</span></li>
+    {{#if @last}}
+    <li><span class="percentile-range">&lt; <span class="import-value-container">{{min_percentage}}%</span> = </span><span class="import-value-container">{{../../import_conversion.lowest_valid_grade}}</span></li>
+    {{/if}}
+    {{/each}}
+</ol>
+{% endtplhandlebars %}
