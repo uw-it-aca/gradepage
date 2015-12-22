@@ -2,7 +2,6 @@ from django.core.management.base import BaseCommand, CommandError
 from course_grader.dao.person import person_from_username
 from course_grader.dao.catalyst import grades_for_section
 from restclients.exceptions import DataFailureException
-import json
 import sys
 
 
@@ -24,7 +23,7 @@ class Command(BaseCommand):
 
         try:
             grade_import = grades_for_section(None, user, gradebook_id)
-            print len(json.loads(grade_import))
             print grade_import
+            print "%s grades imported" % len(grade_import['grades'])
         except DataFailureException as ex:
             print ex
