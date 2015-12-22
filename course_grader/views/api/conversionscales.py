@@ -33,17 +33,13 @@ class ConversionScales(GradeFormHandler):
         return self.response_content()
 
     def response_content(self):
-        grade_imports = GradeImport.objects.filter(
-            imported_by=self.user.uwregid,
-            import_conversion__isnull=False,
-            status_code="200"
-        ).order_by("section_id", "-imported_date")
+        imports = GradeImport.objects.get_imports_by_person(self.user)
 
         seen_sections = {}
         return_data = []
         for term in self.all_terms:
             conversions_in_term = []
-            for grade_import in grade_imports:
+            for grade_import in imports:
                 if grade_import.term_id != term.term_label():
                     # Wrong term
                     continue
