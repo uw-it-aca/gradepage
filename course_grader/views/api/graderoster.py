@@ -202,11 +202,9 @@ class GradeRoster(GradeFormHandler):
         return False
 
     def saved_grades(self, section_id):
-        grades = Grade.objects.filter(section_id=section_id,
-                                      modified_by=self.user.uwregid)
-
         grade_lookup = {}
-        for grade in grades:
+        for grade in Grade.objects.get_by_section_id_and_person(
+                section_id, self.user.uwregid):
             student_id = grade.student_label()
             grade_lookup[student_id] = grade
 

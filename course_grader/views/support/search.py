@@ -245,11 +245,8 @@ def graderosters(request):
 
 
 def find_all_terms():
-    query_terms = SubmittedGradeRoster.objects.all().values_list(
-        "term_id", flat=True).distinct()
-
     all_terms = []
-    for term in query_terms:
+    for term in SubmittedGradeRoster.objects.get_all_terms():
         (year, quarter) = term.split(",")
         all_terms.append(Term(year=int(year), quarter=quarter))
 
