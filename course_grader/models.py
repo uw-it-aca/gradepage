@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 class SubmittedGradeRosterManager(models.Manager):
-    def get_by_section(self, instructor, secondary_section=None):
+    def get_by_section(self, section, instructor, secondary_section=None):
         kwargs = {'section_id': section.section_label()}
         if secondary_section is not None:
             args = (Q(secondary_section_id=secondary_section.section_label()) |
