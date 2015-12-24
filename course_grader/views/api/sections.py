@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.utils.translation import ugettext
+from django.utils.translation import ugettext as _
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import term_from_param, all_viewable_terms
 from course_grader.dao.section import all_gradable_sections
@@ -29,7 +29,7 @@ class Sections(RESTDispatch):
             return self.error_response(404, "%s" % ex)
         except Exception as ex:
             logger.exception(ex)
-            return self.error_response(500, ugettext("sws_not_available"))
+            return self.error_response(500, _("sws_not_available"))
 
         try:
             sections = all_gradable_sections(self.user, self.term)
@@ -39,7 +39,7 @@ class Sections(RESTDispatch):
                 sections = []
             else:
                 logger.exception(ex)
-                return self.error_response(500, ugettext("sws_not_available"))
+                return self.error_response(500, _("sws_not_available"))
 
         content = self.response_content(sections, **kwargs)
         return self.json_response(content)
@@ -74,7 +74,7 @@ class Sections(RESTDispatch):
             if is_grading_period_open or is_grading_period_past:
                 if (section.is_primary_section and
                         section.allows_secondary_grading):
-                    pass
+                    data["grading_status"] = _("secondary_grading_enabled")
                 elif (not section.is_primary_section and
                         not section.allows_secondary_grading):
                     section_url = "/section/%s" % section_id
@@ -83,7 +83,7 @@ class Sections(RESTDispatch):
                     grade_status_url = "/api/v1/graderoster/%s?status=1" % (
                         section_id)
             elif section.is_full_summer_term():
-                data["grading_status"] = ugettext(
+                data["grading_status"] = _(
                     "summer_full_term_grade_submission_opens %(date)s"
                 ) % {
                     "date": display_datetime(section.term.grading_period_open)
