@@ -5,12 +5,11 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.cache import never_cache
 from userservice.user import UserService
-from course_grader.dao.term import current_datetime
-from course_grader.dao.term import term_from_param, all_viewable_terms
-from course_grader.dao.term import next_gradable_term, previous_gradable_term
+from course_grader.dao.term import current_datetime, term_from_param,\
+    all_viewable_terms, next_gradable_term, previous_gradable_term
 from course_grader.exceptions import InvalidTerm
-from course_grader.views import url_for_term, display_datetime
-from course_grader.views import grade_submission_deadline_params
+from course_grader.views import url_for_term, display_datetime,\
+    grade_submission_deadline_params
 import logging
 
 
