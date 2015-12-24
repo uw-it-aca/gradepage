@@ -34,13 +34,11 @@ def status(request):
     except Exception as ex:
         selected_term = curr_term
 
-    graderosters = SubmittedGradeRoster.objects.filter(
-        term_id=selected_term.term_label()).order_by("submitted_date").values(
-            "submitted_date")
+    graderosters = SubmittedGradeRoster.objects.get_submitted_dates_by_term(
+        selected_term)
 
-    grade_imports = GradeImport.objects.filter(
-        term_id=selected_term.term_label()).order_by("imported_date").values(
-            "imported_date", "source")
+    grade_imports = GradeImport.objects.get_import_sources_by_term(
+        selected_term)
 
     if selected_term.quarter == Term.SUMMER:
         grading_period_open = selected_term.aterm_grading_period_open

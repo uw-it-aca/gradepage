@@ -10,8 +10,8 @@ class RestClientsCache(TimedCache):
     url_policies["sws"] = (
         (re.compile(r"^/student/v5/term/current"), 60 * 60),
         (re.compile(r"^/student/v5/term/"), 60 * 60 * 10),
-        (re.compile(r"^/student/v5/course/"), 60 * 60),
-        (re.compile(r"^/student/v5/section"), 60 * 60),
+        (re.compile(r"^/student/v5/course/"), 60 * 15),
+        (re.compile(r"^/student/v5/section"), 60 * 15),
     )
     url_policies["pws"] = (
         (re.compile(r"^/identity/v1/person/"), 60 * 60 * 10),

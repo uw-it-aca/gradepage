@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.utils import timezone
@@ -17,6 +18,30 @@ import json
 logger = logging.getLogger(__name__)
 
 
+class SubmittedGradeRosterManager(models.Manager):
+    def get_by_section(self, instructor, secondary_section=None):
+        kwargs = {'section_id': section.section_label()}
+        if secondary_section is not None:
+            args = (Q(secondary_section_id=secondary_section.section_label()) |
+                    Q(secondary_section_id__isnull=True),)
+        else:
+            args = ()
+            if section.is_independent_study:
+                kwargs['instructor_id'] = instructor.uwregid
+
+        return super(SubmittedGradeRosterManager, self).get_query_set().filter(
+            *args, **kwargs).order_by('secondary_section_id')
+
+    def get_submitted_dates_by_term(self, term):
+        return super(SubmittedGradeRosterManager, self).get_query_set().filter(
+            term_id=term.term_label()
+        ).order_by('submitted_date').values('submitted_date')
+
+    def get_all_terms(self):
+        return super(SubmittedGradeRosterManager, self).get_query_set(
+        ).values_list('term_id', flat=True).distinct()
+
+
 class SubmittedGradeRoster(models.Model):
     """ Represents a submitted graderoster document.
     """
@@ -30,6 +55,8 @@ class SubmittedGradeRoster(models.Model):
     status_code = models.CharField(max_length=3, null=True)
     document = models.TextField()
     catalyst_gradebook_id = models.IntegerField(null=True)
+
+    objects = SubmittedGradeRosterManager()
 
     def submission_id(self):
         if self.secondary_section_id is not None:
@@ -151,6 +178,12 @@ class SubmittedGradeRoster(models.Model):
                         logged_grade, item.status_code, item.status_message))
 
 
+class GradeManager(models.Manager):
+    def get_by_section_id_and_person(section_id, person_id):
+        return super(GradeManager, self).get_query_set().filter(
+            section_id=section_id, modified_by=person_id)
+
+
 class Grade(models.Model):
     """ Represents a saved grade.
     """
@@ -166,6 +199,8 @@ class Grade(models.Model):
     comment = models.CharField(max_length=1000, null=True)
     last_modified = models.DateTimeField(auto_now=True)
     modified_by = models.CharField(max_length=32)
+
+    objects = GradeManager()
 
     def student_label(self):
         label = self.student_reg_id
@@ -224,6 +259,27 @@ class ImportConversion(models.Model):
         }
 
 
+class GradeImportManager(models.Manager):
+    def get_last_import_by_section_id(self, section_id):
+        return super(GradeImportManager, self).get_query_set().filter(
+            section_id=section_id,
+            import_conversion__isnull=False,
+            status_code='200'
+        ).order_by('-imported_date')[0:1].get()
+
+    def get_imports_by_person(self, person):
+        return super(GradeImportManager, self).get_query_set().filter(
+            imported_by=person.uwregid,
+            import_conversion__isnull=False,
+            status_code='200'
+        ).order_by('section_id', '-imported_date')
+
+    def get_import_sources_by_term(self, term):
+        return super(GradeImportManager, self).get_query_set().filter(
+            term_id=term.term_label()
+        ).order_by('imported_date').values('imported_date', 'source')
+
+
 class GradeImport(models.Model):
     """ Represents a grade import.
     """
@@ -244,6 +300,8 @@ class GradeImport(models.Model):
     imported_date = models.DateTimeField(auto_now=True)
     imported_by = models.CharField(max_length=32)
     import_conversion = models.ForeignKey(ImportConversion, null=True)
+
+    objects = GradeImportManager()
 
     def grades_for_section(self, section, instructor):
         try:
