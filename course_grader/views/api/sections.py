@@ -85,7 +85,9 @@ class Sections(RESTDispatch):
             elif section.is_full_summer_term():
                 data["grading_status"] = ugettext(
                     "summer_full_term_grade_submission_opens %(date)s"
-                ) % {"date": display_datetime(section.term.grading_period_open)}
+                ) % {
+                    "date": display_datetime(section.term.grading_period_open)
+                }
 
             data["section_url"] = section_url
             data["grade_status_url"] = grade_status_url
