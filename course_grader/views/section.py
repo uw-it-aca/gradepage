@@ -8,9 +8,8 @@ from course_grader.models import GradeImport
 from course_grader.dao.section import section_from_param
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import current_term
-from course_grader.views import section_url_token, url_for_term
-from course_grader.views import display_section_name, display_person_name
-from course_grader.views import grade_submission_deadline_params
+from course_grader.views import grade_submission_deadline_params,\
+    section_url_token, display_section_name, display_person_name, url_for_term
 from course_grader.exceptions import MissingInstructorParam
 from restclients.catalyst.gradebook import valid_gradebook_id
 import logging
