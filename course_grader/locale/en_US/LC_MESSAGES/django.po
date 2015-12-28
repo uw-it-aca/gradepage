@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-24 10:16-0800\n"
+"POT-Creation-Date: 2015-12-28 12:59-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -194,7 +194,12 @@ msgstr[1] "%(name)s submitted %(count)s grades for %(section)s"
 msgid "sws_not_available"
 msgstr "The Student Web Service is not available. Please try again later."
 
+#: views/api/sections.py:77
+msgid "secondary_grading_status"
+msgstr "Secondary grading is enabled for this course."
+
 #: views/api/sections.py:87
+#, python-format
 msgid "summer_full_term_grade_submission_opens %(date)s"
 msgstr "Summer full-term grade submission opens on %(date)s."
 

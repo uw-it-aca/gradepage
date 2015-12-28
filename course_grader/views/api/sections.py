@@ -74,7 +74,7 @@ class Sections(RESTDispatch):
             if is_grading_period_open or is_grading_period_past:
                 if (section.is_primary_section and
                         section.allows_secondary_grading):
-                    data["grading_status"] = _("secondary_grading_enabled")
+                    data["grading_status"] = _("secondary_grading_status")
                 elif (not section.is_primary_section and
                         not section.allows_secondary_grading):
                     section_url = "/section/%s" % section_id
