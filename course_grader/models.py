@@ -67,6 +67,11 @@ class SubmittedGradeRoster(models.Model):
             return self.section_id.split("/")[-1]
 
     def submit(self):
+
+        @retry(SSLError, tries=3, delay=1, logger=logger)
+        def _update_graderoster(graderoster):
+            return update_graderoster(graderoster)
+
         try:
             graderoster = graderoster_from_xhtml(
                 self.document, section_from_label(self.section_id),
@@ -76,7 +81,7 @@ class SubmittedGradeRoster(models.Model):
                 graderoster.secondary_section = section_from_label(
                     self.secondary_section_id)
 
-            ret_graderoster = self._update_graderoster(graderoster)
+            ret_graderoster = _update_graderoster(graderoster)
 
         except Exception as ex:
             logger.exception(ex)
@@ -115,10 +120,6 @@ class SubmittedGradeRoster(models.Model):
 
         # Notify submitters
         self._notify_submitters(graderoster)
-
-    @retry(SSLError, tries=3, delay=1, logger=logger)
-    def _update_graderoster(self, graderoster):
-        return update_graderoster(graderoster)
 
     def _notify_submitters(self, graderoster):
         people = {graderoster.instructor.uwregid: graderoster.instructor}
