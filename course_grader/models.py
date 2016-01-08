@@ -6,11 +6,13 @@ from django.utils import timezone
 from restclients.exceptions import DataFailureException
 from restclients.sws.graderoster import update_graderoster
 from restclients.sws.graderoster import graderoster_from_xhtml
+from restclients.util import retry
 from course_grader.dao.section import section_from_label
 from course_grader.dao.person import person_from_regid
 from course_grader.dao.canvas import grades_for_section as canvas_grades
 from course_grader.dao.catalyst import grades_for_section as catalyst_grades
 from course_grader.views.email import submission_message
+from urllib3.exceptions import SSLError
 import logging
 import json
 
@@ -74,7 +76,7 @@ class SubmittedGradeRoster(models.Model):
                 graderoster.secondary_section = section_from_label(
                     self.secondary_section_id)
 
-            ret_graderoster = update_graderoster(graderoster)
+            ret_graderoster = self._update_graderoster(graderoster)
 
         except Exception as ex:
             logger.exception(ex)
@@ -113,6 +115,10 @@ class SubmittedGradeRoster(models.Model):
 
         # Notify submitters
         self._notify_submitters(graderoster)
+
+    @retry(SSLError, tries=3, delay=1, logger=logger)
+    def _update_graderoster(self, graderoster):
+        return update_graderoster(graderoster)
 
     def _notify_submitters(self, graderoster):
         people = {graderoster.instructor.uwregid: graderoster.instructor}
