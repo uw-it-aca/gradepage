@@ -186,7 +186,7 @@ class SubmittedGradeRoster(models.Model):
 
 
 class GradeManager(models.Manager):
-    def get_by_section_id_and_person(section_id, person_id):
+    def get_by_section_id_and_person(self, section_id, person_id):
         return super(GradeManager, self).get_query_set().filter(
             section_id=section_id, modified_by=person_id)
 
