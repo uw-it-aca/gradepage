@@ -6,7 +6,7 @@ from django.utils import timezone
 from restclients.exceptions import DataFailureException
 from restclients.sws.graderoster import update_graderoster
 from restclients.sws.graderoster import graderoster_from_xhtml
-from restclients.util import retry
+from restclients.util.retry import retry
 from course_grader.dao.section import section_from_label
 from course_grader.dao.person import person_from_regid
 from course_grader.dao.canvas import grades_for_section as canvas_grades
