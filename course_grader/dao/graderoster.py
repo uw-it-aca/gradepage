@@ -4,12 +4,18 @@ This module encapsulates the access of sws graderoster data
 
 from restclients.sws.graderoster import get_graderoster, graderoster_from_xhtml
 from restclients.sws.section import get_section_by_url
+from restclients.util import retry
 from course_grader.dao.person import person_from_user, person_from_regid
 from course_grader.dao.section import is_grader_for_section
 from course_grader.exceptions import GradingNotPermitted, ReceiptNotFound
 from course_grader.exceptions import GradingPeriodNotOpen
 from course_grader.models import SubmittedGradeRoster, GradeImport
+from urllib3.exceptions import SSLError
+import logging
 import re
+
+
+logger = logging.getLogger(__name__)
 
 
 def graderoster_for_section(section, instructor):
@@ -36,7 +42,7 @@ def graderoster_for_section(section, instructor):
 
     # If grading period is open, start with a "live" graderoster
     if section.is_grading_period_open():
-        ret_graderoster = get_graderoster(section, instructor)
+        ret_graderoster = _get_graderoster(section, instructor)
         ret_graderoster.secondary_section = secondary_section
         ret_graderoster.submissions = {}
 
@@ -105,3 +111,8 @@ def graderoster_for_section(section, instructor):
                     pass
 
     return ret_graderoster
+
+
+@retry(SSLError, tries=3, delay=1, logger=logger)
+def _get_graderoster(section, instructor):
+    return get_graderoster(section, instructor)
