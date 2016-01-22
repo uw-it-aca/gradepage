@@ -61,7 +61,9 @@ class GradeRoster(GradeFormHandler):
         except (InvalidSection, ReceiptNotFound) as ex:
             return self.error_response(404, "%s" % ex)
         except Exception as ex:
-            logger.exception(ex)
+            logger.error(
+                "GET graderoster error: %s, Section: %s, Instructor: %s" % (
+                    ex, section.section_label(), instructor.uwnetid))
             err = ex.msg if hasattr(ex, "msg") else ex
             return self.error_response(500, "%s" % err)
 
@@ -89,7 +91,7 @@ class GradeRoster(GradeFormHandler):
             grade_data = json.loads(request.body)
             grade = self.save_grade(section_id, grade_data)
         except Exception as ex:
-            logger.exception(ex)
+            logger.error("PATCH grade failed for %s: %s" % (section_id, ex))
             return self.error_response(500)
 
         # PATCH does not return a full graderoster resource
@@ -104,7 +106,7 @@ class GradeRoster(GradeFormHandler):
                 saved_grades[data["student_id"]] = grade
 
         except Exception as ex:
-            logger.exception(ex)
+            logger.error("PUT grade failed for %s %s" % (section_id, ex))
             return self.error_response(500)
 
         secondary_section = getattr(self.graderoster, "secondary_section",

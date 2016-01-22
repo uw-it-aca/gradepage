@@ -40,10 +40,11 @@ def section(request, url_token):
                 return render_to_response("503.html", {},
                                           RequestContext(request))
             else:
-                logger.exception(ex)
+                logger.error("Section view error: %s, Param: %s" % (ex,
+                                                                    url_token))
                 raise
         else:
-            logger.exception(ex)
+            logger.error("Section view error: %s, Param: %s" % (ex, url_token))
             return error_response(request, status=404)
 
     if (not section.is_grading_period_open() and

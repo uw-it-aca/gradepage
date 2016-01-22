@@ -38,7 +38,7 @@ def home(request):
         if (hasattr(ex, "status") and ex.status == 503):
             return render_to_response("503.html", {}, RequestContext(request))
         else:
-            logger.exception(ex)
+            logger.error("GET selected term failed: %s" % ex)
             raise
 
     opt_terms = []
@@ -70,7 +70,7 @@ def home(request):
             prev_term = previous_gradable_term()
             next_term = next_gradable_term()
         except Exception as ex:
-            logger.exception(ex)
+            logger.error("GET previous/next term failed: %s" % ex)
             raise
 
         if next_term.quarter == next_term.SUMMER:

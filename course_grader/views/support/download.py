@@ -38,7 +38,8 @@ def graderoster(request, *args, **kwargs):
         return response
 
     except Exception as ex:
-        logger.exception(ex)
+        logger.error("Download failed for graderoster model %s: %s" % (
+            graderoster_id, ex))
         raise
 
     if model.secondary_section_id is not None:
