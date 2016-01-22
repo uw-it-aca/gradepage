@@ -84,7 +84,9 @@ class SubmittedGradeRoster(models.Model):
             ret_graderoster = _update_graderoster(graderoster)
 
         except Exception as ex:
-            logger.exception(ex)
+            logger.error(
+                "PUT graderoster failed: %s, Section: %s, Instructor: %s" % (
+                    ex, self.section_id, self.instructor_id))
             self.status_code = getattr(ex, "status", 500)
             self.save()
             return
@@ -157,8 +159,7 @@ class SubmittedGradeRoster(models.Model):
             message.send()
             log_message = "Submission email sent"
         except Exception as ex:
-            logger.exception(ex)
-            log_message = "Submission email failed"
+            log_message = "Submission email failed: %s" % ex
 
         for recipient in recipients:
             logger.info("%s, To: %s, Section: %s, Status: %s" % (

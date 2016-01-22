@@ -28,7 +28,7 @@ class Sections(RESTDispatch):
         except InvalidTerm as ex:
             return self.error_response(404, "%s" % ex)
         except Exception as ex:
-            logger.exception(ex)
+            logger.error("GET selected term failed: %s" % ex)
             return self.error_response(500, _("sws_not_available"))
 
         try:
@@ -38,7 +38,7 @@ class Sections(RESTDispatch):
                     (ex.status == 401 or ex.status == 404)):
                 sections = []
             else:
-                logger.exception(ex)
+                logger.error("GET gradable sections failed: %s" % ex)
                 return self.error_response(500, _("sws_not_available"))
 
         content = self.response_content(sections, **kwargs)

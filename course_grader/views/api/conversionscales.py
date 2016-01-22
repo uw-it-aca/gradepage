@@ -19,7 +19,7 @@ class ConversionScales(GradeFormHandler):
         except InvalidUser as ex:
             return self.error_response(403, "%s" % ex)
         except Exception as ex:
-            logger.exception(ex)
+            logger.error("GET terms failed: %s" % ex)
             return self.error_response(500, "%s" % ex)
 
         return self.run_http_method(*args, **kwargs)

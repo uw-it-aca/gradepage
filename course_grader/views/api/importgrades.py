@@ -57,7 +57,9 @@ class ImportGrades(GradeFormHandler):
         except InvalidSection as ex:
             return self.error_response(404, "%s" % ex)
         except Exception as ex:
-            logger.exception(ex)
+            logger.error(
+                "GET graderoster failed: %s, Section: %s, Instructor: %s" % (
+                    ex, section.section_label(), instructor.uwregid))
             if hasattr(ex, "status"):
                 status = 404 if (ex.status == 404) else 500
             else:
@@ -105,7 +107,7 @@ class ImportGrades(GradeFormHandler):
                 grade_import.import_conversion = import_conversion
                 grade_import.save()
             except Exception as ex:
-                logger.exception(ex)
+                logger.error("PUT import error for %s: %s" % (section_id, ex))
 
         import_data = grade_import.json_data()
         converted_grades = put_data.get("converted_grades", {})
@@ -145,7 +147,8 @@ class ImportGrades(GradeFormHandler):
             source_id = data.get("source_id", None)
             source_id = source_id if valid_gradebook_id(source_id) else None
         except Exception as ex:
-            logger.exception(ex)
+            logger.error("POST import failed for %s: %s" % (
+                self.section.section_label(), ex))
             return self.error_response(400, "Invalid import")
 
         grade_import = GradeImport(
@@ -158,7 +161,8 @@ class ImportGrades(GradeFormHandler):
         try:
             grade_import.grades_for_section(self.section, self.instructor)
         except Exception as ex:
-            logger.exception(ex)
+            logger.error("POST import failed for %s: %s" % (
+                self.section.section_label(), ex))
             return self.error_response(500, "%s" % ex)
 
         return self.response_content(grade_import)

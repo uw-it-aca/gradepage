@@ -64,7 +64,7 @@ def all_gradable_sections(person, term):
         try:
             section = section_from_url(section_ref.url)
         except Exception as ex:
-            logger.exception(ex)
+            logger.error("SKIP section for grading: %s" % ex)
             continue
 
         if section.current_enrollment == 0:
@@ -102,7 +102,7 @@ def all_gradable_sections(person, term):
                         primary_instructors[primary_url] = get_section_by_url(
                             primary_url).get_instructors()
                     except Exception as ex:
-                        logger.exception(ex)
+                        logger.error("SKIP section for grading: %s" % ex)
                         continue
 
             if (section.is_instructor(person) or (
