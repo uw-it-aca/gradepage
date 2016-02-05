@@ -37,9 +37,9 @@ class SubmittedGradeRosterManager(models.Manager):
     def get_status_by_term(self, term):
         return super(SubmittedGradeRosterManager, self).get_query_set().filter(
             term_id=term.term_label()
-        ).order_by('submitted_date').values('section_id',
-            'secondary_section_id', 'submitted_date', 'submitted_by',
-            'status_code')
+        ).order_by('submitted_date').values(
+            'section_id', 'secondary_section_id', 'submitted_date',
+            'submitted_by', 'status_code')
 
     def get_all_terms(self):
         return super(SubmittedGradeRosterManager, self).get_query_set(

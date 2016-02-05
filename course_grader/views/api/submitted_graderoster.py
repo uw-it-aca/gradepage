@@ -34,8 +34,12 @@ class SubmissionsByTerm(RESTDispatch):
 
         csv.register_dialect("unix_newline", lineterminator="\n")
         writer = csv.writer(response, dialect="unix_newline")
-        writer.writerow(["Section", "Secondary section", "Submitter",
-            "Submission datetime"])
+        writer.writerow([
+            "Section",
+            "Secondary section",
+            "Submitter",
+            "Submission datetime"
+        ])
 
         for graderoster in graderosters:
             writer.writerow([
