@@ -70,7 +70,7 @@
                 <td>{{ graderoster.submitted_by }} ({{ graderoster.submitter_netid }})</td>
                 <td>{{ graderoster.submitted_date }}</td>
                 <td><span class="{% if graderoster.status_code == '200' %}text-success{% else %}text-danger{% endif %}">{{ graderoster.status_code }}</span></td>
-                <td>{% if graderoster.status_code != '200' %}<a href="{% url 'course_grader.views.support.download.graderoster' graderoster.id %}" class="btn btn-primary btn-small" style="font-size:.75em;"><i class="fa fa-download"></i>&nbsp;CSV</a>{% endif %}</td>
+                <td><a href="{% url 'submitted_graderoster' graderoster.id %}" class="btn btn-primary btn-small" style="font-size:.75em;"><i class="fa fa-download"></i>&nbsp;CSV</a></td>
             </tr>
             {% endfor %}
         </tbody>

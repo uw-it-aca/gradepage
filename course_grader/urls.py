@@ -5,6 +5,8 @@ from course_grader.views.api.sections import Sections
 from course_grader.views.api.graderoster import GradeRoster
 from course_grader.views.api.importgrades import ImportGrades
 from course_grader.views.api.conversionscales import ConversionScales
+from course_grader.views.api.submitted_graderoster import SubmissionsByTerm,\
+    SubmittedGradeRoster
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -29,8 +31,10 @@ urlpatterns = patterns(
         'course_grader.views.support.search.graderosters'),
     url(r'^support/imports/?$',
         'course_grader.views.support.search.grade_imports'),
-    url(r'^support/download/(?P<graderoster_id>[\d]*)$',
-        'course_grader.views.support.download.graderoster'),
+    url(r'^api/v1/submitted_graderosters/(?P<term_id>[^/]*)$',
+        SubmissionsByTerm().run, name="term_submissions"),
+    url(r'^api/v1/submitted_graderoster/(?P<graderoster_id>[\d]*)$',
+        SubmittedGradeRoster().run, name='submitted_graderoster'),
 )
 
 # debug routes for developing error pages
