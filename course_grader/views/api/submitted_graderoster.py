@@ -6,13 +6,46 @@ from course_grader.dao.person import person_from_regid
 from course_grader.dao.section import section_from_label
 from course_grader.views.support import is_admin_user
 from course_grader.views import display_person_name
+from course_grader.dao.term import term_from_param
 from restclients.sws.graderoster import graderoster_from_xhtml
 import logging
-import json
 import csv
 
 
 logger = logging.getLogger(__name__)
+
+
+class SubmissionsByTerm(RESTDispatch):
+    def GET(self, request, **kwargs):
+        if not is_admin_user():
+            return self.error_response(403, "Unauthorized")
+
+        term_id = kwargs.get("term_id")
+
+        try:
+            selected_term = term_from_param(term_id)
+        except Exception as ex:
+            return self.error_response(400, "Invalid Term ID")
+
+        graderosters = SubmittedGradeRosterModel.objects.get_status_by_term(
+            selected_term)
+
+        response = self.csv_response(filename=term_id)
+
+        csv.register_dialect("unix_newline", lineterminator="\n")
+        writer = csv.writer(response, dialect="unix_newline")
+        writer.writerow(["Section", "Secondary section", "Submitter",
+            "Submission datetime"])
+
+        for graderoster in graderosters:
+            writer.writerow([
+                graderoster["section_id"],
+                graderoster["secondary_section_id"],
+                graderoster["submitted_by"],
+                graderoster["submitted_date"],
+            ])
+
+        return response
 
 
 class SubmittedGradeRoster(RESTDispatch):
