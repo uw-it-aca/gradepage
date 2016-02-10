@@ -270,5 +270,5 @@ def term_from_param(request, all_terms):
         return get_term_by_year_and_quarter(selected_term.year,
                                             selected_term.quarter)
     except Exception as ex:
-        logger.exception(ex)
+        logger.error("GET term failed: %s" % ex)
         raise

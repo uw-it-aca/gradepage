@@ -2,7 +2,6 @@ sudo: false
 language: python
 python:
   - "2.7"
-  - "2.6"
 install: pip install -r requirements.txt
 before_script:
   - pip install coverage
@@ -10,7 +9,7 @@ before_script:
   - pip install pep8
   - cp travis-ci/manage.py manage.py
 script:
-  - pep8 course_grader/
+  - pep8 course_grader/ --exclude=migrations
   - coverage run --source=course_grader/ manage.py test course_grader
 after_script:
   - coveralls

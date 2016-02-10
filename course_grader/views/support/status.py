@@ -25,7 +25,7 @@ def status(request):
     try:
         curr_term = current_term()
     except Exception as ex:
-        logger.exception(ex)
+        logger.error("GET current term failed: %s" % ex)
         raise
 
     term_id = request.GET.get("term", "").strip()
@@ -34,7 +34,7 @@ def status(request):
     except Exception as ex:
         selected_term = curr_term
 
-    graderosters = SubmittedGradeRoster.objects.get_submitted_dates_by_term(
+    graderosters = SubmittedGradeRoster.objects.get_status_by_term(
         selected_term)
 
     grade_imports = GradeImport.objects.get_import_sources_by_term(
@@ -93,6 +93,7 @@ def status(request):
         "grading_period_open": grading_period_open,
         "grade_submission_deadline": selected_term.grade_submission_deadline,
         "chart_data": json.dumps(chart_data),
+        "term_id": term_id
     }
     return render_to_response("support/status.html", params,
                               RequestContext(request))

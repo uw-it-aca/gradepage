@@ -1,7 +1,6 @@
-Django==1.6.7
-django-compressor
+Django==1.7.11
+django-compressor<2.0
 django-templatetag-handlebars
-south
 beautifulsoup==3.2.1
 nameparser>=0.2.9
 -e git+https://github.com/uw-it-aca/grade-conversion-calculator#egg=GradeConversionCalculator

@@ -6,11 +6,13 @@ from django.utils import timezone
 from restclients.exceptions import DataFailureException
 from restclients.sws.graderoster import update_graderoster
 from restclients.sws.graderoster import graderoster_from_xhtml
+from restclients.util.retry import retry
 from course_grader.dao.section import section_from_label
 from course_grader.dao.person import person_from_regid
 from course_grader.dao.canvas import grades_for_section as canvas_grades
 from course_grader.dao.catalyst import grades_for_section as catalyst_grades
 from course_grader.views.email import submission_message
+from urllib3.exceptions import SSLError
 import logging
 import json
 
@@ -19,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class SubmittedGradeRosterManager(models.Manager):
-    def get_by_section(self, instructor, secondary_section=None):
+    def get_by_section(self, section, instructor, secondary_section=None):
         kwargs = {'section_id': section.section_label()}
         if secondary_section is not None:
             args = (Q(secondary_section_id=secondary_section.section_label()) |
@@ -32,10 +34,12 @@ class SubmittedGradeRosterManager(models.Manager):
         return super(SubmittedGradeRosterManager, self).get_query_set().filter(
             *args, **kwargs).order_by('secondary_section_id')
 
-    def get_submitted_dates_by_term(self, term):
+    def get_status_by_term(self, term):
         return super(SubmittedGradeRosterManager, self).get_query_set().filter(
             term_id=term.term_label()
-        ).order_by('submitted_date').values('submitted_date')
+        ).order_by('submitted_date').values(
+            'section_id', 'secondary_section_id', 'submitted_date',
+            'submitted_by', 'status_code')
 
     def get_all_terms(self):
         return super(SubmittedGradeRosterManager, self).get_query_set(
@@ -65,6 +69,11 @@ class SubmittedGradeRoster(models.Model):
             return self.section_id.split("/")[-1]
 
     def submit(self):
+
+        @retry(SSLError, tries=3, delay=1, logger=logger)
+        def _update_graderoster(graderoster):
+            return update_graderoster(graderoster)
+
         try:
             graderoster = graderoster_from_xhtml(
                 self.document, section_from_label(self.section_id),
@@ -74,10 +83,12 @@ class SubmittedGradeRoster(models.Model):
                 graderoster.secondary_section = section_from_label(
                     self.secondary_section_id)
 
-            ret_graderoster = update_graderoster(graderoster)
+            ret_graderoster = _update_graderoster(graderoster)
 
         except Exception as ex:
-            logger.exception(ex)
+            logger.error(
+                "PUT graderoster failed: %s, Section: %s, Instructor: %s" % (
+                    ex, self.section_id, self.instructor_id))
             self.status_code = getattr(ex, "status", 500)
             self.save()
             return
@@ -150,8 +161,7 @@ class SubmittedGradeRoster(models.Model):
             message.send()
             log_message = "Submission email sent"
         except Exception as ex:
-            logger.exception(ex)
-            log_message = "Submission email failed"
+            log_message = "Submission email failed: %s" % ex
 
         for recipient in recipients:
             logger.info("%s, To: %s, Section: %s, Status: %s" % (
@@ -179,7 +189,7 @@ class SubmittedGradeRoster(models.Model):
 
 
 class GradeManager(models.Manager):
-    def get_by_section_id_and_person(section_id, person_id):
+    def get_by_section_id_and_person(self, section_id, person_id):
         return super(GradeManager, self).get_query_set().filter(
             section_id=section_id, modified_by=person_id)
 

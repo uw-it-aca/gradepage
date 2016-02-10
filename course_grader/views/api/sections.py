@@ -3,8 +3,8 @@ from django.utils.translation import ugettext as _
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import term_from_param, all_viewable_terms
 from course_grader.dao.section import all_gradable_sections
-from course_grader.views import clean_section_id, section_url_token
-from course_grader.views import display_section_name, display_person_name
+from course_grader.views import clean_section_id, section_url_token,\
+    display_section_name, display_person_name, display_datetime
 from course_grader.views.rest_dispatch import RESTDispatch
 from course_grader.exceptions import InvalidUser, InvalidTerm
 import logging
@@ -28,7 +28,7 @@ class Sections(RESTDispatch):
         except InvalidTerm as ex:
             return self.error_response(404, "%s" % ex)
         except Exception as ex:
-            logger.exception(ex)
+            logger.error("GET selected term failed: %s" % ex)
             return self.error_response(500, _("sws_not_available"))
 
         try:
@@ -38,7 +38,7 @@ class Sections(RESTDispatch):
                     (ex.status == 401 or ex.status == 404)):
                 sections = []
             else:
-                logger.exception(ex)
+                logger.error("GET gradable sections failed: %s" % ex)
                 return self.error_response(500, _("sws_not_available"))
 
         content = self.response_content(sections, **kwargs)
@@ -74,7 +74,7 @@ class Sections(RESTDispatch):
             if is_grading_period_open or is_grading_period_past:
                 if (section.is_primary_section and
                         section.allows_secondary_grading):
-                    pass
+                    data["grading_status"] = _("secondary_grading_status")
                 elif (not section.is_primary_section and
                         not section.allows_secondary_grading):
                     section_url = "/section/%s" % section_id
@@ -82,6 +82,12 @@ class Sections(RESTDispatch):
                     section_url = "/section/%s" % section_id
                     grade_status_url = "/api/v1/graderoster/%s?status=1" % (
                         section_id)
+            elif section.is_full_summer_term():
+                data["grading_status"] = _(
+                    "summer_full_term_grade_submission_opens %(date)s"
+                ) % {
+                    "date": display_datetime(section.term.grading_period_open)
+                }
 
             data["section_url"] = section_url
             data["grade_status_url"] = grade_status_url
