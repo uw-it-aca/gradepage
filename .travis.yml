@@ -10,8 +10,8 @@ before_script:
 - cp travis-ci/manage.py manage.py
 script:
 - pep8 course_grader/ --exclude=migrations
-- coverage run --source=course_grader/ manage.py test course_grader
-after_script:
+- coverage run --source=course_grader/ --omit=course_grader/migrations/* manage.py test course_grader
+after_success:
 - coveralls
 notifications:
   slack:
