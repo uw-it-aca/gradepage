@@ -3,6 +3,7 @@ from course_grader.dao.section import section_from_param
 from course_grader.dao.canvas import grades_for_section
 from restclients.exceptions import DataFailureException
 import sys
+import json
 
 
 class Command(BaseCommand):
@@ -22,7 +23,7 @@ class Command(BaseCommand):
 
         try:
             grade_import = grades_for_section(section, user)
-            print grade_import
+            print json.dumps(grade_import, indent=4)
             print "%s grades imported" % len(grade_import['grades'])
         except DataFailureException as ex:
             print ex
