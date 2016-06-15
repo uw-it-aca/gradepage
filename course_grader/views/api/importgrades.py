@@ -45,7 +45,8 @@ class ImportGrades(GradeFormHandler):
             if "PUT" == request.method:
                 self.valid_user_override()
 
-            self.graderoster = graderoster_for_section(section, instructor)
+            self.graderoster = graderoster_for_section(
+                self.section, self.instructor, self.user)
 
         except GradingNotPermitted as ex:
             logger.info("Grading for %s not permitted for %s" % (
