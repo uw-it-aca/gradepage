@@ -71,8 +71,8 @@ class SubmittedGradeRoster(models.Model):
     def submit(self):
 
         @retry(SSLError, tries=3, delay=1, logger=logger)
-        def _update_graderoster(graderoster):
-            return update_graderoster(graderoster)
+        def _update_graderoster(graderoster, requestor):
+            return update_graderoster(graderoster, requestor)
 
         try:
             graderoster = graderoster_from_xhtml(
@@ -83,7 +83,8 @@ class SubmittedGradeRoster(models.Model):
                 graderoster.secondary_section = section_from_label(
                     self.secondary_section_id)
 
-            ret_graderoster = _update_graderoster(graderoster)
+            requestor = person_from_regid(self.submitted_by)
+            ret_graderoster = _update_graderoster(graderoster, requestor)
 
         except Exception as ex:
             logger.error(

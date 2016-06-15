@@ -5,7 +5,7 @@ This module encapsulates the access of sws graderoster data
 from restclients.sws.graderoster import get_graderoster, graderoster_from_xhtml
 from restclients.sws.section import get_section_by_url
 from restclients.util.retry import retry
-from course_grader.dao.person import person_from_user, person_from_regid
+from course_grader.dao.person import person_from_regid
 from course_grader.dao.section import is_grader_for_section
 from course_grader.exceptions import GradingNotPermitted, ReceiptNotFound
 from course_grader.exceptions import GradingPeriodNotOpen
@@ -18,7 +18,7 @@ import re
 logger = logging.getLogger(__name__)
 
 
-def graderoster_for_section(section, instructor):
+def graderoster_for_section(section, instructor, requestor):
     ret_graderoster = None
     secondary_section = None
 
@@ -30,23 +30,22 @@ def graderoster_for_section(section, instructor):
         primary_section_href = section.primary_section_href
         secondary_section = section
         section = get_section_by_url(primary_section_href)
-        person = person_from_user()
 
         if (not section.is_instructor(instructor) and
-                section.is_instructor(person)):
-            instructor = person
+                section.is_instructor(requestor)):
+            instructor = requestor
 
-        if not is_grader_for_section(section, person):
+        if not is_grader_for_section(section, requestor):
             raise GradingNotPermitted(section.section_label(),
-                                      person.uwregid)
+                                      requestor.uwregid)
 
     @retry(SSLError, tries=3, delay=1, logger=logger)
-    def _get_graderoster(section, instructor):
-        return get_graderoster(section, instructor)
+    def _get_graderoster(section, instructor, requestor):
+        return get_graderoster(section, instructor, requestor)
 
     # If grading period is open, start with a "live" graderoster
     if section.is_grading_period_open():
-        ret_graderoster = _get_graderoster(section, instructor)
+        ret_graderoster = _get_graderoster(section, instructor, requestor)
         ret_graderoster.secondary_section = secondary_section
         ret_graderoster.submissions = {}
 
