@@ -80,7 +80,8 @@ def grade_imports(request):
             if not len(curr_abbr):
                 params["errors"].pop("curriculum_abbr", None)
         except (DataFailureException, InvalidNetID) as err:
-            params["errors"]["submitter"] = err
+            params["errors"]["submitter"] = err.msg if (
+                hasattr(err, "msg")) else err
 
     if len(params["errors"]):
         return render_to_response(template, params, RequestContext(request))
@@ -179,7 +180,8 @@ def graderosters(request):
             if not len(curr_abbr):
                 params["errors"].pop("curriculum_abbr", None)
         except (DataFailureException, InvalidNetID) as err:
-            params["errors"]["submitter"] = err
+            params["errors"]["submitter"] = err.msg if (
+                hasattr(err, "msg")) else err
     else:
         args = ()
 
