@@ -43,7 +43,7 @@
         {% if not has_less_compiled %}
         <script src="{% static "course_grader/js/vendor/less-2.0.0.min.js" %}"></script>
         {% endif %}
-
+        <script type="text/javascript" src="{% url "django.views.i18n.javascript_catalog" %}"></script>
     </head>
     <body>
         {% if override_user %}
@@ -124,8 +124,6 @@
         <script src="{% static "grade_conversion_calculator/js/main.js" %}"></script>
         {% endcompress %}
 
-        {% load handlebars_i18n %}
-        {% i18n_catalog "grade_conversion_calculator+course_grader" %}
         {% block extra_js %}{% endblock %}
 
 		{% if not request.is_mobile and not request.is_tablet %}
