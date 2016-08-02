@@ -111,6 +111,7 @@ LOGGING = {
     },
     'handlers': {
         'course_grader': {
+            'class': 'logging.StreamHandler',
             'filters': ['add_user'],
             'formatter': 'course_grader',
         },
