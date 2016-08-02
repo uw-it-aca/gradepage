@@ -31,18 +31,18 @@ class SubmittedGradeRosterManager(models.Manager):
             if section.is_independent_study:
                 kwargs['instructor_id'] = instructor.uwregid
 
-        return super(SubmittedGradeRosterManager, self).get_query_set().filter(
+        return super(SubmittedGradeRosterManager, self).get_queryset().filter(
             *args, **kwargs).order_by('secondary_section_id')
 
     def get_status_by_term(self, term):
-        return super(SubmittedGradeRosterManager, self).get_query_set().filter(
+        return super(SubmittedGradeRosterManager, self).get_queryset().filter(
             term_id=term.term_label()
         ).order_by('submitted_date').values(
             'section_id', 'secondary_section_id', 'submitted_date',
             'submitted_by', 'status_code')
 
     def get_all_terms(self):
-        return super(SubmittedGradeRosterManager, self).get_query_set(
+        return super(SubmittedGradeRosterManager, self).get_queryset(
         ).values_list('term_id', flat=True).distinct()
 
 
@@ -191,7 +191,7 @@ class SubmittedGradeRoster(models.Model):
 
 class GradeManager(models.Manager):
     def get_by_section_id_and_person(self, section_id, person_id):
-        return super(GradeManager, self).get_query_set().filter(
+        return super(GradeManager, self).get_queryset().filter(
             section_id=section_id, modified_by=person_id)
 
 
@@ -272,21 +272,21 @@ class ImportConversion(models.Model):
 
 class GradeImportManager(models.Manager):
     def get_last_import_by_section_id(self, section_id):
-        return super(GradeImportManager, self).get_query_set().filter(
+        return super(GradeImportManager, self).get_queryset().filter(
             section_id=section_id,
             import_conversion__isnull=False,
             status_code='200'
         ).order_by('-imported_date')[0:1].get()
 
     def get_imports_by_person(self, person):
-        return super(GradeImportManager, self).get_query_set().filter(
+        return super(GradeImportManager, self).get_queryset().filter(
             imported_by=person.uwregid,
             import_conversion__isnull=False,
             status_code='200'
         ).order_by('section_id', '-imported_date')
 
     def get_import_sources_by_term(self, term):
-        return super(GradeImportManager, self).get_query_set().filter(
+        return super(GradeImportManager, self).get_queryset().filter(
             term_id=term.term_label()
         ).order_by('imported_date').values('imported_date', 'source')
 

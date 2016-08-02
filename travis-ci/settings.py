@@ -37,9 +37,12 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'compressor',
     'templatetag_handlebars',
+    'supporttools',
     'restclients',
     'userservice',
+    'authz_group',
     'course_grader',
+    'grade_conversion_calculator',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -91,3 +94,32 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'add_user': {
+            '()': 'course_grader.log.UserFilter'
+        },
+    },
+    'formatters': {
+        'course_grader': {
+            'format': '%(asctime)s %(user)s %(actas)s %(message)s',
+            'datefmt': '[%Y-%m-%d %H:%M:%S]',
+        },
+    },
+    'handlers': {
+        'course_grader': {
+            'filters': ['add_user'],
+            'formatter': 'course_grader',
+        },
+    },
+    'loggers': {
+        'course_grader': {
+            'handlers': ['course_grader'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    }
+}
