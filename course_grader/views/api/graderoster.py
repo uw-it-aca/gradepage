@@ -49,7 +49,8 @@ class GradeRoster(GradeFormHandler):
                 self.valid_user_override()
 
             if (re.match(r"(GET|PUT|POST)", request.method)):
-                self.graderoster = graderoster_for_section(section, instructor)
+                self.graderoster = graderoster_for_section(
+                    self.section, self.instructor, self.user)
 
         except GradingNotPermitted as ex:
             logger.info("Grading for %s not permitted for %s" % (
@@ -175,8 +176,8 @@ class GradeRoster(GradeFormHandler):
             model.save()
             model.submit()
 
-            self.graderoster = graderoster_for_section(self.section,
-                                                       self.instructor)
+            self.graderoster = graderoster_for_section(
+                self.section, self.instructor, self.user)
 
         kwargs["saved_grades"] = saved_grades
 

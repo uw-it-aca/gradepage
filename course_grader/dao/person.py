@@ -10,9 +10,13 @@ from course_grader.exceptions import InvalidUser
 import json
 
 
+def person_from_netid(netid):
+    return PWS().get_person_by_netid(netid.lower())
+
+
 def person_from_username(username):
     try:
-        return PWS().get_person_by_netid(username.lower())
+        return person_from_netid(username)
     except InvalidNetID as ex:
         raise InvalidUser()
     except DataFailureException as ex:
@@ -34,7 +38,7 @@ def is_netid(username):
     error_msg = "No override user supplied, please enter a UWNetID"
     if len(username) > 0:
         try:
-            person = PWS().get_person_by_netid(username)
+            person = person_from_netid(username)
             if username.lower() == person.uwnetid:
                 error_msg = None
             else:

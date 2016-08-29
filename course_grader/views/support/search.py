@@ -9,7 +9,7 @@ from restclients.sws.term import get_term_by_year_and_quarter
 from restclients.models.sws import Term
 from restclients.exceptions import DataFailureException, InvalidNetID
 from course_grader.models import SubmittedGradeRoster, GradeImport
-from course_grader.dao.person import person_from_username, person_from_regid
+from course_grader.dao.person import person_from_netid, person_from_regid
 from course_grader.views.support import is_admin_user
 from course_grader.views import display_person_name
 import logging
@@ -75,12 +75,13 @@ def grade_imports(request):
 
     if len(submitter_netid):
         try:
-            submitter = person_from_username(submitter_netid)
+            submitter = person_from_netid(submitter_netid)
             kwargs["imported_by"] = submitter.uwregid
             if not len(curr_abbr):
                 params["errors"].pop("curriculum_abbr", None)
-        except DataFailureException, InvalidNetID:
-            params["errors"]["submitter"] = "Invalid UWNetID"
+        except (DataFailureException, InvalidNetID) as err:
+            params["errors"]["submitter"] = err.msg if (
+                hasattr(err, "msg")) else err
 
     if len(params["errors"]):
         return render_to_response(template, params, RequestContext(request))
@@ -173,13 +174,14 @@ def graderosters(request):
 
     if len(submitter_netid):
         try:
-            submitter = person_from_username(submitter_netid)
+            submitter = person_from_netid(submitter_netid)
             args = (Q(submitted_by=submitter.uwregid) |
                     Q(instructor_id=submitter.uwregid),)
             if not len(curr_abbr):
                 params["errors"].pop("curriculum_abbr", None)
-        except DataFailureException, InvalidNetID:
-            params["errors"]["submitter"] = "Invalid UWNetID"
+        except (DataFailureException, InvalidNetID) as err:
+            params["errors"]["submitter"] = err.msg if (
+                hasattr(err, "msg")) else err
     else:
         args = ()
 

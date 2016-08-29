@@ -1,18 +1,18 @@
 sudo: false
 language: python
 python:
-- '2.7'
+  - '2.7'
 install: pip install -r requirements.txt
 before_script:
-- pip install coverage
-- pip install python-coveralls
-- pip install pep8
-- cp travis-ci/manage.py manage.py
+  - pip install coverage
+  - pip install python-coveralls
+  - pip install pep8
+  - cp travis-ci/manage.py manage.py
 script:
-- pep8 course_grader/ --exclude=migrations
-- coverage run --source=course_grader/ --omit=course_grader/migrations/* manage.py test course_grader
+  - pep8 course_grader/ --exclude=migrations
+  - coverage run --source=course_grader/ --omit=course_grader/migrations/* manage.py test course_grader
 after_success:
-- coveralls
+  - coveralls
 notifications:
   slack:
     secure: bgGViuJPtyDmNQoB1ruD2x2ZPYDEksExmjytHB5Y26unuTs7kDR8/3mQiDRqKcwvrwMZ/sVYgqMCU6x9yZuBbx/pD60c+lBP8rTF/Phm5hg6+LAstMxPrGm8B4+0SKO3eMED6RaFzZpnIOAQkFK7wMXEAf2rMRukU5EGpzYHpEluCqj0Y3AsgToGbFi49StcxMjZ4dgMOVb/AAl2vxmO7umxXvXa2rcBieJdG+dMdPYIMZiyIBvNDWqm2h61FS3iQRlsmaOOXZWCl5iGhTqes2JCsGNS5eFf8MysBKP1O+FWbaqSx4AULSxUKBb4lYGrtU8vKy66LyvtxBOhwq4x9+e6KdA9MLBl9YDccPj0W5mTlXuB0FqDHeH8mgD7ip3/BoiNu6K8d+T867D0mib3+K/iQxFBpwBfvUkCjurK2IP9TUz4bkyY7KI6PF69KZGROgymh0uHDCq/4zhyWehwoYUZW14LY6f6Pmral3kvK8MDLBMiNXj75Mr6URZ/1xDAsInlw9l3Qb95CUAr2hI6UJ7a9VYdQQEdGPOHhlqKVFtWHnocCK0q0o+mTqt+7v2HzsXQrauHhVqbjlyUfzlc/PK+F0TNNZx3krZCQ+foK4tSi5lqkCJ8m9mIKMG0YYTnp4QqwIxB4XJiTTIt3IppVNWubLqfFvFKUMjTabNtzAk=
