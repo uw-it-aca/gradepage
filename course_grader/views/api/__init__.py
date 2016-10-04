@@ -70,9 +70,10 @@ class GradeFormHandler(RESTDispatch):
 
         return grade
 
-    def sorted_students(self):
-        return sorted(self.graderoster.items, key=lambda s: (
-            s.student_surname, s.student_first_name, s.section_id))
+    def sorted_students(self, students):
+        return sorted(students, key=lambda s: (
+            s.student_surname.upper(), s.student_first_name.upper(),
+            s.section_id))
 
     def sorted_grades(self, grades):
         return sorted(grades, key=lambda s: grade_order.get(s, s),
