@@ -256,7 +256,7 @@ class GradeRoster(GradeFormHandler):
                                                "label": choice[1]})
 
         grade_lookup = {}
-        for item in self.sorted_students():
+        for item in self.sorted_students(self.graderoster.items):
             if (secondary_section is not None and
                     secondary_section.section_id != item.section_id):
                 # Filtering by secondary section
