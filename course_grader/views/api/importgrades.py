@@ -179,7 +179,7 @@ class ImportGrades(GradeFormHandler):
 
         secondary_section = getattr(self.graderoster, "secondary_section",
                                     None)
-        for item in self.sorted_students():
+        for item in self.sorted_students(self.graderoster.items):
             if (secondary_section is not None and
                     secondary_section.section_id != item.section_id):
                 # Filtering by secondary section
