@@ -127,6 +127,7 @@ GradePage.Import = (function ($) {
     }
 
     function select_previous_scale() {
+        /*jshint validthis: true */
         var selected = $(this).val(),
             selected_data,
             el,
@@ -210,6 +211,7 @@ GradePage.Import = (function ($) {
     }
 
     function initialize_conversion() {
+        /*jshint validthis: true */
         var scale = $(this).attr("id").replace(/^gp-convert-scale-/, "");
 
         $("#gp-import-modal").on("hidden.bs.modal", function () {
@@ -305,6 +307,7 @@ GradePage.Import = (function ($) {
     }
 
     function select_import() {
+        /*jshint validthis: true */
         var source = $(this).val();
         if (source !== "") {
             create_import(source);

@@ -188,6 +188,7 @@ GradePage.GradeRoster = (function ($) {
     }
 
     function validate_all_grades() {
+        /*jshint validthis: true */
         var counts = { missing_count: 0, invalid_count: 0 };
 
         $(".gp-roster-list").find(grade_input_selector())
@@ -209,6 +210,7 @@ GradePage.GradeRoster = (function ($) {
     }
 
     function save_grade() {
+        /*jshint validthis: true */
         var input_id = $(this).attr("id"), item_id, student_id,
             is_incomplete, is_writing, grade, no_grade_now, grade_choices,
             grade_url, put_data = {};
@@ -291,11 +293,13 @@ GradePage.GradeRoster = (function ($) {
     }
 
     function update_writing() {
+        /*jshint validthis: true */
         decorate_writing_input($(this));
         save_grade.call($(this));
     }
 
     function decorate_incomplete_input(el) {
+        /*jshint validthis: true */
         var wrapper = el.closest(".gp-inc-wrapper"),
             is_incomplete_checked = el.is(":checked"),
             title_base,
@@ -329,11 +333,13 @@ GradePage.GradeRoster = (function ($) {
     }
 
     function update_incomplete() {
+        /*jshint validthis: true */
         decorate_incomplete_input($(this));
         save_grade.call($(this));
     }
 
     function select_grade(ev, ui) {
+        /*jshint validthis: true */
         $(this).val(ui.item.value);
         save_grade.call($(this));
     }
@@ -350,14 +356,17 @@ GradePage.GradeRoster = (function ($) {
     }
 
     function open_autocomplete() {
+        /*jshint validthis: true */
         $(this).attr("ac_state", "open");
     }
 
     function close_autocomplete() {
+        /*jshint validthis: true */
         $(this).attr("ac_state", "closed");
     }
 
     function create_autocomplete() {
+        /*jshint validthis: true */
         if ($(this).attr("ac_state") === undefined) {
             $(this).autocomplete({
                 minLength: 0,
@@ -380,6 +389,7 @@ GradePage.GradeRoster = (function ($) {
     }
 
     function create_grade_select() {
+        /*jshint validthis: true */
         var i,
             len,
             val = normalize_grade($(this).val()),
@@ -401,6 +411,7 @@ GradePage.GradeRoster = (function ($) {
     }
 
     function toggle_view_scale(ev) {
+        /*jshint validthis: true */
         var submissions = $(this).data("submissions"),
             container = $("#gp-import-scale-display"),
             i,
@@ -426,6 +437,7 @@ GradePage.GradeRoster = (function ($) {
     }
 
     function select_view_scale() {
+        /*jshint validthis: true */
         var submissions = $(this).data("submissions"),
             container = $("#gp-import-scale-display");
         container.html(import_scale_template(submissions[$(this).val()].grade_import))
@@ -433,6 +445,7 @@ GradePage.GradeRoster = (function ($) {
     }
 
     function draw_submitted_graderoster(data) {
+        /*jshint validthis: true */
         var template = Handlebars.compile($("#confirmation-tmpl").html());
         Handlebars.registerPartial("student", $("#student-tmpl").html());
         Handlebars.registerPartial("grade", $("#grade-tmpl").html());
@@ -604,8 +617,8 @@ GradePage.GradeRoster = (function ($) {
     }
 
     function review_grades() {
+        /*jshint validthis: true */
         var put_data = [];
-
         $(".gp-roster-list").find(grade_input_selector())
                             .not(":disabled").each(function () {
                 var item_id = $(this).attr("id").replace(/^grade-/, ""),
