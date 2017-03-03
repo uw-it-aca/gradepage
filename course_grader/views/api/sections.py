@@ -80,7 +80,7 @@ class Sections(RESTDispatch):
                     section_url = "/section/%s" % section_id
                 else:
                     section_url = "/section/%s" % section_id
-                    grade_status_url = "/api/v1/graderoster/%s?status=1" % (
+                    grade_status_url = "/api/v1/grading_status/%s" % (
                         section_id)
             elif section.is_full_summer_term():
                 data["grading_status"] = _(

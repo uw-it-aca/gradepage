@@ -2,11 +2,11 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
 from course_grader.views.api.sections import Sections
-from course_grader.views.api.graderoster import GradeRoster
+from course_grader.views.api.graderoster import GradeRoster, GradeRosterStatus
 from course_grader.views.api.importgrades import ImportGrades
 from course_grader.views.api.conversionscales import ConversionScales
-from course_grader.views.api.submitted_graderoster import SubmissionsByTerm,\
-    SubmittedGradeRoster
+from course_grader.views.api.submitted_graderoster import (
+    SubmissionsByTerm, SubmittedGradeRoster)
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -19,6 +19,8 @@ urlpatterns = patterns(
         'course_grader.views.section.section'),
     url(r'^api/v1/sections/(?P<term_id>[^/]*)$', Sections().run),
     url(r'^api/v1/graderoster/(?P<section_id>[^/]*)$', GradeRoster().run),
+    url(r'^api/v1/grading_status/(?P<section_id>[^/]*)$',
+        GradeRosterStatus().run),
     url(r'^api/v1/import/(?P<section_id>[^/]*)$', ImportGrades().run),
     url(r'^api/v1/import/(?P<section_id>[^/]*)/(?P<import_id>[\d]*)$',
         ImportGrades().run),
