@@ -18,7 +18,21 @@ import re
 logger = logging.getLogger(__name__)
 
 
-def graderoster_for_section(section, instructor, requestor):
+def is_submitted(item):
+    if (item.is_auditor or item.date_withdrawn is not None):
+        return False
+
+    # Old receipts do not include date_graded, so also check for the
+    # existence of a grade
+    if (item.date_graded is not None or
+            item.grade is not None or item.no_grade_now):
+        return True
+    else:
+        return False
+
+
+def graderoster_for_section(section, instructor, requestor,
+                            submitted_graderosters_only=False):
     ret_graderoster = None
     secondary_section = None
 
@@ -43,8 +57,9 @@ def graderoster_for_section(section, instructor, requestor):
     def _get_graderoster(section, instructor, requestor):
         return get_graderoster(section, instructor, requestor)
 
-    # If grading period is open, start with a "live" graderoster
-    if section.is_grading_period_open():
+    # If submitted_graderosters_only is False and grading period is open,
+    # start with a "live" graderoster
+    if (not submitted_graderosters_only and section.is_grading_period_open()):
         ret_graderoster = _get_graderoster(section, instructor, requestor)
         ret_graderoster.secondary_section = secondary_section
         ret_graderoster.submissions = {}
@@ -64,7 +79,10 @@ def graderoster_for_section(section, instructor, requestor):
                                              people[instructor_id])
 
         grade_imp = None
-        if model.submitted_date is not None:
+        # If submitted_graderosters_only is False and this graderoster has been
+        # submitted, try to find a grade import
+        if (not submitted_graderosters_only and
+                model.submitted_date is not None):
             imp_section_id = "-".join([re.sub(r"[,/]", "-", model.section_id),
                                        model.instructor_id])
             try:

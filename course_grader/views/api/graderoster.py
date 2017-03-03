@@ -1,6 +1,6 @@
 from django.core.context_processors import csrf
 from course_grader.models import SubmittedGradeRoster, Grade, GradeImport
-from course_grader.dao.graderoster import graderoster_for_section
+from course_grader.dao.graderoster import graderoster_for_section, is_submitted
 from course_grader.dao.section import section_from_param, is_grader_for_section
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import all_viewable_terms
@@ -72,17 +72,11 @@ class GradeRoster(GradeFormHandler):
 
     def GET(self, request, **kwargs):
         section_id = kwargs.get("section_id")
-        is_status = True if request.GET.get("status", "") else False
 
-        if is_status:
-            content = self.status_response_content(**kwargs)
+        if self.section.is_grading_period_open():
+            kwargs["saved_grades"] = self.saved_grades(section_id)
 
-        else:
-            if self.section.is_grading_period_open():
-                kwargs["saved_grades"] = self.saved_grades(section_id)
-
-            content = self.response_content(**kwargs)
-
+        content = self.response_content(**kwargs)
         return self.json_response(content)
 
     def PATCH(self, request, **kwargs):
@@ -118,7 +112,7 @@ class GradeRoster(GradeFormHandler):
                     secondary_section.section_id != item.section_id):
                 continue
 
-            if (self.is_submitted(item) or item.is_auditor or
+            if (is_submitted(item) or item.is_auditor or
                     item.date_withdrawn is not None):
                 continue
 
@@ -144,7 +138,7 @@ class GradeRoster(GradeFormHandler):
                     secondary_section.section_id != item.section_id):
                 continue
 
-            if (self.is_submitted(item) or item.is_auditor or
+            if (is_submitted(item) or item.is_auditor or
                     item.date_withdrawn is not None):
                 continue
 
@@ -264,7 +258,7 @@ class GradeRoster(GradeFormHandler):
 
             student_id = item.student_label(separator="-")
             item_id = "-".join([section_id, student_id])
-            is_submitted = self.is_submitted(item)
+            is_submitted = is_submitted(item)
             grade_choices_index = None
             grade_url = None
             grade = "" if item.no_grade_now is True else item.grade
@@ -361,6 +355,69 @@ class GradeRoster(GradeFormHandler):
 
         return {"graderoster": data}
 
+
+class GradeRosterStatus(GradeRoster):
+    def run(self, *args, **kwargs):
+        request = args[0]
+
+        try:
+            self.user = person_from_user()
+            submitted_graderosters_only = False
+        except InvalidUser as ex:
+            act_as = request.META.get('X-UW-Act-as')
+            try:
+                self.user = person_from_user(act_as)
+                submitted_graderosters_only = True
+            except InvalidUser as ex:
+                return self.error_response(403, "%s" % ex)
+
+        try:
+            section_id = kwargs.get("section_id")
+            (section, instructor) = section_from_param(section_id)
+            self.section = section
+            self.instructor = instructor
+
+            if section.term not in all_viewable_terms():
+                raise InvalidTerm()
+
+            if not is_grader_for_section(section, instructor):
+                raise GradingNotPermitted(section.section_label(),
+                                          instructor.uwnetid)
+
+            if (self.user != instructor and
+                    not is_grader_for_section(section, self.user)):
+                raise GradingNotPermitted(section.section_label(),
+                                          self.user.uwnetid)
+
+            if section.is_primary_section and section.allows_secondary_grading:
+                raise SecondaryGradingEnabled()
+
+            self.graderoster = graderoster_for_section(
+                self.section, self.instructor, self.user,
+                submitted_graderosters_only=submitted_graderosters_only)
+
+        except GradingNotPermitted as ex:
+            logger.info("Grading status for %s not permitted for %s" % (
+                ex.section, ex.person))
+            return self.error_response(403, "%s" % ex)
+        except (SecondaryGradingEnabled, GradingPeriodNotOpen,
+                InvalidTerm) as ex:
+            return self.error_response(403, "%s" % ex)
+        except (InvalidSection, ReceiptNotFound) as ex:
+            return self.error_response(404, "%s" % ex)
+        except Exception as ex:
+            logger.error(
+                "GET graderoster error: %s, Section: %s, Instructor: %s" % (
+                    ex, section.section_label(), instructor.uwnetid))
+            err = ex.msg if hasattr(ex, "msg") else ex
+            return self.error_response(500, "%s" % err)
+
+        return self.run_http_method(*args, **kwargs)
+
+    def GET(self, request, **kwargs):
+        content = self.status_response_content(**kwargs)
+        return self.json_response(content)
+
     def status_response_content(self, **kwargs):
         section_id = kwargs.get("section_id")
         section = self.section
@@ -395,15 +452,15 @@ class GradeRoster(GradeFormHandler):
                 continue
 
             total_count += 1
-            if self.is_submitted(item):
+            if is_submitted(item):
                 submitted_count += 1
 
         unsubmitted_count = total_count - submitted_count
         grading_period_open = self.graderoster.section.is_grading_period_open()
 
         if hasattr(self.graderoster, "submissions"):
-            submission = self.graderoster.submissions.get(secondary_section_id,
-                                                          None)
+            submission = self.graderoster.submissions.get(
+                secondary_section_id, None)
             if submission is None:
                 submission = self.graderoster.submissions.get(
                     self.graderoster.section.section_id, None)
@@ -429,15 +486,3 @@ class GradeRoster(GradeFormHandler):
             data["deadline_warning"] = submission_deadline_warning(term)
 
         return data
-
-    def is_submitted(self, item):
-        if (item.is_auditor or item.date_withdrawn is not None):
-            return False
-
-        # Old receipts do not include date_graded, so also check for the
-        # existence of a grade
-        if (item.date_graded is not None or
-                item.grade is not None or item.no_grade_now):
-            return True
-        else:
-            return False

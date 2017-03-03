@@ -16,7 +16,7 @@ Handlebars.registerHelper("trans", function() {
         default:
             // Something else - just return something empty.
             return no_trans_key({});
-    };
+    }
 
     function no_trans_key() {
         return "";
