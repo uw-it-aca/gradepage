@@ -79,7 +79,7 @@ def graderoster_for_section(section, instructor, requestor,
                                              people[instructor_id])
 
         grade_imp = None
-        # If submitted_graderosters_only is False and this graderoster has been 
+        # If submitted_graderosters_only is False and this graderoster has been
         # submitted, try to find a grade import
         if (not submitted_graderosters_only and
                 model.submitted_date is not None):

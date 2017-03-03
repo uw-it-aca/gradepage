@@ -363,15 +363,15 @@ class GradeRosterStatus(GradeRoster):
         try:
             self.user = person_from_user()
             submitted_graderosters_only = False
-	except InvalidUser as ex:
-	    act_as = request.META.get('X-UW-Act-as')
+        except InvalidUser as ex:
+            act_as = request.META.get('X-UW-Act-as')
             try:
-	        self.user = person_from_user(act_as)
+                self.user = person_from_user(act_as)
                 submitted_graderosters_only = True
             except InvalidUser as ex:
                 return self.error_response(403, "%s" % ex)
 
-	try:
+        try:
             section_id = kwargs.get("section_id")
             (section, instructor) = section_from_param(section_id)
             self.section = section
