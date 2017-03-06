@@ -18,7 +18,7 @@ import re
 logger = logging.getLogger(__name__)
 
 
-def is_submitted(item):
+def item_is_submitted(item):
     if (item.is_auditor or item.date_withdrawn is not None):
         return False
 
