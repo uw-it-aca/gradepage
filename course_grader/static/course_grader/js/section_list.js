@@ -108,7 +108,7 @@ GradePage.SectionList = (function ($) {
             },
             success: function (data) {
                 badge_element(section_id).removeClass("loading-icon");
-                draw_section_status(data.graderoster_status);
+                draw_section_status(data.grading_status);
             },
             error: function (xhr) {
                 badge_element(section_id).removeClass("loading-icon");
