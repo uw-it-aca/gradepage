@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
-from django.utils.timezone import get_default_timezone, localtime
-from django.utils.timezone import is_naive, make_aware
+from django.utils.timezone import (
+    get_default_timezone, localtime, is_naive, make_aware)
+from django.utils.translation import ugettext as _
 from course_grader.dao.term import submission_deadline_warning
 from nameparser import HumanName
 from datetime import datetime
@@ -49,6 +50,42 @@ def display_person_name(person):
 def display_section_name(section):
     return " ".join([section.curriculum_abbr, section.course_number,
                      section.section_id])
+
+
+def section_status_params(section):
+    section_id = section_url_token(section, section.grader)
+
+    if section.is_independent_study:
+        display_name = "%s (%s)" % (display_section_name(section),
+                                    display_person_name(section.grader))
+    else:
+        display_name = display_section_name(section)
+
+    data = {
+        "section_id": clean_section_id(section_id),
+        "display_name": display_name,
+        "section_url": None,
+        "grade_status_url": None
+    }
+
+    if (section.is_grading_period_open() or
+            section.term.is_grading_period_past()):
+        if (section.is_primary_section and section.allows_secondary_grading):
+            data["grading_status"] = _("secondary_grading_status")
+        elif (not section.is_primary_section and not
+                section.allows_secondary_grading):
+            data["section_url"] = "/section/%s" % section_id
+        else:
+            data["section_url"] = "/section/%s" % section_id
+            data["grade_status_url"] = "/api/v1/grading_status/%s" % section_id
+    elif section.is_full_summer_term():
+        data["grading_status"] = _(
+            "summer_full_term_grade_submission_opens %(date)s"
+        ) % {
+            "date": display_datetime(section.term.grading_period_open)
+        }
+
+    return data
 
 
 def grade_submission_deadline_params(term):

@@ -6,8 +6,9 @@ from course_grader.dao.section import section_from_param, is_grader_for_section
 from course_grader.dao.person import person_from_user, person_from_request
 from course_grader.dao.term import all_viewable_terms
 from course_grader.dao.term import submission_deadline_warning
-from course_grader.views import clean_section_id
-from course_grader.views import display_section_name, display_person_name
+from course_grader.views import (
+    section_status_params, clean_section_id, display_section_name,
+    display_person_name)
 from course_grader.views.api import GradeFormHandler
 from course_grader.exceptions import *
 from datetime import datetime
@@ -356,6 +357,54 @@ class GradeRoster(GradeFormHandler):
 
         return {"graderoster": data}
 
+    def status_by_section(self, secondary_section_id=None):
+        data = section_status_params(self.graderoster.section)
+        total_count = 0
+        submitted_count = 0
+        for item in self.graderoster.items:
+            if (secondary_section_id is not None and
+                    secondary_section_id != item.section_id):
+                continue
+
+            if item.is_auditor or item.date_withdrawn:
+                continue
+
+            total_count += 1
+            if item_is_submitted(item):
+                submitted_count += 1
+
+        unsubmitted_count = total_count - submitted_count
+        grading_period_open = self.graderoster.section.is_grading_period_open()
+
+        if hasattr(self.graderoster, "submissions"):
+            submission = self.graderoster.submissions.get(
+                secondary_section_id, None)
+            if submission is None:
+                submission = self.graderoster.submissions.get(
+                    self.graderoster.section.section_id, None)
+
+            if submission is not None:
+                submitted_date = submission["submitted_date"]
+                submitted_by = submission["submitted_by"]
+                accepted_date = submission["accepted_date"]
+                grade_import = submission["grade_import"]
+                data["submitted_date"] = submitted_date.isoformat()
+                data["accepted_date"] = accepted_date.isoformat() if (
+                    accepted_date is not None) else None
+                data["submitted_by"] = display_person_name(submitted_by)
+                data["grade_import"] = grade_import.json_data() if (
+                    grade_import is not None) else None
+
+        data["submitted_count"] = submitted_count
+        data["unsubmitted_count"] = unsubmitted_count
+        data["grading_period_open"] = grading_period_open
+
+        if (grading_period_open and unsubmitted_count):
+            data["deadline_warning"] = submission_deadline_warning(
+                self.section.term)
+
+        return data
+
 
 class GradeRosterStatus(GradeRoster):
     def run(self, *args, **kwargs):
@@ -415,15 +464,10 @@ class GradeRosterStatus(GradeRoster):
         return self.run_http_method(*args, **kwargs)
 
     def GET(self, request, **kwargs):
-        content = self.status_response_content(**kwargs)
-        return self.json_response(content)
-
-    def status_response_content(self, **kwargs):
         section_id = kwargs.get("section_id")
         section = self.section
 
         data = self.status_by_section()
-        data["section_id"] = clean_section_id(section_id)
 
         # Handle secondary sections in this request if appropriate
         if section.is_primary_section and not section.allows_secondary_grading:
@@ -437,52 +481,4 @@ class GradeRosterStatus(GradeRoster):
                               secondary_section_id, self.instructor.uwregid]))
                 data["secondary_sections"].append(secondary_data)
 
-        return {"graderoster_status": data}
-
-    def status_by_section(self, secondary_section_id=None):
-        data = {}
-        total_count = 0
-        submitted_count = 0
-        for item in self.graderoster.items:
-            if (secondary_section_id is not None and
-                    secondary_section_id != item.section_id):
-                continue
-
-            if item.is_auditor or item.date_withdrawn:
-                continue
-
-            total_count += 1
-            if item_is_submitted(item):
-                submitted_count += 1
-
-        unsubmitted_count = total_count - submitted_count
-        grading_period_open = self.graderoster.section.is_grading_period_open()
-
-        if hasattr(self.graderoster, "submissions"):
-            submission = self.graderoster.submissions.get(
-                secondary_section_id, None)
-            if submission is None:
-                submission = self.graderoster.submissions.get(
-                    self.graderoster.section.section_id, None)
-
-            if submission is not None:
-                submitted_date = submission["submitted_date"]
-                submitted_by = submission["submitted_by"]
-                accepted_date = submission["accepted_date"]
-                grade_import = submission["grade_import"]
-                data["submitted_date"] = submitted_date.isoformat()
-                data["accepted_date"] = accepted_date.isoformat() if (
-                    accepted_date is not None) else None
-                data["submitted_by"] = display_person_name(submitted_by)
-                data["grade_import"] = grade_import.json_data() if (
-                    grade_import is not None) else None
-
-        data["submitted_count"] = submitted_count
-        data["unsubmitted_count"] = unsubmitted_count
-        data["grading_period_open"] = grading_period_open
-
-        if (grading_period_open and unsubmitted_count):
-            term = self.section.term
-            data["deadline_warning"] = submission_deadline_warning(term)
-
-        return data
+        return self.json_response({"grading_status": data})
