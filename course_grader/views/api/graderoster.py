@@ -1,8 +1,9 @@
 from django.core.context_processors import csrf
 from course_grader.models import SubmittedGradeRoster, Grade, GradeImport
-from course_grader.dao.graderoster import graderoster_for_section, is_submitted
+from course_grader.dao.graderoster import (
+    graderoster_for_section, item_is_submitted)
 from course_grader.dao.section import section_from_param, is_grader_for_section
-from course_grader.dao.person import person_from_user
+from course_grader.dao.person import person_from_user, person_from_request
 from course_grader.dao.term import all_viewable_terms
 from course_grader.dao.term import submission_deadline_warning
 from course_grader.views import clean_section_id
@@ -112,7 +113,7 @@ class GradeRoster(GradeFormHandler):
                     secondary_section.section_id != item.section_id):
                 continue
 
-            if (is_submitted(item) or item.is_auditor or
+            if (item_is_submitted(item) or item.is_auditor or
                     item.date_withdrawn is not None):
                 continue
 
@@ -138,7 +139,7 @@ class GradeRoster(GradeFormHandler):
                     secondary_section.section_id != item.section_id):
                 continue
 
-            if (is_submitted(item) or item.is_auditor or
+            if (item_is_submitted(item) or item.is_auditor or
                     item.date_withdrawn is not None):
                 continue
 
@@ -258,7 +259,7 @@ class GradeRoster(GradeFormHandler):
 
             student_id = item.student_label(separator="-")
             item_id = "-".join([section_id, student_id])
-            is_submitted = is_submitted(item)
+            is_submitted = item_is_submitted(item)
             grade_choices_index = None
             grade_url = None
             grade = "" if item.no_grade_now is True else item.grade
@@ -364,9 +365,8 @@ class GradeRosterStatus(GradeRoster):
             self.user = person_from_user()
             submitted_graderosters_only = False
         except InvalidUser as ex:
-            act_as = request.META.get('X-UW-Act-as')
             try:
-                self.user = person_from_user(act_as)
+                self.user = person_from_request(request)
                 submitted_graderosters_only = True
             except InvalidUser as ex:
                 return self.error_response(403, "%s" % ex)
@@ -452,7 +452,7 @@ class GradeRosterStatus(GradeRoster):
                 continue
 
             total_count += 1
-            if is_submitted(item):
+            if item_is_submitted(item):
                 submitted_count += 1
 
         unsubmitted_count = total_count - submitted_count

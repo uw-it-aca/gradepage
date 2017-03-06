@@ -11,7 +11,10 @@ import json
 
 
 def person_from_netid(netid):
-    return PWS().get_person_by_netid(netid.lower())
+    if netid is None:
+        raise InvalidNetID()
+    else:
+        return PWS().get_person_by_netid(netid)
 
 
 def person_from_username(username):
@@ -28,6 +31,10 @@ def person_from_username(username):
 
 def person_from_user():
     return person_from_username(UserService().get_user())
+
+
+def person_from_request(request):
+    return person_from_username(request.META.get('HTTP_X_UW_ACT_AS'))
 
 
 def person_from_regid(regid):

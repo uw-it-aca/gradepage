@@ -1,9 +1,14 @@
+from django.http import HttpResponseRedirect
 from django.utils.timezone import get_default_timezone, localtime
 from django.utils.timezone import is_naive, make_aware
 from course_grader.dao.term import submission_deadline_warning
 from nameparser import HumanName
 from datetime import datetime
 import re
+
+
+def user_login(request):
+    return HttpResponseRedirect(request.GET.get('next', '/'))
 
 
 def section_url_token(section, instructor):
