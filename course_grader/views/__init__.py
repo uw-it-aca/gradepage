@@ -55,6 +55,7 @@ def display_section_name(section):
 def section_status_params(section, instructor):
     section_id = section_url_token(section, instructor)
     grading_period_open = section.is_grading_period_open()
+    submission_deadline = section.term.grade_submission_deadline.isoformat()
 
     if section.is_independent_study:
         display_name = "%s (%s)" % (display_section_name(section),
@@ -69,7 +70,7 @@ def section_status_params(section, instructor):
         "status_url": None,
         "grading_status": None,
         "grading_period_open": grading_period_open,
-        "grade_submission_deadline": section.term.grade_submission_deadline,
+        "grade_submission_deadline": submission_deadline,
     }
 
     if (grading_period_open or section.term.is_grading_period_past()):
