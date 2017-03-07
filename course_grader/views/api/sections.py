@@ -44,9 +44,9 @@ class Sections(RESTDispatch):
         return self.json_response(content)
 
     def response_content(self, sections, **kwargs):
-        sections.sort(key=lambda section: (section.section_label(),
-                                           section.grader.surname,
-                                           section.grader.first_name))
+        sections.sort(key=lambda section: (
+            section.section_label(), section.grading_instructor.surname,
+            section.grading_instructor.first_name))
 
         primary_sections = {}
         for section in sections:
@@ -55,7 +55,7 @@ class Sections(RESTDispatch):
 
         section_data = []
         for section in sections:
-            data = section_status_params(section, section.grader)
+            data = section_status_params(section, section.grading_instructor)
 
             if (not section.is_primary_section and
                     section.primary_section_label() in primary_sections):
