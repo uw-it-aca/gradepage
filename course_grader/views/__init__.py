@@ -52,12 +52,12 @@ def display_section_name(section):
                      section.section_id])
 
 
-def section_status_params(section):
-    section_id = section_url_token(section, section.grader)
+def section_status_params(section, instructor):
+    section_id = section_url_token(section, instructor)
 
     if section.is_independent_study:
         display_name = "%s (%s)" % (display_section_name(section),
-                                    display_person_name(section.grader))
+                                    display_person_name(instructor))
     else:
         display_name = display_section_name(section)
 

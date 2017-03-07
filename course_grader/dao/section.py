@@ -82,7 +82,7 @@ def all_gradable_sections(person, term):
                         section.is_grade_submission_delegate(person)):
                     url = "%s|%s" % (section_ref.url, instructor.uwregid)
                     gradable_section = copy.deepcopy(section)
-                    gradable_section.grader = instructor
+                    gradable_section.grading_instructor = instructor
                     gradable_sections[url] = gradable_section
 
         else:
@@ -138,7 +138,7 @@ def all_gradable_sections(person, term):
                 continue
 
             if instructor is not None:
-                section.grader = instructor
+                section.grading_instructor = instructor
                 gradable_sections[section_ref.url] = section
 
     return gradable_sections.values()
