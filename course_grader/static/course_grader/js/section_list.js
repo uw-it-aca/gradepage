@@ -101,7 +101,7 @@ GradePage.SectionList = (function ($) {
             text;
 
         $.ajax({
-            url: section_data.grade_status_url,
+            url: section_data.status_url,
             dataType: "json",
             beforeSend: function () {
                 badge_element(section_id).addClass("loading-icon");
@@ -130,7 +130,7 @@ GradePage.SectionList = (function ($) {
     function next_section_status() {
         if (section_status_queue.length) {
             var data = section_status_queue.shift();
-            if (data.grade_status_url) {
+            if (data.status_url) {
                 get_section_status(data);
             } else {
                 next_section_status();
@@ -162,13 +162,13 @@ GradePage.SectionList = (function ($) {
 
         for (i = 0, il = data.sections.length; i < il; i++) {
             section = data.sections[i];
-            if (section.grade_status_url !== null) {
+            if (section.status_url !== null) {
                 add_to_queue(section);
             }
             if (section.hasOwnProperty("secondary_sections")) {
                 for (j = 0, jl = section.secondary_sections.length; j < jl; j++) {
                     secondary_section = section.secondary_sections[j];
-                    if (secondary_section.grade_status_url !== null) {
+                    if (secondary_section.status_url !== null) {
                         add_to_queue(secondary_section);
                     }
                 }

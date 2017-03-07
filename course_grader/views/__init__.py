@@ -65,7 +65,8 @@ def section_status_params(section, instructor):
         "section_id": clean_section_id(section_id),
         "display_name": display_name,
         "section_url": None,
-        "grade_status_url": None
+        "status_url": None,
+        "grading_status": None,
     }
 
     if (section.is_grading_period_open() or
@@ -77,7 +78,7 @@ def section_status_params(section, instructor):
             data["section_url"] = "/section/%s" % section_id
         else:
             data["section_url"] = "/section/%s" % section_id
-            data["grade_status_url"] = "/api/v1/grading_status/%s" % section_id
+            data["status_url"] = "/api/v1/grading_status/%s" % section_id
     elif section.is_full_summer_term():
         data["grading_status"] = _(
             "summer_full_term_grade_submission_opens %(date)s"

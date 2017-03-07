@@ -448,11 +448,13 @@ class GradeRosterStatus(GradeRoster):
             logger.info("Grading status for %s not permitted for %s" % (
                 ex.section, ex.person))
             return self.error_response(403, "%s" % ex)
-        except (SecondaryGradingEnabled, GradingPeriodNotOpen,
-                InvalidTerm, InvalidSection, MissingInstructorParam) as ex:
+        except (InvalidTerm, InvalidSection, MissingInstructorParam) as ex:
             return self.error_response(400, "%s" % ex)
-        except ReceiptNotFound as ex:
-            return self.error_response(404, "%s" % ex)
+        except (GradingPeriodNotOpen, SecondaryGradingEnabled,
+                ReceiptNotFound) as ex:
+            data = section_status_params(self.section, self.instructor)
+            data["grading_status"] = ex
+            return self.json_response({"grading_status": data})
         except Exception as ex:
             logger.error("GET graderoster error: %s" % ex)
             err = ex.msg if hasattr(ex, "msg") else ex
