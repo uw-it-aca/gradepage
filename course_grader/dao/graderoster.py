@@ -114,7 +114,10 @@ def graderoster_for_section(section, instructor, requestor,
             if section.term.is_grading_period_past():
                 raise ReceiptNotFound()
             else:
-                raise GradingPeriodNotOpen()
+                if submitted_graderosters_only:
+                    raise ReceiptNotFound()
+                else:
+                    raise GradingPeriodNotOpen()
 
     # Merge any remaining receipts together, if they have a submission_id
     for graderoster in submitted_graderosters:
