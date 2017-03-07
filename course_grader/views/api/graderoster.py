@@ -358,7 +358,8 @@ class GradeRoster(GradeFormHandler):
         return {"graderoster": data}
 
     def status_by_section(self, secondary_section_id=None):
-        data = section_status_params(self.graderoster.section)
+        data = section_status_params(self.graderoster.section,
+                                     self.graderoster.instructor)
         total_count = 0
         submitted_count = 0
         for item in self.graderoster.items:

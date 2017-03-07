@@ -55,7 +55,7 @@ class Sections(RESTDispatch):
 
         section_data = []
         for section in sections:
-            data = section_status_params(section)
+            data = section_status_params(section, section.grader)
 
             if (not section.is_primary_section and
                     section.primary_section_label() in primary_sections):
