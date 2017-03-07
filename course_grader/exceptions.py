@@ -25,7 +25,8 @@ class InvalidSection(Exception):
 
 
 class MissingInstructorParam(Exception):
-    pass
+    def __str__(self):
+        return _("Missing instructor UWRegID")
 
 
 class ReceiptNotFound(Exception):

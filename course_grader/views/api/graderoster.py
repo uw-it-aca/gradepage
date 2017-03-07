@@ -54,19 +54,17 @@ class GradeRoster(GradeFormHandler):
                 self.graderoster = graderoster_for_section(
                     self.section, self.instructor, self.user)
 
-        except GradingNotPermitted as ex:
+        except (InvalidUser, GradingNotPermitted, OverrideNotPermitted) as ex:
             logger.info("Grading for %s not permitted for %s" % (
                 ex.section, ex.person))
             return self.error_response(403, "%s" % ex)
         except (SecondaryGradingEnabled, GradingPeriodNotOpen,
-                InvalidTerm, InvalidUser, OverrideNotPermitted) as ex:
-            return self.error_response(403, "%s" % ex)
-        except (InvalidSection, ReceiptNotFound) as ex:
+                InvalidTerm, InvalidSection, MissingInstructorParam) as ex:
+            return self.error_response(400, "%s" % ex)
+        except ReceiptNotFound as ex:
             return self.error_response(404, "%s" % ex)
         except Exception as ex:
-            logger.error(
-                "GET graderoster error: %s, Section: %s, Instructor: %s" % (
-                    ex, section.section_label(), instructor.uwnetid))
+            logger.error("GET graderoster error: %s" % ex)
             err = ex.msg if hasattr(ex, "msg") else ex
             return self.error_response(500, "%s" % err)
 
@@ -450,15 +448,15 @@ class GradeRosterStatus(GradeRoster):
             logger.info("Grading status for %s not permitted for %s" % (
                 ex.section, ex.person))
             return self.error_response(403, "%s" % ex)
-        except (SecondaryGradingEnabled, GradingPeriodNotOpen,
-                InvalidTerm) as ex:
-            return self.error_response(403, "%s" % ex)
-        except (InvalidSection, ReceiptNotFound) as ex:
-            return self.error_response(404, "%s" % ex)
+        except (InvalidTerm, InvalidSection, MissingInstructorParam) as ex:
+            return self.error_response(400, "%s" % ex)
+        except (GradingPeriodNotOpen, SecondaryGradingEnabled,
+                ReceiptNotFound) as ex:
+            data = section_status_params(self.section, self.instructor)
+            data["grading_status"] = ex
+            return self.json_response({"grading_status": data})
         except Exception as ex:
-            logger.error(
-                "GET graderoster error: %s, Section: %s, Instructor: %s" % (
-                    ex, section.section_label(), instructor.uwnetid))
+            logger.error("GET graderoster error: %s" % ex)
             err = ex.msg if hasattr(ex, "msg") else ex
             return self.error_response(500, "%s" % err)
 
