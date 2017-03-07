@@ -54,6 +54,7 @@ def display_section_name(section):
 
 def section_status_params(section, instructor):
     section_id = section_url_token(section, instructor)
+    grading_period_open = section.is_grading_period_open()
 
     if section.is_independent_study:
         display_name = "%s (%s)" % (display_section_name(section),
@@ -67,10 +68,10 @@ def section_status_params(section, instructor):
         "section_url": None,
         "status_url": None,
         "grading_status": None,
+        "grading_period_open": grading_period_open
     }
 
-    if (section.is_grading_period_open() or
-            section.term.is_grading_period_past()):
+    if (grading_period_open or section.term.is_grading_period_past()):
         if (section.is_primary_section and section.allows_secondary_grading):
             data["grading_status"] = _("secondary_grading_status")
         elif (not section.is_primary_section and not

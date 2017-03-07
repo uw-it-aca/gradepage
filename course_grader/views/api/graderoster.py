@@ -373,7 +373,6 @@ class GradeRoster(GradeFormHandler):
                 submitted_count += 1
 
         unsubmitted_count = total_count - submitted_count
-        grading_period_open = self.graderoster.section.is_grading_period_open()
 
         if hasattr(self.graderoster, "submissions"):
             submission = self.graderoster.submissions.get(
@@ -396,9 +395,9 @@ class GradeRoster(GradeFormHandler):
 
         data["submitted_count"] = submitted_count
         data["unsubmitted_count"] = unsubmitted_count
-        data["grading_period_open"] = grading_period_open
 
-        if (grading_period_open and unsubmitted_count):
+        if (self.graderoster.section.is_grading_period_open() and
+                unsubmitted_count):
             data["deadline_warning"] = submission_deadline_warning(
                 self.section.term)
 
@@ -453,7 +452,7 @@ class GradeRosterStatus(GradeRoster):
         except (GradingPeriodNotOpen, SecondaryGradingEnabled,
                 ReceiptNotFound) as ex:
             data = section_status_params(self.section, self.instructor)
-            data["grading_status"] = ex
+            data["grading_status"] = "%s" % ex
             return self.json_response({"grading_status": data})
         except Exception as ex:
             logger.error("GET graderoster error: %s" % ex)
