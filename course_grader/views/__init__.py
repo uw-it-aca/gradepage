@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.utils.timezone import (
     get_default_timezone, localtime, is_naive, make_aware)
@@ -55,6 +56,8 @@ def display_section_name(section):
 def section_status_params(section, instructor):
     section_id = section_url_token(section, instructor)
     grading_period_open = section.is_grading_period_open()
+    submission_deadline = section.term.grade_submission_deadline.isoformat()
+    gradepage_host = getattr(settings, "GRADEPAGE_HOST", "")
 
     if section.is_independent_study:
         display_name = "%s (%s)" % (display_section_name(section),
@@ -69,7 +72,7 @@ def section_status_params(section, instructor):
         "status_url": None,
         "grading_status": None,
         "grading_period_open": grading_period_open,
-        "grade_submission_deadline": section.term.grade_submission_deadline,
+        "grade_submission_deadline": submission_deadline,
     }
 
     if (grading_period_open or section.term.is_grading_period_past()):
@@ -77,10 +80,13 @@ def section_status_params(section, instructor):
             data["grading_status"] = _("secondary_grading_status")
         elif (not section.is_primary_section and not
                 section.allows_secondary_grading):
-            data["section_url"] = "/section/%s" % section_id
+            data["section_url"] = "%s/section/%s" % (
+                gradepage_host, section_id)
         else:
-            data["section_url"] = "/section/%s" % section_id
-            data["status_url"] = "/api/v1/grading_status/%s" % section_id
+            data["section_url"] = "%s/section/%s" % (
+                gradepage_host, section_id)
+            data["status_url"] = "%s/api/v1/grading_status/%s" % (
+                gradepage_host, section_id)
     elif section.is_full_summer_term():
         data["grading_status"] = _(
             "summer_full_term_grade_submission_opens %(date)s"

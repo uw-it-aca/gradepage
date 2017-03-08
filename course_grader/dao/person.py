@@ -4,41 +4,43 @@ provides identity information
 """
 
 from restclients.pws import PWS
-from restclients.exceptions import InvalidNetID, DataFailureException
+from restclients.exceptions import (
+    InvalidNetID, InvalidRegID, DataFailureException)
 from userservice.user import UserService
 from course_grader.exceptions import InvalidUser
 import json
 
 
 def person_from_netid(netid):
-    if netid is None:
-        raise InvalidNetID()
-    else:
-        return PWS().get_person_by_netid(netid)
-
-
-def person_from_username(username):
     try:
-        return person_from_netid(username)
-    except InvalidNetID as ex:
-        raise InvalidUser()
+        return PWS().get_person_by_netid(netid)
+    except (InvalidNetID, AttributeError) as ex:
+        raise InvalidUser(ex)
     except DataFailureException as ex:
         if ex.status == 404:
-            raise InvalidUser()
+            raise InvalidUser(ex)
         else:
             raise
 
 
 def person_from_user():
-    return person_from_username(UserService().get_user())
+    return person_from_netid(UserService().get_user())
 
 
 def person_from_request(request):
-    return person_from_username(request.META.get('HTTP_X_UW_ACT_AS'))
+    return person_from_netid(request.META.get('HTTP_X_UW_ACT_AS'))
 
 
 def person_from_regid(regid):
-    return PWS().get_person_by_regid(regid)
+    try:
+        return PWS().get_person_by_regid(regid)
+    except InvalidRegID as ex:
+        raise InvalidUser(ex)
+    except DataFailureException as ex:
+        if ex.status == 404:
+            raise InvalidUser(ex)
+        else:
+            raise
 
 
 def is_netid(username):

@@ -416,7 +416,7 @@ class GradeRosterStatus(GradeRoster):
                 self.user = person_from_request(request)
                 submitted_graderosters_only = True
             except InvalidUser as ex:
-                return self.error_response(403, "%s" % ex)
+                return self.error_response(403, "Invalid user: %s" % ex)
 
         try:
             section_id = kwargs.get("section_id")
@@ -447,10 +447,10 @@ class GradeRosterStatus(GradeRoster):
             logger.info("Grading status for %s not permitted for %s" % (
                 ex.section, ex.person))
             return self.error_response(403, "%s" % ex)
-        except (InvalidTerm, InvalidSection, MissingInstructorParam) as ex:
+        except (InvalidSection, InvalidUser, MissingInstructorParam) as ex:
             return self.error_response(400, "%s" % ex)
         except (GradingPeriodNotOpen, SecondaryGradingEnabled,
-                ReceiptNotFound) as ex:
+                ReceiptNotFound, InvalidTerm) as ex:
             data = section_status_params(self.section, self.instructor)
             data["grading_status"] = "%s" % ex
             return self.json_response({"grading_status": data})
