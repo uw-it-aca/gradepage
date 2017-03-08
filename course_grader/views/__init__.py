@@ -29,6 +29,16 @@ def url_for_term(term):
     return "/?term=%s-%s" % (term.year, term.quarter)
 
 
+def url_for_section(section_id):
+    return "%s/section/%s" % (
+        getattr(settings, "GRADEPAGE_HOST", ""), section_id)
+
+
+def url_for_grading_status(section_id):
+    return "%s/api/v1/grading_status/%s" % (
+        getattr(settings, "GRADEPAGE_HOST", ""), section_id)
+
+
 def display_datetime(datetime):
     if is_naive(datetime):
         datetime = make_aware(datetime, get_default_timezone())
@@ -57,7 +67,6 @@ def section_status_params(section, instructor):
     section_id = section_url_token(section, instructor)
     grading_period_open = section.is_grading_period_open()
     submission_deadline = section.term.grade_submission_deadline.isoformat()
-    gradepage_host = getattr(settings, "GRADEPAGE_HOST", "")
 
     if section.is_independent_study:
         display_name = "%s (%s)" % (display_section_name(section),
@@ -78,15 +87,9 @@ def section_status_params(section, instructor):
     if (grading_period_open or section.term.is_grading_period_past()):
         if (section.is_primary_section and section.allows_secondary_grading):
             data["grading_status"] = _("secondary_grading_status")
-        elif (not section.is_primary_section and not
-                section.allows_secondary_grading):
-            data["section_url"] = "%s/section/%s" % (
-                gradepage_host, section_id)
         else:
-            data["section_url"] = "%s/section/%s" % (
-                gradepage_host, section_id)
-            data["status_url"] = "%s/api/v1/grading_status/%s" % (
-                gradepage_host, section_id)
+            data["section_url"] = url_for_section(section_id)
+            data["status_url"] = url_for_grading_status(section_id)
     elif section.is_full_summer_term():
         data["grading_status"] = _(
             "summer_full_term_grade_submission_opens %(date)s"

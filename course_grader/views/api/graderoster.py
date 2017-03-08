@@ -8,7 +8,7 @@ from course_grader.dao.term import all_viewable_terms
 from course_grader.dao.term import submission_deadline_warning
 from course_grader.views import (
     section_status_params, clean_section_id, display_section_name,
-    display_person_name)
+    display_person_name, url_for_section, url_for_grading_status)
 from course_grader.views.api import GradeFormHandler
 from course_grader.exceptions import *
 from datetime import datetime
@@ -356,8 +356,7 @@ class GradeRoster(GradeFormHandler):
         return {"graderoster": data}
 
     def status_by_section(self, secondary_section_id=None):
-        data = section_status_params(self.graderoster.section,
-                                     self.graderoster.instructor)
+        data = section_status_params(self.section, self.instructor)
         total_count = 0
         submitted_count = 0
         for item in self.graderoster.items:
@@ -410,11 +409,11 @@ class GradeRosterStatus(GradeRoster):
 
         try:
             self.user = person_from_user()
-            submitted_graderosters_only = False
+            self.submitted_graderosters_only = False
         except InvalidUser as ex:
             try:
                 self.user = person_from_request(request)
-                submitted_graderosters_only = True
+                self.submitted_graderosters_only = True
             except InvalidUser as ex:
                 return self.error_response(403, "Invalid user: %s" % ex)
 
@@ -441,7 +440,7 @@ class GradeRosterStatus(GradeRoster):
 
             self.graderoster = graderoster_for_section(
                 self.section, self.instructor, self.user,
-                submitted_graderosters_only=submitted_graderosters_only)
+                submitted_graderosters_only=self.submitted_graderosters_only)
 
         except GradingNotPermitted as ex:
             logger.info("Grading status for %s not permitted for %s" % (
@@ -465,18 +464,40 @@ class GradeRosterStatus(GradeRoster):
         section_id = kwargs.get("section_id")
         section = self.section
 
-        data = self.status_by_section()
-
         # Handle secondary sections in this request if appropriate
         if section.is_primary_section and not section.allows_secondary_grading:
+            data = self.status_by_section()
             data["secondary_sections"] = []
             for linked_url in section.linked_section_urls:
-                secondary_section_id = linked_url.split("/")[-1].split(".")[0]
-                secondary_data = self.status_by_section(secondary_section_id)
-                secondary_data["section_id"] = clean_section_id(
-                    "-".join([str(section.term.year), section.term.quarter,
-                              section.curriculum_abbr, section.course_number,
-                              secondary_section_id, self.instructor.uwregid]))
+                secondary_data = self.secondary_section_status(linked_url)
                 data["secondary_sections"].append(secondary_data)
+        elif (not section.is_primary_section and
+                not section.allows_secondary_grading):
+            data = self.status_by_section(section.section_id)
+        else:
+            data = self.status_by_section()
 
         return self.json_response({"grading_status": data})
+
+    def secondary_section_status(self, section_url):
+        section = self.section
+        # Avoiding an SWS request for this section
+        secondary_section_id = section_url.split("/")[-1].split(".")[0]
+        section_id = "-".join([str(section.term.year), section.term.quarter,
+                              section.curriculum_abbr, section.course_number,
+                              secondary_section_id, self.instructor.uwregid])
+
+        data = self.status_by_section(secondary_section_id)
+
+        data["section_id"] = clean_section_id(section_id)
+        data["section_url"] = url_for_section(section_id)
+        data["display_name"] = " ".join([section.curriculum_abbr,
+                                        section.course_number,
+                                        secondary_section_id])
+
+        if self.submitted_graderosters_only:
+            data["status_url"] = url_for_grading_status(section_id)
+        else:
+            data["status_url"] = None
+
+        return data

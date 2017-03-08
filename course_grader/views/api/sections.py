@@ -60,6 +60,11 @@ class Sections(RESTDispatch):
             if (not section.is_primary_section and
                     section.primary_section_label() in primary_sections):
                 # Nested secondary
+
+                if not section.allows_secondary_grading:
+                    # Suppress status request from client
+                    data["status_url"] = None
+
                 primary_sections[section.primary_section_label()].append(data)
             elif (section.is_primary_section and
                     not section.is_independent_study):
