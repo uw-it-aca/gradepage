@@ -135,9 +135,9 @@ class ViewFunctionsTest(TestCase):
         with self.settings(
                 RESTCLIENTS_SWS_DAO_CLASS='restclients.dao_implementation.sws.File'):
 
-            term = get_term_by_year_and_quarter(2013, 'spring')
+            term = get_term_by_year_and_quarter(2013, 'summer')
             p = grade_submission_deadline_params(term)
 
             self.assertEquals(p['deadline_year'], 2013)
-            self.assertEquals(p['deadline_quarter'], 'Spring')
-            self.assertEquals(str(p['grade_submission_deadline']), '2017-03-09 17:00:00')
+            self.assertEquals(p['deadline_quarter'], 'Summer')
+            self.assertEquals(str(p['grade_submission_deadline']), '2013-08-27 17:00:00')
