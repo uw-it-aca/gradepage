@@ -1,15 +1,16 @@
 from django.core.context_processors import csrf
 from course_grader.models import SubmittedGradeRoster, Grade, GradeImport
-from course_grader.dao.graderoster import (
-    graderoster_for_section, item_is_submitted)
+from course_grader.dao.graderoster import graderoster_for_section
 from course_grader.dao.section import section_from_param, is_grader_for_section
 from course_grader.dao.person import person_from_user, person_from_request
 from course_grader.dao.term import all_viewable_terms
 from course_grader.dao.term import submission_deadline_warning
 from course_grader.views import (
     section_status_params, clean_section_id, display_section_name,
-    display_person_name, url_for_section, url_for_grading_status)
-from course_grader.views.api import GradeFormHandler
+    url_for_section, url_for_grading_status)
+from course_grader.views.api import (
+    GradeFormHandler, graderoster_status_params, item_is_submitted,
+    sorted_students, sorted_grades)
 from course_grader.exceptions import *
 from datetime import datetime
 import json
@@ -235,7 +236,8 @@ class GradeRoster(GradeFormHandler):
         submissions = getattr(self.graderoster, "submissions", {})
         for key in sorted(submissions.iterkeys()):
             sid = key if key != self.graderoster.section.section_id else None
-            submission_status = self.status_by_section(sid)
+            submission_status = graderoster_status_params(
+                self.graderoster, secondary_section_id=sid)
             submission_status["section_id"] = sid
             if submission_status["accepted_date"] is None:
                 data["has_inprogress_submissions"] = True
@@ -250,7 +252,7 @@ class GradeRoster(GradeFormHandler):
                                                "label": choice[1]})
 
         grade_lookup = {}
-        for item in self.sorted_students(self.graderoster.items):
+        for item in sorted_students(self.graderoster.items):
             if (secondary_section is not None and
                     secondary_section.section_id != item.section_id):
                 # Filtering by secondary section
@@ -304,7 +306,7 @@ class GradeRoster(GradeFormHandler):
                     grade_choices_index = grade_lookup[grade_choices_csv]
                 except KeyError:
                     data["grade_choices"].append(
-                        self.sorted_grades(item.grade_choices))
+                        sorted_grades(item.grade_choices))
                     grade_choices_index = len(data["grade_choices"]) - 1
                     grade_lookup[grade_choices_csv] = grade_choices_index
 
@@ -355,58 +357,9 @@ class GradeRoster(GradeFormHandler):
 
         return {"graderoster": data}
 
-    def status_by_section(self, secondary_section_id=None):
-        data = section_status_params(self.section, self.instructor)
-        total_count = 0
-        submitted_count = 0
-        for item in self.graderoster.items:
-            if (secondary_section_id is not None and
-                    secondary_section_id != item.section_id):
-                continue
 
-            if item.is_auditor or item.date_withdrawn:
-                continue
-
-            total_count += 1
-            if item_is_submitted(item):
-                submitted_count += 1
-
-        unsubmitted_count = total_count - submitted_count
-
-        if hasattr(self.graderoster, "submissions"):
-            submission = self.graderoster.submissions.get(
-                secondary_section_id, None)
-            if submission is None:
-                submission = self.graderoster.submissions.get(
-                    self.graderoster.section.section_id, None)
-
-            if submission is not None:
-                submitted_date = submission["submitted_date"]
-                submitted_by = submission["submitted_by"]
-                accepted_date = submission["accepted_date"]
-                grade_import = submission["grade_import"]
-                data["submitted_date"] = submitted_date.isoformat()
-                data["accepted_date"] = accepted_date.isoformat() if (
-                    accepted_date is not None) else None
-                data["submitted_by"] = display_person_name(submitted_by)
-                data["grade_import"] = grade_import.json_data() if (
-                    grade_import is not None) else None
-
-        data["submitted_count"] = submitted_count
-        data["unsubmitted_count"] = unsubmitted_count
-
-        if (self.graderoster.section.is_grading_period_open() and
-                unsubmitted_count):
-            data["deadline_warning"] = submission_deadline_warning(
-                self.section.term)
-
-        return data
-
-
-class GradeRosterStatus(GradeRoster):
-    def run(self, *args, **kwargs):
-        request = args[0]
-
+class GradeRosterStatus(GradeFormHandler):
+    def GET(self, request, **kwargs):
         try:
             self.user = person_from_user()
             self.submitted_graderosters_only = False
@@ -458,24 +411,22 @@ class GradeRosterStatus(GradeRoster):
             err = ex.msg if hasattr(ex, "msg") else ex
             return self.error_response(500, "%s" % err)
 
-        return self.run_http_method(*args, **kwargs)
+        data = section_status_params(self.section, self.instructor)
 
-    def GET(self, request, **kwargs):
-        section_id = kwargs.get("section_id")
         section = self.section
-
-        # Handle secondary sections in this request if appropriate
         if section.is_primary_section and not section.allows_secondary_grading:
-            data = self.status_by_section()
+            # Handle secondary sections in this request if appropriate
+            data.update(graderoster_status_params(self.graderoster))
             data["secondary_sections"] = []
             for linked_url in section.linked_section_urls:
                 secondary_data = self.secondary_section_status(linked_url)
                 data["secondary_sections"].append(secondary_data)
         elif (not section.is_primary_section and
                 not section.allows_secondary_grading):
-            data = self.status_by_section(section.section_id)
+            data.update(graderoster_status_params(
+                self.graderoster, secondary_section_id=section.section_id))
         else:
-            data = self.status_by_section()
+            data.update(graderoster_status_params(self.graderoster))
 
         return self.json_response({"grading_status": data})
 
@@ -487,7 +438,9 @@ class GradeRosterStatus(GradeRoster):
                               section.curriculum_abbr, section.course_number,
                               secondary_section_id, self.instructor.uwregid])
 
-        data = self.status_by_section(secondary_section_id)
+        data = section_status_params(section, self.instructor)
+        data.update(graderoster_status_params(
+            self.graderoster, secondary_section_id=secondary_section_id))
 
         data["section_id"] = clean_section_id(section_id)
         data["section_url"] = url_for_section(section_id)
