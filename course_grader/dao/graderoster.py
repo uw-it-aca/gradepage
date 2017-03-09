@@ -18,19 +18,6 @@ import re
 logger = logging.getLogger(__name__)
 
 
-def item_is_submitted(item):
-    if (item.is_auditor or item.date_withdrawn is not None):
-        return False
-
-    # Old receipts do not include date_graded, so also check for the
-    # existence of a grade
-    if (item.date_graded is not None or
-            item.grade is not None or item.no_grade_now):
-        return True
-    else:
-        return False
-
-
 def graderoster_for_section(section, instructor, requestor,
                             submitted_graderosters_only=False):
     ret_graderoster = None

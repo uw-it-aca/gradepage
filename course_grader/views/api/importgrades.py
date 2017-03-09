@@ -4,7 +4,7 @@ from course_grader.dao.term import all_viewable_terms
 from course_grader.dao.section import section_from_param, is_grader_for_section
 from course_grader.dao.graderoster import graderoster_for_section
 from course_grader.dao.catalyst import valid_gradebook_id
-from course_grader.views.api import GradeFormHandler
+from course_grader.views.api import GradeFormHandler, sorted_students
 from course_grader.views import clean_section_id, section_url_token
 from course_grader.views import display_section_name
 from course_grader.exceptions import *
@@ -179,7 +179,7 @@ class ImportGrades(GradeFormHandler):
 
         secondary_section = getattr(self.graderoster, "secondary_section",
                                     None)
-        for item in self.sorted_students(self.graderoster.items):
+        for item in sorted_students(self.graderoster.items):
             if (secondary_section is not None and
                     secondary_section.section_id != item.section_id):
                 # Filtering by secondary section
