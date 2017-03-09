@@ -10,7 +10,7 @@ before_script:
   - npm install jshint
   - cp travis-ci/manage.py manage.py
 script:
-  - pep8 course_grader/ --exclude=migrations
+  - pep8 course_grader/ --exclude=migrations,test
   - jshint course_grader/static/course_grader/js/ --verbose
   - coverage run --source=course_grader/ --omit=course_grader/migrations/* manage.py test course_grader
 after_success:
