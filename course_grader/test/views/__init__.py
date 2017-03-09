@@ -3,21 +3,20 @@ from django.utils.timezone import utc
 from restclients.pws import PWS
 from restclients.sws.section import get_section_by_label
 from restclients.sws.term import get_term_by_year_and_quarter
+from restclients.test import fdao_sws_override, fdao_pws_override
 from course_grader.views import *
 from datetime import datetime
 
 
+@fdao_sws_override
+@fdao_pws_override
 class ViewFunctionsTest(TestCase):
     def test_section_url_token(self):
-        with self.settings(
-                RESTCLIENTS_SWS_DAO_CLASS='restclients.dao_implementation.sws.File',
-                RESTCLIENTS_PWS_DAO_CLASS='restclients.dao_implementation.pws.File'):
+        section = get_section_by_label('2013,spring,TRAIN,101/A')
+        user = PWS().get_person_by_netid('javerage')
 
-            section = get_section_by_label('2013,spring,TRAIN,101/A')
-            user = PWS().get_person_by_netid('javerage')
-
-            self.assertEquals(section_url_token(section, user),
-                              '2013-spring-TRAIN-101-A-9136CCB8F66711D5BE060004AC494FFE')
+        self.assertEquals(section_url_token(section, user),
+                          '2013-spring-TRAIN-101-A-9136CCB8F66711D5BE060004AC494FFE')
 
     def test_clean_section_id(self):
         self.assertEquals(
@@ -94,50 +93,36 @@ class ViewFunctionsTest(TestCase):
                 'January 01 at  6:30 AM PST')
 
     def test_display_person_name(self):
-        with self.settings(
-                RESTCLIENTS_PWS_DAO_CLASS='restclients.dao_implementation.pws.File'):
+        user = PWS().get_person_by_netid('javerage')
+        user.display_name = 'Joe Student'
+        self.assertEquals(display_person_name(user), 'Joe Student')
 
-            user = PWS().get_person_by_netid('javerage')
-            user.display_name = 'Joe Student'
-            self.assertEquals(display_person_name(user), 'Joe Student')
-
-            user = PWS().get_person_by_netid('javerage')
-            user.display_name = None
-            self.assertEquals(display_person_name(user), 'James Student')
+        user = PWS().get_person_by_netid('javerage')
+        user.display_name = None
+        self.assertEquals(display_person_name(user), 'James Student')
 
     def test_display_section_name(self):
-        with self.settings(
-                RESTCLIENTS_SWS_DAO_CLASS='restclients.dao_implementation.sws.File',
-                RESTCLIENTS_PWS_DAO_CLASS='restclients.dao_implementation.pws.File'):
+        section = get_section_by_label('2013,spring,TRAIN,101/A')
+        self.assertEquals(display_section_name(section), 'TRAIN 101 A')
 
-            section = get_section_by_label('2013,spring,TRAIN,101/A')
-            self.assertEquals(display_section_name(section), 'TRAIN 101 A')
-
-            section = get_section_by_label('2013,spring,TRAIN,101/A')
-            section.is_independent_study = True
-            self.assertEquals(display_section_name(section), 'TRAIN 101 A')
+        section = get_section_by_label('2013,spring,TRAIN,101/A')
+        section.is_independent_study = True
+        self.assertEquals(display_section_name(section), 'TRAIN 101 A')
 
     def test_section_status_params(self):
-        with self.settings(
-                RESTCLIENTS_SWS_DAO_CLASS='restclients.dao_implementation.sws.File',
-                RESTCLIENTS_PWS_DAO_CLASS='restclients.dao_implementation.pws.File'):
+        section = get_section_by_label('2013,summer,TRAIN,101/A')
+        user = PWS().get_person_by_netid('javerage')
 
-            section = get_section_by_label('2013,summer,TRAIN,101/A')
-            user = PWS().get_person_by_netid('javerage')
+        p = section_status_params(section, user)
 
-            p = section_status_params(section, user)
-
-            self.assertEquals(p['grading_period_open'], False)
-            self.assertEquals(p['grade_submission_deadline'], '2013-08-27T17:00:00')
-            self.assertEquals(p['grading_status'], None)
+        self.assertEquals(p['grading_period_open'], False)
+        self.assertEquals(p['grade_submission_deadline'], '2013-08-27T17:00:00')
+        self.assertEquals(p['grading_status'], None)
 
     def test_grade_submission_deadline_params(self):
-        with self.settings(
-                RESTCLIENTS_SWS_DAO_CLASS='restclients.dao_implementation.sws.File'):
+        term = get_term_by_year_and_quarter(2013, 'summer')
+        p = grade_submission_deadline_params(term)
 
-            term = get_term_by_year_and_quarter(2013, 'summer')
-            p = grade_submission_deadline_params(term)
-
-            self.assertEquals(p['deadline_year'], 2013)
-            self.assertEquals(p['deadline_quarter'], 'Summer')
-            self.assertEquals(str(p['grade_submission_deadline']), '2013-08-27 17:00:00')
+        self.assertEquals(p['deadline_year'], 2013)
+        self.assertEquals(p['deadline_quarter'], 'Summer')
+        self.assertEquals(str(p['grade_submission_deadline']), '2013-08-27 17:00:00')

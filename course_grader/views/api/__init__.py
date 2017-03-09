@@ -1,5 +1,6 @@
 from django.conf import settings
 from userservice.user import UserService
+from course_grader.dao.term import submission_deadline_warning
 from course_grader.views.rest_dispatch import RESTDispatch
 from course_grader.models import Grade
 from course_grader.exceptions import OverrideNotPermitted
