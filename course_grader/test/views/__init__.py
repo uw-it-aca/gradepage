@@ -1,11 +1,9 @@
 from django.test import TestCase
-from django.utils.timezone import utc
 from restclients.pws import PWS
 from restclients.sws.section import get_section_by_label
 from restclients.sws.term import get_term_by_year_and_quarter
 from restclients.test import fdao_sws_override, fdao_pws_override
 from course_grader.views import *
-from datetime import datetime
 
 
 @fdao_sws_override
@@ -65,25 +63,6 @@ class ViewFunctionsTest(TestCase):
             self.assertEquals(
                 url_for_grading_status('2013-spring-T RAIN-101-A-9136CCB8F66711D5BE060004AC494FFE'),
                 'https://abc.edu/api/v1/grading_status/2013-spring-T RAIN-101-A-9136CCB8F66711D5BE060004AC494FFE')
-
-    def test_display_datetime(self):
-        with self.settings(TIME_ZONE='UTC'):
-            self.assertEquals(
-                display_datetime(datetime(2000, 1, 1, 14, 30)),
-                'January 01 at  2:30 PM UTC')
-
-            self.assertEquals(
-                display_datetime(datetime(2000, 1, 1, 14, 30).replace(tzinfo=utc)),
-                'January 01 at  2:30 PM UTC')
-
-        with self.settings(TIME_ZONE='America/Los_Angeles'):
-	    self.assertEquals(
-                display_datetime(datetime(2000, 1, 1, 14, 30)),
-                'January 01 at  2:30 PM PST')
-
-            self.assertEquals(
-                display_datetime(datetime(2000, 1, 1, 14, 30).replace(tzinfo=utc)),
-                'January 01 at  6:30 AM PST')
 
     def test_section_status_params(self):
         section = get_section_by_label('2013,summer,TRAIN,101/A')

@@ -1,12 +1,10 @@
 from django.conf import settings
 from django.http import HttpResponseRedirect
-from django.utils.timezone import (
-    get_default_timezone, localtime, is_naive, make_aware)
 from django.utils.translation import ugettext as _
+from course_grader.dao import display_datetime
 from course_grader.dao.person import person_display_name
 from course_grader.dao.section import section_url_token, section_display_name
 from course_grader.dao.term import submission_deadline_warning
-from datetime import datetime
 import re
 
 
@@ -32,14 +30,6 @@ def url_for_section(section_id):
 def url_for_grading_status(section_id):
     return "%s/api/v1/grading_status/%s" % (
         getattr(settings, "GRADEPAGE_HOST", ""), section_id)
-
-
-def display_datetime(datetime):
-    if is_naive(datetime):
-        datetime = make_aware(datetime, get_default_timezone())
-    else:
-        datetime = localtime(datetime)
-    return datetime.strftime("%B %d at %l:%M %p %Z")
 
 
 def section_status_params(section, instructor):

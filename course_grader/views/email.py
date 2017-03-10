@@ -4,8 +4,7 @@ from django.utils.translation import ungettext, ugettext
 from django.contrib.humanize.templatetags.humanize import apnumber
 from course_grader.dao.section import section_url_token, section_display_name
 from course_grader.dao.person import person_display_name
-from course_grader.views import display_datetime
-from datetime import datetime
+from course_grader.dao import current_datetime, display_datetime
 
 
 def submission_message(graderoster, submitter):
@@ -54,7 +53,7 @@ def submission_message(graderoster, submitter):
     gradepage_host = getattr(settings, "GRADEPAGE_HOST", "http://localhost")
     params = {
         "submitted_by": submitter_name,
-        "submitted_date": display_datetime(datetime.now()),
+        "submitted_date": display_datetime(current_datetime()),
         "submitted_count": success_count + error_count,
         "success_count": success_count,
         "failure_count": error_count,

@@ -3,19 +3,13 @@ This module encapsulates the access of sws term data
 """
 
 from django.conf import settings
-from restclients.sws.term import get_term_by_year_and_quarter, get_term_by_date
-from restclients.sws.term import get_term_before, get_term_after
+from restclients.sws.term import (
+    get_term_by_year_and_quarter, get_term_by_date, get_term_before,
+    get_term_after)
+from course_grader.dao import current_datetime
 from course_grader.exceptions import InvalidTerm
-from datetime import datetime, timedelta
+from datetime import timedelta
 import re
-
-
-def current_datetime():
-    override_dt = getattr(settings, "CURRENT_DATETIME_OVERRIDE", None)
-    if override_dt is not None:
-        return datetime.strptime(override_dt, "%Y-%m-%d %H:%M:%S")
-    else:
-        return datetime.now()
 
 
 def submission_deadline_warning(term):
