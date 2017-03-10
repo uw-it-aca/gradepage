@@ -2,8 +2,9 @@ from django.conf import settings
 from django.template import loader
 from django.utils.translation import ungettext, ugettext
 from django.contrib.humanize.templatetags.humanize import apnumber
-from course_grader.views import display_person_name, display_datetime
-from datetime import datetime
+from course_grader.dao.section import section_url_token, section_display_name
+from course_grader.dao.person import person_display_name
+from course_grader.dao import current_datetime, display_datetime
 
 
 def submission_message(graderoster, submitter):
@@ -11,14 +12,9 @@ def submission_message(graderoster, submitter):
     if section is None:
         section = graderoster.section
 
-    section_id = "-".join([str(section.term.year), section.term.quarter,
-                           section.curriculum_abbr, section.course_number,
-                           section.section_id, graderoster.instructor.uwregid])
-    section_name = " ".join([section.curriculum_abbr,
-                             section.course_number,
-                             section.section_id])
-
-    submitter_name = display_person_name(submitter)
+    section_id = section_url_token(section, graderoster.instructor)
+    section_name = section_display_name(section)
+    submitter_name = person_display_name(submitter)
 
     success_count = 0
     error_count = 0
@@ -57,7 +53,7 @@ def submission_message(graderoster, submitter):
     gradepage_host = getattr(settings, "GRADEPAGE_HOST", "http://localhost")
     params = {
         "submitted_by": submitter_name,
-        "submitted_date": display_datetime(datetime.now()),
+        "submitted_date": display_datetime(current_datetime()),
         "submitted_count": success_count + error_count,
         "success_count": success_count,
         "failure_count": error_count,

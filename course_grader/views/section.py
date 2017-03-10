@@ -5,11 +5,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.views.decorators.cache import never_cache
 from course_grader.models import GradeImport
-from course_grader.dao.section import section_from_param
+from course_grader.dao.section import (
+    section_from_param, section_display_name, section_url_token)
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import current_term
-from course_grader.views import grade_submission_deadline_params,\
-    section_url_token, display_section_name, display_person_name, url_for_term
+from course_grader.views import grade_submission_deadline_params, url_for_term
 from course_grader.exceptions import MissingInstructorParam
 from restclients.catalyst.gradebook import valid_gradebook_id
 import logging
@@ -52,7 +52,10 @@ def section(request, url_token):
         # future grading period
         return HttpResponseRedirect("/")
 
-    section_name = display_section_name(section)
+    if section.is_independent_study:
+        section_name = section_display_name(section, instructor)
+    else:
+        section_name = section_display_name(section)
 
     params = {
         "page_title": section_name,
@@ -68,9 +71,6 @@ def section(request, url_token):
         "import_url": "/api/v1/import/%s" % section_url_token(
             section, instructor),
     }
-
-    if section.is_independent_study:
-        params["section_name"] += " (%s)" % display_person_name(instructor)
 
     if now_term.is_grading_period_open():
         params.update(grade_submission_deadline_params(now_term))

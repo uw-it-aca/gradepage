@@ -1,22 +1,15 @@
 from django.conf import settings
 from django.http import HttpResponseRedirect
-from django.utils.timezone import (
-    get_default_timezone, localtime, is_naive, make_aware)
 from django.utils.translation import ugettext as _
+from course_grader.dao import display_datetime
+from course_grader.dao.person import person_display_name
+from course_grader.dao.section import section_url_token, section_display_name
 from course_grader.dao.term import submission_deadline_warning
-from nameparser import HumanName
-from datetime import datetime
 import re
 
 
 def user_login(request):
     return HttpResponseRedirect(request.GET.get('next', '/'))
-
-
-def section_url_token(section, instructor):
-    return "-".join([str(section.term.year), section.term.quarter,
-                     section.curriculum_abbr, section.course_number,
-                     section.section_id, instructor.uwregid])
 
 
 def clean_section_id(section_id):
@@ -39,40 +32,15 @@ def url_for_grading_status(section_id):
         getattr(settings, "GRADEPAGE_HOST", ""), section_id)
 
 
-def display_datetime(datetime):
-    if is_naive(datetime):
-        datetime = make_aware(datetime, get_default_timezone())
-    else:
-        datetime = localtime(datetime)
-    return datetime.strftime("%B %d at %l:%M %p %Z")
-
-
-def display_person_name(person):
-    if (person.display_name is not None and len(person.display_name) and
-            not person.display_name.isupper()):
-        name = person.display_name
-    else:
-        name = HumanName("%s %s" % (person.first_name, person.surname))
-        name.capitalize()
-        name.string_format = "{first} {last}"
-    return unicode(name)
-
-
-def display_section_name(section):
-    return " ".join([section.curriculum_abbr, section.course_number,
-                     section.section_id])
-
-
 def section_status_params(section, instructor):
     section_id = section_url_token(section, instructor)
     grading_period_open = section.is_grading_period_open()
     submission_deadline = section.term.grade_submission_deadline.isoformat()
 
     if section.is_independent_study:
-        display_name = "%s (%s)" % (display_section_name(section),
-                                    display_person_name(instructor))
+        display_name = section_display_name(section, instructor)
     else:
-        display_name = display_section_name(section)
+        display_name = section_display_name(section)
 
     data = {
         "section_id": clean_section_id(section_id),
