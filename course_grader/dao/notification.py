@@ -1,13 +1,25 @@
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 from django.template import loader
 from django.utils.translation import ungettext, ugettext
 from django.contrib.humanize.templatetags.humanize import apnumber
 from course_grader.dao.section import section_url_token, section_display_name
-from course_grader.dao.person import person_display_name
+from course_grader.dao.person import person_from_regid, person_display_name
 from course_grader.dao import current_datetime, display_datetime
+import logging
 
 
-def submission_message(graderoster, submitter):
+logger = logging.getLogger(__name__)
+
+
+def create_recipient_list(people):
+    recipients = []
+    for person in people.values():
+        recipients.append("%s@uw.edu" % person.uwnetid)
+    return recipients
+
+
+def create_message(graderoster, submitter):
     section = getattr(graderoster, "secondary_section", None)
     if section is None:
         section = graderoster.section
@@ -70,3 +82,46 @@ def submission_message(graderoster, submitter):
     return (subject,
             loader.render_to_string(text_template, params),
             loader.render_to_string(html_template, params))
+
+
+def graderoster_people(graderoster):
+    people = {graderoster.instructor.uwregid: graderoster.instructor}
+
+    for person in graderoster.authorized_grade_submitters:
+        people[person.uwregid] = person
+
+    for delegate in graderoster.grade_submission_delegates:
+        people[delegate.person.uwregid] = delegate.person
+
+    return people
+
+
+def notify_grade_submitters(graderoster, submitter_regid):
+    people = graderoster_people(graderoster)
+
+    if submitter_regid in people:
+        submitter = people[submitter_regid]
+    else:
+        submitter = person_from_regid(submitter_regid)
+
+    (subject, text_body, html_body) = create_message(graderoster, submitter)
+    sender = settings.get("EMAIL_NOREPLY_ADDRESS")
+    recipients = create_recipient_list(people)
+
+    message = EmailMultiAlternatives(subject, text_body, sender, recipients)
+    message.attach_alternative(html_body, "text/html")
+
+    section = getattr(graderoster, "secondary_section", None)
+    if section is None:
+        section = graderoster.section
+    section_id = section.section_label()
+
+    try:
+        message.send()
+        log_message = "Submission email sent"
+    except Exception as ex:
+        log_message = "Submission email failed: %s" % ex
+
+    for recipient in recipients:
+        logger.info("%s, To: %s, Section: %s, Status: %s" % (
+            log_message, recipient, section_id, subject))
