@@ -5,7 +5,7 @@ This module encapsulates the access of sws section data
 from restclients.sws.section import get_section_by_url, get_section_by_label
 from restclients.sws.section import get_sections_by_instructor_and_term
 from restclients.sws.section import get_sections_by_delegate_and_term
-from course_grader.dao.person import person_from_regid
+from course_grader.dao.person import person_from_regid, person_display_name
 from course_grader.exceptions import InvalidSection, MissingInstructorParam
 import logging
 import copy
@@ -42,6 +42,22 @@ def section_from_param(param):
         raise MissingInstructorParam()
 
     return (section, person_from_regid(instructor_reg_id))
+
+
+def section_url_token(section, instructor):
+    return "-".join([str(section.term.year), section.term.quarter,
+                     section.curriculum_abbr, section.course_number,
+                     section.section_id, instructor.uwregid])
+
+
+def section_display_name(section, instructor=None):
+    name = " ".join([section.curriculum_abbr, section.course_number,
+                     section.section_id])
+
+    if instructor is not None:
+        name = "%s (%s)" % (name, person_display_name(instructor))
+
+    return name
 
 
 def all_gradable_sections(person, term):

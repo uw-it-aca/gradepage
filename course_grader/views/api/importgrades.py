@@ -1,12 +1,13 @@
 from course_grader.models import GradeImport, ImportConversion
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import all_viewable_terms
-from course_grader.dao.section import section_from_param, is_grader_for_section
+from course_grader.dao.section import (
+    section_from_param, is_grader_for_section, section_display_name,
+    section_url_token)
 from course_grader.dao.graderoster import graderoster_for_section
 from course_grader.dao.catalyst import valid_gradebook_id
 from course_grader.views.api import GradeFormHandler, sorted_students
-from course_grader.views import clean_section_id, section_url_token
-from course_grader.views import display_section_name
+from course_grader.views import clean_section_id
 from course_grader.exceptions import *
 import json
 import logging
@@ -170,7 +171,7 @@ class ImportGrades(GradeFormHandler):
 
     def response_content(self, grade_import):
         return_data = grade_import.json_data()
-        return_data["section_name"] = display_section_name(self.section)
+        return_data["section_name"] = section_display_name(self.section)
 
         # Create a new list of imported grades, including only students who are
         # actually on the graderoster

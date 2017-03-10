@@ -1,12 +1,11 @@
 from django.conf import settings
 from userservice.user import UserService
-from course_grader.dao.person import person_from_user
-from course_grader.views import display_person_name
+from course_grader.dao.person import person_from_user, person_display_name
 
 
 def user(request):
     try:
-        user_fullname = display_person_name(person_from_user())
+        user_fullname = person_display_name(person_from_user())
     except Exception as ex:
         user_fullname = None
 

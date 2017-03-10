@@ -9,9 +9,9 @@ from restclients.sws.term import get_term_by_year_and_quarter
 from restclients.models.sws import Term
 from restclients.exceptions import DataFailureException, InvalidNetID
 from course_grader.models import SubmittedGradeRoster, GradeImport
-from course_grader.dao.person import person_from_netid, person_from_regid
+from course_grader.dao.person import (
+    person_from_netid, person_from_regid, person_display_name)
 from course_grader.views.support import is_admin_user
-from course_grader.views import display_person_name
 import logging
 import re
 
@@ -102,8 +102,8 @@ def grade_imports(request):
             person = person_from_regid(instructor_reg_id)
             people[instructor_reg_id] = person
 
-        importer_name = display_person_name(people[grade_import.imported_by])
-        instructor_name = display_person_name(people[instructor_reg_id])
+        importer_name = person_display_name(people[grade_import.imported_by])
+        instructor_name = person_display_name(people[instructor_reg_id])
 
         data["section_name"] = " ".join([curriculum_abbr, course_number,
                                          section_id])
@@ -220,10 +220,10 @@ def graderosters(request):
             "id": graderoster.pk,
             "section_id": sid,
             "section_name": section_name,
-            "instructor": display_person_name(
+            "instructor": person_display_name(
                 people[graderoster.instructor_id]),
             "submitted_date": graderoster.submitted_date,
-            "submitted_by": display_person_name(
+            "submitted_by": person_display_name(
                 people[graderoster.submitted_by]),
             "submitter_netid": people[graderoster.submitted_by].uwnetid,
             "status_code": graderoster.status_code or "200",

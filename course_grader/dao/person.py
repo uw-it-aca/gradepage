@@ -8,6 +8,7 @@ from restclients.exceptions import (
     InvalidNetID, InvalidRegID, DataFailureException)
 from userservice.user import UserService
 from course_grader.exceptions import InvalidUser
+from nameparser import HumanName
 import json
 
 
@@ -43,16 +44,27 @@ def person_from_regid(regid):
             raise
 
 
+def person_display_name(person):
+    if (person.display_name is not None and len(person.display_name) and
+            not person.display_name.isupper()):
+        name = person.display_name
+    else:
+        name = HumanName("%s %s" % (person.first_name, person.surname))
+        name.capitalize()
+        name.string_format = "{first} {last}"
+    return unicode(name)
+
+
 def is_netid(username):
     error_msg = "No override user supplied, please enter a UWNetID"
-    if len(username) > 0:
+    if username is not None and len(username) > 0:
         try:
             person = person_from_netid(username)
             if username.lower() == person.uwnetid:
                 error_msg = None
             else:
                 error_msg = "Current netid: %s, Prior netid: " % person.uwnetid
-        except InvalidNetID:
+        except InvalidUser:
             error_msg = "Not a valid UWNetID: "
         except DataFailureException, err:
             data = json.loads(err.msg)

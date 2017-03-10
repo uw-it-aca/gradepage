@@ -1,13 +1,14 @@
 from django.core.context_processors import csrf
 from course_grader.models import SubmittedGradeRoster, Grade, GradeImport
 from course_grader.dao.graderoster import graderoster_for_section
-from course_grader.dao.section import section_from_param, is_grader_for_section
+from course_grader.dao.section import (
+    section_from_param, is_grader_for_section, section_display_name)
 from course_grader.dao.person import person_from_user, person_from_request
 from course_grader.dao.term import all_viewable_terms
 from course_grader.dao.term import submission_deadline_warning
 from course_grader.views import (
-    section_status_params, clean_section_id, display_section_name,
-    url_for_section, url_for_grading_status)
+    section_status_params, clean_section_id, url_for_section,
+    url_for_grading_status)
 from course_grader.views.api import (
     GradeFormHandler, graderoster_status_params, item_is_submitted,
     sorted_students, sorted_grades)
@@ -216,7 +217,7 @@ class GradeRoster(GradeFormHandler):
         sources = dict(GradeImport.SOURCE_CHOICES)
 
         data = {"section_id": section_id,
-                "section_name": display_section_name(self.section),
+                "section_name": section_display_name(self.section),
                 "students": [],
                 "import_choices": [],
                 "grade_choices": [],

@@ -1,5 +1,6 @@
 from django.conf import settings
 from userservice.user import UserService
+from course_grader.dao.person import person_display_name
 from course_grader.dao.term import submission_deadline_warning
 from course_grader.views.rest_dispatch import RESTDispatch
 from course_grader.models import Grade
@@ -130,7 +131,7 @@ def graderoster_status_params(graderoster, secondary_section_id=None):
             data["submitted_date"] = submitted_date.isoformat()
             data["accepted_date"] = accepted_date.isoformat() if (
                 accepted_date is not None) else None
-            data["submitted_by"] = display_person_name(submitted_by)
+            data["submitted_by"] = person_display_name(submitted_by)
             data["grade_import"] = grade_import.json_data() if (
                 grade_import is not None) else None
 
