@@ -3,6 +3,7 @@ from course_grader.test.dao.person import PersonDAOFunctionsTest
 from course_grader.test.dao.section import SectionDAOFunctionsTest
 from course_grader.test.dao.gradesubmission import (
     GradeSubmissionDAOFunctionsTest)
+from course_grader.test.dao.term import TermDAOFunctionsTest
 from course_grader.test.dao.notification import NotificationDAOFunctionsTest
 from course_grader.test.views import ViewFunctionsTest
 from course_grader.test.views.api import ViewAPIFunctionsTest
