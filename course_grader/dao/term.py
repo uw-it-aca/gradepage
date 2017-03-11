@@ -19,7 +19,7 @@ def submission_deadline_warning(term):
 
 
 def term_from_param(param):
-    valid = re.compile("^2\d{3}-(?:winter|spring|summer|autumn)$")
+    valid = re.compile("^2\d{3}-(?:winter|spring|summer|autumn)$", re.I)
     if not valid.match(param):
         raise InvalidTerm()
     (year, quarter) = param.split("-")
@@ -53,7 +53,7 @@ def previous_gradable_term():
 def all_viewable_terms():
     term = current_term()
     terms = []
-    for i in range(-1, settings.PAST_TERMS_VIEWABLE):
+    for i in range(-1, getattr(settings, "PAST_TERMS_VIEWABLE", 4)):
         terms.append(term)
         term = get_term_before(term)
     return terms
