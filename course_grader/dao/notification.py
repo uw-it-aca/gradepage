@@ -105,7 +105,7 @@ def notify_grade_submitters(graderoster, submitter_regid):
         submitter = person_from_regid(submitter_regid)
 
     (subject, text_body, html_body) = create_message(graderoster, submitter)
-    sender = settings.get("EMAIL_NOREPLY_ADDRESS")
+    sender = getattr(settings, "EMAIL_NOREPLY_ADDRESS")
     recipients = create_recipient_list(people)
 
     message = EmailMultiAlternatives(subject, text_body, sender, recipients)
