@@ -66,7 +66,7 @@ def is_netid(username):
                 error_msg = "Current netid: %s, Prior netid: " % person.uwnetid
         except InvalidUser:
             error_msg = "Not a valid UWNetID: "
-        except DataFailureException, err:
+        except DataFailureException as err:
             data = json.loads(err.msg)
             error_msg = "%s: " % data["StatusDescription"].rstrip(".")
     return error_msg
