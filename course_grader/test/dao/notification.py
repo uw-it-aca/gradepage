@@ -15,17 +15,17 @@ class NotificationDAOFunctionsTest(TestCase):
         user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
         graderoster = get_graderoster(section, user, requestor=user)
 
-	p = graderoster_people(graderoster)
+        p = graderoster_people(graderoster)
         self.assertEquals(len(p), 3)
 
     def test_create_recipient_list(self):
-	section = get_section_by_label('2013,summer,CSS,161/A')
+        section = get_section_by_label('2013,summer,CSS,161/A')
         user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
         graderoster = get_graderoster(section, user, requestor=user)
 
-	people = graderoster_people(graderoster)
-	r = create_recipient_list(people)
-	self.assertEquals(len(r), 3)
+        people = graderoster_people(graderoster)
+        r = create_recipient_list(people)
+        self.assertEquals(len(r), 3)
         r.sort()
         self.assertEquals(r[0], 'bill@uw.edu')
         self.assertEquals(r[1], 'fred@uw.edu')
