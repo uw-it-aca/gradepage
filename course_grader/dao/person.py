@@ -3,11 +3,11 @@ This module encapsulates the interactions with the restclients.pws,
 provides identity information
 """
 
-from restclients.pws import PWS
-from restclients.exceptions import (
+from uw_pws import PWS
+from restclients_core.exceptions import (
     InvalidNetID, InvalidRegID, DataFailureException)
-from userservice.user import UserService
 from course_grader.exceptions import InvalidUser
+from userservice.user import UserService
 from nameparser import HumanName
 import json
 

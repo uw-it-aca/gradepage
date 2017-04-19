@@ -1,11 +1,10 @@
-from restclients.sws.graderoster import get_graderoster, graderoster_from_xhtml
-from restclients.sws.section import get_section_by_url
-from restclients.util.retry import retry
+from uw_sws.graderoster import get_graderoster, graderoster_from_xhtml
 from course_grader.dao.person import person_from_regid
-from course_grader.dao.section import is_grader_for_section
+from course_grader.dao.section import get_section_by_url, is_grader_for_section
 from course_grader.exceptions import (
     GradingNotPermitted, ReceiptNotFound, GradingPeriodNotOpen)
 from course_grader.models import SubmittedGradeRoster, GradeImport
+from course_grader.util.retry import retry
 from urllib3.exceptions import SSLError
 import logging
 import re

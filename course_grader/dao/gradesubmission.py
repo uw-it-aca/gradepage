@@ -1,8 +1,7 @@
-from restclients.sws.graderoster import (
-    update_graderoster, graderoster_from_xhtml)
-from restclients.util.retry import retry
+from uw_sws.graderoster import update_graderoster, graderoster_from_xhtml
 from course_grader.dao.section import section_from_label
 from course_grader.dao.person import person_from_regid
+from course_grader.util.retry import retry
 from urllib3.exceptions import SSLError
 import logging
 
