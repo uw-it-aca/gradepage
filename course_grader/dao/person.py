@@ -52,7 +52,7 @@ def person_display_name(person):
         name = HumanName("%s %s" % (person.first_name, person.surname))
         name.capitalize()
         name.string_format = "{first} {last}"
-    return unicode(name)
+    return str(name)
 
 
 def is_netid(username):

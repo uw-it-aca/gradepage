@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.test import TestCase
 from uw_pws.util import fdao_pws_override
 from course_grader.dao.person import *
@@ -38,3 +39,7 @@ class PersonDAOFunctionsTest(TestCase):
         user = PWS().get_person_by_netid('javerage')
         user.display_name = None
         self.assertEquals(person_display_name(user), 'James Student')
+
+        user = PWS().get_person_by_netid('javerage')
+        user.display_name = 'Jôe Stüdent'
+        self.assertEquals(person_display_name(user), 'Jôe Stüdent')
