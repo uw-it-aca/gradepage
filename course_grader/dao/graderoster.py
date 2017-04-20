@@ -1,4 +1,4 @@
-from uw_sws.graderoster import get_graderoster, graderoster_from_xhtml
+from uw_sws_graderoster import get_graderoster, graderoster_from_xhtml
 from course_grader.dao.person import person_from_regid
 from course_grader.dao.section import get_section_by_url, is_grader_for_section
 from course_grader.exceptions import (

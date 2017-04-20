@@ -1,5 +1,5 @@
 from django.test import TestCase
-from uw_sws.models import GradeRosterItem
+from uw_sws_graderoster.models import GradeRosterItem
 from course_grader.dao.gradesubmission import *
 
 
