@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import all_viewable_terms
 from course_grader.models import GradeImport, ImportConversion
@@ -10,22 +11,17 @@ logger = logging.getLogger(__name__)
 
 
 class ConversionScales(GradeFormHandler):
-    def run(self, *args, **kwargs):
-        request = args[0]
+    @login_required
+    def GET(self, request, **kwargs):
         try:
             self.user = person_from_user()
             self.all_terms = all_viewable_terms()
-
+            self.scale = kwargs.get("scale", "").lower()
         except InvalidUser as ex:
             return self.error_response(403, "%s" % ex)
         except Exception as ex:
             logger.error("GET terms failed: %s" % ex)
             return self.error_response(500, "%s" % ex)
-
-        return self.run_http_method(*args, **kwargs)
-
-    def GET(self, request, **kwargs):
-        self.scale = kwargs.get("scale", "").lower()
 
         if self.scale not in dict(ImportConversion.SCALE_CHOICES):
             return self.error_response(400, "Invalid scale")

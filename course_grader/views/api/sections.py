@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.utils.translation import ugettext as _
+from django.contrib.auth.decorators import login_required
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import term_from_param, all_viewable_terms
 from course_grader.dao.section import all_gradable_sections
@@ -14,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class Sections(RESTDispatch):
+    @login_required
     def GET(self, request, **kwargs):
         try:
             term = term_from_param(kwargs.get("term_id"))

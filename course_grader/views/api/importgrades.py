@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from course_grader.models import GradeImport, ImportConversion
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import all_viewable_terms
@@ -18,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 class ImportGrades(GradeFormHandler):
+    @login_required
     def run(self, *args, **kwargs):
         request = args[0]
         try:
