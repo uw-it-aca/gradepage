@@ -27,7 +27,7 @@ setup(
         'django-templatetag-handlebars',
         'nameparser>=0.2.9',
         'django-userservice==1.2.1',
-        'AuthZ-Group',
+        'AuthZ-Group>=1.6',
         'UW-RestClients-SWS>=0.5.1,<1.0',
         'UW-RestClients-PWS>=0.5,<1.0',
         'UW-RestClients-GWS>=0.1,<1.0',
