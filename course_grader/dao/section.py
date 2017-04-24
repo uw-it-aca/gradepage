@@ -2,9 +2,9 @@
 This module encapsulates the access of sws section data
 """
 
-from restclients.sws.section import get_section_by_url, get_section_by_label
-from restclients.sws.section import get_sections_by_instructor_and_term
-from restclients.sws.section import get_sections_by_delegate_and_term
+from uw_sws.section import (
+    get_section_by_url, get_section_by_label,
+    get_sections_by_instructor_and_term, get_sections_by_delegate_and_term)
 from course_grader.dao.person import person_from_regid, person_display_name
 from course_grader.exceptions import InvalidSection, MissingInstructorParam
 import logging

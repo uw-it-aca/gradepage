@@ -1,8 +1,9 @@
 from django.test import TestCase
-from restclients.pws import PWS
-from restclients.sws.section import get_section_by_label
-from restclients.sws.graderoster import get_graderoster
-from restclients.test import fdao_sws_override, fdao_pws_override
+from course_grader.dao.person import PWS
+from course_grader.dao.section import get_section_by_label
+from course_grader.dao.graderoster import get_graderoster
+from uw_pws.util import fdao_pws_override
+from uw_sws.util import fdao_sws_override
 from course_grader.views.api import *
 
 
