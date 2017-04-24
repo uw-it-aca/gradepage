@@ -3,7 +3,7 @@ This module encapsulates the access of sws term data
 """
 
 from django.conf import settings
-from restclients.sws.term import (
+from uw_sws.term import (
     get_term_by_year_and_quarter, get_term_by_date, get_term_before,
     get_term_after)
 from course_grader.dao import current_datetime

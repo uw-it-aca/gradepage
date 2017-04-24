@@ -2,9 +2,9 @@
 This module encapsulates the interactions with catalyst gradebook
 """
 
-from restclients.catalyst.gradebook import get_participants_for_section
-from restclients.catalyst.gradebook import get_participants_for_gradebook
-from restclients.catalyst.gradebook import valid_gradebook_id
+from uw_catalyst.gradebook import (
+    get_participants_for_section, get_participants_for_gradebook,
+    valid_gradebook_id)
 
 
 def grades_for_section(section, instructor, gradebook_id=None):

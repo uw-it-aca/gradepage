@@ -38,11 +38,11 @@ INSTALLED_APPS = (
     'compressor',
     'templatetag_handlebars',
     'supporttools',
-    'restclients',
     'userservice',
     'authz_group',
-    'course_grader',
+    'rc_django',
     'grade_conversion_calculator',
+    'course_grader.apps.CourseGraderConfig',
 )
 
 MIDDLEWARE_CLASSES = (

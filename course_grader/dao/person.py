@@ -3,11 +3,11 @@ This module encapsulates the interactions with the restclients.pws,
 provides identity information
 """
 
-from restclients.pws import PWS
-from restclients.exceptions import (
+from uw_pws import PWS
+from restclients_core.exceptions import (
     InvalidNetID, InvalidRegID, DataFailureException)
-from userservice.user import UserService
 from course_grader.exceptions import InvalidUser
+from userservice.user import UserService
 from nameparser import HumanName
 import json
 
@@ -52,7 +52,7 @@ def person_display_name(person):
         name = HumanName("%s %s" % (person.first_name, person.surname))
         name.capitalize()
         name.string_format = "{first} {last}"
-    return unicode(name)
+    return str(name)
 
 
 def is_netid(username):
@@ -66,7 +66,7 @@ def is_netid(username):
                 error_msg = "Current netid: %s, Prior netid: " % person.uwnetid
         except InvalidUser:
             error_msg = "Not a valid UWNetID: "
-        except DataFailureException, err:
+        except DataFailureException as err:
             data = json.loads(err.msg)
             error_msg = "%s: " % data["StatusDescription"].rstrip(".")
     return error_msg

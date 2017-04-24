@@ -2,8 +2,8 @@
 This module encapsulates the interactions with canvas gradebook
 """
 
-from restclients.canvas.enrollments import Enrollments
-from restclients.canvas.assignments import Assignments
+from uw_canvas.enrollments import Enrollments
+from uw_canvas.assignments import Assignments
 from course_grader.dao.section import section_from_url
 
 

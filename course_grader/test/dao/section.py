@@ -1,6 +1,7 @@
 from django.test import TestCase
-from restclients.pws import PWS
-from restclients.test import fdao_sws_override, fdao_pws_override
+from uw_pws.util import fdao_pws_override
+from uw_sws.util import fdao_sws_override
+from course_grader.dao.person import PWS
 from course_grader.dao.section import *
 from course_grader.exceptions import InvalidSection, MissingInstructorParam
 

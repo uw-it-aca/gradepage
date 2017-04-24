@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
-from restclients.exceptions import DataFailureException
+from restclients_core.exceptions import DataFailureException
 from course_grader.dao.canvas import grades_for_section as canvas_grades
 from course_grader.dao.catalyst import grades_for_section as catalyst_grades
 from course_grader.dao.gradesubmission import submit_grades

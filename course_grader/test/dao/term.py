@@ -1,5 +1,5 @@
 from django.test import TestCase
-from restclients.test import fdao_sws_override
+from uw_sws.util import fdao_sws_override
 from course_grader.dao.term import *
 from course_grader.exceptions import InvalidTerm
 
@@ -17,7 +17,7 @@ class TermDAOFunctionsTest(TestCase):
             self.assertEquals(submission_deadline_warning(term), True)
 
     def test_term_from_param(self):
-	term = term_from_param('2013-autumn')
+        term = term_from_param('2013-autumn')
         self.assertEquals(term.year, 2013)
         self.assertEquals(term.quarter, 'autumn')
 
@@ -38,7 +38,7 @@ class TermDAOFunctionsTest(TestCase):
             self.assertEquals(term.quarter, 'autumn')
 
     def test_next_gradable_term(self):
-	with self.settings(CURRENT_DATETIME_OVERRIDE='2013-10-15 00:00:00'):
+        with self.settings(CURRENT_DATETIME_OVERRIDE='2013-10-15 00:00:00'):
             term = next_gradable_term()
             self.assertEquals(term.year, 2013)
             self.assertEquals(term.quarter, 'autumn')
@@ -61,10 +61,9 @@ class TermDAOFunctionsTest(TestCase):
 
     def test_all_viewable_terms(self):
         with self.settings(PAST_TERMS_VIEWABLE=2,
-			   CURRENT_DATETIME_OVERRIDE='2013-10-15 00:00:00'):
-	    terms = all_viewable_terms()
-	    self.assertEquals(len(terms), 3)
+               CURRENT_DATETIME_OVERRIDE='2013-10-15 00:00:00'):
+            terms = all_viewable_terms()
+            self.assertEquals(len(terms), 3)
             self.assertEquals(terms[0].quarter, 'autumn')
             self.assertEquals(terms[1].quarter, 'summer')
             self.assertEquals(terms[2].quarter, 'spring')
-
