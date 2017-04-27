@@ -15,7 +15,7 @@ from course_grader.views.api.submitted_graderoster import (
 urlpatterns = patterns(
     '',
     url(r'^$', 'course_grader.views.chooser.home'),
-    url(r'^user_login/?$', 'course_grader.views.user_login'),
+    url(r'^login/?$', 'course_grader.views.user_login'),
     url(r'^section/(?P<url_token>[^/]*)$',
         'course_grader.views.section.section'),
     url(r'^api/v1/sections/(?P<term_id>[^/]*)$', Sections().run),

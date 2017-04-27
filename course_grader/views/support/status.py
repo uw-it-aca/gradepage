@@ -1,8 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.views.decorators.cache import never_cache
-from django.template import RequestContext
-from django.shortcuts import render_to_response
 from django.utils import timezone
 from restclients.models.sws import Term
 from course_grader.models import SubmittedGradeRoster, GradeImport
@@ -95,8 +93,7 @@ def status(request):
         "chart_data": json.dumps(chart_data),
         "term_id": term_id
     }
-    return render_to_response("support/status.html", params,
-                              RequestContext(request))
+    return render(request, "support/status.html", params)
 
 
 def get_total_milliseconds(td):

@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from course_grader.views.rest_dispatch import RESTDispatch
 from course_grader.models import (
     SubmittedGradeRoster as SubmittedGradeRosterModel)
@@ -15,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 class SubmissionsByTerm(RESTDispatch):
+    @login_required
     def GET(self, request, **kwargs):
         if not is_admin_user():
             return self.error_response(403, "Unauthorized")
@@ -52,6 +54,7 @@ class SubmissionsByTerm(RESTDispatch):
 
 
 class SubmittedGradeRoster(RESTDispatch):
+    @login_required
     def GET(self, request, **kwargs):
         if not is_admin_user():
             return self.error_response(403, "Unauthorized")

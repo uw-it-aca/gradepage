@@ -1,8 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.views.decorators.cache import never_cache
 from course_grader.models import GradeImport
 from course_grader.dao.section import (
@@ -37,8 +36,7 @@ def section(request, url_token):
             if ex.status == 404:
                 return error_response(request, status=404)
             elif ex.status == 503:
-                return render_to_response("503.html", {},
-                                          RequestContext(request))
+                return render(request, "503.html", {})
             else:
                 logger.error("Section view error: %s, Param: %s" % (ex,
                                                                     url_token))
@@ -80,11 +78,11 @@ def section(request, url_token):
             params["auto_import_id"] = import_id
             params["auto_import_src"] = GradeImport.CATALYST_SOURCE
 
-    return render_to_response("section.html", params, RequestContext(request))
+    return render(request, "section.html", params)
 
 
 def error_response(request, status=500):
     template = "%s.html" % status
-    response = render_to_response(template, {}, RequestContext(request))
+    response = render(request, template, {})
     response.status_code = status
     return response

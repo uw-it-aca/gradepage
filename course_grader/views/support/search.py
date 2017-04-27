@@ -2,8 +2,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.views.decorators.cache import never_cache
-from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from restclients.sws import QUARTER_SEQ
 from restclients.sws.term import get_term_by_year_and_quarter
 from restclients.models.sws import Term
@@ -56,7 +55,7 @@ def grade_imports(request):
 
     template = "support/imports.html"
     if not len(request.GET):
-        return render_to_response(template, params, RequestContext(request))
+        return render(request, template, params)
 
     args = ()
     kwargs = {}
@@ -84,7 +83,7 @@ def grade_imports(request):
                 hasattr(err, "msg")) else err
 
     if len(params["errors"]):
-        return render_to_response(template, params, RequestContext(request))
+        return render(request, template, params)
 
     grade_imports = GradeImport.objects.filter(*args, **kwargs)
 
@@ -113,7 +112,7 @@ def grade_imports(request):
         data["imported_date"] = grade_import.imported_date
         params["grade_imports"].append(data)
 
-    return render_to_response(template, params, RequestContext(request))
+    return render(request, template, params)
 
 
 @login_required
@@ -155,7 +154,7 @@ def graderosters(request):
 
     template = "support/search.html"
     if not len(request.GET):
-        return render_to_response(template, params, RequestContext(request))
+        return render(request, template, params)
 
     kwargs = {"term_id": selected_term.term_label()}
 
@@ -192,7 +191,7 @@ def graderosters(request):
         kwargs["accepted_date__isnull"] = True
 
     if len(params["errors"]):
-        return render_to_response(template, params, RequestContext(request))
+        return render(request, template, params)
 
     graderosters = SubmittedGradeRoster.objects.filter(
         *args, **kwargs).defer("document")
@@ -243,7 +242,7 @@ def graderosters(request):
         chart_data.append([k, v])
     params["chart_data"] = chart_data
 
-    return render_to_response(template, params, RequestContext(request))
+    return render(request, template, params)
 
 
 def find_all_terms():

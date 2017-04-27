@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.cache import never_cache
 from userservice.user import UserService
@@ -37,7 +36,7 @@ def home(request):
 
     except Exception as ex:
         if (hasattr(ex, "status") and ex.status == 503):
-            return render_to_response("503.html", {}, RequestContext(request))
+            return render(request, "503.html", {})
         else:
             logger.error("GET selected term failed: %s" % ex)
             raise
@@ -90,4 +89,4 @@ def home(request):
         params["in_current_quarter"] = True if (
             next_term.first_day_quarter < current_datetime().date()) else False
 
-    return render_to_response("home.html", params, RequestContext(request))
+    return render(request, "home.html", params)
