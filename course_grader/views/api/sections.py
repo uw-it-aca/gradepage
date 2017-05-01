@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
+from django.utils.decorators import method_decorator
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import term_from_param, all_viewable_terms
 from course_grader.dao.section import all_gradable_sections
@@ -14,9 +16,10 @@ import re
 logger = logging.getLogger(__name__)
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class Sections(RESTDispatch):
-    @login_required
-    def GET(self, request, **kwargs):
+    def get(self, request, *args, **kwargs):
         try:
             term = term_from_param(kwargs.get("term_id"))
             if term is None or term not in all_viewable_terms():

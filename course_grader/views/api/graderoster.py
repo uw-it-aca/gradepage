@@ -1,5 +1,7 @@
 from django.template.context_processors import csrf
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
+from django.utils.decorators import method_decorator
 from course_grader.models import SubmittedGradeRoster, Grade, GradeImport
 from course_grader.dao.graderoster import graderoster_for_section
 from course_grader.dao.section import (
@@ -23,11 +25,10 @@ import re
 logger = logging.getLogger(__name__)
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class GradeRoster(GradeFormHandler):
-    @login_required
-    def run(self, *args, **kwargs):
-        request = args[0]
-
+    def _authorize(self, request, *args, **kwargs):
         try:
             self.user = person_from_user()
 
@@ -72,9 +73,11 @@ class GradeRoster(GradeFormHandler):
             err = ex.msg if hasattr(ex, "msg") else ex
             return self.error_response(500, "%s" % err)
 
-        return self.run_http_method(*args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        error = self._authorize(request, *args, **kwargs)
+        if error is not None:
+            return error
 
-    def GET(self, request, **kwargs):
         section_id = kwargs.get("section_id")
 
         if self.section.is_grading_period_open():
@@ -83,7 +86,11 @@ class GradeRoster(GradeFormHandler):
         content = self.response_content(**kwargs)
         return self.json_response(content)
 
-    def PATCH(self, request, **kwargs):
+    def patch(self, request, *args, **kwargs):
+        error = self._authorize(request, *args, **kwargs)
+        if error is not None:
+            return error
+
         section_id = kwargs.get("section_id")
 
         try:
@@ -96,7 +103,11 @@ class GradeRoster(GradeFormHandler):
         # PATCH does not return a full graderoster resource
         return self.json_response(grade.json_data())
 
-    def PUT(self, request, **kwargs):
+    def put(self, request, *args, **kwargs):
+        error = self._authorize(request, *args, **kwargs)
+        if error is not None:
+            return error
+
         section_id = kwargs.get("section_id")
         saved_grades = {}
         try:
@@ -129,7 +140,11 @@ class GradeRoster(GradeFormHandler):
         content = self.response_content(**kwargs)
         return self.json_response(content, status=status)
 
-    def POST(self, request, **kwargs):
+    def post(self, request, *args, **kwargs):
+        error = self._authorize(request, *args, **kwargs)
+        if error is not None:
+            return error
+
         section_id = kwargs.get("section_id")
         saved_grades = self.saved_grades(section_id)
         secondary_section = getattr(self.graderoster, "secondary_section",
@@ -361,8 +376,9 @@ class GradeRoster(GradeFormHandler):
         return {"graderoster": data}
 
 
+@method_decorator(never_cache, name='dispatch')
 class GradeRosterStatus(GradeFormHandler):
-    def GET(self, request, **kwargs):
+    def get(self, request, *args, **kwargs):
         try:
             self.user = person_from_user()
             self.submitted_graderosters_only = False
