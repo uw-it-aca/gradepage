@@ -37,7 +37,7 @@ setup(
         'UW-RestClients-Graderoster>=0.2,<1.0',
         'UW-Grade-Conversion-Calculator>=0.2,<1.0',
         'Django-Safe-EmailBackend>=0.1,<1.0',
-        'Django-SupportTools',
+        'Django-SupportTools>=1.0',
         'django_mobileesp',
     ],
     license='Apache License, Version 2.0',
