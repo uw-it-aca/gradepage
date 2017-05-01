@@ -7,16 +7,16 @@ from django.utils.translation import ugettext as _
 
 
 class InvalidUser(Exception):
+    def __init__(self, identifier):
+        self.identifier = identifier
+
     def __str__(self):
-        return _("grading_not_permitted")
+        return _("Invalid identifier %s" % self.identifier)
 
 
 class InvalidTerm(Exception):
     def __str__(self):
-        return _(
-            "term_not_available %(support_phone)s %(support_email)s"
-        ) % {"support_phone": settings.REGISTRAR_SUPPORT_PHONE,
-             "support_email": settings.REGISTRAR_SUPPORT_EMAIL}
+        return _("receipt_not_found")
 
 
 class InvalidSection(Exception):
@@ -25,7 +25,8 @@ class InvalidSection(Exception):
 
 
 class MissingInstructorParam(Exception):
-    pass
+    def __str__(self):
+        return _("Missing instructor UWRegID")
 
 
 class ReceiptNotFound(Exception):

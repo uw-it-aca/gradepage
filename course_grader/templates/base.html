@@ -43,12 +43,12 @@
         {% if not has_less_compiled %}
         <script src="{% static "course_grader/js/vendor/less-2.0.0.min.js" %}"></script>
         {% endif %}
-        <script type="text/javascript" src="{% url "django.views.i18n.javascript_catalog" %}"></script>
+        <script type="text/javascript" src="{% url "javascript-catalog" %}"></script>
     </head>
     <body>
         {% if override_user %}
         <div class="gp-admin-bar" role="complementary" aria-label="Admin Override Status">
-            <form method="POST" action="{% url 'userservice.views.support' %}">
+            <form method="POST" action="{% url 'userservice_override' %}">
                 <div class="container">Overriding as <strong>{{override_user|lower}}</strong>
                 {% csrf_token %}
                 <input type="hidden" value="1" name="clear_override">

@@ -1,15 +1,20 @@
 sudo: false
 language: python
 python:
-  - '2.7'
+- '2.7'
+- '3.4'
+- '3.5'
+- '3.6'
 install: pip install -r requirements.txt
 before_script:
   - pip install coverage
   - pip install python-coveralls
   - pip install pep8
+  - npm install jshint
   - cp travis-ci/manage.py manage.py
 script:
-  - pep8 course_grader/ --exclude=migrations
+  - pep8 course_grader/ --exclude=migrations,test
+  - jshint course_grader/static/course_grader/js/ --verbose
   - coverage run --source=course_grader/ --omit=course_grader/migrations/* manage.py test course_grader
 after_success:
   - coveralls

@@ -1,12 +1,16 @@
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
+from django.utils.decorators import method_decorator
 from course_grader.models import GradeImport, ImportConversion
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import all_viewable_terms
-from course_grader.dao.section import section_from_param, is_grader_for_section
+from course_grader.dao.section import (
+    section_from_param, is_grader_for_section, section_display_name,
+    section_url_token)
 from course_grader.dao.graderoster import graderoster_for_section
 from course_grader.dao.catalyst import valid_gradebook_id
-from course_grader.views.api import GradeFormHandler
-from course_grader.views import clean_section_id, section_url_token
-from course_grader.views import display_section_name
+from course_grader.views.api import GradeFormHandler, sorted_students
+from course_grader.views import clean_section_id
 from course_grader.exceptions import *
 import json
 import logging
@@ -16,9 +20,10 @@ import re
 logger = logging.getLogger(__name__)
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class ImportGrades(GradeFormHandler):
-    def run(self, *args, **kwargs):
-        request = args[0]
+    def _authorize(self, request, *args, **kwargs):
         try:
             self.user = person_from_user()
 
@@ -68,9 +73,11 @@ class ImportGrades(GradeFormHandler):
             err = ex.msg if hasattr(ex, "msg") else ex
             return self.error_response(status, "%s" % err)
 
-        return self.run_http_method(*args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        error = self._authorize(request, *args, **kwargs)
+        if error is not None:
+            return error
 
-    def GET(self, request, **kwargs):
         section_id = kwargs.get("section_id")
         import_id = kwargs.get("import_id")
 
@@ -81,7 +88,11 @@ class ImportGrades(GradeFormHandler):
 
         return self.response_content(grade_import)
 
-    def PUT(self, request, **kwargs):
+    def put(self, request, *args, **kwargs):
+        error = self._authorize(request, *args, **kwargs)
+        if error is not None:
+            return error
+
         section_id = kwargs.get("section_id")
         import_id = kwargs.get("import_id")
 
@@ -141,7 +152,11 @@ class ImportGrades(GradeFormHandler):
 
         return self.response_content(grade_import)
 
-    def POST(self, request, **kwargs):
+    def post(self, request, *args, **kwargs):
+        error = self._authorize(request, *args, **kwargs)
+        if error is not None:
+            return error
+
         try:
             data = json.loads(request.body)
             source = data.get("source", None)
@@ -170,7 +185,7 @@ class ImportGrades(GradeFormHandler):
 
     def response_content(self, grade_import):
         return_data = grade_import.json_data()
-        return_data["section_name"] = display_section_name(self.section)
+        return_data["section_name"] = section_display_name(self.section)
 
         # Create a new list of imported grades, including only students who are
         # actually on the graderoster
@@ -179,7 +194,7 @@ class ImportGrades(GradeFormHandler):
 
         secondary_section = getattr(self.graderoster, "secondary_section",
                                     None)
-        for item in self.sorted_students(self.graderoster.items):
+        for item in sorted_students(self.graderoster.items):
             if (secondary_section is not None and
                     secondary_section.section_id != item.section_id):
                 # Filtering by secondary section

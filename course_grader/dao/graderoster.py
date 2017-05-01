@@ -1,15 +1,10 @@
-"""
-This module encapsulates the access of sws graderoster data
-"""
-
-from restclients.sws.graderoster import get_graderoster, graderoster_from_xhtml
-from restclients.sws.section import get_section_by_url
-from restclients.util.retry import retry
+from uw_sws_graderoster import get_graderoster, graderoster_from_xhtml
 from course_grader.dao.person import person_from_regid
-from course_grader.dao.section import is_grader_for_section
-from course_grader.exceptions import GradingNotPermitted, ReceiptNotFound
-from course_grader.exceptions import GradingPeriodNotOpen
+from course_grader.dao.section import get_section_by_url, is_grader_for_section
+from course_grader.exceptions import (
+    GradingNotPermitted, ReceiptNotFound, GradingPeriodNotOpen)
 from course_grader.models import SubmittedGradeRoster, GradeImport
+from course_grader.util.retry import retry
 from urllib3.exceptions import SSLError
 import logging
 import re
@@ -18,7 +13,8 @@ import re
 logger = logging.getLogger(__name__)
 
 
-def graderoster_for_section(section, instructor, requestor):
+def graderoster_for_section(section, instructor, requestor,
+                            submitted_graderosters_only=False):
     ret_graderoster = None
     secondary_section = None
 
@@ -43,8 +39,9 @@ def graderoster_for_section(section, instructor, requestor):
     def _get_graderoster(section, instructor, requestor):
         return get_graderoster(section, instructor, requestor)
 
-    # If grading period is open, start with a "live" graderoster
-    if section.is_grading_period_open():
+    # If submitted_graderosters_only is False and grading period is open,
+    # start with a "live" graderoster
+    if (not submitted_graderosters_only and section.is_grading_period_open()):
         ret_graderoster = _get_graderoster(section, instructor, requestor)
         ret_graderoster.secondary_section = secondary_section
         ret_graderoster.submissions = {}
@@ -64,7 +61,10 @@ def graderoster_for_section(section, instructor, requestor):
                                              people[instructor_id])
 
         grade_imp = None
-        if model.submitted_date is not None:
+        # If submitted_graderosters_only is False and this graderoster has been
+        # submitted, try to find a grade import
+        if (not submitted_graderosters_only and
+                model.submitted_date is not None):
             imp_section_id = "-".join([re.sub(r"[,/]", "-", model.section_id),
                                        model.instructor_id])
             try:
@@ -96,7 +96,10 @@ def graderoster_for_section(section, instructor, requestor):
             if section.term.is_grading_period_past():
                 raise ReceiptNotFound()
             else:
-                raise GradingPeriodNotOpen()
+                if submitted_graderosters_only:
+                    raise ReceiptNotFound()
+                else:
+                    raise GradingPeriodNotOpen()
 
     # Merge any remaining receipts together, if they have a submission_id
     for graderoster in submitted_graderosters:

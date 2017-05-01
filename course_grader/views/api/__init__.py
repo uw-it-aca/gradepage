@@ -1,5 +1,7 @@
 from django.conf import settings
 from userservice.user import UserService
+from course_grader.dao.person import person_display_name
+from course_grader.dao.term import submission_deadline_warning
 from course_grader.views.rest_dispatch import RESTDispatch
 from course_grader.models import Grade
 from course_grader.exceptions import OverrideNotPermitted
@@ -70,11 +72,70 @@ class GradeFormHandler(RESTDispatch):
 
         return grade
 
-    def sorted_students(self, students):
-        return sorted(students, key=lambda s: (
-            s.student_surname.upper(), s.student_first_name.upper(),
-            s.section_id))
 
-    def sorted_grades(self, grades):
-        return sorted(grades, key=lambda s: grade_order.get(s, s),
-                      reverse=True)
+def sorted_students(students):
+    return sorted(students, key=lambda s: (
+        s.student_surname.upper(), s.student_first_name.upper(),
+        s.section_id))
+
+
+def sorted_grades(grades):
+    return sorted(grades, key=lambda s: grade_order.get(s, s),
+                  reverse=True)
+
+
+def item_is_submitted(item):
+    if (item.is_auditor or item.date_withdrawn is not None):
+        return False
+
+    # Old receipts do not include date_graded, so also check for the
+    # existence of a grade
+    if (item.date_graded is not None or
+            item.grade is not None or item.no_grade_now):
+        return True
+    else:
+        return False
+
+
+def graderoster_status_params(graderoster, secondary_section_id=None):
+    total_count = 0
+    submitted_count = 0
+    for item in graderoster.items:
+        if (secondary_section_id is not None and
+                secondary_section_id != item.section_id):
+            continue
+
+        if item.is_auditor or item.date_withdrawn:
+            continue
+
+        total_count += 1
+        if item_is_submitted(item):
+            submitted_count += 1
+
+    data = {
+        "submitted_count": submitted_count,
+        "unsubmitted_count": total_count - submitted_count
+    }
+
+    section = graderoster.section
+    if hasattr(graderoster, "submissions"):
+        submission = graderoster.submissions.get(secondary_section_id, None)
+        if submission is None:
+            submission = graderoster.submissions.get(section.section_id, None)
+
+        if submission is not None:
+            submitted_date = submission["submitted_date"]
+            submitted_by = submission["submitted_by"]
+            accepted_date = submission["accepted_date"]
+            grade_import = submission["grade_import"]
+            data["submitted_date"] = submitted_date.isoformat()
+            data["accepted_date"] = accepted_date.isoformat() if (
+                accepted_date is not None) else None
+            data["submitted_by"] = person_display_name(submitted_by)
+            data["grade_import"] = grade_import.json_data() if (
+                grade_import is not None) else None
+
+    if (section.is_grading_period_open() and data["unsubmitted_count"]):
+        data["deadline_warning"] = submission_deadline_warning(section.term)
+
+    return data

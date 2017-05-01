@@ -1,8 +1,8 @@
 from django.core.management.base import BaseCommand, CommandError
-from course_grader.dao.person import person_from_username
+from course_grader.dao.person import person_from_netid
 from course_grader.dao.section import section_from_label
 from course_grader.dao.catalyst import grades_for_section
-from restclients.exceptions import DataFailureException
+from restclients_core.exceptions import DataFailureException
 import sys
 import json
 
@@ -18,7 +18,7 @@ class Command(BaseCommand):
         section_id = args[0]
         login = args[1]
         try:
-            user = person_from_username(login)
+            user = person_from_netid(login)
         except Exception as ex:
             print ex
             sys.exit()

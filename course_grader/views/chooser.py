@@ -1,15 +1,15 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.cache import never_cache
 from userservice.user import UserService
-from course_grader.dao.term import current_datetime, term_from_param,\
-    all_viewable_terms, next_gradable_term, previous_gradable_term
+from course_grader.dao import current_datetime, display_datetime
+from course_grader.dao.term import (
+    term_from_param, all_viewable_terms, next_gradable_term,
+    previous_gradable_term)
 from course_grader.exceptions import InvalidTerm
-from course_grader.views import url_for_term, display_datetime,\
-    grade_submission_deadline_params
+from course_grader.views import url_for_term, grade_submission_deadline_params
 import logging
 
 
@@ -36,7 +36,7 @@ def home(request):
 
     except Exception as ex:
         if (hasattr(ex, "status") and ex.status == 503):
-            return render_to_response("503.html", {}, RequestContext(request))
+            return render(request, "503.html", {})
         else:
             logger.error("GET selected term failed: %s" % ex)
             raise
@@ -89,4 +89,4 @@ def home(request):
         params["in_current_quarter"] = True if (
             next_term.first_day_quarter < current_datetime().date()) else False
 
-    return render_to_response("home.html", params, RequestContext(request))
+    return render(request, "home.html", params)
