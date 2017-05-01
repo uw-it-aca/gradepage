@@ -1,4 +1,6 @@
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
+from django.utils.decorators import method_decorator
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import all_viewable_terms
 from course_grader.models import GradeImport, ImportConversion
@@ -10,9 +12,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class ConversionScales(GradeFormHandler):
-    @login_required
-    def GET(self, request, **kwargs):
+    def get(self, request, *args, **kwargs):
         try:
             self.user = person_from_user()
             self.all_terms = all_viewable_terms()

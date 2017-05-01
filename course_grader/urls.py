@@ -21,24 +21,24 @@ urlpatterns = [
     url(r'^$', home),
     url(r'^login/?$', user_login),
     url(r'^section/(?P<url_token>[^/]*)$', section),
-    url(r'^api/v1/sections/(?P<term_id>[^/]*)$', Sections().run),
-    url(r'^api/v1/graderoster/(?P<section_id>[^/]*)$', GradeRoster().run),
+    url(r'^api/v1/sections/(?P<term_id>[^/]*)$', Sections.as_view()),
+    url(r'^api/v1/graderoster/(?P<section_id>[^/]*)$', GradeRoster.as_view()),
     url(r'^api/v1/grading_status/(?P<section_id>[^/]*)$',
-        GradeRosterStatus().run),
-    url(r'^api/v1/import/(?P<section_id>[^/]*)$', ImportGrades().run),
+        GradeRosterStatus.as_view()),
+    url(r'^api/v1/import/(?P<section_id>[^/]*)$', ImportGrades.as_view()),
     url(r'^api/v1/import/(?P<section_id>[^/]*)/(?P<import_id>[\d]*)$',
-        ImportGrades().run),
+        ImportGrades.as_view()),
     url(r'^api/v1/conversion_scales/(?P<scale>[a-z]*)$',
-        ConversionScales().run),
+        ConversionScales.as_view()),
 
     # support urls
     url(r'^support/status/?$', status),
     url(r'^support/search/?$', graderosters),
     url(r'^support/imports/?$', grade_imports),
     url(r'^api/v1/submitted_graderosters/(?P<term_id>[^/]*)$',
-        SubmissionsByTerm().run, name="term_submissions"),
+        SubmissionsByTerm.as_view(), name="term_submissions"),
     url(r'^api/v1/submitted_graderoster/(?P<graderoster_id>[\d]*)$',
-        SubmittedGradeRoster().run, name='submitted_graderoster'),
+        SubmittedGradeRoster.as_view(), name='submitted_graderoster'),
 ]
 
 # debug routes for developing error pages
