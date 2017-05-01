@@ -1,6 +1,6 @@
 from django.db.models import Q
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from django.shortcuts import render
 from uw_sws import QUARTER_SEQ

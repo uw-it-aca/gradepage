@@ -1,7 +1,7 @@
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from userservice.user import UserService
 from course_grader.dao import current_datetime, display_datetime

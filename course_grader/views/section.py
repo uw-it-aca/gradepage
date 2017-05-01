@@ -1,7 +1,7 @@
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from course_grader.models import GradeImport
 from course_grader.dao.section import (
