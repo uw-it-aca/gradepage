@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.conf.urls import patterns, include, url
+from django.conf.urls import url
 from django.views.generic import TemplateView
 from course_grader.views.api.sections import Sections
 from course_grader.views.api.graderoster import GradeRoster, GradeRosterStatus
@@ -12,8 +12,7 @@ from course_grader.views.api.submitted_graderoster import (
 # from django.contrib import admin
 # admin.autodiscover()
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^$', 'course_grader.views.chooser.home'),
     url(r'^login/?$', 'course_grader.views.user_login'),
     url(r'^section/(?P<url_token>[^/]*)$',
@@ -38,12 +37,11 @@ urlpatterns = patterns(
         SubmissionsByTerm().run, name="term_submissions"),
     url(r'^api/v1/submitted_graderoster/(?P<graderoster_id>[\d]*)$',
         SubmittedGradeRoster().run, name='submitted_graderoster'),
-)
+]
 
 # debug routes for developing error pages
 if settings.DEBUG:
-    urlpatterns += patterns(
-        '',
+    urlpatterns.extend([
         (r'^404$', TemplateView.as_view(template_name='404.html')),
         (r'^500$', TemplateView.as_view(template_name='500.html')),
-    )
+    ])
