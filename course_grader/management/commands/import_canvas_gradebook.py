@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from course_grader.dao.section import section_from_param
 from course_grader.dao.canvas import grades_for_section
-from restclients.exceptions import DataFailureException
+from restclients_core.exceptions import DataFailureException
 import sys
 import json
 

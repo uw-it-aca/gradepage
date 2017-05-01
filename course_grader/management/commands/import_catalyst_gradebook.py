@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from course_grader.dao.person import person_from_netid
 from course_grader.dao.catalyst import grades_for_section
-from restclients.exceptions import DataFailureException
+from restclients_core.exceptions import DataFailureException
 import sys
 import json
 

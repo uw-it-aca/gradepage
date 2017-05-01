@@ -3,10 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.views.decorators.cache import never_cache
 from django.shortcuts import render
-from restclients.sws import QUARTER_SEQ
-from restclients.sws.term import get_term_by_year_and_quarter
-from restclients.models.sws import Term
-from restclients.exceptions import DataFailureException, InvalidNetID
+from uw_sws import QUARTER_SEQ
+from uw_sws.term import get_term_by_year_and_quarter
+from uw_sws.models import Term
+from restclients_core.exceptions import DataFailureException, InvalidNetID
 from course_grader.models import SubmittedGradeRoster, GradeImport
 from course_grader.dao.person import (
     person_from_netid, person_from_regid, person_display_name)

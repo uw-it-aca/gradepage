@@ -10,7 +10,7 @@ from course_grader.dao.person import person_from_user
 from course_grader.dao.term import current_term
 from course_grader.views import grade_submission_deadline_params, url_for_term
 from course_grader.exceptions import MissingInstructorParam
-from restclients.catalyst.gradebook import valid_gradebook_id
+from uw_catalyst.gradebook import valid_gradebook_id
 import logging
 import re
 

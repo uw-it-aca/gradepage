@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.views.decorators.cache import never_cache
 from django.utils import timezone
-from restclients.models.sws import Term
+from uw_sws.models import Term
 from course_grader.models import SubmittedGradeRoster, GradeImport
 from course_grader.dao.term import term_from_param, current_term
 from course_grader.views.support import is_admin_user
