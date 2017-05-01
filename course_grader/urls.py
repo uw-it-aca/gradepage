@@ -32,9 +32,9 @@ urlpatterns = [
         ConversionScales.as_view()),
 
     # support urls
-    url(r'^support/status/?$', status),
-    url(r'^support/search/?$', graderosters),
-    url(r'^support/imports/?$', grade_imports),
+    url(r'^support/status/?$', status, name='gradepage_status'),
+    url(r'^support/search/?$', graderosters, name='search_graderosters'),
+    url(r'^support/imports/?$', grade_imports, name='grade_imports'),
     url(r'^api/v1/submitted_graderosters/(?P<term_id>[^/]*)$',
         SubmissionsByTerm.as_view(), name="term_submissions"),
     url(r'^api/v1/submitted_graderoster/(?P<graderoster_id>[\d]*)$',
