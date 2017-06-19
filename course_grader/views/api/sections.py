@@ -1,10 +1,12 @@
 from django.conf import settings
 from django.utils.translation import ugettext as _
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
+from django.utils.decorators import method_decorator
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import term_from_param, all_viewable_terms
 from course_grader.dao.section import all_gradable_sections
-from course_grader.views import clean_section_id, section_url_token,\
-    display_section_name, display_person_name, display_datetime
+from course_grader.views import section_status_params
 from course_grader.views.rest_dispatch import RESTDispatch
 from course_grader.exceptions import InvalidUser, InvalidTerm
 import logging
@@ -14,8 +16,10 @@ import re
 logger = logging.getLogger(__name__)
 
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(never_cache, name='dispatch')
 class Sections(RESTDispatch):
-    def GET(self, request, **kwargs):
+    def get(self, request, *args, **kwargs):
         try:
             term = term_from_param(kwargs.get("term_id"))
             if term is None or term not in all_viewable_terms():
@@ -45,9 +49,9 @@ class Sections(RESTDispatch):
         return self.json_response(content)
 
     def response_content(self, sections, **kwargs):
-        sections.sort(key=lambda section: (section.section_label(),
-                                           section.grader.surname,
-                                           section.grader.first_name))
+        sections.sort(key=lambda section: (
+            section.section_label(), section.grading_instructor.surname,
+            section.grading_instructor.first_name))
 
         primary_sections = {}
         for section in sections:
@@ -56,50 +60,16 @@ class Sections(RESTDispatch):
 
         section_data = []
         for section in sections:
-            is_grading_period_open = section.is_grading_period_open()
-            is_grading_period_past = section.term.is_grading_period_past()
-            section_id = section_url_token(section, section.grader)
-
-            data = {
-                "section_id": clean_section_id(section_id),
-                "is_primary_section": section.is_primary_section,
-                "allows_secondary_grading": section.allows_secondary_grading,
-                "is_independent_study": section.is_independent_study,
-                "is_grading_period_open": is_grading_period_open,
-                "is_grading_period_past": is_grading_period_past,
-            }
-
-            section_url = None
-            grade_status_url = None
-            if is_grading_period_open or is_grading_period_past:
-                if (section.is_primary_section and
-                        section.allows_secondary_grading):
-                    data["grading_status"] = _("secondary_grading_status")
-                elif (not section.is_primary_section and
-                        not section.allows_secondary_grading):
-                    section_url = "/section/%s" % section_id
-                else:
-                    section_url = "/section/%s" % section_id
-                    grade_status_url = "/api/v1/graderoster/%s?status=1" % (
-                        section_id)
-            elif section.is_full_summer_term():
-                data["grading_status"] = _(
-                    "summer_full_term_grade_submission_opens %(date)s"
-                ) % {
-                    "date": display_datetime(section.term.grading_period_open)
-                }
-
-            data["section_url"] = section_url
-            data["grade_status_url"] = grade_status_url
-            data["display_name"] = display_section_name(section)
-
-            if section.is_independent_study:
-                instructor_name = display_person_name(section.grader)
-                data["display_name"] += " (%s)" % instructor_name
+            data = section_status_params(section, section.grading_instructor)
 
             if (not section.is_primary_section and
                     section.primary_section_label() in primary_sections):
                 # Nested secondary
+
+                if not section.allows_secondary_grading:
+                    # Suppress status request from client
+                    data["status_url"] = None
+
                 primary_sections[section.primary_section_label()].append(data)
             elif (section.is_primary_section and
                     not section.is_independent_study):

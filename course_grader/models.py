@@ -1,18 +1,11 @@
 from django.db import models
 from django.db.models import Q
-from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
 from django.utils import timezone
-from restclients.exceptions import DataFailureException
-from restclients.sws.graderoster import update_graderoster
-from restclients.sws.graderoster import graderoster_from_xhtml
-from restclients.util.retry import retry
-from course_grader.dao.section import section_from_label
-from course_grader.dao.person import person_from_regid
+from restclients_core.exceptions import DataFailureException
 from course_grader.dao.canvas import grades_for_section as canvas_grades
 from course_grader.dao.catalyst import grades_for_section as catalyst_grades
-from course_grader.views.email import submission_message
-from urllib3.exceptions import SSLError
+from course_grader.dao.gradesubmission import submit_grades
+from course_grader.dao.notification import notify_grade_submitters
 import logging
 import json
 
@@ -69,23 +62,8 @@ class SubmittedGradeRoster(models.Model):
             return self.section_id.split("/")[-1]
 
     def submit(self):
-
-        @retry(SSLError, tries=3, delay=1, logger=logger)
-        def _update_graderoster(graderoster, requestor):
-            return update_graderoster(graderoster, requestor)
-
         try:
-            graderoster = graderoster_from_xhtml(
-                self.document, section_from_label(self.section_id),
-                person_from_regid(self.instructor_id))
-
-            if self.secondary_section_id is not None:
-                graderoster.secondary_section = section_from_label(
-                    self.secondary_section_id)
-
-            requestor = person_from_regid(self.submitted_by)
-            ret_graderoster = _update_graderoster(graderoster, requestor)
-
+            graderoster = submit_grades(self)
         except Exception as ex:
             logger.error(
                 "PUT graderoster failed: %s, Section: %s, Instructor: %s" % (
@@ -94,99 +72,12 @@ class SubmittedGradeRoster(models.Model):
             self.save()
             return
 
-        # The returned graderoster from PUT omits items for which a grade was
-        # not actually submitted, and it lacks secondary section info for each
-        # item. To create a saved graderoster receipt, merge the returned
-        # graderoster into the submitted graderoster, to capture both the
-        # submitted grade and the returned status code/message for each item.
-        for item in ret_graderoster.items:
-            if item.status_code is None:
-                continue
-
-            try:
-                idx = graderoster.items.index(item)
-                graderoster.items[idx].status_code = item.status_code
-                graderoster.items[idx].status_message = item.status_message
-                graderoster.items[idx].date_graded = item.date_graded
-                graderoster.items[idx].grade_document_id = \
-                    item.grade_document_id
-                graderoster.items[idx].grade_submitter_source = \
-                    item.grade_submitter_source
-                self._log_grade(graderoster.items[idx])
-
-            except Exception as ex:
-                pass
-
-        # Update model attrs and save
         self.status_code = 200
         self.accepted_date = timezone.now()
         self.document = graderoster.xhtml()
         self.save()
 
-        # Notify submitters
-        self._notify_submitters(graderoster)
-
-    def _notify_submitters(self, graderoster):
-        people = {graderoster.instructor.uwregid: graderoster.instructor}
-
-        for person in graderoster.authorized_grade_submitters:
-            people[person.uwregid] = person
-
-        for delegate in graderoster.grade_submission_delegates:
-            people[delegate.person.uwregid] = delegate.person
-
-        submitter = None
-        recipients = []
-        for person in people.values():
-            recipients.append("%s@uw.edu" % person.uwnetid)
-
-            if person.uwregid == self.submitted_by:
-                submitter = person
-
-        if submitter is None:
-            submitter = person_from_regid(self.submitted_by)
-
-        (subject, text_body, html_body) = submission_message(graderoster,
-                                                             submitter)
-
-        message = EmailMultiAlternatives(subject, text_body,
-                                         settings.EMAIL_NOREPLY_ADDRESS,
-                                         recipients)
-        message.attach_alternative(html_body, "text/html")
-
-        secondary_section = getattr(graderoster, "secondary_section", None)
-        section_id = graderoster.section.section_label() if (
-            secondary_section is None) else secondary_section.section_label()
-
-        try:
-            message.send()
-            log_message = "Submission email sent"
-        except Exception as ex:
-            log_message = "Submission email failed: %s" % ex
-
-        for recipient in recipients:
-            logger.info("%s, To: %s, Section: %s, Status: %s" % (
-                log_message, recipient, section_id, subject))
-
-    def _log_grade(self, item):
-        if item.is_auditor or item.date_withdrawn:
-            return
-
-        if self.secondary_section_id is not None:
-            section_id = self.secondary_section_id
-        else:
-            section_id = self.section_id
-
-        logged_grade = "X" if item.no_grade_now else str(item.grade)
-        if item.has_incomplete:
-            logged_grade = "I," + logged_grade
-        if item.has_writing_credit:
-            logged_grade += ",W"
-
-        logger.info("Grade submitted, Student: %s, Section: %s, Grade: %s, " +
-                    "Code: %s, Message: %s" % (
-                        item.student_label(separator="-"), section_id,
-                        logged_grade, item.status_code, item.status_message))
+        notify_grade_submitters(graderoster, self.submitted_by)
 
 
 class GradeManager(models.Manager):

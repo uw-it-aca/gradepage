@@ -1,17 +1,16 @@
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
-from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from course_grader.models import GradeImport
-from course_grader.dao.section import section_from_param
+from course_grader.dao.section import (
+    section_from_param, section_display_name, section_url_token)
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import current_term
-from course_grader.views import grade_submission_deadline_params,\
-    section_url_token, display_section_name, display_person_name, url_for_term
+from course_grader.views import grade_submission_deadline_params, url_for_term
 from course_grader.exceptions import MissingInstructorParam
-from restclients.catalyst.gradebook import valid_gradebook_id
+from uw_catalyst.gradebook import valid_gradebook_id
 import logging
 import re
 
@@ -37,8 +36,7 @@ def section(request, url_token):
             if ex.status == 404:
                 return error_response(request, status=404)
             elif ex.status == 503:
-                return render_to_response("503.html", {},
-                                          RequestContext(request))
+                return render(request, "503.html", {})
             else:
                 logger.error("Section view error: %s, Param: %s" % (ex,
                                                                     url_token))
@@ -52,7 +50,10 @@ def section(request, url_token):
         # future grading period
         return HttpResponseRedirect("/")
 
-    section_name = display_section_name(section)
+    if section.is_independent_study:
+        section_name = section_display_name(section, instructor)
+    else:
+        section_name = section_display_name(section)
 
     params = {
         "page_title": section_name,
@@ -69,9 +70,6 @@ def section(request, url_token):
             section, instructor),
     }
 
-    if section.is_independent_study:
-        params["section_name"] += " (%s)" % display_person_name(instructor)
-
     if now_term.is_grading_period_open():
         params.update(grade_submission_deadline_params(now_term))
 
@@ -80,11 +78,11 @@ def section(request, url_token):
             params["auto_import_id"] = import_id
             params["auto_import_src"] = GradeImport.CATALYST_SOURCE
 
-    return render_to_response("section.html", params, RequestContext(request))
+    return render(request, "section.html", params)
 
 
 def error_response(request, status=500):
     template = "%s.html" % status
-    response = render_to_response(template, {}, RequestContext(request))
+    response = render(request, template, {})
     response.status_code = status
     return response

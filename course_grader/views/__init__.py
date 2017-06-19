@@ -1,15 +1,15 @@
-from django.utils.timezone import get_default_timezone, localtime
-from django.utils.timezone import is_naive, make_aware
+from django.conf import settings
+from django.http import HttpResponseRedirect
+from django.utils.translation import ugettext as _
+from course_grader.dao import display_datetime
+from course_grader.dao.person import person_display_name
+from course_grader.dao.section import section_url_token, section_display_name
 from course_grader.dao.term import submission_deadline_warning
-from nameparser import HumanName
-from datetime import datetime
 import re
 
 
-def section_url_token(section, instructor):
-    return "-".join([str(section.term.year), section.term.quarter,
-                     section.curriculum_abbr, section.course_number,
-                     section.section_id, instructor.uwregid])
+def user_login(request):
+    return HttpResponseRedirect(request.GET.get('next', '/'))
 
 
 def clean_section_id(section_id):
@@ -22,28 +22,50 @@ def url_for_term(term):
     return "/?term=%s-%s" % (term.year, term.quarter)
 
 
-def display_datetime(datetime):
-    if is_naive(datetime):
-        datetime = make_aware(datetime, get_default_timezone())
+def url_for_section(section_id):
+    return "%s/section/%s" % (
+        getattr(settings, "GRADEPAGE_HOST", ""), section_id)
+
+
+def url_for_grading_status(section_id):
+    return "%s/api/v1/grading_status/%s" % (
+        getattr(settings, "GRADEPAGE_HOST", ""), section_id)
+
+
+def section_status_params(section, instructor):
+    section_id = section_url_token(section, instructor)
+    grading_period_open = section.is_grading_period_open()
+    submission_deadline = section.term.grade_submission_deadline.isoformat()
+
+    if section.is_independent_study:
+        display_name = section_display_name(section, instructor)
     else:
-        datetime = localtime(datetime)
-    return datetime.strftime("%B %d at %l:%M %p %Z")
+        display_name = section_display_name(section)
 
+    data = {
+        "section_id": clean_section_id(section_id),
+        "display_name": display_name,
+        "section_url": None,
+        "status_url": None,
+        "grading_status": None,
+        "grading_period_open": grading_period_open,
+        "grade_submission_deadline": submission_deadline,
+    }
 
-def display_person_name(person):
-    if (person.display_name is not None and len(person.display_name) and
-            not person.display_name.isupper()):
-        name = person.display_name
-    else:
-        name = HumanName("%s %s" % (person.first_name, person.surname))
-        name.capitalize()
-        name.string_format = "{first} {last}"
-    return unicode(name)
+    if (grading_period_open or section.term.is_grading_period_past()):
+        if (section.is_primary_section and section.allows_secondary_grading):
+            data["grading_status"] = _("secondary_grading_status")
+        else:
+            data["section_url"] = url_for_section(section_id)
+            data["status_url"] = url_for_grading_status(section_id)
+    elif section.is_full_summer_term():
+        data["grading_status"] = _(
+            "summer_full_term_grade_submission_opens %(date)s"
+        ) % {
+            "date": display_datetime(section.term.grading_period_open)
+        }
 
-
-def display_section_name(section):
-    return " ".join([section.curriculum_abbr, section.course_number,
-                     section.section_id])
+    return data
 
 
 def grade_submission_deadline_params(term):

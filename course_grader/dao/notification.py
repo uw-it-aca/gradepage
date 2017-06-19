@@ -1,24 +1,32 @@
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 from django.template import loader
 from django.utils.translation import ungettext, ugettext
 from django.contrib.humanize.templatetags.humanize import apnumber
-from course_grader.views import display_person_name, display_datetime
-from datetime import datetime
+from course_grader.dao.section import section_url_token, section_display_name
+from course_grader.dao.person import person_from_regid, person_display_name
+from course_grader.dao import current_datetime, display_datetime
+import logging
 
 
-def submission_message(graderoster, submitter):
+logger = logging.getLogger(__name__)
+
+
+def create_recipient_list(people):
+    recipients = []
+    for person in people.values():
+        recipients.append("%s@uw.edu" % person.uwnetid)
+    return recipients
+
+
+def create_message(graderoster, submitter):
     section = getattr(graderoster, "secondary_section", None)
     if section is None:
         section = graderoster.section
 
-    section_id = "-".join([str(section.term.year), section.term.quarter,
-                           section.curriculum_abbr, section.course_number,
-                           section.section_id, graderoster.instructor.uwregid])
-    section_name = " ".join([section.curriculum_abbr,
-                             section.course_number,
-                             section.section_id])
-
-    submitter_name = display_person_name(submitter)
+    section_id = section_url_token(section, graderoster.instructor)
+    section_name = section_display_name(section)
+    submitter_name = person_display_name(submitter)
 
     success_count = 0
     error_count = 0
@@ -57,7 +65,7 @@ def submission_message(graderoster, submitter):
     gradepage_host = getattr(settings, "GRADEPAGE_HOST", "http://localhost")
     params = {
         "submitted_by": submitter_name,
-        "submitted_date": display_datetime(datetime.now()),
+        "submitted_date": display_datetime(current_datetime()),
         "submitted_count": success_count + error_count,
         "success_count": success_count,
         "failure_count": error_count,
@@ -74,3 +82,46 @@ def submission_message(graderoster, submitter):
     return (subject,
             loader.render_to_string(text_template, params),
             loader.render_to_string(html_template, params))
+
+
+def graderoster_people(graderoster):
+    people = {graderoster.instructor.uwregid: graderoster.instructor}
+
+    for person in graderoster.authorized_grade_submitters:
+        people[person.uwregid] = person
+
+    for delegate in graderoster.grade_submission_delegates:
+        people[delegate.person.uwregid] = delegate.person
+
+    return people
+
+
+def notify_grade_submitters(graderoster, submitter_regid):
+    people = graderoster_people(graderoster)
+
+    if submitter_regid in people:
+        submitter = people[submitter_regid]
+    else:
+        submitter = person_from_regid(submitter_regid)
+
+    (subject, text_body, html_body) = create_message(graderoster, submitter)
+    sender = getattr(settings, "EMAIL_NOREPLY_ADDRESS")
+    recipients = create_recipient_list(people)
+
+    message = EmailMultiAlternatives(subject, text_body, sender, recipients)
+    message.attach_alternative(html_body, "text/html")
+
+    section = getattr(graderoster, "secondary_section", None)
+    if section is None:
+        section = graderoster.section
+    section_id = section.section_label()
+
+    try:
+        message.send()
+        log_message = "Submission email sent"
+    except Exception as ex:
+        log_message = "Submission email failed: %s" % ex
+
+    for recipient in recipients:
+        logger.info("%s, To: %s, Section: %s, Status: %s" % (
+            log_message, recipient, section_id, subject))

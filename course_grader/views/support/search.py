@@ -1,17 +1,16 @@
 from django.db.models import Q
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
-from django.template import RequestContext
-from django.shortcuts import render_to_response
-from restclients.sws import QUARTER_SEQ
-from restclients.sws.term import get_term_by_year_and_quarter
-from restclients.models.sws import Term
-from restclients.exceptions import DataFailureException, InvalidNetID
+from django.shortcuts import render
+from uw_sws import QUARTER_SEQ
+from uw_sws.term import get_term_by_year_and_quarter
+from uw_sws.models import Term
+from restclients_core.exceptions import DataFailureException, InvalidNetID
 from course_grader.models import SubmittedGradeRoster, GradeImport
-from course_grader.dao.person import person_from_netid, person_from_regid
+from course_grader.dao.person import (
+    person_from_netid, person_from_regid, person_display_name)
 from course_grader.views.support import is_admin_user
-from course_grader.views import display_person_name
 import logging
 import re
 
@@ -56,7 +55,7 @@ def grade_imports(request):
 
     template = "support/imports.html"
     if not len(request.GET):
-        return render_to_response(template, params, RequestContext(request))
+        return render(request, template, params)
 
     args = ()
     kwargs = {}
@@ -84,7 +83,7 @@ def grade_imports(request):
                 hasattr(err, "msg")) else err
 
     if len(params["errors"]):
-        return render_to_response(template, params, RequestContext(request))
+        return render(request, template, params)
 
     grade_imports = GradeImport.objects.filter(*args, **kwargs)
 
@@ -102,8 +101,8 @@ def grade_imports(request):
             person = person_from_regid(instructor_reg_id)
             people[instructor_reg_id] = person
 
-        importer_name = display_person_name(people[grade_import.imported_by])
-        instructor_name = display_person_name(people[instructor_reg_id])
+        importer_name = person_display_name(people[grade_import.imported_by])
+        instructor_name = person_display_name(people[instructor_reg_id])
 
         data["section_name"] = " ".join([curriculum_abbr, course_number,
                                          section_id])
@@ -113,7 +112,7 @@ def grade_imports(request):
         data["imported_date"] = grade_import.imported_date
         params["grade_imports"].append(data)
 
-    return render_to_response(template, params, RequestContext(request))
+    return render(request, template, params)
 
 
 @login_required
@@ -155,7 +154,7 @@ def graderosters(request):
 
     template = "support/search.html"
     if not len(request.GET):
-        return render_to_response(template, params, RequestContext(request))
+        return render(request, template, params)
 
     kwargs = {"term_id": selected_term.term_label()}
 
@@ -192,7 +191,7 @@ def graderosters(request):
         kwargs["accepted_date__isnull"] = True
 
     if len(params["errors"]):
-        return render_to_response(template, params, RequestContext(request))
+        return render(request, template, params)
 
     graderosters = SubmittedGradeRoster.objects.filter(
         *args, **kwargs).defer("document")
@@ -220,10 +219,10 @@ def graderosters(request):
             "id": graderoster.pk,
             "section_id": sid,
             "section_name": section_name,
-            "instructor": display_person_name(
+            "instructor": person_display_name(
                 people[graderoster.instructor_id]),
             "submitted_date": graderoster.submitted_date,
-            "submitted_by": display_person_name(
+            "submitted_by": person_display_name(
                 people[graderoster.submitted_by]),
             "submitter_netid": people[graderoster.submitted_by].uwnetid,
             "status_code": graderoster.status_code or "200",
@@ -243,7 +242,7 @@ def graderosters(request):
         chart_data.append([k, v])
     params["chart_data"] = chart_data
 
-    return render_to_response(template, params, RequestContext(request))
+    return render(request, template, params)
 
 
 def find_all_terms():

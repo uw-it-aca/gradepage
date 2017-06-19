@@ -43,12 +43,12 @@
         {% if not has_less_compiled %}
         <script src="{% static "course_grader/js/vendor/less-2.0.0.min.js" %}"></script>
         {% endif %}
-        <script type="text/javascript" src="{% url "django.views.i18n.javascript_catalog" %}"></script>
+        <script type="text/javascript" src="{% url "javascript-catalog" %}"></script>
     </head>
     <body>
         {% if override_user %}
         <div class="gp-admin-bar" role="complementary" aria-label="Admin Override Status">
-            <form method="POST" action="{% url 'userservice.views.support' %}">
+            <form method="POST" action="{% url 'userservice_override' %}">
                 <div class="container">Overriding as <strong>{{override_user|lower}}</strong>
                 {% csrf_token %}
                 <input type="hidden" value="1" name="clear_override">
@@ -93,9 +93,9 @@
             	<div class="clearfix gp-footer">
                 <!-- example of is_desktop usage in templates -->
                 {% if request.is_mobile %}
-                <p class="pull-left credit"><a href="http://www.washington.edu/online/privacy" title="UW Privacy Policy" target="_blank">Privacy</a> | <a href="http://www.washington.edu/online/terms" target="_blank" title="UW Terms of Service">Terms</a><br />&copy; 2011-{% now "Y" %}, UW-IT, ACA</p>
+                <p class="pull-left credit"><a href="http://www.washington.edu/online/privacy" title="UW Privacy Policy" target="_blank">Privacy</a> | <a href="http://www.washington.edu/online/terms" target="_blank" title="UW Terms of Service">Terms</a><br />&copy; 2011-{% now "Y" %}, UW-IT, AXDD</p>
                 {% else %}
-                <p class="pull-left credit"><a href="http://www.washington.edu/online/privacy" title="UW Privacy Policy" target="_blank">Privacy</a> | <a href="http://www.washington.edu/online/terms" target="_blank" title="UW Terms of Service">Terms</a><br />&copy; 2011-{% now "Y" %}, UW Information Technology, Academic &amp; Collaborative Applications</p>
+                <p class="pull-left credit"><a href="http://www.washington.edu/online/privacy" title="UW Privacy Policy" target="_blank">Privacy</a> | <a href="http://www.washington.edu/online/terms" target="_blank" title="UW Terms of Service">Terms</a><br />&copy; 2011-{% now "Y" %}, UW Information Technology, Academic Experience Design &amp; Delivery</p>
                 {% endif %}
                 <p class="pull-right gp-help"><a href="http://www.washington.edu/itconnect/learn/tools/catalyst-web-tools/gradebook/gradepage/" target="_blank" title="Go to GradePage documentation"><i class="fa fa-info"></i> {% if request.is_mobile %}Help{% else %}GradePage Help{% endif %}</a></p>
             	</div>

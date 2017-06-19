@@ -5,6 +5,7 @@ var GradePage = {};
 GradePage.AdminSupport = (function ($) {
     "use strict";
     function toggle_conversion_scale(ev) {
+        /*jshint validthis: true */
         ev.preventDefault();
         if ($(this).next().is(":visible")) {
             $(this).text("View").next().hide();
