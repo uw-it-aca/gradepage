@@ -2,17 +2,16 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
-from optparse import make_option
 from course_grader.models import SubmittedGradeRoster, GradeImport, Grade
 
 
 class Command(BaseCommand):
     help = "Deletes grade data by date"
 
-    option_list = BaseCommand.option_list + (
-        make_option("-c", "--commit", action="store_true", dest="commit",
-                    default=False, help="Actually delete grade data"),
-    )
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "-c", "--commit", action="store_true", dest="commit",
+            default=False, help="Actually delete grade data")
 
     def handle(self, *args, **options):
         commit = options.get("commit")
