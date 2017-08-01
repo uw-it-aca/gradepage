@@ -11,7 +11,7 @@ class InvalidUser(Exception):
         self.identifier = identifier
 
     def __str__(self):
-        return _("Invalid identifier %s" % self.identifier)
+        return _("Invalid identifier '%s'" % self.identifier)
 
 
 class InvalidTerm(Exception):

@@ -423,7 +423,8 @@ class GradeRosterStatus(GradeFormHandler):
         except (GradingPeriodNotOpen, SecondaryGradingEnabled,
                 ReceiptNotFound, InvalidTerm) as ex:
             data = section_status_params(self.section, self.instructor)
-            data["grading_status"] = "%s" % ex
+            if data["grading_status"] is None:
+                data["grading_status"] = "%s" % ex
             return self.json_response({"grading_status": data})
         except Exception as ex:
             logger.error("GET graderoster error: %s" % ex)
