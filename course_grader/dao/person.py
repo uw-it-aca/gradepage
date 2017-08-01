@@ -15,8 +15,10 @@ import json
 def person_from_netid(netid):
     try:
         return PWS().get_person_by_netid(netid)
-    except (InvalidNetID, AttributeError) as ex:
+    except InvalidNetID as ex:
         raise InvalidUser(ex)
+    except AttributeError as ex:
+        raise InvalidUser('')
     except DataFailureException as ex:
         if ex.status == 404:
             raise InvalidUser(ex)
