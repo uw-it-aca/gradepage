@@ -12,6 +12,7 @@ from course_grader.dao.catalyst import valid_gradebook_id
 from course_grader.views.api import GradeFormHandler, sorted_students
 from course_grader.views import clean_section_id
 from course_grader.exceptions import *
+from userservice.user import UserService
 import json
 import logging
 import re
@@ -53,13 +54,13 @@ class ImportGrades(GradeFormHandler):
             self.graderoster = graderoster_for_section(
                 self.section, self.instructor, self.user)
 
-        except GradingNotPermitted as ex:
+        except (InvalidUser, GradingNotPermitted, OverrideNotPermitted) as ex:
             logger.info("Grading for %s not permitted for %s" % (
-                ex.section, ex.person))
+                section_id, UserService().get_original_user()))
             return self.error_response(403, "%s" % ex)
         except (SecondaryGradingEnabled, GradingPeriodNotOpen,
-                InvalidTerm, InvalidUser, OverrideNotPermitted) as ex:
-            return self.error_response(403, "%s" % ex)
+                InvalidTerm) as ex:
+            return self.error_response(400, "%s" % ex)
         except InvalidSection as ex:
             return self.error_response(404, "%s" % ex)
         except Exception as ex:

@@ -16,6 +16,7 @@ from course_grader.views.api import (
     GradeFormHandler, graderoster_status_params, item_is_submitted,
     sorted_students, sorted_grades)
 from course_grader.exceptions import *
+from userservice.user import UserService
 from datetime import datetime
 import json
 import logging
@@ -61,7 +62,7 @@ class GradeRoster(GradeFormHandler):
 
         except (InvalidUser, GradingNotPermitted, OverrideNotPermitted) as ex:
             logger.info("Grading for %s not permitted for %s" % (
-                ex.section, ex.person))
+                section_id, UserService().get_original_user()))
             return self.error_response(403, "%s" % ex)
         except (SecondaryGradingEnabled, GradingPeriodNotOpen,
                 InvalidTerm, InvalidSection, MissingInstructorParam) as ex:
