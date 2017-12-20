@@ -68,7 +68,7 @@ class ImportGrades(GradeFormHandler):
                 "GET graderoster failed: %s, Section: %s, Instructor: %s" % (
                     ex, section.section_label(), instructor.uwregid))
             if hasattr(ex, "status"):
-                status = 404 if (ex.status == 404) else 500
+                status = 404 if (ex.status == 404) else 543
             else:
                 status = 500
             err = ex.msg if hasattr(ex, "msg") else ex

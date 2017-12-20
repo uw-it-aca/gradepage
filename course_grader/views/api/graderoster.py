@@ -71,8 +71,10 @@ class GradeRoster(GradeFormHandler):
             return self.error_response(404, "%s" % ex)
         except Exception as ex:
             logger.error("GET graderoster error: %s" % ex)
-            err = ex.msg if hasattr(ex, "msg") else ex
-            return self.error_response(500, "%s" % err)
+            if hasattr(ex, "msg"):
+                return self.error_response(543, "%s" % ex.msg)
+            else:
+                return self.error_response(500, "%s" % ex)
 
     def get(self, request, *args, **kwargs):
         error = self._authorize(request, *args, **kwargs)
@@ -429,8 +431,10 @@ class GradeRosterStatus(GradeFormHandler):
             return self.json_response({"grading_status": data})
         except Exception as ex:
             logger.error("GET graderoster error: %s" % ex)
-            err = ex.msg if hasattr(ex, "msg") else ex
-            return self.error_response(500, "%s" % err)
+            if hasattr(ex, "msg"):
+                return self.error_response(543, "%s" % ex.msg)
+            else:
+                return self.error_response(500, "%s" % ex)
 
         data = section_status_params(self.section, self.instructor)
 
