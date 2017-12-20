@@ -9,11 +9,11 @@ install: pip install -r requirements.txt
 before_script:
   - pip install coverage
   - pip install python-coveralls
-  - pip install pep8
-  - npm install jshint
+  - pip install pycodestyle
+  - npm install -g jshint
   - cp travis-ci/manage.py manage.py
 script:
-  - pep8 course_grader/ --exclude=migrations,test
+  - pycodestyle course_grader/ --exclude=migrations,test
   - jshint course_grader/static/course_grader/js/ --verbose
   - coverage run --source=course_grader/ --omit=course_grader/migrations/* manage.py test course_grader
 after_success:
