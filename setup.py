@@ -22,7 +22,7 @@ setup(
     packages=['course_grader'],
     include_package_data=True,
     install_requires = [
-        'Django==1.10.5',
+        'Django==1.11.10',
         'django-compressor',
         'django-templatetag-handlebars',
         'nameparser>=0.2.9',
