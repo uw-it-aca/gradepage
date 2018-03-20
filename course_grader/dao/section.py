@@ -64,8 +64,15 @@ def all_gradable_sections(person, term):
     """
     Return a list of gradable sections for the user and term.
     """
-    section_refs = get_sections_by_instructor_and_term(person, term)
-    section_refs.extend(get_sections_by_delegate_and_term(person, term))
+    args = [person, term]
+    kwargs = {
+        'future_terms': 0,
+        'include_secondaries': True,
+        'transcriptable_course': 'yes',
+        'delete_flag': ['active', 'suspended']
+    }
+    section_refs = get_sections_by_instructor_and_term(*args, **kwargs)
+    section_refs.extend(get_sections_by_delegate_and_term(*args, **kwargs))
 
     # This sort ensures that primary sections are seen before secondaries
     section_refs.sort(key=lambda section_ref: section_ref.url)

@@ -3,7 +3,9 @@ from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
 from course_grader.dao.person import PWS
 from course_grader.dao.section import *
+from course_grader.dao.term import term_from_param
 from course_grader.exceptions import InvalidSection, MissingInstructorParam
+import mock
 
 
 @fdao_sws_override
@@ -17,8 +19,20 @@ class SectionDAOFunctionsTest(TestCase):
         self.assertRaises(InvalidSection, section_from_param, '2013-spring-TRAIN-101')
         self.assertRaises(MissingInstructorParam, section_from_param, '2013-spring-TRAIN-101-A')
 
-    def test_all_gradable_sections(self):
-        pass
+    @mock.patch('course_grader.dao.section.get_sections_by_delegate_and_term')
+    @mock.patch('course_grader.dao.section.get_sections_by_instructor_and_term')
+    def test_all_gradable_sections_args(self, mock_ins_fn, mock_del_fn):
+        person = PWS().get_person_by_netid('javerage')
+        term = term_from_param('2013-autumn')
+
+        ret = all_gradable_sections(person, term)
+        mock_ins_fn.assert_called_with(
+            person, term, delete_flag=['active', 'suspended'], future_terms=0,
+            include_secondaries=True, transcriptable_course='yes')
+
+        mock_del_fn.assert_called_with(
+            person, term, delete_flag=['active', 'suspended'], future_terms=0,
+            include_secondaries=True, transcriptable_course='yes')
 
     def test_is_grader_for_section(self):
         section = get_section_by_label('2013,spring,TRAIN,101/A')
