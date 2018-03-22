@@ -1,7 +1,7 @@
 """
 This module encapsulates the access of sws section data
 """
-
+from uw_sws.models import Section
 from uw_sws.section import (
     get_section_by_url, get_section_by_label,
     get_sections_by_instructor_and_term, get_sections_by_delegate_and_term)
@@ -64,8 +64,16 @@ def all_gradable_sections(person, term):
     """
     Return a list of gradable sections for the user and term.
     """
-    section_refs = get_sections_by_instructor_and_term(person, term)
-    section_refs.extend(get_sections_by_delegate_and_term(person, term))
+    args = [person, term]
+    kwargs = {
+        'future_terms': 0,
+        'include_secondaries': True,
+        'transcriptable_course': 'yes',
+        'delete_flag': [Section.DELETE_FLAG_ACTIVE,
+                        Section.DELETE_FLAG_SUSPENDED]
+    }
+    section_refs = get_sections_by_instructor_and_term(*args, **kwargs)
+    section_refs.extend(get_sections_by_delegate_and_term(*args, **kwargs))
 
     # This sort ensures that primary sections are seen before secondaries
     section_refs.sort(key=lambda section_ref: section_ref.url)
