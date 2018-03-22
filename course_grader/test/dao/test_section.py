@@ -1,6 +1,7 @@
 from django.test import TestCase
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
+from uw_sws.models import Section
 from course_grader.dao.person import PWS
 from course_grader.dao.section import *
 from course_grader.dao.term import term_from_param
@@ -27,12 +28,14 @@ class SectionDAOFunctionsTest(TestCase):
 
         ret = all_gradable_sections(person, term)
         mock_ins_fn.assert_called_with(
-            person, term, delete_flag=['active', 'suspended'], future_terms=0,
-            include_secondaries=True, transcriptable_course='yes')
+            person, term,
+            delete_flag=[Section.DELETE_FLAG_ACTIVE, Section.DELETE_FLAG_SUSPENDED],
+            future_terms=0, include_secondaries=True, transcriptable_course='yes')
 
         mock_del_fn.assert_called_with(
-            person, term, delete_flag=['active', 'suspended'], future_terms=0,
-            include_secondaries=True, transcriptable_course='yes')
+            person, term,
+            delete_flag=[Section.DELETE_FLAG_ACTIVE, Section.DELETE_FLAG_SUSPENDED],
+            future_terms=0, include_secondaries=True, transcriptable_course='yes')
 
     def test_is_grader_for_section(self):
         section = get_section_by_label('2013,spring,TRAIN,101/A')
