@@ -7,6 +7,11 @@ from uw_canvas.assignments import Assignments
 from course_grader.dao.section import section_from_url
 
 
+def assignment_muted(assignment):
+    return (assignment.muted and (
+        assignment.published or assignment.has_submissions))
+
+
 def grades_for_section(section, instructor):
     canvas = Enrollments()
 
@@ -37,7 +42,7 @@ def grades_for_section(section, instructor):
     canvas = Assignments()
     for course_id in courses.keys():
         for assignment in canvas.get_assignments(course_id):
-            if assignment.muted:
+            if assignment_muted(assignment):
                 assignment_data = {"course_id": course_id,
                                    "assignment_id": assignment.assignment_id,
                                    "name": assignment.name}
