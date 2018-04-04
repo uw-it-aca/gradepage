@@ -1,15 +1,10 @@
 from django.conf import settings
-from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from course_grader.dao import display_datetime
 from course_grader.dao.person import person_display_name
 from course_grader.dao.section import section_url_token, section_display_name
 from course_grader.dao.term import submission_deadline_warning
 import re
-
-
-def user_login(request):
-    return HttpResponseRedirect(request.GET.get('next', '/'))
 
 
 def clean_section_id(section_id):

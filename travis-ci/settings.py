@@ -122,3 +122,5 @@ LOGGING = {
         },
     }
 }
+
+GRADEPAGE_ADMIN_GROUP = ''

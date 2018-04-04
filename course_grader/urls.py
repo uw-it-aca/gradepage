@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.conf.urls import url
 from django.views.generic import TemplateView
-from course_grader.views import user_login
 from course_grader.views.chooser import home
 from course_grader.views.section import section
 from course_grader.views.support.status import status
@@ -19,7 +18,6 @@ from course_grader.views.api.submitted_graderoster import (
 
 urlpatterns = [
     url(r'^$', home),
-    url(r'^login/?$', user_login),
     url(r'^section/(?P<url_token>[^/]*)$', section),
     url(r'^api/v1/sections/(?P<term_id>[^/]*)$', Sections.as_view()),
     url(r'^api/v1/graderoster/(?P<section_id>[^/]*)$', GradeRoster.as_view()),

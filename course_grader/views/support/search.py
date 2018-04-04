@@ -1,8 +1,8 @@
+from django.conf import settings
 from django.db.models import Q
-from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from django.shortcuts import render
+from uw_saml.decorators import group_required
 from uw_sws import QUARTER_SEQ
 from uw_sws.term import get_term_by_year_and_quarter
 from uw_sws.models import Term
@@ -10,7 +10,6 @@ from restclients_core.exceptions import DataFailureException, InvalidNetID
 from course_grader.models import SubmittedGradeRoster, GradeImport
 from course_grader.dao.person import (
     person_from_netid, person_from_regid, person_display_name)
-from course_grader.views.support import is_admin_user
 import logging
 import re
 
@@ -18,12 +17,9 @@ import re
 logger = logging.getLogger(__name__)
 
 
-@login_required
+@group_required(settings.GRADEPAGE_ADMIN_GROUP)
 @never_cache
 def grade_imports(request):
-    if not is_admin_user():
-        return HttpResponseRedirect("/")
-
     all_terms = find_all_terms()
     selected_term = term_from_param(request, all_terms)
 
@@ -115,12 +111,9 @@ def grade_imports(request):
     return render(request, template, params)
 
 
-@login_required
+@group_required(settings.GRADEPAGE_ADMIN_GROUP)
 @never_cache
 def graderosters(request):
-    if not is_admin_user():
-        return HttpResponseRedirect("/")
-
     all_terms = find_all_terms()
     selected_term = term_from_param(request, all_terms)
 
