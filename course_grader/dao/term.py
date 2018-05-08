@@ -19,7 +19,7 @@ def submission_deadline_warning(term):
 
 
 def term_from_param(param):
-    valid = re.compile("^2\d{3}-(?:winter|spring|summer|autumn)$", re.I)
+    valid = re.compile(r"^2\d{3}-(?:winter|spring|summer|autumn)$", re.I)
     if not valid.match(param):
         raise InvalidTerm()
     (year, quarter) = param.split("-")
