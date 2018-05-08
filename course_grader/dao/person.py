@@ -8,7 +8,6 @@ from restclients_core.exceptions import (
     InvalidNetID, InvalidRegID, DataFailureException)
 from course_grader.exceptions import InvalidUser
 from userservice.user import UserService
-from nameparser import HumanName
 import json
 
 
@@ -47,14 +46,7 @@ def person_from_regid(regid):
 
 
 def person_display_name(person):
-    if (person.display_name is not None and len(person.display_name) and
-            not person.display_name.isupper()):
-        name = person.display_name
-    else:
-        name = HumanName("%s %s" % (person.first_name, person.surname))
-        name.capitalize()
-        name.string_format = "{first} {last}"
-    return str(name)
+    return person.get_formatted_name(string_format="{first} {last}")
 
 
 def is_netid(username):
