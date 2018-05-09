@@ -62,4 +62,4 @@ class SectionDAOFunctionsTest(TestCase):
 
         user = PWS().get_person_by_netid('javerage')
         self.assertEquals(section_display_name(section, user),
-                          'TRAIN 101 A (James Student)')
+                          'TRAIN 101 A (Jamesy McJamesy)')
