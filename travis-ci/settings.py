@@ -37,7 +37,6 @@ INSTALLED_APPS = (
     'templatetag_handlebars',
     'supporttools',
     'userservice',
-    'authz_group',
     'rc_django',
     'grade_conversion_calculator',
     'course_grader.apps.CourseGraderConfig',
