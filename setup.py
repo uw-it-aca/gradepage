@@ -37,7 +37,7 @@ setup(
         'UW-RestClients-Graderoster>=0.4.3,<1.0',
         'UW-Grade-Conversion-Calculator>=0.2,<1.0',
         'Django-Safe-EmailBackend>=0.1,<1.0',
-        'Django-SupportTools>=2.0,<3.0',
+        'Django-SupportTools>=2.0.3,<3.0',
         'UW-Django-SAML2>=0.4.2',
     ],
     license='Apache License, Version 2.0',
