@@ -1,13 +1,14 @@
-{% load i18n %}                                                                 
 {% load humanize %}
-<p>{% blocktrans with name=submitted_by text_count=submitted_count|apnumber date=submitted_date count count=submitted_count %}email_body_submission_success {{ name }} {{ text_count }} {{ date }}{% plural %}email_body_submissions_success {{ name }} {{ text_count }} {{ date }}{% endblocktrans %}</p>
+<p>{% if submitted_count == 1 %}
+{{ submitted_by }} submitted a grade for one student to the Registrar on {{ submitted_date }}.  This grade has been successfully processed and will be available to the student via MyUW.{% else %}{{ submitted_by }} submitted grades for {{ submitted_count|apnumber }} students to the Registrar on {{ submitted_date }}.  These grades have been successfully processed and will be available to the students via MyUW.
+{% endif %}</p>
 
-<a href="{{section_url}}">View or print a copy of this grade submission for your records.</a>
+<a href="{{ section_url }}">View or print a copy of this grade submission for your records.</a>
 
-<p>{% blocktrans %}email_body_change_grade_html{% endblocktrans %}</p>
-
-<p>{% blocktrans with url=gradepage_url %}email_body_submit_more_html {{ url }}{% endblocktrans %}</p>
+<p>No changes can be made through GradePage.  To change submitted grades, use the <a href="https://depts.washington.edu/registra/staffFaculty/gradeChange/">Change of Grade form</a>.</p>
 
 {% if grading_window_open %}
-<p>{% blocktrans with date=grade_submission_deadline %}email_body_submission_deadline_html {{ date }}{% endblocktrans %}</p>
+<p>To submit more grades for a different class, return to <a href="{{ gradepage_url }}">GradePage</a>.</p>
+
+<p>All grades must be submitted by <strong>{{ grade_submission_deadline }}</strong>.</p>
 {% endif %}
