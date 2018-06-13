@@ -64,3 +64,9 @@ class ExceptionsTest(TestCase):
         except OverrideNotPermitted as ex:
             self.assertEquals(
                 str(ex), "Cannot submit grades while using admin override.")
+
+    def test_GradesNotSubmitted(self):
+        try:
+            raise GradesNotSubmitted()
+        except GradesNotSubmitted as ex:
+            self.assertEquals(str(ex), "No grades were submitted")
