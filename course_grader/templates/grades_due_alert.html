@@ -1,10 +1,9 @@
-{% load i18n %}
 {% load humanize %}
 {% if grade_submission_deadline %}
 <div class="alert gp-alert {% if deadline_warning %}alert-danger{% else %}gp-alert-warning{% endif %} hidden-print" role="alert">
     <div class="container gp-alert-text">
         <i class="fa fa-exclamation-circle fa-lg"></i>
-            {% blocktrans with quarter=deadline_quarter year=deadline_year date=grade_submission_deadline|date:"F d, g:i A T" %}grades_due_alert {{ quarter }} {{ year }} {{ date }}{% endblocktrans %}
+        {{ deadline_quarter }} {{ deadline_year }} grades are due on <strong>{{ grade_submission_deadline|date:"F d, g:i A T" }}.</strong>
     </div>
 </div>
 {% if deadline_warning %}
@@ -12,10 +11,9 @@
     <div class="container alert-dismissable">
         <button  type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <strong>Attention!</strong>
-        {% if request.is_mobile %}
-        {% blocktrans with remaining=grade_submission_deadline|naturaltime %}hours_remaining_alert_short {{ remaining }}{% endblocktrans %}
-        {% else %}
-        {% blocktrans with remaining=grade_submission_deadline|naturaltime %}hours_remaining_alert_long {{ remaining }}{% endblocktrans %}
+        The grading period closes {{ grade_submission_deadline|naturaltime }}!
+        {% if not request.is_mobile %}
+        Grades cannot be submitted online after deadline.
         {% endif %}
     </div>
 </div>
