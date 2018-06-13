@@ -56,3 +56,8 @@ class GradingNotPermitted(Exception):
 class OverrideNotPermitted(Exception):
     def __str__(self):
         return "Cannot submit grades while using admin override."
+
+
+class GradesNotSubmitted(Exception):
+    def __str__(self):
+        return "No grades were submitted"

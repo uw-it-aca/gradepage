@@ -1,7 +1,6 @@
 {% load humanize %}
 {% if submitted_count == 1 %}
-{{ submitted_by }} submitted a grade for one student to the Registrar on {{ submitted_date }}.  This grade has been successfully processed and will be available to the student via MyUW.{% else %}{{ submitted_by }} submitted grades for {{ submitted_count|apnumber }} students to the Registrar on {{ submitted_date }}.  These grades have been successfully processed and will be available to the students via MyUW.
-{% endif %}
+{{ submitted_by }} submitted a grade for one student to the Registrar on {{ submitted_date }}.  This grade has been successfully processed and will be available to the student via MyUW.{% else %}{{ submitted_by }} submitted grades for {{ submitted_count|apnumber }} students to the Registrar on {{ submitted_date }}.  These grades have been successfully processed and will be available to the students via MyUW.{% endif %}
 
 To view or print a copy of this grade submission for your records, go to: {{ section_url }}
 

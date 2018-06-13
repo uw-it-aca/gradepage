@@ -5,6 +5,7 @@ from django.contrib.humanize.templatetags.humanize import apnumber
 from course_grader.dao.section import section_url_token, section_display_name
 from course_grader.dao.person import person_from_regid, person_display_name
 from course_grader.dao import current_datetime, display_datetime
+from course_grader.exceptions import GradesNotSubmitted
 import logging
 
 
@@ -55,7 +56,7 @@ def create_message(graderoster, submitter):
         text_template = "email/success.txt"
         html_template = "email/success.html"
     else:
-        raise Exception("No grades were submitted")
+        raise GradesNotSubmitted()
 
     gradepage_host = getattr(settings, "GRADEPAGE_HOST", "http://localhost")
     params = {
