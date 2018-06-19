@@ -1,8 +1,10 @@
 from django.conf import settings
-from userservice.user import UserService
-from authz_group import Group
+from uw_saml.utils import is_member_of_group
 
 
-def is_admin_user():
-    return Group().is_member_of_group(UserService().get_original_user(),
-                                      settings.GRADEPAGE_ADMIN_GROUP)
+def can_override_user(request):
+    return is_member_of_group(request, settings.GRADEPAGE_ADMIN_GROUP)
+
+
+def can_proxy_restclient(request, service, url):
+    return is_member_of_group(request, settings.GRADEPAGE_ADMIN_GROUP)
