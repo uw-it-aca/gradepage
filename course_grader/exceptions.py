@@ -3,7 +3,6 @@ Custom exceptions used by GradePage.
 """
 
 from django.conf import settings
-from django.utils.translation import ugettext as _
 
 
 class InvalidUser(Exception):
@@ -11,37 +10,38 @@ class InvalidUser(Exception):
         self.identifier = identifier
 
     def __str__(self):
-        return _("Invalid identifier '%s'" % self.identifier)
+        return "Invalid identifier '%s'" % self.identifier
 
 
 class InvalidTerm(Exception):
     def __str__(self):
-        return _("receipt_not_found")
+        return "No submission information available"
 
 
 class InvalidSection(Exception):
     def __str__(self):
-        return _("section_not_found")
+        return "Section not found."
 
 
 class MissingInstructorParam(Exception):
     def __str__(self):
-        return _("Missing instructor UWRegID")
+        return "Missing instructor UWRegID"
 
 
 class ReceiptNotFound(Exception):
     def __str__(self):
-        return _("receipt_not_found")
+        return "No submission information available"
 
 
 class GradingPeriodNotOpen(Exception):
     def __str__(self):
-        return _("grading_period_not_open")
+        return "Grade submission is not open for this section."
 
 
 class SecondaryGradingEnabled(Exception):
     def __str__(self):
-        return _("secondary_grading_enabled")
+        return ("Secondary grading is enabled for this course. Final grades "
+                "must be submitted separately for each secondary section.")
 
 
 class GradingNotPermitted(Exception):
@@ -50,9 +50,14 @@ class GradingNotPermitted(Exception):
         self.person = person
 
     def __str__(self):
-        return _("grading_not_permitted")
+        return "You are not authorized to submit grades for this section."
 
 
 class OverrideNotPermitted(Exception):
     def __str__(self):
-        return _("no_override_submit")
+        return "Cannot submit grades while using admin override."
+
+
+class GradesNotSubmitted(Exception):
+    def __str__(self):
+        return "No grades were submitted"

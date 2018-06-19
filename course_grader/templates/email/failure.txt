@@ -1,11 +1,11 @@
-{% load i18n %}                                                                 
 {% load humanize %}
-{% blocktrans with name=submitted_by text_count=submitted_count|apnumber date=submitted_date count count=submitted_count %}email_body_submission_failure {{ name }} {{ text_count }} {{ date }}{% plural %}email_body_submissions_failure {{ name }} {{ text_count }} {{ date }}{% endblocktrans %} {% blocktrans with url=section_url %}email_body_view_receipt {{ url }}{% endblocktrans %}
+{% if submitted_count == 1 %}
+{{ submitted_by }} unsuccessfully submitted a grade for one student to the Registrar on {{ submitted_date }}.  There was a problem processing this grade and it has not been submitted.{% else %}{{ submitted_by }} unsuccessfully submitted grades for {{ submitted_count|apnumber }} students to the Registrar on {{ submitted_date }}.  There was a problem processing these grades and they have not been submitted.{% endif %}
 
-{% blocktrans %}email_body_change_grade_html{% endblocktrans %}
+No changes can be made through GradePage.  To change submitted grades, use the Change of Grade form: https://depts.washington.edu/registra/staffFaculty/gradeChange/
 
 {% if grading_window_open %}
-{% blocktrans with url=gradepage_url %}email_body_submit_more {{ url }}{% endblocktrans %}
+To submit more grades for a different class, return to GradePage: {{ gradepage_url }}
 
-{% blocktrans with date=grade_submission_deadline %}email_body_submission_deadline {{ date }}{% endblocktrans %}
+All grades must be submitted by {{ grade_submission_deadline }}.
 {% endif %}

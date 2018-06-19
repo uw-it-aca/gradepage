@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.http import HttpResponseRedirect
-from django.utils.translation import ugettext as _
 from course_grader.dao import display_datetime
 from course_grader.dao.person import person_display_name
 from course_grader.dao.section import section_url_token, section_display_name
@@ -54,16 +53,15 @@ def section_status_params(section, instructor):
 
     if (grading_period_open or section.term.is_grading_period_past()):
         if (section.is_primary_section and section.allows_secondary_grading):
-            data["grading_status"] = _("secondary_grading_status")
+            data["grading_status"] = (
+                "Secondary grading is enabled for this course.")
         else:
             data["section_url"] = url_for_section(section_id)
             data["status_url"] = url_for_grading_status(section_id)
     elif section.is_full_summer_term():
-        data["grading_status"] = _(
-            "summer_full_term_grade_submission_opens %(date)s"
-        ) % {
-            "date": display_datetime(section.term.grading_period_open)
-        }
+        data["grading_status"] = (
+            "Summer full-term grade submission opens on %s." % (
+                display_datetime(section.term.grading_period_open)))
 
     return data
 

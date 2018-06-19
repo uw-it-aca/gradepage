@@ -63,6 +63,12 @@ ROOT_URLCONF = 'travis-ci.urls'
 
 WSGI_APPLICATION = 'travis-ci.wsgi.application'
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+    },
+]
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases

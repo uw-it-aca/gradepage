@@ -1,11 +1,11 @@
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template import loader
-from django.utils.translation import ungettext, ugettext
 from django.contrib.humanize.templatetags.humanize import apnumber
 from course_grader.dao.section import section_url_token, section_display_name
 from course_grader.dao.person import person_from_regid, person_display_name
 from course_grader.dao import current_datetime, display_datetime
+from course_grader.exceptions import GradesNotSubmitted
 import logging
 
 
@@ -39,28 +39,24 @@ def create_message(graderoster, submitter):
                 success_count += 1
 
     if success_count > 0 and error_count > 0:
-        subject = ugettext(
-            "email_subject_submission_failure %(section)s"
-        ) % {"section": section_name}
+        subject = "Failed grade submission attempt for %s" % (section_name)
         text_template = "email/partial.txt"
         html_template = "email/partial.html"
     elif success_count == 0 and error_count > 0:
-        subject = ugettext(
-            "email_subject_submission_failure %(section)s"
-        ) % {"section": section_name}
+        subject = "Failed grade submission attempt for %s" % (section_name)
         text_template = "email/failure.txt"
         html_template = "email/failure.html"
     elif success_count > 0 and error_count == 0:
-        subject = ungettext(
-            "email_subject_submission_success %(name)s %(count)s %(section)s",
-            "email_subject_submissions_success %(name)s %(count)s %(section)s",
-            success_count) % {"count": apnumber(success_count),
-                              "name": submitter_name,
-                              "section": section_name}
+        if success_count == 1:
+            subject = "%s submitted %s grade for %s" % (
+                submitter_name, apnumber(success_count), section_name)
+        else:
+            subject = "%s submitted %s grades for %s" % (
+                submitter_name, apnumber(success_count), section_name)
         text_template = "email/success.txt"
         html_template = "email/success.html"
     else:
-        raise Exception("No grades were submitted")
+        raise GradesNotSubmitted()
 
     gradepage_host = getattr(settings, "GRADEPAGE_HOST", "http://localhost")
     params = {

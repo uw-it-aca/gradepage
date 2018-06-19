@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
@@ -20,6 +19,8 @@ logger = logging.getLogger(__name__)
 @method_decorator(never_cache, name='dispatch')
 class Sections(RESTDispatch):
     def get(self, request, *args, **kwargs):
+        sws_not_available = ("The Student Web Service is not available. "
+                             "Please try again later.")
         try:
             term = term_from_param(kwargs.get("term_id"))
             if term is None or term not in all_viewable_terms():
@@ -33,7 +34,7 @@ class Sections(RESTDispatch):
             return self.error_response(404, "%s" % ex)
         except Exception as ex:
             logger.error("GET selected term failed: %s" % ex)
-            return self.error_response(500, _("sws_not_available"))
+            return self.error_response(500, sws_not_available)
 
         try:
             sections = all_gradable_sections(self.user, self.term)
@@ -43,7 +44,7 @@ class Sections(RESTDispatch):
                 sections = []
             else:
                 logger.error("GET gradable sections failed: %s" % ex)
-                return self.error_response(500, _("sws_not_available"))
+                return self.error_response(500, sws_not_available)
 
         content = self.response_content(sections, **kwargs)
         return self.json_response(content)
