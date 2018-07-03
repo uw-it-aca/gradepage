@@ -1,13 +1,13 @@
+from django.conf import settings
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
+from uw_saml.decorators import group_required
 from course_grader.views.rest_dispatch import RESTDispatch
 from course_grader.models import (
     SubmittedGradeRoster as SubmittedGradeRosterModel)
 from course_grader.dao.person import person_from_regid, person_display_name
 from course_grader.dao.section import section_from_label
-from course_grader.views.support import is_admin_user
 from course_grader.dao.term import term_from_param
 from uw_sws_graderoster import graderoster_from_xhtml
 import logging
@@ -17,13 +17,11 @@ import csv
 logger = logging.getLogger(__name__)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(group_required(settings.GRADEPAGE_ADMIN_GROUP),
+                  name='dispatch')
 @method_decorator(never_cache, name='dispatch')
 class SubmissionsByTerm(RESTDispatch):
     def get(self, request, *args, **kwargs):
-        if not is_admin_user():
-            return self.error_response(403, "Unauthorized")
-
         term_id = kwargs.get("term_id")
 
         try:
@@ -56,13 +54,11 @@ class SubmissionsByTerm(RESTDispatch):
         return response
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(group_required(settings.GRADEPAGE_ADMIN_GROUP),
+                  name='dispatch')
 @method_decorator(never_cache, name='dispatch')
 class SubmittedGradeRoster(RESTDispatch):
     def get(self, request, *args, **kwargs):
-        if not is_admin_user():
-            return self.error_response(403, "Unauthorized")
-
         graderoster_id = kwargs.get("graderoster_id")
 
         try:
