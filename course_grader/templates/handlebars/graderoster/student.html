@@ -1,7 +1,8 @@
-{% load templatetag_handlebars %}                                               
-{% tplhandlebars "student-tmpl" %}
+{% verbatim %}
+<script id="student-tmpl" type="text/x-handlebars-template">
 <div class="gp-roster-user-container-edit">
     <h3 id="student-{{ item_id }}">{{ student_lastname }}, {{ student_firstname }}</h3>
 	<div class="gp-small"><span class="offcanvas">{{ trans "section" }}:</span>{{ section_id }}, {{# if student_credits }}<span class="offcanvas">{{ trans 	"student_credits" }}:</span>{{ student_credits }} CR,&nbsp;{{/if}}<span class="offcanvas">{{ trans "student_number" }}:</span>{{ student_number }} {{# if 	duplicate_code }}<span class="label label-default" title="Duplicate code"><span class="offcanvas">{{ trans "duplicate_code" }}:</span>{{duplicate_code}}</span> {{/if}} </div>
 </div>
-{% endtplhandlebars %}
+</script>
+{% endverbatim %}

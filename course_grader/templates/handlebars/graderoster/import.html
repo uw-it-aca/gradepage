@@ -1,5 +1,5 @@
-{% load templatetag_handlebars %}
-{% tplhandlebars "import-tmpl" %}
+{% verbatim %}
+<script id="import-tmpl" type="text/x-handlebars-template">
 {{# if grade_count }}
     <p>{{{ trans "One grade found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>." "%(grade_count)s total grades found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>." grade_count }}}</p>
 
@@ -34,4 +34,5 @@
 {{else}}
     <p>{{{ trans "import_no_grades_found" }}}</p>
 {{/if}}
-{% endtplhandlebars %}
+</script>
+{% endverbatim %}

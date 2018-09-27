@@ -1,5 +1,5 @@
-{% load templatetag_handlebars %}
-{% tplhandlebars "convert-tmpl" %}
+{% verbatim %}
+<script id="convert-tmpl" type="text/x-handlebars-template">
 <div class="container">
     <div class="gp-import-conversion">
         <div class="gp-conversion-instructions">
@@ -15,9 +15,8 @@
         <div id="grade-calculator-container"></div>
     </div>
 </div>
-{% endtplhandlebars %}
-
-{% tplhandlebars "convert-optgroup-tmpl" %}
+</script>
+<script id="convert-optgroup-tmpl" type="text/x-handlebars-template">
     {{# each terms }}
     <optgroup label="{{ quarter }} {{ year }}">
         {{# each conversion_scales }}
@@ -25,4 +24,5 @@
         {{/each}}
     </optgroup>
     {{/each}}
-{% endtplhandlebars %}
+</script>
+{% endverbatim %}

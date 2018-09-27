@@ -1,5 +1,5 @@
-{% load templatetag_handlebars %}
-{% tplhandlebars "section-list-tmpl" %}
+{% verbatim %}
+<script id="section-list-tmpl" type="text/x-handlebars-template">
         {{# if sections }}
         <ol class="list-group gp-section-list">
             {{# each sections}}
@@ -20,4 +20,5 @@
         {{else}}
         <div class="well">{{{ trans "no_classes_to_grade" }}}</div>
         {{/if}}
-{% endtplhandlebars %}
+</script>
+{% endverbatim %}

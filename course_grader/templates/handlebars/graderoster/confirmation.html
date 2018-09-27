@@ -1,35 +1,33 @@
-{% load templatetag_handlebars %}
-{% tplhandlebars "confirmation-tmpl" %}
-
+{% verbatim %}
+<script id="confirmation-tmpl" type="text/x-handlebars-template">
     <div class="container">
-        {% verbatim %}
         {{# if is_submission_confirmation}}
-                {{# if has_failed_submissions}}
-                    {{# if has_successful_submissions}}
-                    	<div class="alert alert-warning gp-confirmation-alert" role="status">
-						<span class="gp-submit-success-message"><i class="fa fa-exclamation-circle"></i>
-                        {{ trans "Grades submitted, but one grade had an error." "Grades submitted, but %(failed_submission_count)s grades had errors." failed_submission_count }}
-                    {{else}}
-                    	<div class="alert alert-danger gp-confirmation-alert" role="status">
-						<span class="gp-submit-success-message"><i class="fa fa-times-circle"></i>
-                        {{ trans "Grade submitted with error." "Grades submitted with errors." failed_submission_count }}
-                    {{/if}}
+            {{# if has_failed_submissions}}
+                {{# if has_successful_submissions}}
+                    <div class="alert alert-warning gp-confirmation-alert" role="status">
+                    <span class="gp-submit-success-message"><i class="fa fa-exclamation-circle"></i>
+                    {{ trans "Grades submitted, but one grade had an error." "Grades submitted, but %(failed_submission_count)s grades had errors." failed_submission_count }}
                 {{else}}
-                	<div class="alert alert-success gp-confirmation-alert" role="status">
-						<span class="gp-submit-success-message"><i class="fa fa-check-circle"></i>
-                    {{ trans "grade_submission_successful" }}
+                    <div class="alert alert-danger gp-confirmation-alert" role="status">
+                    <span class="gp-submit-success-message"><i class="fa fa-times-circle"></i>
+                    {{ trans "Grade submitted with error." "Grades submitted with errors." failed_submission_count }}
                 {{/if}}
-						</span>
-						<p>{{ trans "more_grades_to_submit" }} <a href="/">{{ trans "return_classes_to_grade" }}</a></p>
-					</div>
+            {{else}}
+                <div class="alert alert-success gp-confirmation-alert" role="status">
+                    <span class="gp-submit-success-message"><i class="fa fa-check-circle"></i>
+                {{ trans "grade_submission_successful" }}
+            {{/if}}
+                    </span>
+                    <p>{{ trans "more_grades_to_submit" }} <a href="/">{{ trans "return_classes_to_grade" }}</a></p>
+                </div>
         {{else}}
-        {{# if has_inprogress_submissions}}
-        <div class="alert alert-info gp-inprogress-alert" role="status">
-            <span class="gp-submit-success-message"><i class="fa fa-refresh"></i> {{ trans "grade_submission_inprogress" }}</span>
-            <p>{{ trans "in_progress_submission_email" }}</p>
-            <p>{{ trans "more_grades_to_submit" }} <a href="/">{{ trans "return_classes_to_grade" }}</a></p>
-        </div>
-        {{/if}}
+            {{# if has_inprogress_submissions}}
+            <div class="alert alert-info gp-inprogress-alert" role="status">
+                <span class="gp-submit-success-message"><i class="fa fa-refresh"></i> {{ trans "grade_submission_inprogress" }}</span>
+                <p>{{ trans "in_progress_submission_email" }}</p>
+                <p>{{ trans "more_grades_to_submit" }} <a href="/">{{ trans "return_classes_to_grade" }}</a></p>
+            </div>
+            {{/if}}
         {{/if}}
         <div class="gp-receipt-message" role="status">
             {{# each submissions}}
@@ -67,6 +65,6 @@
             <div id="gp-import-scale-display" style="display: none;"></div>
         </div>
         {{/if}}
-        {% endverbatim %}
     </div>
-{% endtplhandlebars %}
+</script>
+{% endverbatim %}

@@ -1,5 +1,5 @@
-{% load templatetag_handlebars %}
-{% tplhandlebars "section-tmpl" %}
+{% verbatim %}
+<script id="section-tmpl" type="text/x-handlebars-template">
 <div aria-labelledby="section-name-{{ section_id }}" class="gp-section-wrapper container">
 {{# if section_url }}<a href="{{ section_url }}" class="gp-section-link">{{ /if }}
     <div class="clearfix gp-section-list-wrapper">
@@ -9,4 +9,5 @@
     <div class="text-muted gp-course-grading-status">{{ grading_status }}</div>
 {{# if section_url }}</a>{{ /if }}
 </div>
-{% endtplhandlebars %}
+</script>
+{% endverbatim %}

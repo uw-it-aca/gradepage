@@ -1,5 +1,5 @@
-{% load templatetag_handlebars %}                                               
-{% tplhandlebars "import-modal-tmpl" %}
+{% verbatim %}
+<script id="import-modal-tmpl" type="text/x-handlebars-template">
 <div class="modal fade" id="gp-import-modal" tabindex="-1" role="dialog" aria-labelledby="gp-import-modal-title" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -14,4 +14,5 @@
         </div>
     </div>
 </div>
-{% endtplhandlebars %}
+</script>
+{% endverbatim %}

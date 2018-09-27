@@ -1,5 +1,5 @@
-{% load templatetag_handlebars %}                                               
-{% tplhandlebars "grade-tmpl" %}
+{% verbatim %}
+<script id="grade-tmpl" type="text/x-handlebars-template">
 {{# if is_auditor }}
     <div class="gp-grading-status">
         <span class="gp-grade-status-msg">{{ trans "auditor" }}</span>
@@ -32,4 +32,5 @@
 </div>
 {{/if}}
 {{/if}}
-{% endtplhandlebars %}
+</script>
+{% endverbatim %}

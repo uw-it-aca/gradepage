@@ -1,5 +1,5 @@
-{% load templatetag_handlebars %}
-{% tplhandlebars "edit-tmpl" %}
+{% verbatim %}
+<script id="edit-tmpl" type="text/x-handlebars-template">
     <div class="container">
     	<div class="gp-edit-subhead">
 
@@ -34,14 +34,10 @@
 						</div>
 						<div class="form-group gp-form-grade">
 	            	 	{% if request.is_mobile or request.is_tablet %}
-					 	{% verbatim %}
                         <select id="grade-{{ item_id }}" class="form-control gp-grade-select" aria-label=""><option value="{{# if no_grade_now}}{{ trans "x_no_grade_now" }}{{else}}{{grade}}{{/if}}" selected="selected">{{# if no_grade_now}}{{ trans "x_no_grade_now" }}{{else}}{{grade}}{{/if}}</option></select>
-						{% endverbatim %}
 						{% else %}
-						{% verbatim %}
                         <span class="gp-default-grade-overlay"{{# unless has_incomplete}} style="display:none;"{{/unless}}>Default</span>
                         <input type="text" class="form-control gp-grade-input" id="grade-{{ item_id }}" aria-label="" role="combobox" aria-expanded="true" aria-autocomplete="list" aria-owns="owned_listbox" aria-activedescendant="selected_option" aria-required="true" value="{{# if no_grade_now}}{{ trans "x_no_grade_now" }}{{else}}{{grade}}{{/if}}"{{# if is_submitted}} disabled="disabled"{{/if}}/>
-						{% endverbatim %}
 						{% endif %}
 						</div>
             		</div>
@@ -73,4 +69,5 @@
 
     </div>
     {{> import_modal}}
-{% endtplhandlebars %}
+</script>
+{% endverbatim %}

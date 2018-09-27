@@ -1,0 +1,63 @@
+{% verbatim %}
+<script id="403-tmpl" type="text/x-handlebars-template">
+<div class="container">
+    <div class="alert" role="main" aria-labelledby="403-error">
+        <h3 id="403-error"> {{{ error }}}</h3>
+        <p>Some things you may want to try:
+        <ul>
+        <li>Make sure you are logged into this service with the appropriate UW NetID.</li>
+        <li>Feel free to contact us at help@uw.edu if you have questions or need help.</li>
+        </ul>
+        </p>
+    </div>
+</div>
+</script>
+
+<script id="404-tmpl" type="text/x-handlebars-template">
+<div class="container">
+    <div class="alert" role="main" aria-labelledby="404-error">
+        <h3 id="404-error"> {{{ error }}}</h3>
+        <p>Some things you may want to try:
+        <ul>
+        <li>Make sure you are logged into this service with the appropriate UW NetID.</li>
+        <li>Feel free to contact us at help@uw.edu if you have questions or need help.</li>
+        </ul>
+        </p>
+    </div>
+</div>
+</script>
+
+<script id="500-tmpl" type="text/x-handlebars-template">
+<div class="container">
+    <div class="alert" role="main" aria-labelledby="500-error">
+        <h3 id="500-error"> There was a problem retrieving grade information{{# if error }}: <br />{{{ error }}}{{/if}}.</h3>
+
+        <p>Our developers have been alerted of this issue and are working to get you back on track.</p>
+        <p>You may want to:
+            <ul>
+                <li>Relax, give us a little time, and try again later.</li>
+                <li>Drop us a line at <a href="mailto:help@uw.edu">help@uw.edu</a> and let us know that this has been taking awhile.</li>
+                <li><a href="/">Go back to the list of classes</a> you can grade.
+            </ul>
+        </p>
+    </div>
+</div>
+</script>
+
+<script id="543-tmpl" type="text/x-handlebars-template">
+<div class="container">
+    <div class="alert" role="main" aria-labelledby="543-error">
+        <h3 id="543-error"> There was a problem retrieving grade information{{# if error }}: <br />{{{ error }}}{{/if}}.</h3>
+
+        <p>To correct this issue, <strong>please email us at <a href="mailto:help@uw.edu">help@uw.edu</a></strong>.
+                <ul>
+                    <li>Include a screenshot{{# if error }} or paste the error text into your email{{/if}} so that we can quickly diagnose the issue.
+                    {{# if error }}<ul><li>The error text to paste into your email to us is: <br/>{{{ error }}}</li></ul>{{/if}}
+                    </li>
+                </ul>
+        </p>
+        <p><br/><a href="/">Go back to the list of classes</a> you can grade.</p>
+    </div>
+</div>
+</script>
+{% endverbatim %}
