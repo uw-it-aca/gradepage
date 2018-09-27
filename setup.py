@@ -24,7 +24,6 @@ setup(
     install_requires = [
         'Django==2.1.1',
         'django-compressor',
-        'django-templatetag-handlebars',
         'django_mobileesp',
         'django-userservice>=3.1.2',
         'UW-RestClients-Core>=1.0.1,<2.0',

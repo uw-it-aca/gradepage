@@ -14,7 +14,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'compressor',
-    'templatetag_handlebars',
     'supporttools',
     'userservice',
     'rc_django',
