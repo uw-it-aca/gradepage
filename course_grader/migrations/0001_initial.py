@@ -83,7 +83,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='gradeimport',
             name='import_conversion',
-            field=models.ForeignKey(to='course_grader.ImportConversion', null=True),
+            field=models.ForeignKey(to='course_grader.ImportConversion', on_delete=models.CASCADE, null=True),
             preserve_default=True,
         ),
         migrations.AlterUniqueTogether(

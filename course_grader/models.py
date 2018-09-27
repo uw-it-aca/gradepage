@@ -201,7 +201,8 @@ class GradeImport(models.Model):
     document = models.TextField()
     imported_date = models.DateTimeField(auto_now=True)
     imported_by = models.CharField(max_length=32)
-    import_conversion = models.ForeignKey(ImportConversion, null=True)
+    import_conversion = models.ForeignKey(
+        ImportConversion, on_delete=models.CASCADE, null=True)
 
     objects = GradeImportManager()
 
