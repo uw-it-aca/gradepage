@@ -13,15 +13,20 @@ import mock
 @fdao_pws_override
 class SectionDAOFunctionsTest(TestCase):
     def test_section_from_param(self):
-        (section, user) = section_from_param('2013-spring-TRAIN-101-A-9136CCB8F66711D5BE060004AC494FFE')
+        (section, user) = section_from_param(
+            '2013-spring-TRAIN-101-A-9136CCB8F66711D5BE060004AC494FFE')
         self.assertEquals(section.section_label(), '2013,spring,TRAIN,101/A')
         self.assertEquals(user.uwregid, '9136CCB8F66711D5BE060004AC494FFE')
 
-        self.assertRaises(InvalidSection, section_from_param, '2013-spring-TRAIN-101')
-        self.assertRaises(MissingInstructorParam, section_from_param, '2013-spring-TRAIN-101-A')
+        self.assertRaises(
+            InvalidSection, section_from_param, '2013-spring-TRAIN-101')
+        self.assertRaises(
+            MissingInstructorParam, section_from_param,
+            '2013-spring-TRAIN-101-A')
 
     @mock.patch('course_grader.dao.section.get_sections_by_delegate_and_term')
-    @mock.patch('course_grader.dao.section.get_sections_by_instructor_and_term')
+    @mock.patch(
+        'course_grader.dao.section.get_sections_by_instructor_and_term')
     def test_all_gradable_sections_args(self, mock_ins_fn, mock_del_fn):
         person = PWS().get_person_by_netid('javerage')
         term = term_from_param('2013-autumn')
@@ -29,13 +34,17 @@ class SectionDAOFunctionsTest(TestCase):
         ret = all_gradable_sections(person, term)
         mock_ins_fn.assert_called_with(
             person, term,
-            delete_flag=[Section.DELETE_FLAG_ACTIVE, Section.DELETE_FLAG_SUSPENDED],
-            future_terms=0, include_secondaries=True, transcriptable_course='yes')
+            delete_flag=[Section.DELETE_FLAG_ACTIVE,
+                         Section.DELETE_FLAG_SUSPENDED],
+            future_terms=0, include_secondaries=True,
+            transcriptable_course='yes')
 
         mock_del_fn.assert_called_with(
             person, term,
-            delete_flag=[Section.DELETE_FLAG_ACTIVE, Section.DELETE_FLAG_SUSPENDED],
-            future_terms=0, include_secondaries=True, transcriptable_course='yes')
+            delete_flag=[Section.DELETE_FLAG_ACTIVE,
+                         Section.DELETE_FLAG_SUSPENDED],
+            future_terms=0, include_secondaries=True,
+            transcriptable_course='yes')
 
     def test_is_grader_for_section(self):
         section = get_section_by_label('2013,spring,TRAIN,101/A')
@@ -49,8 +58,9 @@ class SectionDAOFunctionsTest(TestCase):
         section = get_section_by_label('2013,spring,TRAIN,101/A')
         user = PWS().get_person_by_netid('javerage')
 
-        self.assertEquals(section_url_token(section, user),
-                          '2013-spring-TRAIN-101-A-9136CCB8F66711D5BE060004AC494FFE')
+        self.assertEquals(
+            section_url_token(section, user),
+            '2013-spring-TRAIN-101-A-9136CCB8F66711D5BE060004AC494FFE')
 
     def test_section_display_name(self):
         section = get_section_by_label('2013,spring,TRAIN,101/A')
