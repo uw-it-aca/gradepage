@@ -34,7 +34,7 @@
     <div class="gp-global-header-fixed gp-grade-roster-header-global-fixed">
         <div class="container clearfix" style="padding-top:10px; padding-bottom:10px;">
         	<div class="pull-left gp-overflow-fixed">
-            <a tabindex="-1" href="/" title="GradePage Home"> <span class="gp-app-name"><span class="sr-only"><abbr title="University of Washington" >UW </abbr>GRADEPAGE</span>{% if not request.is_mobile and not request.is_tablet%}<img src="{% static "course_grader/img/gp-logo.png" %}" alt="" width="140" height="23" />{%else%} <img src="{% static "course_grader/img/gp-logo-icon2.png" %}" alt="" width="" height="23" />{% endif %}</span></a>
+            <a tabindex="-1" href="/" title="GradePage Home"> <span class="gp-app-name"><span class="sr-only"><abbr title="University of Washington" >UW </abbr>GRADEPAGE</span>{% if not request.user_agent.is_mobile and not request.user_agent.is_tablet%}<img src="{% static "course_grader/img/gp-logo.png" %}" alt="" width="140" height="23" />{%else%} <img src="{% static "course_grader/img/gp-logo-icon2.png" %}" alt="" width="" height="23" />{% endif %}</span></a>
             <!--<span class="gp-grade-roster-state"></span> for--> <span class="gp-fixed-section-name" style="vertical-align: middle; padding-left: 10px;">{{ section_name }}</span></div>
             <div class="gp-save-status gp-saved pull-right"></div>
         </div>
@@ -70,9 +70,9 @@
             import_url: "{{ import_url|safe }}",{% if auto_import_id %}
             auto_import: {id: "{{ auto_import_id }}", source: "{{ auto_import_src }}"},{% endif %}
             csrftoken: "{{ csrf_token }}",
-            is_mobile: {% if request.is_mobile %}true{% else %}false{% endif %},
-            is_tablet: {% if request.is_tablet %}true{% else %}false{% endif %},
-            is_desktop: {% if not request.is_mobile and not request.is_tablet %}true{% else %}false{% endif %}
+            is_mobile: {% if request.user_agent.is_mobile %}true{% else %}false{% endif %},
+            is_tablet: {% if request.user_agent.is_tablet %}true{% else %}false{% endif %},
+            is_desktop: {% if not request.user_agent.is_mobile and not request.user_agent.is_tablet %}true{% else %}false{% endif %}
         };
     </script>
 {% endblock extra_js %}

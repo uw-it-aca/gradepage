@@ -1,13 +1,13 @@
 {% verbatim %}
 <script id="section-tmpl" type="text/x-handlebars-template">
 <div aria-labelledby="section-name-{{ section_id }}" class="gp-section-wrapper container">
-{{# if section_url }}<a href="{{ section_url }}" class="gp-section-link">{{ /if }}
+{{#if section_url}}<a href="{{ section_url }}" class="gp-section-link">{{/if}}
     <div class="clearfix gp-section-list-wrapper">
         <h3 id="section-name-{{ section_id }}" class="pull-left gp-course-name">{{ display_name }}</h3>
         <div class="pull-right gp-course-grading-link"><i style="color:#63AD45" class="fa"></i></div>
     </div>
     <div class="text-muted gp-course-grading-status">{{ grading_status }}</div>
-{{# if section_url }}</a>{{ /if }}
+{{#if section_url}}</a>{{/if}}
 </div>
 </script>
 {% endverbatim %}

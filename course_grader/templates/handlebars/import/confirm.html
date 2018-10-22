@@ -6,9 +6,9 @@
         <!-- TODO: Student list -->
         <div class="gp-confirm-conversion">
             <ol class="list-group gp-roster-list">
-                {{# each students }}
+                {{#each students}}
                 <li class="clearfix list-group-item gp-roster-list-item">
-                {{> student}}
+                {{> student }}
 
 				<div class="pull-right gp-grade-entered">
 					<span class="gp-review-grade">{{ imported_grade }}% <span class="sr-only">{{ trans "conversion_confirm_grade_text" }}</span> <i class="fa fa-long-arrow-right"></i> <strong>{{ converted_grade }}</strong></span>

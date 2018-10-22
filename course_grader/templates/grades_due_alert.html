@@ -12,7 +12,7 @@
         <button  type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <strong>Attention!</strong>
         The grading period closes {{ grade_submission_deadline|naturaltime }}!
-        {% if not request.is_mobile %}
+        {% if not request.user_agent.is_mobile %}
         Grades cannot be submitted online after deadline.
         {% endif %}
     </div>

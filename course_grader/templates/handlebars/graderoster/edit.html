@@ -7,45 +7,45 @@
         	<label for="gp_import_select" class="sr-only">Import grades</label>
 	       <select id="gp_import_select" title="Import grades">
 	       <option value="" selected>Import from...</option>
-                {{# each import_choices}}
+                {{#each import_choices}}
                 <option value="{{ value }}">{{ label }}</option>{{/each}}
 	        </select>
         </div>
 
-        {{# if is_writing_section }}<div class="gp-course-meta-note">{{{ trans "writing_course_note" }}}</div>{{/if}}
-        {{# if has_duplicate_codes }}<div class="gp-duplicate-code"><span class="label label-default">&nbsp;&nbsp;</span><span class="sr-only">{{trans "duplicate_code_long"}}</span>{{ trans "duplicate_code" }}</div>{{/if}}
+        {{#if is_writing_section}}<div class="gp-course-meta-note">{{{ trans "writing_course_note" }}}</div>{{/if}}
+        {{#if has_duplicate_codes}}<div class="gp-duplicate-code"><span class="label label-default">&nbsp;&nbsp;</span><span class="sr-only">{{trans "duplicate_code_long"}}</span>{{ trans "duplicate_code" }}</div>{{/if}}
         </div>
         <ol aria-controls="grades_left" class="list-group gp-roster-list">
-        {{# each students}}
+        {{#each students}}
         <li class="clearfix list-group-item gp-roster-list-item gp-roster-list-item-edit" aria-labelledby="student-{{ item_id }}">
-            {{> student}}
-            {{# if grade_url }}
+            {{> student }}
+            {{#if grade_url}}
             <div class="form-inline gp-roster-form-container">
             	<!-- new style -->
             	<div class="gp-roster-form-wrapper clearfix" style="display:inline-block">
-                    <div class="gp-inc-wrapper{{# if has_incomplete }} gp-inc-checked{{/if}}" style="float:left;">
+                    <div class="gp-inc-wrapper{{#if has_incomplete}} gp-inc-checked{{/if}}" style="float:left;">
             	 		<div class="form-group gp-form-incomplete">
-                            <label for="incomplete-{{ item_id }}" class="checkbox-inline gp-checkbox-inline" title="{{# unless allows_incomplete }}Incomplete not allowed for {{ student_firstname }} {{ student_lastname }}{{/unless}}">
-                                <input type="checkbox" id="incomplete-{{ item_id }}" class="sr-only" name="incomplete" value="1"{{# unless allows_incomplete}} disabled="disabled"{{/unless}}{{# if has_incomplete }} checked="checked"{{/if}}/>
-					 			<div class="gp-form-incomplete-box {{# unless allows_incomplete}} disabled{{/unless}}">
+                            <label for="incomplete-{{ item_id }}" class="checkbox-inline gp-checkbox-inline" title="{{#unless allows_incomplete}}Incomplete not allowed for {{ student_firstname }} {{ student_lastname }}{{/unless}}">
+                                <input type="checkbox" id="incomplete-{{ item_id }}" class="sr-only" name="incomplete" value="1"{{#unless allows_incomplete}} disabled="disabled"{{/unless}}{{#if has_incomplete}} checked="checked"{{/if}}/>
+					 			<div class="gp-form-incomplete-box {{#unless allows_incomplete}} disabled{{/unless}}">
 						 		    <strong><span style="font-family:Verdana, Geneva, sans-serif;" aria-hidden="true">I</span></strong>
 						 		</div>
 						    </label>
 						</div>
 						<div class="form-group gp-form-grade">
-	            	 	{% if request.is_mobile or request.is_tablet %}
-                        <select id="grade-{{ item_id }}" class="form-control gp-grade-select" aria-label=""><option value="{{# if no_grade_now}}{{ trans "x_no_grade_now" }}{{else}}{{grade}}{{/if}}" selected="selected">{{# if no_grade_now}}{{ trans "x_no_grade_now" }}{{else}}{{grade}}{{/if}}</option></select>
-						{% else %}
-                        <span class="gp-default-grade-overlay"{{# unless has_incomplete}} style="display:none;"{{/unless}}>Default</span>
-                        <input type="text" class="form-control gp-grade-input" id="grade-{{ item_id }}" aria-label="" role="combobox" aria-expanded="true" aria-autocomplete="list" aria-owns="owned_listbox" aria-activedescendant="selected_option" aria-required="true" value="{{# if no_grade_now}}{{ trans "x_no_grade_now" }}{{else}}{{grade}}{{/if}}"{{# if is_submitted}} disabled="disabled"{{/if}}/>
-						{% endif %}
+                        {{#unless ../../is_desktop}}
+                        <select id="grade-{{ item_id }}" class="form-control gp-grade-select" aria-label=""><option value="{{#if no_grade_now}}{{ trans "x_no_grade_now" }}{{else}}{{grade}}{{/if}}" selected="selected">{{#if no_grade_now}}{{ trans "x_no_grade_now" }}{{else}}{{grade}}{{/if}}</option></select>
+                        {{else}}
+                        <span class="gp-default-grade-overlay"{{#unless has_incomplete}} style="display:none;"{{/unless}}>Default</span>
+                        <input type="text" class="form-control gp-grade-input" id="grade-{{ item_id }}" aria-label="" role="combobox" aria-expanded="true" aria-autocomplete="list" aria-owns="owned_listbox" aria-activedescendant="selected_option" aria-required="true" value="{{#if no_grade_now}}{{ trans "x_no_grade_now" }}{{else}}{{grade}}{{/if}}"{{#if is_submitted}} disabled="disabled"{{/if}}/>
+                        {{/unless}}
 						</div>
             		</div>
-                    {{# unless is_writing_section}}
+                    {{#unless is_writing_section}}
             	 	<div class="form-group gp-form-writing" style="float:left;">
-	            	    <label for="writing-{{ item_id }}" class="checkbox-inline gp-checkbox-inline" title="{{# unless allows_writing_credit}}Writing Credit not allowed for {{ student_firstname }} {{ student_lastname }}{{/unless}}">
-	            	    <input type="checkbox" id="writing-{{ item_id }}" class="sr-only" name="writing_credit" value="1"{{# unless allows_writing_credit}} disabled="disabled"{{/unless}}{{# if has_writing_credit }} checked="checked"{{/if}}/>
-	            	    <div class="gp-form-writing-box {{# unless allows_writing_credit}} disabled {{/unless}}">
+	            	    <label for="writing-{{ item_id }}" class="checkbox-inline gp-checkbox-inline" title="{{#unless allows_writing_credit}}Writing Credit not allowed for {{ student_firstname }} {{ student_lastname }}{{/unless}}">
+	            	    <input type="checkbox" id="writing-{{ item_id }}" class="sr-only" name="writing_credit" value="1"{{#unless allows_writing_credit}} disabled="disabled"{{/unless}}{{#if has_writing_credit }} checked="checked"{{/if}}/>
+	            	    <div class="gp-form-writing-box {{#unless allows_writing_credit}} disabled {{/unless}}">
 	            	    <strong><span style="font-family:Verdana, Geneva, sans-serif;" aria-hidden="true">W</span></strong>
 					    </div>
 					    </label>
@@ -54,10 +54,10 @@
             	</div> <!-- close wrapper -->
             </div> <!-- close form-inline -->
             {{else}}
-            {{> grade}}
+            {{> grade }}
             {{/if}}
             <div id="status-{{ item_id }}" class="gp-grading-status">
-                <span class="gp-imported-grade">{{# if import_source }}{{ trans "grade_import_status" }}{{/if}}</span>
+                <span class="gp-imported-grade">{{#if import_source}}{{ trans "grade_import_status" }}{{/if}}</span>
                 <span role="alert" id="" class="text-danger gp-invalid-grade"></span>
             </div>
         </li>
@@ -66,8 +66,7 @@
         <div class="clearfix gp-course-submit">
             <div class="pull-right"><span id="grades_left" class="gp-roster-grades-left" role="status"></span><button type="submit" disabled="disabled" class="btn gp-btn gp-btn-review">{{ trans "btn_review_submit" }}</button></div>
         </div>
-
     </div>
-    {{> import_modal}}
+    {{> import_modal }}
 </script>
 {% endverbatim %}

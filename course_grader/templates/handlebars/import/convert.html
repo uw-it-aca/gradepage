@@ -17,9 +17,9 @@
 </div>
 </script>
 <script id="convert-optgroup-tmpl" type="text/x-handlebars-template">
-    {{# each terms }}
+    {{#each terms}}
     <optgroup label="{{ quarter }} {{ year }}">
-        {{# each conversion_scales }}
+        {{#each conversion_scales}}
         <option value="{{ id }}">{{ section }}</option>
         {{/each}}
     </optgroup>
