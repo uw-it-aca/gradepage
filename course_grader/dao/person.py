@@ -57,10 +57,11 @@ def is_netid(username):
             if username.lower() == person.uwnetid:
                 error_msg = None
             else:
-                error_msg = "Current netid: %s, Prior netid: " % person.uwnetid
+                error_msg = "Current netid: {}, Prior netid: ".format(
+                    person.uwnetid)
         except InvalidUser:
             error_msg = "Not a valid UWNetID: "
         except DataFailureException as err:
             data = json.loads(err.msg)
-            error_msg = "%s: " % data["StatusDescription"].rstrip(".")
+            error_msg = "{}: ".format(data["StatusDescription"].rstrip("."))
     return error_msg

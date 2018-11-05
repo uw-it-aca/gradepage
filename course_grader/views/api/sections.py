@@ -31,9 +31,9 @@ class Sections(RESTDispatch):
             content = self.response_content(sections=[], **kwargs)
             return self.json_response(content)
         except InvalidTerm as ex:
-            return self.error_response(404, "%s" % ex)
+            return self.error_response(404, "{}".format(ex))
         except Exception as ex:
-            logger.error("GET selected term failed: %s" % ex)
+            logger.error("GET selected term failed: {}".format(ex))
             return self.error_response(500, sws_not_available)
 
         try:
@@ -43,7 +43,7 @@ class Sections(RESTDispatch):
                     (ex.status == 401 or ex.status == 404)):
                 sections = []
             else:
-                logger.error("GET gradable sections failed: %s" % ex)
+                logger.error("GET gradable sections failed: {}".format(ex))
                 return self.error_response(500, sws_not_available)
 
         content = self.response_content(sections, **kwargs)

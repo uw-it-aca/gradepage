@@ -28,7 +28,7 @@ def section(request, url_token):
 
     except MissingInstructorParam as ex:
         # MyUW doesn't supply an instructor regid, add the user
-        section_url = "/section/%s-%s" % (url_token, user.uwregid)
+        section_url = "/section/{}-{}".format(url_token, user.uwregid)
         return HttpResponseRedirect(section_url)
 
     except Exception as ex:
@@ -38,11 +38,12 @@ def section(request, url_token):
             elif ex.status == 503:
                 return render(request, "503.html", {})
             else:
-                logger.error("Section view error: %s, Param: %s" % (ex,
-                                                                    url_token))
+                logger.error(
+                    "Section view error: {}, Param: {}".format(ex, url_token))
                 raise
         else:
-            logger.error("Section view error: %s, Param: %s" % (ex, url_token))
+            logger.error(
+                "Section view error: {}, Param: {}".format(ex, url_token))
             return error_response(request, status=404)
 
     if (not section.is_grading_period_open() and
@@ -64,10 +65,10 @@ def section(request, url_token):
         "section_sln": section.sln,
         "section_name": section_name,
         "is_independent_study": section.is_independent_study,
-        "graderoster_url": "/api/v1/graderoster/%s" % section_url_token(
-            section, instructor),
-        "import_url": "/api/v1/import/%s" % section_url_token(
-            section, instructor),
+        "graderoster_url": "/api/v1/graderoster/{}".format(
+            section_url_token(section, instructor)),
+        "import_url": "/api/v1/import/{}".format(
+            section_url_token(section, instructor)),
     }
 
     if now_term.is_grading_period_open():
@@ -82,7 +83,7 @@ def section(request, url_token):
 
 
 def error_response(request, status=500):
-    template = "%s.html" % status
+    template = "{}.html".format(status)
     response = render(request, template, {})
     response.status_code = status
     return response

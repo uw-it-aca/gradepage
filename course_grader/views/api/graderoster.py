@@ -63,18 +63,18 @@ class GradeRoster(GradeFormHandler):
                     self.section, self.instructor, self.user)
 
         except (InvalidUser, GradingNotPermitted, OverrideNotPermitted) as ex:
-            logger.info("Grading for %s not permitted for %s" % (
+            logger.info("Grading for {} not permitted for {}".format(
                 section_id, UserService().get_original_user()))
-            return self.error_response(403, "%s" % ex)
+            return self.error_response(403, "{}".format(ex))
         except (SecondaryGradingEnabled, GradingPeriodNotOpen,
                 InvalidTerm, InvalidSection, MissingInstructorParam) as ex:
-            return self.error_response(400, "%s" % ex)
+            return self.error_response(400, "{}".format(ex))
         except ReceiptNotFound as ex:
-            return self.error_response(404, "%s" % ex)
+            return self.error_response(404, "{}".format(ex))
         except (DataFailureException, MaxRetryError) as ex:
             err = ex.msg if hasattr(ex, "msg") else ex
-            logger.info("GET graderoster error: %s" % err)
-            return self.error_response(543, "%s" % err)
+            logger.info("GET graderoster error: {}".format(err))
+            return self.error_response(543, "{}".format(err))
 
     def get(self, request, *args, **kwargs):
         error = self._authorize(request, *args, **kwargs)
@@ -100,7 +100,8 @@ class GradeRoster(GradeFormHandler):
             grade_data = json.loads(request.body)
             grade = self.save_grade(section_id, grade_data)
         except Exception as ex:
-            logger.error("PATCH grade failed for %s: %s" % (section_id, ex))
+            logger.error(
+                "PATCH grade failed for {}: {}".format(section_id, ex))
             return self.error_response(500)
 
         # PATCH does not return a full graderoster resource
@@ -119,7 +120,7 @@ class GradeRoster(GradeFormHandler):
                 saved_grades[data["student_id"]] = grade
 
         except Exception as ex:
-            logger.error("PUT grade failed for %s %s" % (section_id, ex))
+            logger.error("PUT grade failed for {} {}".format(section_id, ex))
             return self.error_response(500)
 
         secondary_section = getattr(self.graderoster, "secondary_section",
@@ -319,7 +320,7 @@ class GradeRoster(GradeFormHandler):
                     grade = ""
 
             elif grading_period_open and not item.is_auditor:
-                grade_url = "/api/v1/graderoster/%s" % section_id
+                grade_url = "/api/v1/graderoster/{}".format(section_id)
 
                 # Use an existing grade_choices list, or add this one
                 grade_choices_csv = ",".join(item.grade_choices)
@@ -390,11 +391,11 @@ class GradeRosterStatus(GradeFormHandler):
                 self.user = person_from_request(request)
                 self.submitted_graderosters_only = True
             except InvalidUser as ex:
-                return self.error_response(403, "Invalid user: %s" % ex)
+                return self.error_response(403, "Invalid user: {}".format(ex))
             except (DataFailureException, MaxRetryError) as ex:
                 err = ex.msg if hasattr(ex, "msg") else ex
-                logger.info("GET person error: %s" % err)
-                return self.error_response(543, "%s" % err)
+                logger.info("GET person error: {}".format(err))
+                return self.error_response(543, "{}".format(err))
 
         try:
             section_id = kwargs.get("section_id")
@@ -422,21 +423,21 @@ class GradeRosterStatus(GradeFormHandler):
                 submitted_graderosters_only=self.submitted_graderosters_only)
 
         except GradingNotPermitted as ex:
-            logger.info("Grading status for %s not permitted for %s" % (
+            logger.info("Grading status for {} not permitted for {}".format(
                 ex.section, ex.person))
-            return self.error_response(403, "%s" % ex)
+            return self.error_response(403, "{}".format(ex))
         except (InvalidSection, InvalidUser, MissingInstructorParam) as ex:
-            return self.error_response(400, "%s" % ex)
+            return self.error_response(400, "{}".format(ex))
         except (GradingPeriodNotOpen, SecondaryGradingEnabled,
                 ReceiptNotFound, InvalidTerm) as ex:
             data = section_status_params(self.section, self.instructor)
             if data["grading_status"] is None:
-                data["grading_status"] = "%s" % ex
+                data["grading_status"] = "{}".format(ex)
             return self.json_response({"grading_status": data})
         except (DataFailureException, MaxRetryError) as ex:
             err = ex.msg if hasattr(ex, "msg") else ex
-            logger.info("GET graderoster error: %s" % err)
-            return self.error_response(543, "%s" % err)
+            logger.info("GET graderoster error: {}".format(err))
+            return self.error_response(543, "{}".format(err))
 
         data = section_status_params(self.section, self.instructor)
 

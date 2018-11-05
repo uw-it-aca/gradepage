@@ -38,7 +38,7 @@ def home(request):
         if (hasattr(ex, "status") and ex.status == 503):
             return render(request, "503.html", {})
         else:
-            logger.error("GET selected term failed: %s" % ex)
+            logger.error("GET selected term failed: {}".format(ex))
             raise
 
     opt_terms = []
@@ -56,10 +56,11 @@ def home(request):
         "selected_quarter": selected_term.get_quarter_display(),
         "selected_year": selected_term.year,
         "terms": opt_terms,
-        "sections_url": "/api/v1/sections/%s-%s" % (selected_term.year,
-                                                    selected_term.quarter),
-        "page_title": "%s %s" % (selected_term.get_quarter_display(),
-                                 selected_term.year),
+        "sections_url": "/api/v1/sections/{year}-{quarter}".format(
+            year=selected_term.year, quarter=selected_term.quarter),
+        "page_title": "{quarter} {year}".format(
+            quarter=selected_term.get_quarter_display(),
+            year=selected_term.year),
     }
 
     if now_term.is_grading_period_open():
@@ -70,7 +71,7 @@ def home(request):
             prev_term = previous_gradable_term()
             next_term = next_gradable_term()
         except Exception as ex:
-            logger.error("GET previous/next term failed: %s" % ex)
+            logger.error("GET previous/next term failed: {}".format(ex))
             raise
 
         if next_term.quarter == next_term.SUMMER:

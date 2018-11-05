@@ -47,13 +47,16 @@ def submit_grades(model):
 
             logged_grade = logged_grade(graderoster.items[idx])
             if logged_grade is not None:
-                logger.info(
-                    "Grade submitted, Student: %s, Section: %s, Grade: %s, " +
-                    "Code: %s, Message: %s" % (
-                        graderoster.items[idx].student_label(separator="-"),
-                        logged_section_id, logged_grade,
-                        graderoster.items[idx].status_code,
-                        graderoster.items[idx].status_message))
+                logger.info((
+                    "Grade submitted, Student: {student}, Section: "
+                    "{section_id}, Grade: {grade}, Code: {status_code}, "
+                    "Message: {message}").format(
+                        student=graderoster.items[idx].student_label(
+                            separator="-"),
+                        section_id=logged_section_id,
+                        grade=logged_grade,
+                        status_code=graderoster.items[idx].status_code,
+                        message=graderoster.items[idx].status_message))
 
         except Exception as ex:
             pass
