@@ -50,7 +50,7 @@ class Sections(RESTDispatch):
         return self.json_response(content)
 
     def response_content(self, sections, **kwargs):
-        sections.sort(key=lambda section: (
+        sections = sorted(sections, key=lambda section: (
             section.section_label(), section.grading_instructor.surname,
             section.grading_instructor.first_name))
 
