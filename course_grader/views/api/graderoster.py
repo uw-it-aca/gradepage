@@ -256,7 +256,7 @@ class GradeRoster(GradeFormHandler):
                                     None)
 
         submissions = getattr(self.graderoster, "submissions", {})
-        for key in sorted(submissions.iterkeys()):
+        for key in sorted(submissions.keys()):
             sid = key if key != self.graderoster.section.section_id else None
             submission_status = graderoster_status_params(
                 self.graderoster, secondary_section_id=sid)
