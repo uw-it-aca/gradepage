@@ -4,7 +4,7 @@ from course_grader.dao.section import get_section_by_url, is_grader_for_section
 from course_grader.exceptions import (
     GradingNotPermitted, ReceiptNotFound, GradingPeriodNotOpen)
 from course_grader.models import SubmittedGradeRoster, GradeImport
-from course_grader.util.retry import retry
+from restclients_core.util.retry import retry
 from urllib3.exceptions import SSLError
 import logging
 import re
