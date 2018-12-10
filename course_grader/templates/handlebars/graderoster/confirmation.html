@@ -31,7 +31,7 @@
         {{/if}}
         <div class="gp-receipt-message" role="status">
             {{#each submissions}}
-            <p><i class="fa fa-check-circle" style="color:#63AD45;"></i> {{#if section_id}} {{ trans "section" }} {{section_id}}: {{/if}}<strong>{{submitted_count}}</strong> {{ trans "grades_submitted_to_registrar_by" }} <strong>{{submitted_by}}</strong> on {{format_long_datetime submitted_date}}. <a title="Change submitted grades" target="_blank" href="http://www.washington.edu/itconnect/learn/tools/catalyst-web-tools/gradebook/gradepage/change-submitted-grades/">Change submitted grades?</a></p>
+            <p><i class="fa fa-check-circle" style="color:#63AD45;"></i> {{#if section_id}} {{ trans "section" }} {{section_id}}: {{/if}}<strong>{{submitted_count}}</strong> {{ trans "grades_submitted_to_registrar_by" }} <strong>{{submitted_by}}</strong> on {{format_long_datetime submitted_date}}. <a title="Change submitted grades" target="_blank" href="https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/">Change submitted grades?</a></p>
             {{/each}}
             {{#if is_writing_section }}<p><i class="fa fa-check-circle" style="color:#63AD45;"></i> {{{ trans "writing_course_note_receipt" }}}</p>{{/if}}
             {{#unless is_submission_confirmation }}<p><i class="fa fa-exclamation-circle" style="color:#EBDD5A;"></i>	 {{ trans "confirmation_alert_warning" }} <a href="http://depts.washington.edu/registra/learning/online-grading-faq/#past" target="_blank" class="hidden-print">More info.</a></p>{{/unless}}
