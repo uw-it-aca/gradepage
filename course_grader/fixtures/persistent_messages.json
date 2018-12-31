@@ -1,0 +1,65 @@
+[
+	{
+        "model": "persistent_message.taggroup",
+        "pk": 1,
+        "fields": {
+            "name": "Grade submission"
+        }
+    },
+    {
+        "model": "persistent_message.tag",
+        "pk": 1,
+        "fields": {
+            "name": "is_open",
+            "group": 1
+        }
+    },
+    {
+        "model": "persistent_message.tag",
+        "pk": 2,
+        "fields": {
+            "name": "is_closed",
+            "group": 1
+        }
+    },
+    {
+        "model": "persistent_message.message",
+        "pk": 1,
+        "fields": {
+            "content": "Grade submission for <strong>{{ next_quarter }} {{ next_year }}</strong> opens on {{ next_window_open_date }}.<br />Grade submission for <strong>{{ prev_quarter }} {{ prev_year }}</strong> closed on {{ prev_window_close_date }}. {{ prev_quarter }} {{ prev_year }} grades can no longer be submitted online. <a href=\"https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/\" target=\"_blank\" title=\"What can I do now?\">What can I do now?</a>",
+            "level": 20,
+            "modified_by": "gradepage",
+            "tags": [2]
+        }
+    },
+    {
+        "model": "persistent_message.message",
+        "pk": 2,
+        "fields": {
+            "content": "Grade submission for <strong>{{ prev_quarter }} {{ prev_year }}</strong> closed on {{ prev_window_close_date }}. {{ prev_quarter }} {{ prev_year }} grades can no longer be submitted online. <a href=\"https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/\" target=\"_blank\" title=\"What can I do now?\">What can I do now?</a><br />Grade submission for <strong>{{ next_quarter }} {{ next_year }}</strong> opens on {{ next_window_open_date }}.",
+            "level": 40,
+            "modified_by": "gradepage",
+            "tags": [2]
+        }
+    },
+    {
+        "model": "persistent_message.message",
+        "pk": 3,
+        "fields": {
+            "content": "{{ deadline_quarter }} {{ deadline_year }} grades are due on <strong>{{ grade_submission_deadline|date:\"F d, g:i A T\" }}.</strong>",
+            "level": 30,
+            "modified_by": "gradepage",
+            "tags": [1]
+        }
+    },
+    {
+        "model": "persistent_message.message",
+        "pk": 4,
+        "fields": {
+            "content": "<strong>Attention!</strong> The grading period closes {{ grade_submission_deadline|naturaltime }}! Grades cannot be submitted online after deadline.",
+            "level": 40,
+            "modified_by": "gradepage",
+            "tags": [1]
+        }
+    }
+]

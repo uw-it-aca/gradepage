@@ -37,6 +37,7 @@ setup(
         'UW-Grade-Conversion-Calculator>=1.1,<2.0',
         'Django-Safe-EmailBackend>=1.0,<2.0',
         'Django-SupportTools>=3.1.1,<4.0',
+        'Django-Persistent-Message>=0.1.6',
         'UW-Django-SAML2>=1.2.1,<2.0',
     ],
     license='Apache License, Version 2.0',
