@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -8,12 +7,12 @@ from course_grader.dao.section import (
     section_from_param, section_display_name, section_url_token)
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import current_term
-from course_grader.views import grade_submission_deadline_params, url_for_term
+from course_grader.dao.message import get_messages_for_term
+from course_grader.views import url_for_term
 from course_grader.exceptions import MissingInstructorParam
 from uw_catalyst.gradebook import valid_gradebook_id
 import logging
 import re
-
 
 logger = logging.getLogger(__name__)
 
@@ -71,9 +70,9 @@ def section(request, url_token):
             section_url_token(section, instructor)),
     }
 
-    if now_term.is_grading_period_open():
-        params.update(grade_submission_deadline_params(now_term))
+    params.update(get_messages_for_term(now_term))
 
+    if now_term.is_grading_period_open():
         import_id = request.GET.get("cgb_source_id", None)
         if valid_gradebook_id(import_id):
             params["auto_import_id"] = import_id

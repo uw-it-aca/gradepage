@@ -36,7 +36,7 @@ setup(
         'UW-RestClients-Graderoster>=1.0,<2.0',
         'UW-Grade-Conversion-Calculator>=1.1,<2.0',
         'Django-Safe-EmailBackend>=1.0,<2.0',
-        'Django-SupportTools>=3.1.1,<4.0',
+        'Django-SupportTools>=3.3,<4.0',
         'Django-Persistent-Message>=0.1.6',
         'UW-Django-SAML2>=1.2.1,<2.0',
     ],

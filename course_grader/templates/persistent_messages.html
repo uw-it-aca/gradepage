@@ -1,0 +1,5 @@
+<div class="alert alert-{{ message_level }} hidden-print" role="alert">
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+</div>

@@ -1,17 +1,12 @@
-from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
-from userservice.user import UserService
-from course_grader.dao import current_datetime, display_datetime
-from course_grader.dao.term import (
-    term_from_param, all_viewable_terms, next_gradable_term,
-    previous_gradable_term)
+from course_grader.dao.term import term_from_param, all_viewable_terms
+from course_grader.dao.message import get_messages_for_term
 from course_grader.exceptions import InvalidTerm
-from course_grader.views import url_for_term, grade_submission_deadline_params
+from course_grader.views import url_for_term
 import logging
-
 
 logger = logging.getLogger(__name__)
 
@@ -63,31 +58,6 @@ def home(request):
             year=selected_term.year),
     }
 
-    if now_term.is_grading_period_open():
-        params["grading_window_open"] = True
-        params.update(grade_submission_deadline_params(now_term))
-    else:
-        try:
-            prev_term = previous_gradable_term()
-            next_term = next_gradable_term()
-        except Exception as ex:
-            logger.error("GET previous/next term failed: {}".format(ex))
-            raise
-
-        if next_term.quarter == next_term.SUMMER:
-            next_open_date = next_term.aterm_grading_period_open
-        else:
-            next_open_date = next_term.grading_period_open
-
-        params["grading_window_open"] = False
-        params["prev_year"] = prev_term.year
-        params["prev_quarter"] = prev_term.get_quarter_display()
-        params["prev_window_close_date"] = display_datetime(
-            prev_term.grade_submission_deadline)
-        params["next_year"] = next_term.year
-        params["next_quarter"] = next_term.get_quarter_display()
-        params["next_window_open_date"] = display_datetime(next_open_date)
-        params["in_current_quarter"] = True if (
-            next_term.first_day_quarter < current_datetime().date()) else False
+    params.update(get_messages_for_term(now_term))
 
     return render(request, "home.html", params)
