@@ -20,10 +20,13 @@ logger = logging.getLogger(__name__)
 @login_required
 @never_cache
 def section(request, url_token):
+    params = {}
     try:
         user = person_from_user()
         (section, instructor) = section_from_param(url_token)
         now_term = current_term()
+
+        params.update(get_messages_for_term(now_term))
 
     except MissingInstructorParam as ex:
         # MyUW doesn't supply an instructor regid, add the user
@@ -55,7 +58,7 @@ def section(request, url_token):
     else:
         section_name = section_display_name(section)
 
-    params = {
+    params.update({
         "page_title": section_name,
         "section_quarter": section.term.get_quarter_display(),
         "section_year": section.term.year,
@@ -68,9 +71,7 @@ def section(request, url_token):
             section_url_token(section, instructor)),
         "import_url": "/api/v1/import/{}".format(
             section_url_token(section, instructor)),
-    }
-
-    params.update(get_messages_for_term(now_term))
+    })
 
     if now_term.is_grading_period_open():
         import_id = request.GET.get("cgb_source_id", None)

@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 @login_required
 @never_cache
 def home(request):
+    params = {}
     term_id = request.GET.get("term", "").strip()
     try:
         all_terms = all_viewable_terms()
@@ -25,6 +26,8 @@ def home(request):
                 raise InvalidTerm()
         else:
             selected_term = all_terms[0]
+
+        params.update(get_messages_for_term(now_term))
 
     except InvalidTerm:
         return HttpResponseRedirect("/")
@@ -45,7 +48,7 @@ def home(request):
             "is_selected": opt_term == selected_term,
         })
 
-    params = {
+    params.update({
         "now_quarter": now_term.get_quarter_display(),
         "now_year": now_term.year,
         "selected_quarter": selected_term.get_quarter_display(),
@@ -56,8 +59,6 @@ def home(request):
         "page_title": "{quarter} {year}".format(
             quarter=selected_term.get_quarter_display(),
             year=selected_term.year),
-    }
-
-    params.update(get_messages_for_term(now_term))
+    })
 
     return render(request, "home.html", params)
