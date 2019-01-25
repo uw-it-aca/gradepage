@@ -51,7 +51,7 @@ class MessageDAOFunctionsTest(TestCase):
                            SUBMISSION_DEADLINE_WARNING_HOURS=48):
             messages = get_open_grading_messages(current_term())
             self.assertEqual(messages['message_level'], 'danger')
-            self.assertEqual(messages['messages'][0], (
-                '<strong>Attention!</strong> The grading period closes 5 '
-                'years ago! Grades cannot be submitted online after '
-                'deadline.'))
+            self.assertEqual(messages['messages'][0].startswith(
+                '<strong>Attention!</strong> The grading period closes'), True)
+            self.assertEqual(messages['messages'][0].endswith(
+                'Grades cannot be submitted online after deadline.'), True)
