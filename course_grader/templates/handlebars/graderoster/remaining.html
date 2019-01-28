@@ -1,16 +1,17 @@
-{% load templatetag_handlebars %}
-{% tplhandlebars "remaining-tmpl" %}
-{{# if missing_count }}
-    {{# if invalid_count }}
+{% verbatim %}
+<script id="remaining-tmpl" type="text/x-handlebars-template">
+{{#if missing_count}}
+    {{#if invalid_count}}
         {{ trans "%(missing_count)s grade missing" "%(missing_count)s grades missing" missing_count }}, {{ trans "%(invalid_count)s grade invalid" "%(invalid_count)s grades invalid" invalid_count }}.
-    {{ else }}
+    {{else}}
         {{ trans "%(missing_count)s grade missing" "%(missing_count)s grades missing" missing_count }}.
-    {{ /if }}
-{{ else }}
-    {{# if invalid_count }}
+    {{/if}}
+{{else}}
+    {{#if invalid_count}}
         {{ trans "%(invalid_count)s grade invalid" "%(invalid_count)s grades invalid" invalid_count }}.
-    {{ else }}
+    {{else}}
         <span class="sr-only">All grades entered. Click Review button to continue.</span>
-    {{ /if }}
-{{ /if }}
-{% endtplhandlebars %}
+    {{/if}}
+{{/if}}
+</script>
+{% endverbatim %}

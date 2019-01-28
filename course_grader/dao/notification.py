@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 def create_recipient_list(people):
     recipients = []
     for person in people.values():
-        recipients.append("%s@uw.edu" % person.uwnetid)
+        recipients.append("{}@uw.edu".format(person.uwnetid))
     return recipients
 
 
@@ -39,19 +39,19 @@ def create_message(graderoster, submitter):
                 success_count += 1
 
     if success_count > 0 and error_count > 0:
-        subject = "Failed grade submission attempt for %s" % (section_name)
+        subject = "Failed grade submission attempt for {}".format(section_name)
         text_template = "email/partial.txt"
         html_template = "email/partial.html"
     elif success_count == 0 and error_count > 0:
-        subject = "Failed grade submission attempt for %s" % (section_name)
+        subject = "Failed grade submission attempt for {}".format(section_name)
         text_template = "email/failure.txt"
         html_template = "email/failure.html"
     elif success_count > 0 and error_count == 0:
         if success_count == 1:
-            subject = "%s submitted %s grade for %s" % (
+            subject = "{} submitted {} grade for {}".format(
                 submitter_name, apnumber(success_count), section_name)
         else:
-            subject = "%s submitted %s grades for %s" % (
+            subject = "{} submitted {} grades for {}".format(
                 submitter_name, apnumber(success_count), section_name)
         text_template = "email/success.txt"
         html_template = "email/success.html"
@@ -67,7 +67,8 @@ def create_message(graderoster, submitter):
         "failure_count": error_count,
         "section_name": section_name,
         "gradepage_url": gradepage_host,
-        "section_url": "%s/section/%s" % (gradepage_host, section_id),
+        "section_url": "{host}/section/{section_id}".format(
+            host=gradepage_host, section_id=section_id),
         "grading_window_open": section.term.is_grading_period_open(),
     }
 
@@ -116,8 +117,8 @@ def notify_grade_submitters(graderoster, submitter_regid):
         message.send()
         log_message = "Submission email sent"
     except Exception as ex:
-        log_message = "Submission email failed: %s" % ex
+        log_message = "Submission email failed: {}".format(ex)
 
     for recipient in recipients:
-        logger.info("%s, To: %s, Section: %s, Status: %s" % (
+        logger.info("{}, To: {}, Section: {}, Status: {}".format(
             log_message, recipient, section_id, subject))

@@ -4,7 +4,7 @@
 @widescreen: ~"screen and (min-width: 1200px)";
 
 @media print {
-  
+
   li {page-break-inside:avoid;}
   }
 
@@ -15,7 +15,7 @@
 @warning: #EBDD5A;
 @purple-light: #584FA1;
 @purple-dark: #39275B; /*#563d7c; */
-@header-bg: #f2f2f2; 
+@header-bg: #f2f2f2;
 @gp-text: #404652;
 
 /*** global ***/
@@ -23,7 +23,7 @@
 #desktop-wrap {max-width:970px;
 margin: 0 auto;margin-top: 20px;}
 
-@media @desktop { 
+@media @desktop {
 	body {background-color:@gp-text;
 		#wrap {background-color:#fff;-webkit-border-radius: 10px;
 -moz-border-radius: 10px;
@@ -35,8 +35,8 @@ border-radius: 10px;}
 .container {padding-left:45px; padding-right:45px;
 }
 
-.gp-alert {font-size: 1em;
-	.gp-alert-text {font-size:85%;}
+.gp-alert { font-size: 1em;
+	.gp-alert-text { font-size:85%; }
 }
 
 .gp-styled-select {
@@ -46,7 +46,7 @@ border-radius: 10px;}
 	   cursor: pointer;
 	   padding: 5px 5px 0px 20px;
 	   //color:#fff;
-	   option {padding:3px; cursor: pointer;}										
+	   option {padding:3px; cursor: pointer;}
    }
 }
 
@@ -60,9 +60,9 @@ border-radius: 10px;}
 	background-color:#fff;
 	border:1px solid #ccc;
 	width:130px;
-	
+
 	select {
-	   	   
+
 	background-color: transparent;
 	border: 0 none;
 	box-shadow: none;
@@ -77,23 +77,23 @@ border-radius: 10px;}
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	-webkit-appearance: none;
-	appearance: none;	
+	appearance: none;
 	cursor: pointer;
 	max-width: none;
 	text-indent:0;
-	padding-left:30px;					
-    
+	padding-left:30px;
+
     option {padding:3px; cursor: pointer;
         &:disabled {cursor: default;}
     }
-   
+
    }
-   
+
    select:focus {
-   	outline: thin dotted #333333; 
-	outline-offset: -5px; 
+   	outline: thin dotted #333333;
+	outline-offset: -5px;
 	}
-	
+
 }
 
 #select-previous-scale:hover {cursor: pointer;}
@@ -105,10 +105,10 @@ select {
 
     text-indent: 0.01px;
     text-overflow: '';
-    
+
 }
 select:focus {
-	outline: thin dotted #333333; 
+	outline: thin dotted #333333;
 	outline-offset: -5px; }
 
 /******* grade menu *********/
@@ -120,12 +120,12 @@ select:focus {
 	font-weight: normal;
 	color: #212121;
 }
-									
+
 /*.ui-menu .ui-menu-item a.ui-state-focus,
 .ui-menu .ui-menu-item a.ui-state-active {
 	font-weight: normal;
 	margin: -1px;
-}			*/						
+}			*/
 
 /*** header ***/
 #header {
@@ -135,38 +135,38 @@ select:focus {
         .gp-app-title { }
     }
     .gp-remote-user { }
-    
+
     .gp-navbar {}
 }
 
 /*** content ***/
 
-#content { 
-    
+#content {
+
     /* inline media queries */
     @media @desktop {background-color:#fff;}
     @media @widescreen {}
-    
-    .gp-page-header { 
+
+    .gp-page-header {
         @media @widescreen {}
         &.gradepage-chooser-header {padding-right: 15px;}
     }
-    
+
     /* class chooser */
     .gp-class-chooser {
         /* primary section list */
-        .gp-section-list {             
-            .gp-section-list-item { 
+        .gp-section-list {
+            .gp-section-list-item {
                 .gp-section-wrapper {
                     &.container {padding-left:25px; padding-right: 25px;}
                 }
 
                 /* nested (secondary) section lists */
-                .gp-section-list { 
+                .gp-section-list {
                     .gp-section-list-item.gp-secondary-section {  margin-left:23px; }
                 }
             }
-            
+
         }
     }
      /* global header */
@@ -175,81 +175,81 @@ select:focus {
     .gp-grade-roster-header-global-fixed {
 	    .gp-save-status {font-size:60%; color:@success;}
     }
-        
-        
-    /* submit */    
+
+
+    /* submit */
     .gp-grade-roster {
-    
+
     	     /* global header */
 		.gp-global-header { }
 		.gp-global-header-fixed {font-size: 1.5em;max-width: 970px;}
 		.gp-grade-roster-header-global-fixed {
 			.gp-save-status {font-size:60%; color:@success;}
 			}
-    	
-        .gp-page-header { margin-top: 0; margin-bottom: 0; font-size:2em; 
+
+        .gp-page-header { margin-top: 0; margin-bottom: 0; font-size:2em;
 	        .gp-grade-roster-state {font-size:60%;}
         }
-        
+
         /* content */
         .gp-grade-roster-content {
         	/* conversion calc less was here, moved to app */
-            .gp-roster-list { 
-                .gp-roster-list-item { width:100%; 
-                    
+            .gp-roster-list {
+                .gp-roster-list-item { width:100%;
+
                     .gp-roster-user-container-edit { max-width:65%; width:auto; }
-                    .gp-roster-form-container { 
+                    .gp-roster-form-container {
                     	.gp-roster-form-wrapper {float:right;
                     	.gp-inc-wrapper { border: 1px solid #fff;
-                    
+
                     	/* grading inputs */
                         .gp-form-incomplete { display: inline-block; overflow: hidden; white-space: nowrap; text-align: center;
                             /*border: solid 1px #eee;*/
                             border-radius: 3px;
                             margin-bottom: 0;
-                            
+
                             .gp-checkbox-inline {display: inline-block;
 										/*padding-left: 0px; */
 										margin-bottom: 0;
 										font-weight: normal;
 										cursor: pointer;
 										vertical-align:middle;}
-										
-                            
-                            label { margin: 0; line-height: 32px; 
+
+
+                            label { margin: 0; line-height: 32px;
                             		input[type="checkbox"] {
 										display:inline;
 										/*margin-top:40%;*/
 										margin-left:-15px;
 										}
-							
+
 									input:focus + div {
-									outline: thin dotted #333333; 
-									outline-offset: -5px; 
-									}										                            	                            
+									outline: thin dotted #333333;
+									outline-offset: -5px;
+									}
                             }
                         }
-                    														
-						
-                        
+
+
+
                         /* grading inputs */
                         .gp-form-incomplete { }
-                        
-                        
-                        .gp-form-grade { 
+
+
+                        .gp-form-grade {
 	                        .gp-default-grade-overlay {position: absolute;top: 5px; left: 95px;color: #aaa; font-size: 85%;}
                         }
                         }
-                        
-                        .gp-form-writing { 
-	                        
+
+                        .gp-form-writing {
+
 	                        .gp-checkbox-inline {display: inline-block;
-										padding-left: 0; 
+										padding-left: 0;
 										margin-bottom: 0;
 										font-weight: normal;
 										cursor: pointer;
 										vertical-align:middle;}
-										
+
 							label { margin: 0; line-height: 32px;
 									input[type="checkbox"] {
 										display:inline;
@@ -259,37 +259,37 @@ select:focus {
 									input[disabled="disabled"] + div {
 										cursor:not-allowed;
 									}
-									
+
 									input:focus + div {
-										outline: thin dotted #333333; 
-										outline-offset: -5px; 
+										outline: thin dotted #333333;
+										outline-offset: -5px;
 									}
 							}
-	                        
+
                         }
-                        
-                        
+
+
                        }
-                                                
+
                     }
-                    
+
                     .gp-grading-status {text-align: right; font-size: 1.2em;
-	                    
+
 	                    .gp-invalid-grade {text-align:right; white-space: normal;display:block; text-transform: none; font-weight:normal;font-size: .8em;}
 	                    .gp-imported-grade {font-size:.8em; float:right;}
                     }
                 }
             }
-            
+
             .gp-course-submit { }
             .gp-course-submit-fixed {
                 button { margin-bottom: 4px; }
             }
         }
-        
-    }	
-    
-    
+
+    }
+
+
 }
 
 #footer {border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;}

@@ -21,10 +21,10 @@ class ConversionScales(GradeFormHandler):
             self.all_terms = all_viewable_terms()
             self.scale = kwargs.get("scale", "").lower()
         except InvalidUser as ex:
-            return self.error_response(403, "%s" % ex)
+            return self.error_response(403, "{}".format(ex))
         except Exception as ex:
-            logger.error("GET terms failed: %s" % ex)
-            return self.error_response(500, "%s" % ex)
+            logger.error("GET terms failed: {}".format(ex))
+            return self.error_response(500, "{}".format(ex))
 
         if self.scale not in dict(ImportConversion.SCALE_CHOICES):
             return self.error_response(400, "Invalid scale")

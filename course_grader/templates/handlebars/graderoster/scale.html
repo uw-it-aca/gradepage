@@ -1,5 +1,5 @@
-{% load templatetag_handlebars %}
-{% tplhandlebars "import-scale-tmpl" %}
+{% verbatim %}
+<script id="import-scale-tmpl" type="text/x-handlebars-template">
 <h2 id="gp-receipt-conversion-scale" class="sr-only">{{trans "conversion_scale_header"}}</h2>
 <ol aria-labelledby="gp-receipt-conversion-scale">
     {{#each import_conversion.grade_scale}}
@@ -9,4 +9,5 @@
     {{/if}}
     {{/each}}
 </ol>
-{% endtplhandlebars %}
+</script>
+{% endverbatim %}

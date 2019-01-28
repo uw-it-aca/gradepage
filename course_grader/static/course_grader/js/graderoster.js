@@ -477,6 +477,8 @@ GradePage.GradeRoster = (function ($) {
             sdata,
             grade_choices;
 
+        graderoster.is_desktop = window.gradepage.is_desktop;
+
         Handlebars.registerPartial("student", $("#student-tmpl").html());
         Handlebars.registerPartial("grade", $("#grade-tmpl").html());
         Handlebars.registerPartial("import_modal", $("#import-modal-tmpl").html());

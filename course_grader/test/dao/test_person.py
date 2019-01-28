@@ -26,8 +26,11 @@ class PersonDAOFunctionsTest(TestCase):
     def test_is_netid(self):
         self.assertEquals(is_netid('javerage'), None)
         self.assertEquals(is_netid('Javerage'), None)
-        self.assertEquals(is_netid(None), 'No override user supplied, please enter a UWNetID')
-        self.assertEquals(is_netid(''), 'No override user supplied, please enter a UWNetID')
+        self.assertEquals(
+            is_netid(None),
+            'No override user supplied, please enter a UWNetID')
+        self.assertEquals(
+            is_netid(''), 'No override user supplied, please enter a UWNetID')
         self.assertEquals(is_netid('12345'), 'Not a valid UWNetID: ')
         self.assertEquals(is_netid('nobody'), 'Not a valid UWNetID: ')
 

@@ -19,12 +19,12 @@ class Command(BaseCommand):
         try:
             user = person_from_netid(login)
         except Exception as ex:
-            print ex
+            print(ex)
             sys.exit()
 
         try:
             grade_import = grades_for_section(None, user, gradebook_id)
-            print json.dumps(grade_import, indent=4)
-            print "%s grades imported" % len(grade_import['grades'])
+            print(json.dumps(grade_import, indent=4))
+            print("{} grades imported".format(len(grade_import['grades'])))
         except DataFailureException as ex:
-            print ex
+            print(ex)

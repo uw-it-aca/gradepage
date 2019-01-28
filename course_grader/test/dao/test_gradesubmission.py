@@ -14,12 +14,17 @@ class GradeSubmissionDAOFunctionsTest(TestCase):
         self.assertEquals(
             logged_grade(GradeRosterItem(no_grade_now=True)), 'X')
         self.assertEquals(
-            logged_grade(GradeRosterItem(no_grade_now=True, has_incomplete=True)), 'I,X')
+            logged_grade(GradeRosterItem(
+                no_grade_now=True, has_incomplete=True)), 'I,X')
         self.assertEquals(
             logged_grade(GradeRosterItem(grade=3.9)), '3.9')
         self.assertEquals(
-            logged_grade(GradeRosterItem(grade=3.9, has_incomplete=True)), 'I,3.9')
+            logged_grade(GradeRosterItem(
+                grade=3.9, has_incomplete=True)), 'I,3.9')
         self.assertEquals(
-            logged_grade(GradeRosterItem(grade=3.9, has_writing_credit=True)), '3.9,W')
+            logged_grade(GradeRosterItem(
+                grade=3.9, has_writing_credit=True)), '3.9,W')
         self.assertEquals(
-            logged_grade(GradeRosterItem(grade=3.9, has_incomplete=True, has_writing_credit=True)), 'I,3.9,W')
+            logged_grade(GradeRosterItem(
+                grade=3.9, has_incomplete=True, has_writing_credit=True)),
+            'I,3.9,W')
