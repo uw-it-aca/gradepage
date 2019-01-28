@@ -10,15 +10,15 @@
 @warning: #EBDD5A;
 @purple-light: #584FA1;
 @purple-dark: #39275B; /*#563d7c; */
-@header-bg: #f2f2f2; 
+@header-bg: #f2f2f2;
 @gp-text: #404652;
 @gp-checked: #777777;
 @gp-link: #108BCC;
 
 /*** less mixins ***/
 
-.loading { background-image: url('../img/loading.gif'); background-repeat: no-repeat; color: #ccc; }  
-.gp-saving {.loading; min-height:32px; padding-top: 17px; min-width: 32px; background-position:center center; background-size: 15px; /*font-size:80%;text-transform:none; font-weight:normal;color:#999;*/} 
+.loading { background-image: url('../img/loading.gif'); background-repeat: no-repeat; color: #ccc; }
+.gp-saving {.loading; min-height:32px; padding-top: 17px; min-width: 32px; background-position:center center; background-size: 15px; /*font-size:80%;text-transform:none; font-weight:normal;color:#999;*/}
 
 /*** global ***/
 
@@ -40,8 +40,9 @@ a:hover, a:focus {color:#108BCC; text-decoration:underline; }
     left: -999em;}
 
 .gp-alert { padding: 3px; margin-bottom: 0; border-bottom: 1px solid transparent; border-top:none; border-left:none; border-right:none; border-radius: 0;font-size:.9em;
-	
-	.gp-alert-text {font-size:80%;}
+	.gp-alert-text { font-size:80%; padding-left: 2em; position: relative;
+        .fa { position: absolute; left: 0; }
+    }
 }
 	.gp-alert-warning {color:#333; background-color: @warning; border-color:#ccc;}
 
@@ -69,7 +70,7 @@ a:hover, a:focus {color:#108BCC; text-decoration:underline; }
 	   z-index: 1000;
 	   line-height:2;
 	   //color:#fff;
-										
+
    }
 }
 
@@ -108,7 +109,7 @@ a:hover, a:focus {color:#108BCC; text-decoration:underline; }
     background: no-repeat right transparent;
     border: 1px solid #ccc;
     border-radius: 2px;
-	
+
 	select {
 	   background: url('../img/gp-icon-import-2.png') no-repeat transparent;
 	   background-size:20px 21px;
@@ -122,28 +123,28 @@ a:hover, a:focus {color:#108BCC; text-decoration:underline; }
 	   text-indent: 20px;
 	   text-overflow: "";
 	   //color:#fff;
-										
+
    }
-	
+
 }
 
 #select-previous-scale {
-        border: none; 
-        margin-bottom: 5px; 
+        border: none;
+        margin-bottom: 5px;
         padding: 2px;
-        font-size: 95%; 
-        color:#428bca; 
-        -webkit-appearance: none; 
-        -moz-appearance: none; 
+        font-size: 95%;
+        color:#428bca;
+        -webkit-appearance: none;
+        -moz-appearance: none;
         appearance: none;
         background: none;
-                
+
         optgroup {
             padding: 3px;
             color: black;
-        
+
         }
-        
+
         option {padding: 3px 5px;
         }
 }
@@ -165,13 +166,13 @@ select {
 	color: #fff;
 	background-color: @gp-link;
 	border-color: #1680B8;
-	
+
 }
 .gp-btn:hover {
 	color: #fff;
 	background-color: #0482c4;
 	border-color: #1189c4;
-	
+
 }
 
 .gp-small {font-size:14px;
@@ -214,8 +215,8 @@ abbr[title], acronym[title] {
 /*** header ***/
 
 #header { margin: 0; border-radius: 0;
-    
-    .gp-app-logo-container { margin: 0; 
+
+    .gp-app-logo-container { margin: 0;
     	/*background-image: url("../img/Gradepage_logo.png");
     	background-size: 150px 24px;
     	background-repeat: no-repeat;
@@ -223,44 +224,44 @@ abbr[title], acronym[title] {
     	h1 {margin-top:0;}
         .gp-app-title { margin: 0; padding: 0; line-height: 60px; }
     }
-    
-    .gp-remote-user { line-height: 65px; 
+
+    .gp-remote-user { line-height: 65px;
         .gp-netid-fullname { display: inline-block; margin-right: 20px; }
         .gp-netid-display { display: inline-block; color: #aaa; }
     }
-    
+
 }
     .gp-navbar {background-color:#fff;}
 
 /*** content ***/
 
 #content {
-    
+
     /* inline media queries */
     @media @landscape { }
-    
+
     /* content globals */
-    .gp-page-header { 
+    .gp-page-header {
     	display:inline-block;
     	margin-bottom:30px;
     	line-height: 1em;
-        @media @phablet { }         
+        @media @phablet { }
         @media @landscape { }
     }
-    
+
     /* class chooser */
     .gp-class-chooser { margin-bottom: 3em;
-        
+
         .gp-course-name { display: inline-block; margin: 0; width: 99%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         .gp-course-grading-link { font-size: 1.5em; line-height: normal; position:absolute; right: 25px;}
-        
+
         .gp-course-grading-status { display: inline-block; font-size: 1em; text-align: left; margin-left: 0; margin-bottom: 5px; }
-        
+
         /* primary section list */
-        .gp-section-list { margin: 0; padding: 0; 
-        
+        .gp-section-list { margin: 0; padding: 0;
+
             .gp-section-list-wrapper { padding: 10px 0 0 0; }
-            
+
             .gp-section-list-item { list-style: none;  padding: 0; border: none; border-top: solid 2px #dedede; border-radius: 0; color: #777;
                 .gp-section-wrapper {
                     &.container {padding-left:15px;}
@@ -270,7 +271,7 @@ abbr[title], acronym[title] {
 	                h3 {font-weight:normal; font-size: 26px;}
                 }
                 a { display: block; min-height: 65px;}
-                
+
                 /* nested (secondary) section lists */
                 .gp-section-list {
                     .gp-section-list-item.gp-secondary-section { border: none; border-top: solid 1px #dedede; border-radius: 0; margin-left:13px; color: #777;
@@ -279,54 +280,54 @@ abbr[title], acronym[title] {
                         }
                 }
             }
-            
+
         }
-    
+
     }
-    
+
     /* global header/fixed */
     .gp-global-header {  padding-top: 10px; padding-bottom:10px;/*margin-bottom: 1em;*/ }
     .gp-global-header-fixed { font-size: .9em;
-        
+
         position: fixed; top: 0; width: 100%; z-index: 9999; line-height: 64px; line-height:20px;
-        
+
         /* start the static datebar offscreen */
         -webkit-transform: translate3d(0, -66px, 0);
         -moz-transform: translate3d(0, -66px, 0);
         transform: translate3d(0, -66px, 0);
-        
+
         -webkit-transition: .3s all ease;
         -moz-transition: .3s all ease;
         -o-transition: .3s all ease;
         -ms-transition: .3s all ease;
         transition: .3s all ease;
-        
+
         max-height: 0;
-            
+
         &.slide-down {
             position: fixed;
             /* slide the static datebar down */
             -webkit-transform: translate3d(0, 0, 0);
             -moz-transform: translate3d(0, 0, 0);
             transform: translate3d(0, 0, 0);
-        
+
             -webkit-transition: .3s all ease;
             -moz-transition: .3s all ease;
             -o-transition: .3s all ease;
             -ms-transition: .3s all ease;
             transition: .3s all ease;
-            
+
             max-height: 1000px;
         }
-        
+
     }
-    
+
     /* grading roster */
     .gp-grade-roster {
-        
+
         /* headers */
-        
-        .gp-grade-roster-header-global { background: @header-bg; border-bottom: solid 1px #eee; /* margin-bottom: 1em;*/ 
+
+        .gp-grade-roster-header-global { background: @header-bg; border-bottom: solid 1px #eee; /* margin-bottom: 1em;*/
         	.gp-saved {font-size:80%;color:@success;padding-top: 13px;min-height:32px;}
 	        .gp-grade-roster-state {font-size:60%;}
 	        .gp-section-title {overflow:hidden; width:80%; /*white-space: nowrap;*/ text-overflow:ellipsis;}
@@ -338,28 +339,28 @@ abbr[title], acronym[title] {
         	.gp-save-status {font-size:90%;text-align:right;color:@success;}
         	.gp-saved {min-height:32px;}
         	 }
-        
+
         .gp-grade-roster-header-submit { background: #f7f7ea;  border-bottom: solid 1px #f0edcd;  }
         .gp-grade-roster-header-submit-fixed {  background: #f7f7ea; border-bottom: solid 1px #f0edcd; }
-        
+
         .gp-grade-roster-header-review { background: #d9edf7; border-bottom: solid 1px #bce8f1;  margin-bottom: 1em; }
         .gp-grade-roster-header-review-fixed { background: #d9edf7; border-bottom: solid 1px #bce8f1;  margin-bottom: 1em; }
-        
-        .gp-grade-roster-header-confirm { background: @header-bg; border-bottom: solid 1px #eee;  margin-bottom: 1em; } 
-        .gp-grade-roster-header-confirm-fixed { background: @header-bg; border-bottom: solid 1px #eee;  margin-bottom: 1em; } 
-        
+
+        .gp-grade-roster-header-confirm { background: @header-bg; border-bottom: solid 1px #eee;  margin-bottom: 1em; }
+        .gp-grade-roster-header-confirm-fixed { background: @header-bg; border-bottom: solid 1px #eee;  margin-bottom: 1em; }
+
         .gp-page-header { margin-top: 0; margin-bottom: 0; font-size:1.85em;}
         .gp-course-meta { margin-bottom: 0; font-size:.9em; }
         .gp-course-meta-note { margin-bottom: 0; font-size:.9em; padding-top: 3px; }
-        
-                
+
+
         /* content */
-        
+
         .gp-grade-roster-content {
-        	
+
         	/* calculator less was here */
             /* messaging */
-         
+
             .gp-submit-confirmation-btns {margin-bottom:1em;}
     		.gp-submit-success-message {font-weight:bolder;font-size:1.17em;}
     		.gp-error-message {font-weight:bolder;font-size:1.17em;}
@@ -368,132 +369,132 @@ abbr[title], acronym[title] {
     			a {text-decoration: underline;}
     		}
     		.gp-fine-print {font-size:75%;padding-top:10px;}
-            
+
             .gp-duplicate-code {font-weight: 200; font-size: 80%;position:relative; top:10px;width:50%;}
             .label { font-size: 60%; line-height: 1.3; border-radius:1em;}
 	        .label-default {background-color:#aaa;margin: 0 5px 0 0;}
-                
+
             .gp-edit-subhead { margin: .5em 0; min-height:35px;
                 .gp-duplicate-code {margin-bottom:15px;}
 	            &.gp-review-subhead {height: auto;}
             }
             /*.gp-saved {font-size:80%;text-transform:none; font-weight:normal;color:@success;}*/
-             
+
             .gp-receipt-warning {margin-top:-1.15em;}
-            
+
             /* roster list */
             .gp-roster-list {margin: .5em 0; padding: 0; border-bottom: 1px solid #dedede;
-            	
-            	h3 {font-size:1.4em;margin-top:0;margin-bottom:0;text-transform: uppercase;}
-            	
 
-                
+            	h3 {font-size:1.4em;margin-top:0;margin-bottom:0;text-transform: uppercase;}
+
+
+
                 .gp-roster-list-item { list-style: none; line-height: 2em; position: relative; border: none; border-top: solid 1px #dedede; border-radius: 0; padding-left:0; padding-right:0;
-                    
+
                     .gp-roster-user-container-edit { /*border: solid 1px blue;*/ margin: 0; margin-bottom: .5em; max-width:65%; float:left; width:auto;
                     /* overflow: hidden; white-space: nowrap;*/ text-overflow: ellipsis;
                         .label { vertical-align: text-top; font-weight: 100; }
-                        
+
                         @media @phablet { float: left; margin-bottom: 0; line-height: 34px; }
-                        
+
                     }
 
                     .gp-roster-user-container { /*border: solid 1px blue;*/ margin: 0; margin-bottom: .5em; /*width:100%;*/ float:left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
                         .label { vertical-align: text-top; font-weight: 200; }
-                        
+
                         @media @phablet { float: left; margin-bottom: 0; line-height: 34px; }
-                        
+
                     }
                     /* grading inputs */
                     .gp-roster-form-container { /*border: solid 1px red; text-align: right; white-space: nowrap;*/ margin-right: 0;
-                    
+
                        .gp-roster-form-wrapper {
-                       
+
                        		.gp-inc-wrapper {    border: 1px solid #fff;
-                       			&.gp-inc-checked {border: 1px solid @gp-checked;border-radius: 2px;background-color:@gp-checked;}                 		
-                                                              
-                       			 	.gp-form-incomplete { display: inline-block; width: 30px; 
+                       			&.gp-inc-checked {border: 1px solid @gp-checked;border-radius: 2px;background-color:@gp-checked;}
+
+                       			 	.gp-form-incomplete { display: inline-block; width: 30px;
 						   			 				   margin: 0 5px 0 0;
-                            
+
 						   			 		.gp-checkbox-inline {display: inline-block;
-												padding-left: 0; 
+												padding-left: 0;
 												margin-bottom: 0;
 												font-weight: normal;
 												vertical-align: baseline;
 												cursor: pointer;}
-                            
-											label { margin: 0; line-height: 32px; 
-											
+
+											label { margin: 0; line-height: 32px;
+
 													input[type="checkbox"] {
 														display:none;
 													}
-										
+
 													input[type="checkbox"]:checked + div {
-														font-style:normal; 
+														font-style:normal;
 														background-color: @gp-checked;
 														color:#fff;
 														border:none;
 														//border: 1px solid #404652;background-color:#404652;
 													}
-	                            
-												.gp-form-incomplete-box {border: 1px solid #ccc; background-color: #fff;position: relative; width: 2em; 
+
+												.gp-form-incomplete-box {border: 1px solid #ccc; background-color: #fff;position: relative; width: 2em;
 													text-align: center;color: @gp-checked;border-radius:2px;
 													&.disabled {border: 1px solid #eee; color: #eee;}
 													}
 											}
 									}
-										
-							
+
+
 									.form-control {border-radius: 2px;/*border:1px solid @gp-text;*/ height:35px;}
                         			.gp-form-grade { position:relative; display:inline-block; margin-bottom: 0; background-color:#fff; min-width:142px;margin-top:1px;
-                        				 
+
 										.gp-grade-input {}
-                        	
+
 										.gp-grade-select {background:none; width:100%;}
-							                                               
+
 									}
 							}
-								
-                        
+
+
 	                        .gp-form-writing {
 	                        	display:inline-block;
 	                            /*border: solid 1px #eee;*/
 	                            margin: 0 0 0 10px;
 								/*width:30px;*/
-	                            
+
 	                            .gp-checkbox-inline {display: inline-block;
-											padding-left: 0; 
+											padding-left: 0;
 											margin-bottom: 0;
 											font-weight: normal;
 											cursor: pointer;}
-	                            
-	                            label { margin: 0; line-height: 32px; 
-	                            
+
+	                            label { margin: 0; line-height: 32px;
+
 	                            		input[type="checkbox"] {
 											display:none;
 											}
-	
+
 										input[type="checkbox"]:checked + div {
-											font-style:normal; 
+											font-style:normal;
 											background-color: @gp-checked;
 											color:#fff;
 										}
-	                            
-	                            	.gp-form-writing-box {border: 1px solid #ccc; background-color: #fff;position: relative; width: 2em; 
+
+	                            	.gp-form-writing-box {border: 1px solid #ccc; background-color: #fff;position: relative; width: 2em;
 	                            	text-align: center;color: @gp-checked;border-radius:2px;margin-top: 1px;
 	                            		&.disabled {border: 1px solid #eee; color: #eee;}
 	                            	}
 	                            }
 	                        }
-                        
+
                         }
                     }
-                    
+
                     /* grading status */
                     .gp-grading-status { /*position: absolute; top: 5px; right: 5px;*/ min-width: 20px; min-height: 20px; text-align: right;  line-height: 1em; font-weight: bold; text-transform: uppercase;
                     	.gp-invalid-grade {clear:both; display:block; text-align:left; text-transform:none; font-size:90%;}
                     	.gp-grade-status-msg {}
-                    	
+
                     	.gp-imported-grade {
                     		float:left;
 							text-transform: none;
@@ -501,70 +502,70 @@ abbr[title], acronym[title] {
 							font-size:85%;
 							clear:both;
 							}
-                        
+
                         @media @phablet { top:20px; right: 10px; }
                     }
-                    
+
                     /* grade entered */
                     .gp-grade-entered {font-size:2em;text-align:right;
-	        
+
             	        .gp-review-incomplete-letter {font-family:Verdana, Geneva, sans-serif;}
             	        .gp-review-default-grade {font-size:.39em;margin:0;line-height:1.4em;color:#999;width:100%;}
             	        .gp-review-writing {font-size:.5em; padding-left:10px; line-height:1.4em;}
                     }
-                                        
-            		
+
+
                 }
-                
+
                 .gp-roster-list-item-edit {
 		        	.gp-roster-user-container-edit {width:100%;}
 				}
-                
-                
+
+
             }
-            
+
             /* submit */
             .gp-course-submit { margin-bottom: 3em; margin-top:2em;
-            
+
             	button[disabled="disabled"] {
 	            	background-color:#BCBEC0;
 	            	border-color: #eee;
             	}
-            
+
 	            .gp-roster-grades-left { margin-right:1.5em; }
-            }           
+            }
 
             /*
             .gp-course-submit-fixed { position: fixed; left:0; right:0; bottom:0; z-index: 9999; width: 100%; line-height: 64px; background: #aaa; border-top: solid 1px #999;
-	            
+
 	            .gp-roster-grades-left {margin-right: 1.5em;}
-	            
+
                     -webkit-transform: translate3d(0, 65px, 0);
                     -moz-transform: translate3d(0, 65px, 0);
                     transform: translate3d(0, 65px, 0);
-                    
+
                     -webkit-transition: .3s all ease;
                     -moz-transition: .3s all ease;
                     -o-transition: .3s all ease;
                     -ms-transition: .3s all ease;
                     transition: .3s all ease;
-	            
+
 	            &.slide-up {
                     -webkit-transform: translate3d(0, 0, 0);
                     -moz-transform: translate3d(0, 0, 0);
                     transform: translate3d(0, 0, 0);
-                
+
                     -webkit-transition: .3s all ease;
                     -moz-transition: .3s all ease;
                     -o-transition: .3s all ease;
                     -ms-transition: .3s all ease;
                     transition: .3s all ease;
-                }	                        
+                }
             }*/
         }
-    }	
-    
-/* Confirmation: Conversion Receipt */   
+    }
+
+/* Confirmation: Conversion Receipt */
     .conversion-receipt-container {margin-bottom: 10px; font-size: 0.95em; text-align: right;
         a {white-space: nowrap;}
         ol {list-style: none; float: right; padding: 0;
@@ -573,7 +574,7 @@ abbr[title], acronym[title] {
     }
     .percentile-range {float:left;}
     .import-value-container {width:40px; text-align: center; display: inline-block;}
-    
+
     /* errors */
     .gp-error-message {font-weight:bolder;font-size:1.17em;}
 }
@@ -584,9 +585,9 @@ abbr[title], acronym[title] {
 #footer { height: 60px; background-color: @header-bg; font-size: 11px; position: relative; line-height: 14px;
  border: solid #ccc 1px;
  	.gp-footer {background: url('../img/w.png') no-repeat 10px 15px; padding-top: 12px; padding-left: 10px;}
-  
+
   .credit {margin-left: 45px; }
-  
+
 }
 
 
@@ -613,33 +614,33 @@ abbr[title], acronym[title] {
 
 
 .ui-menu { max-height: 300px !important; overflow: hidden; overflow-y: scroll; margin: 0; padding: 0;
-    .ui-menu-item { list-style: none; line-height: 30px; 
+    .ui-menu-item { list-style: none; line-height: 30px;
         a { text-decoration: none; display: block; padding: 0 1em; color: #333;
             &:hover { background: #d9edf7; }
         }
-        
+
     }
 }
 
 /*** user service overrides ***/
 
 .user-service { max-width: 330px; padding: 15px; margin: 0 auto;
-    
+
     .user-service-heading { margin-bottom: 10px; }
     .user-service-sub-heading { color: #666; }
-    
+
     .checkbox { font-weight: normal; }
-    
+
     .form-control { position: relative; font-size: 16px; height: auto; padding: 10px;
     -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
     }
-    
+
     .form-control:focus { z-index: 2; }
-    
+
     input[type="text"] { margin-bottom: -1px; }
-    
+
     input[type="password"] { margin-bottom: 10px; }
 }
 
@@ -650,8 +651,8 @@ abbr[title], acronym[title] {
 .restclients-header-title { padding-left:20px; font-weight:bold; }
 .restclients-header-url { margin-bottom:5px; }
 .restclients-response-content {
-    background: #fff; 
-    padding: 1em; 
+    background: #fff;
+    padding: 1em;
     margin: 0 -5px;
     min-height: 20px;
     background-color: #fff;
@@ -664,14 +665,14 @@ abbr[title], acronym[title] {
 .restclients-response-content input[type="submit"] { margin: 1em 0; }
 .restclients-response-content ul, .restclients-response-content ol { padding-left: 20px; margin-top: 1em; }
 .restclients-footer { font-size:.85em; }
-            
 
-    
+
+
 
 /*** developer ***/
 
 #developer { position: fixed; bottom:15px; right: 10px; text-transform: uppercase; z-index: 10000;}
 
-.dummy { color: @danger !important; 
+.dummy { color: @danger !important;
     & * { color: @danger !important; }
 }
