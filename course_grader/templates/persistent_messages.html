@@ -1,0 +1,7 @@
+<div class="alert gp-alert alert-{{ message_level }} hidden-print" role="alert">
+    {% for message in messages %}
+    <div class="container gp-alert-text"{% if not forloop.last %} style="margin-bottom:10px;"{% endif %}>
+        <i class="fa fa-exclamation-circle fa-lg"></i> {{ message }}
+    </div>
+    {% endfor %}
+</div>

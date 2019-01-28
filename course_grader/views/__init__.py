@@ -60,12 +60,3 @@ def section_status_params(section, instructor):
                 display_datetime(section.term.grading_period_open)))
 
     return data
-
-
-def grade_submission_deadline_params(term):
-    return {
-        "deadline_year": term.year,
-        "deadline_quarter": term.get_quarter_display(),
-        "grade_submission_deadline": term.grade_submission_deadline,
-        "deadline_warning": submission_deadline_warning(term),
-    }

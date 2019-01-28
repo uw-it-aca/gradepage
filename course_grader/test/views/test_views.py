@@ -102,12 +102,3 @@ class ViewFunctionsTest(TestCase):
         self.assertEquals(
             p['grade_submission_deadline'], '2013-08-27T17:00:00')
         self.assertEquals(p['grading_status'], None)
-
-    def test_grade_submission_deadline_params(self):
-        term = get_term_by_year_and_quarter(2013, 'summer')
-        p = grade_submission_deadline_params(term)
-
-        self.assertEquals(p['deadline_year'], 2013)
-        self.assertEquals(p['deadline_quarter'], 'Summer')
-        self.assertEquals(
-            str(p['grade_submission_deadline']), '2013-08-27 17:00:00')

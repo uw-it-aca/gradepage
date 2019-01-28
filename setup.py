@@ -22,7 +22,7 @@ setup(
     packages=['course_grader'],
     include_package_data=True,
     install_requires = [
-        'Django==2.1.1',
+        'Django>=2.0.8,<2.1',
         'django-compressor',
         'django-user-agents',
         'django-userservice>=3.1.2',
@@ -36,7 +36,8 @@ setup(
         'UW-RestClients-Graderoster>=1.0,<2.0',
         'UW-Grade-Conversion-Calculator>=1.1,<2.0',
         'Django-Safe-EmailBackend>=1.0,<2.0',
-        'Django-SupportTools>=3.1.1,<4.0',
+        'Django-SupportTools>=3.3,<4.0',
+        'Django-Persistent-Message>=0.1.6',
         'UW-Django-SAML2>=1.2.1,<2.0',
     ],
     license='Apache License, Version 2.0',

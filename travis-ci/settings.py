@@ -15,6 +15,7 @@ INSTALLED_APPS = (
     'django_user_agents',
     'supporttools',
     'userservice',
+    'persistent_message',
     'rc_django',
     'grade_conversion_calculator',
     'course_grader.apps.CourseGraderConfig',
