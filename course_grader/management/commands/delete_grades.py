@@ -19,14 +19,14 @@ class Command(BaseCommand):
             years=settings.GRADE_RETENTION_YEARS)
 
         if not commit:
-            print "Retention date is: %s" % retention_date
+            print("Retention date is: {}".format(retention_date))
 
         # Saved grades
         grade_count = Grade.objects.filter(
             last_modified__lt=retention_date).count()
 
         if not commit:
-            print "Saved grades found: %s" % grade_count
+            print("Saved grades found: {}".format(grade_count))
 
         if grade_count and commit:
             Grade.objects.filter(
@@ -37,7 +37,7 @@ class Command(BaseCommand):
             imported_date__lt=retention_date).count()
 
         if not commit:
-            print "Grade imports found: %s" % grade_import_count
+            print("Grade imports found: {}".format(grade_import_count))
 
         if grade_import_count and commit:
             GradeImport.objects.filter(
@@ -48,7 +48,7 @@ class Command(BaseCommand):
             submitted_date__lt=retention_date).defer("document").count()
 
         if not commit:
-            print "Graderoster receipts found: %s" % graderoster_count
+            print("Graderoster receipts found: {}".format(graderoster_count))
 
         if graderoster_count and commit:
             SubmittedGradeRoster.objects.filter(

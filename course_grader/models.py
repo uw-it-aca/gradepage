@@ -65,8 +65,9 @@ class SubmittedGradeRoster(models.Model):
         try:
             graderoster = submit_grades(self)
         except Exception as ex:
-            logger.error(
-                "PUT graderoster failed: %s, Section: %s, Instructor: %s" % (
+            logger.error((
+                "PUT graderoster failed: {}, Section: {}, "
+                "Instructor: {}").format(
                     ex, self.section_id, self.instructor_id))
             self.status_code = getattr(ex, "status", 500)
             self.save()
@@ -107,7 +108,7 @@ class Grade(models.Model):
     def student_label(self):
         label = self.student_reg_id
         if self.duplicate_code is not None and len(self.duplicate_code):
-            label += "-%s" % self.duplicate_code
+            label += "-{}".format(self.duplicate_code)
         return label
 
     def json_data(self):
@@ -201,7 +202,8 @@ class GradeImport(models.Model):
     document = models.TextField()
     imported_date = models.DateTimeField(auto_now=True)
     imported_by = models.CharField(max_length=32)
-    import_conversion = models.ForeignKey(ImportConversion, null=True)
+    import_conversion = models.ForeignKey(
+        ImportConversion, on_delete=models.CASCADE, null=True)
 
     objects = GradeImportManager()
 

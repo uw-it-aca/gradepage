@@ -13,17 +13,18 @@ def clean_section_id(section_id):
 
 
 def url_for_term(term):
-    return "/?term=%s-%s" % (term.year, term.quarter)
+    return "/?term={year}-{quarter}".format(
+        year=term.year, quarter=term.quarter)
 
 
 def url_for_section(section_id):
-    return "%s/section/%s" % (
-        getattr(settings, "GRADEPAGE_HOST", ""), section_id)
+    return "{host}/section/{section_id}".format(
+        host=getattr(settings, "GRADEPAGE_HOST", ""), section_id=section_id)
 
 
 def url_for_grading_status(section_id):
-    return "%s/api/v1/grading_status/%s" % (
-        getattr(settings, "GRADEPAGE_HOST", ""), section_id)
+    return "{host}/api/v1/grading_status/{section_id}".format(
+        host=getattr(settings, "GRADEPAGE_HOST", ""), section_id=section_id)
 
 
 def section_status_params(section, instructor):
@@ -55,16 +56,7 @@ def section_status_params(section, instructor):
             data["status_url"] = url_for_grading_status(section_id)
     elif section.is_full_summer_term():
         data["grading_status"] = (
-            "Summer full-term grade submission opens on %s." % (
+            "Summer full-term grade submission opens on {}.".format(
                 display_datetime(section.term.grading_period_open)))
 
     return data
-
-
-def grade_submission_deadline_params(term):
-    return {
-        "deadline_year": term.year,
-        "deadline_quarter": term.get_quarter_display(),
-        "grade_submission_deadline": term.grade_submission_deadline,
-        "deadline_warning": submission_deadline_warning(term),
-    }

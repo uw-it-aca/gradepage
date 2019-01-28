@@ -59,7 +59,7 @@ class GradeFormHandler(RESTDispatch):
             grade.comment = data["comment"]
         grade.save()
 
-        logged_grade = "%s" % ("X" if grade.no_grade_now else grade.grade)
+        logged_grade = "{}".format("X" if grade.no_grade_now else grade.grade)
         if not len(logged_grade):
             logged_grade = "None"
         if grade.is_incomplete:
@@ -67,7 +67,7 @@ class GradeFormHandler(RESTDispatch):
         if grade.is_writing:
             logged_grade += ",W"
 
-        logger.info("Grade %s, Student: %s, Section: %s, Grade: %s" % (
+        logger.info("Grade {}, Student: {}, Section: {}, Grade: {}".format(
             action, student_id, section_id, logged_grade))
 
         return grade

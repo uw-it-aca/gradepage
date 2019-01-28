@@ -73,9 +73,10 @@ class SubmittedGradeRoster(RESTDispatch):
             return self.error_response(404, "Not Found")
 
         except Exception as ex:
-            logger.error("Download failed for graderoster model %s: %s" % (
-                graderoster_id, ex))
-            return self.error_response(500, "%s" % ex)
+            logger.error(
+                "Download failed for graderoster model {}: {}".format(
+                    graderoster_id, ex))
+            return self.error_response(500, "{}".format(ex))
 
         if model.secondary_section_id is not None:
             filename = model.secondary_section_id
@@ -109,8 +110,12 @@ class SubmittedGradeRoster(RESTDispatch):
 
             writer.writerow([
                 item.student_number,
-                "%s %s" % (item.student_first_name, item.student_surname),
-                "%s %s" % (section.curriculum_abbr, section.course_number),
+                "{first_name} {last_name}".format(
+                    first_name=item.student_first_name,
+                    last_name=item.student_surname),
+                "{curr_abbr} {course_num}".format(
+                    curr_abbr=section.curriculum_abbr,
+                    course_num=section.course_number),
                 item.section_id,
                 item.student_credits,
                 "I" if item.has_incomplete else "",
@@ -122,7 +127,7 @@ class SubmittedGradeRoster(RESTDispatch):
                 submitter.uwnetid
             ])
 
-        logger.info("Graderoster downloaded: %s-%s" % (model.section_id,
-                                                       model.instructor_id))
+        logger.info("Graderoster downloaded: {}-{}".format(
+            model.section_id, model.instructor_id))
 
         return response

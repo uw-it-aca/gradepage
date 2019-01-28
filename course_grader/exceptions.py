@@ -10,7 +10,7 @@ class InvalidUser(Exception):
         self.identifier = identifier
 
     def __str__(self):
-        return "Invalid identifier '%s'" % self.identifier
+        return "Invalid identifier '{}'".format(self.identifier)
 
 
 class InvalidTerm(Exception):

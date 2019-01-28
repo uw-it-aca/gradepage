@@ -1,18 +1,17 @@
 language: python
 python:
-- '2.7'
 - '3.6'
 install:
   - sudo apt-get install -qq python-dev libxml2-dev libxmlsec1-dev
 before_script:
   - pip install -r requirements.txt
   - pip install coverage
-  - pip install python-coveralls
+  - pip install coveralls
   - pip install pycodestyle
   - npm install -g jshint
   - cp travis-ci/manage.py manage.py
 script:
-  - pycodestyle course_grader/ --exclude=migrations,test
+  - pycodestyle course_grader/ --exclude=migrations
   - jshint course_grader/static/course_grader/js/ --verbose
   - coverage run --source=course_grader/ --omit=course_grader/migrations/* manage.py test course_grader
 after_success:

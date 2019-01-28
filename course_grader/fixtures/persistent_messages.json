@@ -1,0 +1,93 @@
+[
+	{
+        "model": "persistent_message.taggroup",
+        "pk": 1,
+        "fields": {
+            "name": "Grade submission"
+        }
+    },
+    {
+        "model": "persistent_message.tag",
+        "pk": 1,
+        "fields": {
+            "name": "is_open",
+            "group": 1
+        }
+    },
+    {
+        "model": "persistent_message.tag",
+        "pk": 2,
+        "fields": {
+            "name": "is_closed",
+            "group": 1
+        }
+    },
+    {
+        "model": "persistent_message.tag",
+        "pk": 3,
+        "fields": {
+            "name": "just_before_deadline",
+            "group": 1
+        }
+    },
+	{
+        "model": "persistent_message.tag",
+        "pk": 4,
+        "fields": {
+            "name": "just_after_deadline",
+            "group": 1
+        }
+    },
+    {
+        "model": "persistent_message.message",
+        "pk": 1,
+        "fields": {
+            "content": "Grade submission for <strong>{{ next_quarter }} {{ next_year }}</strong> opens on {{ next_window_open_date }}.<br />Grade submission for <strong>{{ prev_quarter }} {{ prev_year }}</strong> closed on {{ prev_window_close_date }}. {{ prev_quarter }} {{ prev_year }} grades can no longer be submitted online. <a href=\"https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/\" target=\"_blank\" title=\"What can I do now?\">What can I do now?</a>",
+            "level": 20,
+            "begins": "2018-01-01T00:00:00Z",
+            "created": "2018-01-01T00:00:00Z",
+            "modified": "2018-01-01T00:00:00Z",
+            "modified_by": "gradepage",
+            "tags": [2]
+        }
+    },
+    {
+        "model": "persistent_message.message",
+        "pk": 2,
+        "fields": {
+            "content": "Grade submission for <strong>{{ prev_quarter }} {{ prev_year }}</strong> closed on {{ prev_window_close_date }}. {{ prev_quarter }} {{ prev_year }} grades can no longer be submitted online. <a href=\"https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/\" target=\"_blank\" title=\"What can I do now?\">What can I do now?</a><br />Grade submission for <strong>{{ next_quarter }} {{ next_year }}</strong> opens on {{ next_window_open_date }}.",
+            "level": 40,
+            "begins": "2018-01-01T00:00:00Z",
+            "created": "2018-01-01T00:00:00Z",
+            "modified": "2018-01-01T00:00:00Z",
+            "modified_by": "gradepage",
+            "tags": [4]
+        }
+    },
+    {
+        "model": "persistent_message.message",
+        "pk": 3,
+        "fields": {
+            "content": "{{ quarter }} {{ year }} grades are due on <strong>{{ grade_submission_deadline|date:\"F d, g:i A T\" }}</strong>.",
+            "level": 30,
+            "begins": "2018-01-01T00:00:00Z",
+            "created": "2018-01-01T00:00:00Z",
+            "modified": "2018-01-01T00:00:00Z",
+            "modified_by": "gradepage",
+            "tags": [1]
+        }
+    },
+    {
+        "model": "persistent_message.message",
+        "pk": 4,
+        "fields": {
+            "content": "{% load humanize %}<strong>Attention!</strong> The grading period closes {{ grade_submission_deadline|naturaltime }}! Grades cannot be submitted online after deadline.",
+            "level": 40,
+            "begins": "2018-01-01T00:00:00Z",
+            "created": "2018-01-01T00:00:00Z",
+            "modified": "2018-01-01T00:00:00Z",
+            "modified_by": "gradepage",
+            "tags": [3]
+        }
+    }
+]

@@ -28,7 +28,8 @@ def grade_imports(request):
         opt_terms.append({
             "quarter": opt_term.get_quarter_display(),
             "year": opt_term.year,
-            "value": "%s-%s" % (opt_term.year, opt_term.quarter),
+            "value": "{year}-{quarter}".format(
+                year=opt_term.year, quarter=opt_term.quarter),
             "is_selected": opt_term == selected_term,
         })
 
@@ -122,7 +123,8 @@ def graderosters(request):
         opt_terms.append({
             "quarter": opt_term.get_quarter_display(),
             "year": opt_term.year,
-            "value": "%s-%s" % (opt_term.year, opt_term.quarter),
+            "value": "{year}-{quarter}".format(
+                year=opt_term.year, quarter=opt_term.quarter),
             "is_selected": opt_term == selected_term,
         })
 
@@ -264,5 +266,5 @@ def term_from_param(request, all_terms):
         return get_term_by_year_and_quarter(selected_term.year,
                                             selected_term.quarter)
     except Exception as ex:
-        logger.error("GET term failed: %s" % ex)
+        logger.error("GET term failed: {}".format(ex))
         raise

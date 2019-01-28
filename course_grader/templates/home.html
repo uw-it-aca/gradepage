@@ -17,30 +17,6 @@
         </select>
         </span>
 
-        {% if not grading_window_open %}
-        {% if in_current_quarter %}
-        <div class="alert alert-info" role="alert">
-            Grade submission for <strong>{{ next_quarter }} {{ next_year }}</strong> opens on {{ next_window_open_date }}.
-            <br />
-            Grade submission for <strong>{{ prev_quarter }} {{ prev_year }}</strong> closed on
-            {{ prev_window_close_date }}. {{ prev_quarter }} {{ prev_year }} grades can no longer
-            be submitted online.
-            <a href="http://www.washington.edu/itconnect/learn/tools/catalyst-web-tools/gradebook/gradepage/change-submitted-grades/" target="_blank" title="What can I do now?">What can I do now?</a>
-            <br/><br/>
-            <strong>Notice:</strong> GradePage will require two-factor authentication for winter quarter 2019 grade submission.  In mid-February 2019, you will need to use both your UW NetID and DUO to sign in to GradePage. <a href="https://itconnect.uw.edu/security/uw-netids/2fa/" target="_blank" style="color: #0758BB;">Please take a moment now to verify that you can use DUO</a>.
-        </div>
-        {% else %}
-        <div class="alert alert-danger" role="alert">
-            Grade submission for <strong>{{ prev_quarter }} {{ prev_year }}</strong> closed on
-            {{ prev_window_close_date }}. {{ prev_quarter }} {{ prev_year }} grades can no longer
-            be submitted online.
-            <a href="http://www.washington.edu/itconnect/learn/tools/catalyst-web-tools/gradebook/gradepage/change-submitted-grades/" target="_blank" title="What can I do now?">What can I do now?</a>
-            <br />
-            Grade submission for <strong>{{ next_quarter }} {{ next_year }}</strong> opens on {{ next_window_open_date }}.
-        </div>
-        {% endif %}
-        {% endif %}
-
         <div class="container gp-class-chooser">
             <div id="section-list">
             </div>
@@ -57,9 +33,9 @@
     <script type="text/javascript">
         window.gradepage = {
             sections_url: "{{ sections_url }}",
-            is_mobile: {% if request.is_mobile %}true{% else %}false{% endif %},
-            is_tablet: {% if request.is_tablet %}true{% else %}false{% endif %},
-            is_desktop: {% if not request.is_mobile and not request.is_tablet %}true{% else %}false{% endif %}
+            is_mobile: {% if request.user_agent.is_mobile %}true{% else %}false{% endif %},
+            is_tablet: {% if request.user_agent.is_tablet %}true{% else %}false{% endif %},
+            is_desktop: {% if not request.user_agent.is_mobile and not request.user_agent.is_tablet %}true{% else %}false{% endif %}
         };
     </script>
 {% endblock extra_js %}

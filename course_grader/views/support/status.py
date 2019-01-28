@@ -20,7 +20,7 @@ def status(request):
     try:
         curr_term = current_term()
     except Exception as ex:
-        logger.error("GET current term failed: %s" % ex)
+        logger.error("GET current term failed: {}".format(ex))
         raise
 
     term_id = request.GET.get("term", "").strip()

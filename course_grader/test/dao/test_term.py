@@ -61,7 +61,7 @@ class TermDAOFunctionsTest(TestCase):
 
     def test_all_viewable_terms(self):
         with self.settings(PAST_TERMS_VIEWABLE=2,
-               CURRENT_DATETIME_OVERRIDE='2013-10-15 00:00:00'):
+                           CURRENT_DATETIME_OVERRIDE='2013-10-15 00:00:00'):
             terms = all_viewable_terms()
             self.assertEquals(len(terms), 3)
             self.assertEquals(terms[0].quarter, 'autumn')

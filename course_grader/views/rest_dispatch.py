@@ -19,6 +19,7 @@ class RESTDispatch(View):
     def csv_response(self, status=200, filename="file"):
         response = HttpResponse(status=status,
                                 content_type="text/csv")
-        response["Content-Disposition"] = 'attachment; filename="%s.csv"' % (
-            re.sub(r"[,/]", "-", filename))
+        response["Content-Disposition"] = (
+            'attachment; filename="{}.csv"').format(
+                re.sub(r"[,/]", "-", filename))
         return response
