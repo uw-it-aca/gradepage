@@ -40,11 +40,12 @@ a:hover, a:focus {color:#108BCC; text-decoration:underline; }
     left: -999em;}
 
 .gp-alert { padding: 3px; margin-bottom: 0; border-bottom: 1px solid transparent; border-top:none; border-left:none; border-right:none; border-radius: 0;font-size:.9em;
-	.gp-alert-text { font-size:80%; padding-left: 2em; position: relative;
-        .fa { position: absolute; left: 0; }
+	.gp-alert-text { font-size:80%;
+        .fa { float: left; padding-top: 3px; }
+        .gp-persistent-message { display: block; padding-left: 20px; }
     }
 }
-	.gp-alert-warning {color:#333; background-color: @warning; border-color:#ccc;}
+.gp-alert-warning {color:#333; background-color: @warning; border-color:#ccc;}
 
 .gp-back-link { padding: 10px 0; }
 
