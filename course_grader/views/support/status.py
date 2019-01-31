@@ -14,7 +14,7 @@ import json
 logger = logging.getLogger(__name__)
 
 
-@group_required(settings.GRADEPAGE_ADMIN_GROUP)
+@group_required(settings.GRADEPAGE_SUPPORT_GROUP)
 @never_cache
 def status(request):
     try:

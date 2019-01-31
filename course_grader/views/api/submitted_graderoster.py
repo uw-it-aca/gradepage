@@ -17,7 +17,7 @@ import csv
 logger = logging.getLogger(__name__)
 
 
-@method_decorator(group_required(settings.GRADEPAGE_ADMIN_GROUP),
+@method_decorator(group_required(settings.GRADEPAGE_SUPPORT_GROUP),
                   name='dispatch')
 @method_decorator(never_cache, name='dispatch')
 class SubmissionsByTerm(RESTDispatch):
@@ -54,7 +54,7 @@ class SubmissionsByTerm(RESTDispatch):
         return response
 
 
-@method_decorator(group_required(settings.GRADEPAGE_ADMIN_GROUP),
+@method_decorator(group_required(settings.GRADEPAGE_SUPPORT_GROUP),
                   name='dispatch')
 @method_decorator(never_cache, name='dispatch')
 class SubmittedGradeRoster(RESTDispatch):
