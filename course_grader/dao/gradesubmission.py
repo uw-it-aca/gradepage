@@ -1,10 +1,11 @@
-from uw_sws_graderoster import update_graderoster, graderoster_from_xhtml
+from uw_sws_graderoster import update_graderoster
+from uw_sws_graderoster.models import GradeRoster
 from course_grader.dao.section import section_from_label
 from course_grader.dao.person import person_from_regid
 from restclients_core.util.retry import retry
 from urllib3.exceptions import SSLError
+from lxml import etree
 import logging
-
 
 logger = logging.getLogger(__name__)
 
@@ -14,9 +15,10 @@ def submit_grades(model):
     def _update_graderoster(graderoster, requestor):
         return update_graderoster(graderoster, requestor)
 
-    graderoster = graderoster_from_xhtml(
-        model.document, section_from_label(model.section_id),
-        person_from_regid(model.instructor_id))
+    graderoster = GradeRoster(
+        data=etree.fromstring(model.document.strip()),
+        section=section_from_label(model.section_id),
+        instructor=person_from_regid(model.instructor_id))
 
     logged_section_id = model.section_id
     if model.secondary_section_id is not None:

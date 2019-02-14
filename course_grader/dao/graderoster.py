@@ -1,4 +1,5 @@
-from uw_sws_graderoster import get_graderoster, graderoster_from_xhtml
+from uw_sws_graderoster import get_graderoster
+from uw_sws_graderoster.models import GradeRoster
 from course_grader.dao.person import person_from_regid
 from course_grader.dao.section import get_section_by_url, is_grader_for_section
 from course_grader.exceptions import (
@@ -6,6 +7,7 @@ from course_grader.exceptions import (
 from course_grader.models import SubmittedGradeRoster, GradeImport
 from restclients_core.util.retry import retry
 from urllib3.exceptions import SSLError
+from lxml import etree
 import logging
 import re
 
@@ -57,8 +59,9 @@ def graderoster_for_section(section, instructor, requestor,
         if model.submitted_by not in people:
             people[model.submitted_by] = person_from_regid(model.submitted_by)
 
-        graderoster = graderoster_from_xhtml(model.document, section,
-                                             people[instructor_id])
+        graderoster = GradeRoster(
+            data=etree.fromstring(model.document.strip()),
+            section=section, instructor=people[instructor_id])
 
         grade_imp = None
         # If submitted_graderosters_only is False and this graderoster has been

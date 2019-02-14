@@ -9,7 +9,8 @@ from course_grader.models import (
 from course_grader.dao.person import person_from_regid, person_display_name
 from course_grader.dao.section import section_from_label
 from course_grader.dao.term import term_from_param
-from uw_sws_graderoster import graderoster_from_xhtml
+from uw_sws_graderoster.models import GradeRoster
+from lxml import etree
 import logging
 import csv
 
@@ -66,8 +67,9 @@ class SubmittedGradeRoster(RESTDispatch):
             section = section_from_label(model.section_id)
             instructor = person_from_regid(model.instructor_id)
             submitter = person_from_regid(model.submitted_by)
-            graderoster = graderoster_from_xhtml(model.document, section,
-                                                 instructor)
+            graderoster = GradeRoster(
+                data=etree.fromstring(model.document.strip()),
+                section=section, instructor=instructor)
 
         except SubmittedGradeRosterModel.DoesNotExist:
             return self.error_response(404, "Not Found")
