@@ -33,7 +33,7 @@ setup(
         'UW-RestClients-Canvas>=1.0.1,<2.0',
         'UW-RestClients-Catalyst>=1.0,<2.0',
         'UW-RestClients-Django-Utils>=2.1.2,<3.0',
-        'UW-RestClients-Graderoster>=1.0,<2.0',
+        'UW-RestClients-Graderoster>=1.0.1,<2.0',
         'UW-Grade-Conversion-Calculator>=1.1,<2.0',
         'Django-Safe-EmailBackend>=1.0,<2.0',
         'Django-SupportTools>=3.3,<4.0',
