@@ -38,7 +38,7 @@ setup(
         'Django-Safe-EmailBackend>=1.0,<2.0',
         'Django-SupportTools>=3.3,<4.0',
         'Django-Persistent-Message>=0.1.9,<2.0',
-        'UW-Django-SAML2>=1.3.5,<2.0',
+        'UW-Django-SAML2>=1.3.6,<2.0',
     ],
     license='Apache License, Version 2.0',
     description='UW application that support online grade submission',
