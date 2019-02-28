@@ -1,9 +1,11 @@
 from django.test import TestCase
+from django.utils import timezone
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
 from course_grader.dao.person import PWS
 from course_grader.dao.section import get_section_by_label
 from course_grader.dao.graderoster import graderoster_for_section
+from course_grader.models import SubmittedGradeRoster
 from course_grader.exceptions import (
     GradingNotPermitted, ReceiptNotFound, GradingPeriodNotOpen)
 
@@ -22,9 +24,52 @@ class GraderosterDAOFunctionsTest(TestCase):
         section = get_section_by_label('2013,spring,TRAIN,101/B')
         user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
 
+        gr = graderoster_for_section(section, user, user)
+        self.assertEqual(len(gr.items), 1)
+        self.assertFalse(hasattr(gr, 'submission_id'))
+
+        model = SubmittedGradeRoster(
+            section_id='2013,spring,TRAIN,101/B',
+            instructor_id='FBB38FE46A7C11D5A4AE0004AC494FFE',
+            term_id='2013,spring',
+            submitted_date=timezone.now(),
+            submitted_by='FBB38FE46A7C11D5A4AE0004AC494FFE',
+            accepted_date=timezone.now(),
+            status_code=200,
+            document=gr.xhtml()
+        )
+        model.save()
+
+        gr = graderoster_for_section(section, user, user)
+        self.assertEqual(len(gr.items), 1)
+        self.assertFalse(hasattr(gr, 'submission_id'))
+
+    def test_submitted_only_graderoster_for_section(self):
+        section = get_section_by_label('2013,spring,TRAIN,101/B')
+        user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
+
         self.assertRaises(
             ReceiptNotFound, graderoster_for_section, section, user, user,
             submitted_graderosters_only=True)
+
+        gr = graderoster_for_section(section, user, user)
+
+        model = SubmittedGradeRoster(
+            section_id='2013,spring,TRAIN,101/B',
+            instructor_id='FBB38FE46A7C11D5A4AE0004AC494FFE',
+            term_id='2013,spring',
+            submitted_date=timezone.now(),
+            submitted_by='FBB38FE46A7C11D5A4AE0004AC494FFE',
+            accepted_date=timezone.now(),
+            status_code=200,
+            document=gr.xhtml()
+        )
+        model.save()
+
+        gr = graderoster_for_section(
+            section, user, user, submitted_graderosters_only=True)
+        self.assertEqual(len(gr.items), 1)
+        self.assertEqual(gr.submission_id, 'B')
 
     def test_graderoster_not_permitted(self):
         section = get_section_by_label('2013,spring,TRAIN,100/AA')
