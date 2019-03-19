@@ -70,7 +70,7 @@ class GradeRoster(GradeFormHandler):
         except ReceiptNotFound as ex:
             return self.error_response(404, "{}".format(ex))
         except DataFailureException as ex:
-            logger.info("GET graderoster error: {}".format(ex.msg))
+            logger.info("GET graderoster error: {}".format(ex))
             return self.error_response(543, ex.msg)
 
     def get(self, request, *args, **kwargs):
@@ -390,7 +390,7 @@ class GradeRosterStatus(GradeFormHandler):
             except InvalidUser as ex:
                 return self.error_response(403, "Invalid user: {}".format(ex))
             except DataFailureException as ex:
-                logger.info("GET person error: {}".format(ex.msg))
+                logger.info("GET person error: {}".format(ex))
                 return self.error_response(543, ex.msg)
 
         try:
@@ -431,7 +431,7 @@ class GradeRosterStatus(GradeFormHandler):
                 data["grading_status"] = "{}".format(ex)
             return self.json_response({"grading_status": data})
         except DataFailureException as ex:
-            logger.info("GET graderoster error: {}".format(ex.msg))
+            logger.info("GET graderoster error: {}".format(ex))
             return self.error_response(543, ex.msg)
 
         data = section_status_params(self.section, self.instructor)
