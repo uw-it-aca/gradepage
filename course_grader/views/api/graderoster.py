@@ -17,7 +17,6 @@ from course_grader.views.api import (
 from course_grader.exceptions import *
 from userservice.user import UserService
 from restclients_core.exceptions import DataFailureException
-from urllib3.exceptions import MaxRetryError
 from datetime import datetime
 import json
 import logging
@@ -70,10 +69,9 @@ class GradeRoster(GradeFormHandler):
             return self.error_response(400, "{}".format(ex))
         except ReceiptNotFound as ex:
             return self.error_response(404, "{}".format(ex))
-        except (DataFailureException, MaxRetryError) as ex:
-            err = ex.msg if hasattr(ex, "msg") else ex
-            logger.info("GET graderoster error: {}".format(err))
-            return self.error_response(543, "{}".format(err))
+        except DataFailureException as ex:
+            logger.info("GET graderoster error: {}".format(ex))
+            return self.error_response(543, ex.msg)
 
     def get(self, request, *args, **kwargs):
         error = self._authorize(request, *args, **kwargs)
@@ -391,10 +389,9 @@ class GradeRosterStatus(GradeFormHandler):
                 self.submitted_graderosters_only = True
             except InvalidUser as ex:
                 return self.error_response(403, "Invalid user: {}".format(ex))
-            except (DataFailureException, MaxRetryError) as ex:
-                err = ex.msg if hasattr(ex, "msg") else ex
-                logger.info("GET person error: {}".format(err))
-                return self.error_response(543, "{}".format(err))
+            except DataFailureException as ex:
+                logger.info("GET person error: {}".format(ex))
+                return self.error_response(543, ex.msg)
 
         try:
             section_id = kwargs.get("section_id")
@@ -433,10 +430,9 @@ class GradeRosterStatus(GradeFormHandler):
             if data["grading_status"] is None:
                 data["grading_status"] = "{}".format(ex)
             return self.json_response({"grading_status": data})
-        except (DataFailureException, MaxRetryError) as ex:
-            err = ex.msg if hasattr(ex, "msg") else ex
-            logger.info("GET graderoster error: {}".format(err))
-            return self.error_response(543, "{}".format(err))
+        except DataFailureException as ex:
+            logger.info("GET graderoster error: {}".format(ex))
+            return self.error_response(543, ex.msg)
 
         data = section_status_params(self.section, self.instructor)
 
