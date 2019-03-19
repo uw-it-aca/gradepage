@@ -21,6 +21,9 @@ class SectionDAOFunctionsTest(TestCase):
         self.assertRaises(
             InvalidSection, section_from_param, '2013-spring-TRAIN-101')
         self.assertRaises(
+            InvalidSection, section_from_param,
+            '2013-spring-TRAIN-101--9136CCB8F66711D5BE060004AC494FFE')
+        self.assertRaises(
             MissingInstructorParam, section_from_param,
             '2013-spring-TRAIN-101-A')
 

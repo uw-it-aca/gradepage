@@ -3,13 +3,13 @@ This module encapsulates the access of sws section data
 """
 from uw_sws.models import Section
 from uw_sws.section import (
-    get_section_by_url, get_section_by_label,
+    validate_section_label, get_section_by_url, get_section_by_label,
     get_sections_by_instructor_and_term, get_sections_by_delegate_and_term)
+from uw_sws.exceptions import InvalidSectionID
 from course_grader.dao.person import person_from_regid, person_display_name
 from course_grader.exceptions import InvalidSection, MissingInstructorParam
 import logging
 import copy
-
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +38,11 @@ def section_from_param(param):
         "{year},{quarter},{curr_abbr},{course_num}/{section_id}").format(
             year=year, quarter=quarter, curr_abbr=curriculum_abbr,
             course_num=course_number, section_id=section_id)
+
+    try:
+        validate_section_label(section_label)
+    except InvalidSectionID as ex:
+        raise InvalidSection("Invalid section ID: {}".format(param))
 
     section = section_from_label(section_label)
 
