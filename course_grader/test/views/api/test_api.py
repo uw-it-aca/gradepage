@@ -4,7 +4,37 @@ from course_grader.dao.section import get_section_by_label
 from course_grader.dao.graderoster import get_graderoster
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
+from course_grader.views.rest_dispatch import RESTDispatch
 from course_grader.views.api import *
+
+
+class RestDispatchTest(TestCase):
+    def test_error_response(self):
+        response = RESTDispatch.error_response(400, message='Error')
+        self.assertEqual(response.content, b'{"error": "Error"}')
+        self.assertEqual(response.status_code, 400)
+
+        response = RESTDispatch.error_response(500, message=Exception('Error'))
+        self.assertEqual(response.content, b'{"error": "Error"}')
+        self.assertEqual(response.status_code, 500)
+
+    def test_json_response(self):
+        response = RESTDispatch.json_response('Test')
+        self.assertEqual(response.content, b'"Test"')
+        self.assertEqual(response.status_code, 200)
+
+        response = RESTDispatch.json_response({'Test': 3, 'Another Test': 4})
+        self.assertEqual(response.content, b'{"Another Test": 4, "Test": 3}')
+        self.assertEqual(response.status_code, 200)
+
+    def test_csv_response(self):
+        response = RESTDispatch.csv_response(filename="test")
+        self.assertEqual(response['Content-Disposition'],
+                         'attachment; filename="test.csv"')
+
+        response = RESTDispatch.csv_response(filename="test/test")
+        self.assertEqual(response['Content-Disposition'],
+                         'attachment; filename="test-test.csv"')
 
 
 @fdao_sws_override

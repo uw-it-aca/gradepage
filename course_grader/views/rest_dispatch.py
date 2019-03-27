@@ -5,18 +5,21 @@ import re
 
 
 class RESTDispatch(View):
-    def error_response(self, status, message="", content={}):
-        content["error"] = message
+    @staticmethod
+    def error_response(status, message="", content={}):
+        content["error"] = str(message)
         return HttpResponse(json.dumps(content),
+                            status=status,
+                            content_type='application/json')
+
+    @staticmethod
+    def json_response(content="", status=200):
+        return HttpResponse(json.dumps(content, sort_keys=True),
                             status=status,
                             content_type="application/json")
 
-    def json_response(self, content="", status=200):
-        return HttpResponse(json.dumps(content),
-                            status=status,
-                            content_type="application/json")
-
-    def csv_response(self, status=200, filename="file"):
+    @staticmethod
+    def csv_response(status=200, filename="file"):
         response = HttpResponse(status=status,
                                 content_type="text/csv")
         response["Content-Disposition"] = (
