@@ -10,6 +10,7 @@ from course_grader.dao.term import current_term
 from course_grader.dao.message import get_messages_for_term
 from course_grader.views import url_for_term
 from course_grader.exceptions import MissingInstructorParam
+from restclients_core.exceptions import DataFailureException
 from uw_catalyst.gradebook import valid_gradebook_id
 import logging
 import re
@@ -33,20 +34,15 @@ def section(request, url_token):
         section_url = "/section/{}-{}".format(url_token, user.uwregid)
         return HttpResponseRedirect(section_url)
 
-    except Exception as ex:
-        if hasattr(ex, "status"):
-            if ex.status == 404:
-                return error_response(request, status=404)
-            elif ex.status == 503:
-                return render(request, "503.html", {})
-            else:
-                logger.error(
-                    "Section view error: {}, Param: {}".format(ex, url_token))
-                raise
+    except DataFailureException as ex:
+        if ex.status == 404:
+            response = render(request, "404.html", {})
+            response.status_code = ex.status
         else:
             logger.error(
-                "Section view error: {}, Param: {}".format(ex, url_token))
-            return error_response(request, status=404)
+                "GET section failed: {}, Param: {}".format(ex, url_token))
+            response = render(request, "503.html", {})
+        return response
 
     if (not section.is_grading_period_open() and
             not section.term.is_grading_period_past()):
@@ -80,10 +76,3 @@ def section(request, url_token):
             params["auto_import_src"] = GradeImport.CATALYST_SOURCE
 
     return render(request, "section.html", params)
-
-
-def error_response(request, status=500):
-    template = "{}.html".format(status)
-    response = render(request, template, {})
-    response.status_code = status
-    return response
