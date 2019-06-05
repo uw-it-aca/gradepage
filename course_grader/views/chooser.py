@@ -6,6 +6,7 @@ from course_grader.dao.term import term_from_param, all_viewable_terms
 from course_grader.dao.message import get_messages_for_term
 from course_grader.exceptions import InvalidTerm
 from course_grader.views import url_for_term
+from restclients_core.exceptions import DataFailureException
 import logging
 
 logger = logging.getLogger(__name__)
@@ -32,12 +33,9 @@ def home(request):
     except InvalidTerm:
         return HttpResponseRedirect("/")
 
-    except Exception as ex:
-        if (hasattr(ex, "status") and ex.status == 503):
-            return render(request, "503.html", {})
-        else:
-            logger.error("GET selected term failed: {}".format(ex))
-            raise
+    except DataFailureException as ex:
+        logger.error("GET selected term failed: {}".format(ex))
+        return render(request, "503.html", {})
 
     opt_terms = []
     for opt_term in all_terms:
