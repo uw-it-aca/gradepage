@@ -9,7 +9,7 @@ from course_grader.dao.person import person_from_user
 from course_grader.dao.term import current_term
 from course_grader.dao.message import get_messages_for_term
 from course_grader.views import url_for_term
-from course_grader.exceptions import MissingInstructorParam
+from course_grader.exceptions import InvalidSection, MissingInstructorParam
 from restclients_core.exceptions import DataFailureException
 from uw_catalyst.gradebook import valid_gradebook_id
 import logging
@@ -28,6 +28,9 @@ def section(request, url_token):
         now_term = current_term()
 
         params.update(get_messages_for_term(now_term))
+
+    except InvalidSection as ex:
+        return render(request, "404.html", {})
 
     except MissingInstructorParam as ex:
         # MyUW doesn't supply an instructor regid, add the user
