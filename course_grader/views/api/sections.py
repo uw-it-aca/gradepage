@@ -37,9 +37,8 @@ class Sections(RESTDispatch):
 
         try:
             sections = all_gradable_sections(self.user, self.term)
-        except Exception as ex:
-            if (hasattr(ex, "status") and
-                    (ex.status == 401 or ex.status == 404)):
+        except DataFailureException as ex:
+            if (ex.status == 401 or ex.status == 404):
                 sections = []
             else:
                 logger.error("GET gradable sections failed: {}".format(ex))
