@@ -5,9 +5,9 @@ from course_grader.dao.person import person_from_regid
 from restclients_core.util.retry import retry
 from urllib3.exceptions import SSLError
 from lxml import etree
-import logging
+from logging import getLogger
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 def submit_grades(model):

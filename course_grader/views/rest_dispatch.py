@@ -3,8 +3,16 @@ from django.views import View
 import json
 import re
 
+timeout_error = ("The request to the student information system has timed "
+                 "out. Please try again.")
+
 
 class RESTDispatch(View):
+    @staticmethod
+    def data_failure_error(ex):
+        return (543, timeout_error) if (
+            ex.status == 0) else (ex.status, ex.msg)
+
     @staticmethod
     def error_response(status, message="", content={}):
         content["error"] = str(message)

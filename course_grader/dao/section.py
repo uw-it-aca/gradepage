@@ -8,10 +8,10 @@ from uw_sws.section import (
 from uw_sws.exceptions import InvalidSectionID
 from course_grader.dao.person import person_from_regid, person_display_name
 from course_grader.exceptions import InvalidSection, MissingInstructorParam
-import logging
+from logging import getLogger
 import copy
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 def section_from_label(label):

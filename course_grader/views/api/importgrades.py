@@ -12,13 +12,13 @@ from course_grader.dao.catalyst import valid_gradebook_id
 from course_grader.views.api import GradeFormHandler, sorted_students
 from course_grader.views import clean_section_id
 from course_grader.exceptions import *
+from restclients_core.exceptions import DataFailureException
 from userservice.user import UserService
+from logging import getLogger
 import json
-import logging
 import re
 
-
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -63,17 +63,10 @@ class ImportGrades(GradeFormHandler):
             return self.error_response(400, "{}".format(ex))
         except InvalidSection as ex:
             return self.error_response(404, "{}".format(ex))
-        except Exception as ex:
-            logger.error((
-                "GET graderoster failed: {}, Section: {}, "
-                "Instructor: {}").format(
-                    ex, section.section_label(), instructor.uwregid))
-            if hasattr(ex, "status"):
-                status = 404 if (ex.status == 404) else 543
-            else:
-                status = 500
-            err = ex.msg if hasattr(ex, "msg") else ex
-            return self.error_response(status, "{}".format(err))
+        except DataFailureException as ex:
+            logger.info("GET graderoster error: {}".format(ex))
+            (status, msg) = self.data_failure_error(ex)
+            return self.error_response(status, msg)
 
     def get(self, request, *args, **kwargs):
         error = self._authorize(request, *args, **kwargs)

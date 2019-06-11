@@ -6,10 +6,9 @@ from course_grader.dao.term import all_viewable_terms
 from course_grader.models import GradeImport, ImportConversion
 from course_grader.views.api import GradeFormHandler
 from course_grader.exceptions import *
-import logging
+from logging import getLogger
 
-
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 @method_decorator(login_required, name='dispatch')

@@ -1,7 +1,7 @@
-import logging
+from logging import Filter
 
 
-class UserFilter(logging.Filter):
+class UserFilter(Filter):
     """ Add user information to each log entry. """
 
     def filter(self, record):
@@ -17,7 +17,7 @@ class UserFilter(logging.Filter):
         return True
 
 
-class InfoFilter(logging.Filter):
+class InfoFilter(Filter):
     """ Limits log level to INFO only. """
 
     def filter(self, record):

@@ -8,19 +8,17 @@ from course_grader.dao.section import all_gradable_sections
 from course_grader.views import section_status_params
 from course_grader.views.rest_dispatch import RESTDispatch
 from course_grader.exceptions import InvalidUser, InvalidTerm
-import logging
+from restclients_core.exceptions import DataFailureException
+from logging import getLogger
 import re
 
-
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(never_cache, name='dispatch')
 class Sections(RESTDispatch):
     def get(self, request, *args, **kwargs):
-        sws_not_available = ("The Student Web Service is not available. "
-                             "Please try again later.")
         try:
             term = term_from_param(kwargs.get("term_id"))
             if term is None or term not in all_viewable_terms():
@@ -32,9 +30,10 @@ class Sections(RESTDispatch):
             return self.json_response(content)
         except InvalidTerm as ex:
             return self.error_response(404, "{}".format(ex))
-        except Exception as ex:
+        except DataFailureException as ex:
             logger.error("GET selected term failed: {}".format(ex))
-            return self.error_response(500, sws_not_available)
+            (status, msg) = self.data_failure_error(ex)
+            return self.error_response(status, msg)
 
         try:
             sections = all_gradable_sections(self.user, self.term)
@@ -44,7 +43,8 @@ class Sections(RESTDispatch):
                 sections = []
             else:
                 logger.error("GET gradable sections failed: {}".format(ex))
-                return self.error_response(500, sws_not_available)
+                (status, msg) = self.data_failure_error(ex)
+                return self.error_response(status, msg)
 
         content = self.response_content(sections, **kwargs)
         return self.json_response(content)

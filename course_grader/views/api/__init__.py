@@ -5,10 +5,9 @@ from course_grader.dao.term import submission_deadline_warning
 from course_grader.views.rest_dispatch import RESTDispatch
 from course_grader.models import Grade
 from course_grader.exceptions import OverrideNotPermitted
-import logging
+from logging import getLogger
 
-
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 # Assign numeric strings, for mixed sorting with 4.0 scale grades
 grade_order = {"": "9.9", "I": "9.8", "W": "9.7", "HW": "9.5",

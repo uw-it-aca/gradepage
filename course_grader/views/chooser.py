@@ -7,9 +7,9 @@ from course_grader.dao.message import get_messages_for_term
 from course_grader.exceptions import InvalidTerm
 from course_grader.views import url_for_term
 from restclients_core.exceptions import DataFailureException
-import logging
+from logging import getLogger
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 @login_required

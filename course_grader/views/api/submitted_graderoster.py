@@ -11,11 +11,10 @@ from course_grader.dao.section import section_from_label
 from course_grader.dao.term import term_from_param
 from uw_sws_graderoster.models import GradeRoster
 from lxml import etree
-import logging
+from logging import getLogger
 import csv
 
-
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 @method_decorator(group_required(settings.GRADEPAGE_SUPPORT_GROUP),

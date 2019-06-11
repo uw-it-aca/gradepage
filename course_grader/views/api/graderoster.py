@@ -18,12 +18,11 @@ from course_grader.exceptions import *
 from userservice.user import UserService
 from restclients_core.exceptions import DataFailureException
 from datetime import datetime
+from logging import getLogger
 import json
-import logging
 import re
 
-
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -71,7 +70,8 @@ class GradeRoster(GradeFormHandler):
             return self.error_response(404, "{}".format(ex))
         except DataFailureException as ex:
             logger.info("GET graderoster error: {}".format(ex))
-            return self.error_response(543, ex.msg)
+            (status, msg) = self.data_failure_error(ex)
+            return self.error_response(status, msg)
 
     def get(self, request, *args, **kwargs):
         error = self._authorize(request, *args, **kwargs)
@@ -391,7 +391,8 @@ class GradeRosterStatus(GradeFormHandler):
                 return self.error_response(403, "Invalid user: {}".format(ex))
             except DataFailureException as ex:
                 logger.info("GET person error: {}".format(ex))
-                return self.error_response(543, ex.msg)
+                (status, msg) = self.data_failure_error(ex)
+                return self.error_response(status, msg)
 
         try:
             section_id = kwargs.get("section_id")
@@ -432,7 +433,8 @@ class GradeRosterStatus(GradeFormHandler):
             return self.json_response({"grading_status": data})
         except DataFailureException as ex:
             logger.info("GET graderoster error: {}".format(ex))
-            return self.error_response(543, ex.msg)
+            (status, msg) = self.data_failure_error(ex)
+            return self.error_response(status, msg)
 
         data = section_status_params(self.section, self.instructor)
 
