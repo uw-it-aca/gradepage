@@ -17,7 +17,7 @@ class RestDispatchTest(TestCase):
 
         ex = DataFailureException(url='/', status=500, msg='Server error')
         self.assertEqual(
-            (500, 'Server error'), RESTDispatch.data_failure_error(ex))
+            (543, 'Server error'), RESTDispatch.data_failure_error(ex))
 
         ex = DataFailureException(url='/', status=0, msg='Timeout')
         self.assertEqual(

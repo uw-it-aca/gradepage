@@ -10,8 +10,9 @@ timeout_error = ("The request to the student information system has timed "
 class RESTDispatch(View):
     @staticmethod
     def data_failure_error(ex):
-        return (543, timeout_error) if (
-            ex.status == 0) else (ex.status, ex.msg)
+        status = 404 if ex.status == 404 else 543
+        msg = timeout_error if ex.status == 0 else ex.msg
+        return (status, msg)
 
     @staticmethod
     def error_response(status, message="", content={}):

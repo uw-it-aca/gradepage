@@ -34,8 +34,14 @@ def home(request):
         return HttpResponseRedirect("/")
 
     except DataFailureException as ex:
-        logger.error("GET selected term failed: {}".format(ex))
-        return render(request, "503.html", {})
+        if ex.status == 404:
+            response = render(request, "404.html", {})
+            response.status_code = ex.status
+        else:
+            logger.error(
+                "GET selected term failed: {}, Param: {}".format(ex, term_id))
+            response = render(request, "503.html", {})
+        return response
 
     opt_terms = []
     for opt_term in all_terms:
