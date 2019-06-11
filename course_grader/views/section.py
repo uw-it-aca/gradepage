@@ -30,7 +30,9 @@ def section(request, url_token):
         params.update(get_messages_for_term(now_term))
 
     except InvalidSection as ex:
-        return render(request, "404.html", {})
+        response = render(request, "404.html", {})
+        response.status_code = 404
+        return response
 
     except MissingInstructorParam as ex:
         # MyUW doesn't supply an instructor regid, add the user
