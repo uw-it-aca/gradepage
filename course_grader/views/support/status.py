@@ -7,11 +7,10 @@ from uw_sws.models import Term
 from course_grader.models import SubmittedGradeRoster, GradeImport
 from course_grader.dao.term import term_from_param, current_term
 from datetime import datetime, timedelta
-import logging
+from logging import getLogger
 import json
 
-
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 @group_required(settings.GRADEPAGE_SUPPORT_GROUP)

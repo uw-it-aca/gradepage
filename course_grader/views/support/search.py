@@ -10,11 +10,10 @@ from restclients_core.exceptions import DataFailureException, InvalidNetID
 from course_grader.models import SubmittedGradeRoster, GradeImport
 from course_grader.dao.person import (
     person_from_netid, person_from_regid, person_display_name)
-import logging
+from logging import getLogger
 import re
 
-
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 @group_required(settings.GRADEPAGE_SUPPORT_GROUP)

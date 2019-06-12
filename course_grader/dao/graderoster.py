@@ -8,11 +8,11 @@ from course_grader.models import SubmittedGradeRoster, GradeImport
 from restclients_core.util.retry import retry
 from urllib3.exceptions import SSLError
 from lxml import etree
-import logging
+from logging import getLogger
 import re
 
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 def graderoster_for_section(section, instructor, requestor,

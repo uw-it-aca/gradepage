@@ -12,10 +12,10 @@ from course_grader.views import url_for_term
 from course_grader.exceptions import InvalidSection, MissingInstructorParam
 from restclients_core.exceptions import DataFailureException
 from uw_catalyst.gradebook import valid_gradebook_id
-import logging
+from logging import getLogger
 import re
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 @login_required

@@ -6,10 +6,9 @@ from course_grader.dao.section import section_url_token, section_display_name
 from course_grader.dao.person import person_from_regid, person_display_name
 from course_grader.dao import current_datetime, display_datetime
 from course_grader.exceptions import GradesNotSubmitted
-import logging
+from logging import getLogger
 
-
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 def create_recipient_list(people):

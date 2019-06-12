@@ -6,11 +6,10 @@ from course_grader.dao.canvas import grades_for_section as canvas_grades
 from course_grader.dao.catalyst import grades_for_section as catalyst_grades
 from course_grader.dao.gradesubmission import submit_grades
 from course_grader.dao.notification import notify_grade_submitters
-import logging
+from logging import getLogger
 import json
 
-
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 class SubmittedGradeRosterManager(models.Manager):

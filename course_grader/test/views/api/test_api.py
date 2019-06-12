@@ -2,13 +2,27 @@ from django.test import TestCase
 from course_grader.dao.person import PWS
 from course_grader.dao.section import get_section_by_label
 from course_grader.dao.graderoster import get_graderoster
+from restclients_core.exceptions import DataFailureException
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
-from course_grader.views.rest_dispatch import RESTDispatch
+from course_grader.views.rest_dispatch import RESTDispatch, timeout_error
 from course_grader.views.api import *
 
 
 class RestDispatchTest(TestCase):
+    def test_data_failure_error(self):
+        ex = DataFailureException(url='/', status=404, msg='Not found')
+        self.assertEqual(
+            (404, 'Not found'), RESTDispatch.data_failure_error(ex))
+
+        ex = DataFailureException(url='/', status=500, msg='Server error')
+        self.assertEqual(
+            (543, 'Server error'), RESTDispatch.data_failure_error(ex))
+
+        ex = DataFailureException(url='/', status=0, msg='Timeout')
+        self.assertEqual(
+            (543, timeout_error), RESTDispatch.data_failure_error(ex))
+
     def test_error_response(self):
         response = RESTDispatch.error_response(400, message='Error')
         self.assertEqual(response.content, b'{"error": "Error"}')
