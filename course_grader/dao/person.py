@@ -8,7 +8,6 @@ from restclients_core.exceptions import (
     InvalidNetID, InvalidRegID, DataFailureException)
 from course_grader.exceptions import InvalidUser
 from userservice.user import UserService
-import json
 
 
 def person_from_netid(netid):
@@ -62,6 +61,5 @@ def is_netid(username):
         except InvalidUser:
             error_msg = "Not a valid UWNetID: "
         except DataFailureException as err:
-            data = json.loads(err.msg)
-            error_msg = "{}: ".format(data["StatusDescription"].rstrip("."))
+            error_msg = "Error ({}) {}: ".format(err.status, err.msg)
     return error_msg
