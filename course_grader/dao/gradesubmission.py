@@ -2,8 +2,6 @@ from uw_sws_graderoster import update_graderoster
 from uw_sws_graderoster.models import GradeRoster
 from course_grader.dao.section import section_from_label
 from course_grader.dao.person import person_from_regid
-from restclients_core.util.retry import retry
-from urllib3.exceptions import SSLError
 from lxml import etree
 from logging import getLogger
 
@@ -11,10 +9,6 @@ logger = getLogger(__name__)
 
 
 def submit_grades(model):
-    @retry(SSLError, tries=3, delay=1, logger=logger)
-    def _update_graderoster(graderoster, requestor):
-        return update_graderoster(graderoster, requestor)
-
     graderoster = GradeRoster(
         data=etree.fromstring(model.document.strip()),
         section=section_from_label(model.section_id),
@@ -27,7 +21,7 @@ def submit_grades(model):
             model.secondary_section_id)
 
     requestor = person_from_regid(model.submitted_by)
-    ret_graderoster = _update_graderoster(graderoster, requestor)
+    ret_graderoster = update_graderoster(graderoster, requestor)
 
     # The returned graderoster from PUT omits items for which a grade was
     # not actually submitted, and it lacks secondary section info for each

@@ -5,8 +5,6 @@ from course_grader.dao.section import get_section_by_url, is_grader_for_section
 from course_grader.exceptions import (
     GradingNotPermitted, ReceiptNotFound, GradingPeriodNotOpen)
 from course_grader.models import SubmittedGradeRoster, GradeImport
-from restclients_core.util.retry import retry
-from urllib3.exceptions import SSLError
 from lxml import etree
 from logging import getLogger
 import re
@@ -37,14 +35,10 @@ def graderoster_for_section(section, instructor, requestor,
             raise GradingNotPermitted(section.section_label(),
                                       requestor.uwregid)
 
-    @retry(SSLError, tries=3, delay=1, logger=logger)
-    def _get_graderoster(section, instructor, requestor):
-        return get_graderoster(section, instructor, requestor)
-
     # If submitted_graderosters_only is False and grading period is open,
     # start with a "live" graderoster
     if (not submitted_graderosters_only and section.is_grading_period_open()):
-        ret_graderoster = _get_graderoster(section, instructor, requestor)
+        ret_graderoster = get_graderoster(section, instructor, requestor)
         ret_graderoster.secondary_section = secondary_section
         ret_graderoster.submissions = {}
 
