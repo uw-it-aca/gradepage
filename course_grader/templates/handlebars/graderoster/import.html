@@ -5,7 +5,7 @@
 
     {{#if muted_assignment_count}}
     <div role="alert" class="alert alert-danger alert-muted-assignment">
-        <i class="fa fa-exclamation-circle"></i> <p>{{{ trans "You have <strong>one muted assignment</strong> in this Canvas Gradebook." "You have <strong>%(muted_assignment_count)s muted assignments</strong> in this Canvas Gradebook." muted_assignment_count }}} {{ trans "The grade for this assignment WILL NOT be represented in the imported grade." "Grades for these assignments WILL NOT be represented in the imported grade." muted_assignment_count }}
+        <i class="fas fa-exclamation-circle"></i> <p>{{{ trans "You have <strong>one muted assignment</strong> in this Canvas Gradebook." "You have <strong>%(muted_assignment_count)s muted assignments</strong> in this Canvas Gradebook." muted_assignment_count }}} {{ trans "The grade for this assignment WILL NOT be represented in the imported grade." "Grades for these assignments WILL NOT be represented in the imported grade." muted_assignment_count }}
         <a target="_blank" href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/">{{ trans "learn_more" }}</a>.</p>
         <ul>{{{ trans "The muted assignment for <strong>%(section_name)s</strong> is:" "The muted assignments for <strong>%(section_name)s</strong> are:" muted_assignment_count }}}
                 {{#each muted_assignments}}

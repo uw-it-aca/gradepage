@@ -2,10 +2,10 @@
 {% if grade_submission_deadline %}
 <div class="alert gp-alert {% if deadline_warning %}alert-danger{% else %}gp-alert-warning{% endif %} hidden-print" role="alert">
     <div class="container gp-alert-text">
-        <i class="fa fa-exclamation-circle fa-lg"></i>
+        <i class="fas fa-exclamation-circle fa-lg"></i>
         {{ deadline_quarter }} {{ deadline_year }} grades are due on <strong>{{ grade_submission_deadline|date:"F d, g:i A T" }}.</strong>
         <br/><br/>
-        <i class="fa fa-exclamation-circle fa-lg"></i>
+        <i class="fas fa-exclamation-circle fa-lg"></i>
         <strong>Notice:</strong> GradePage will require two-factor authentication for winter quarter 2019 grade submission.  In mid-February 2019, you will need to use both your UW NetID and DUO to sign in to GradePage. <a href="https://itconnect.uw.edu/security/uw-netids/2fa/" target="_blank" style="color: #0758BB;">Please take a moment now to verify that you can use DUO</a>.
     </div>
 </div>

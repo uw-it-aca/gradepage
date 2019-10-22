@@ -27,7 +27,7 @@
         <!-- mobile first styles -->
         {% compress css %}
         <link rel="stylesheet" href="{% static "course_grader/css/vendor/bootstrap-3.0.0.min.css" %}"/>
-        <link rel="stylesheet" href="{% static "course_grader/css/vendor/font-awesome-4.0.3.min.css" %}"/>
+        <link rel="stylesheet" href="{% static "course_grader/css/vendor/font-awesome-all-5.11.2.min.css" %}"/>
         <link rel="stylesheet" type="text/less" href="{% static "course_grader/css/mobile.less" %}"/>
         <link rel="stylesheet" type="text/less" href="{% static "grade_conversion_calculator/css/mobile.less" %}"/>
         {% endcompress %}
@@ -52,7 +52,7 @@
                 <div class="container">Overriding as <strong>{{override_user|lower}}</strong>
                 {% csrf_token %}
                 <input type="hidden" value="1" name="clear_override">
-                <button class="btn btn-danger btn-xs" value="Clear override" type="submit"><i class="fa fa-times-circle"></i> Clear</button>
+                <button class="btn btn-danger btn-xs" value="Clear override" type="submit"><i class="fas fa-times-circle"></i> Clear</button>
                 </div>
             </form>
         </div>
@@ -69,7 +69,7 @@
                 <div class="container clearfix">
                     <div class="navbar-header pull-left gp-app-logo-container"><h1 id="gradepage-main"><a class="navbar-brand gp-app-title" title="GradePage Home" href="/"><span class="gp-app-name"><img src="{% static "course_grader/img/gp-logo.png" %}" alt="" width="140px" height="23" /><abbr title="University of Washington" class="sr-only">UW </abbr><span class="sr-only">Gradepage</span></span> {% if not request.user_agent.is_mobile and not request.user_agent.is_tablet %}&nbsp;&nbsp;<span class="gp-app-tagline">Online Grade Submission</span>{% endif %}</a></h1></div>
                     <div class="pull-right gp-remote-user">
-                        <span class="gp-app-name"><i class="fa fa-user"></i> </span>
+                        <span class="gp-app-name"><i class="fas fa-user"></i> </span>
                         {% if request.user_agent.is_mobile or request.user_agent.is_tablet or not user_fullname %}
                         <span class="gp-netid-display">{{user_login|lower}}</span>
                         {% else %}
@@ -97,7 +97,7 @@
                 {% else %}
                 <p class="pull-left credit"><a href="http://www.washington.edu/online/privacy" title="UW Privacy Policy" target="_blank">Privacy</a> | <a href="http://www.washington.edu/online/terms" target="_blank" title="UW Terms of Service">Terms</a><br />&copy; 2011-{% now "Y" %}, UW Information Technology, Academic Experience Design &amp; Delivery</p>
                 {% endif %}
-                <p class="pull-right gp-help"><a href="https://itconnect.uw.edu/learn/tools/gradepage/" target="_blank" title="Go to GradePage documentation"><i class="fa fa-info"></i> {% if request.user_agent.is_mobile %}Help{% else %}GradePage Help{% endif %}</a> | <a href="{% url 'saml_logout' %}" title="Logout">Logout</a></p>
+                <p class="pull-right gp-help"><a href="https://itconnect.uw.edu/learn/tools/gradepage/" target="_blank" title="Go to GradePage documentation"><i class="fas fa-info"></i> {% if request.user_agent.is_mobile %}Help{% else %}GradePage Help{% endif %}</a> | <a href="{% url 'saml_logout' %}" title="Logout">Logout</a></p>
             	</div>
             </div>
         </div>
