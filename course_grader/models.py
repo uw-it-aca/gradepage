@@ -98,6 +98,7 @@ class Grade(models.Model):
     no_grade_now = models.BooleanField(default=False)
     import_source = models.CharField(max_length=50, null=True)
     import_grade = models.CharField(max_length=100, null=True)
+    is_override_grade = models.BooleanField(default=False)
     comment = models.CharField(max_length=1000, null=True)
     last_modified = models.DateTimeField(auto_now=True)
     modified_by = models.CharField(max_length=32)
@@ -120,6 +121,7 @@ class Grade(models.Model):
                 "is_incomplete": self.is_incomplete,
                 "import_source": self.import_source,
                 "import_grade": self.import_grade,
+                "is_override_grade": self.is_override_grade,
                 "comment": self.comment,
                 "last_modified": self.last_modified.isoformat(),
                 "modified_by": self.modified_by}
@@ -235,18 +237,29 @@ class GradeImport(models.Model):
 
         grades = []
         for grade in grade_data.get("grades", []):
+            student_reg_id = None
+            imported_grade = None
+            is_override_grade = False
+            comment = None
+
             if self.source == self.CATALYST_SOURCE:
-                grades.append({"student_reg_id": grade["person_id"],
-                               "imported_grade": grade["class_grade"],
-                               "comment": grade["notes"]})
+                student_reg_id = grade["person_id"]
+                imported_grade = grade["class_grade"]
+                comment = grade["notes"]
 
             elif self.source == self.CANVAS_SOURCE:
-                grades.append({"student_reg_id": grade["sis_user_id"],
-                               "imported_grade": grade["current_score"],
-                               "comment": None})
+                student_reg_id = grade["sis_user_id"]
+                imported_grade = grade["current_score"]
 
-            else:
-                continue
+                if grade["override_score"] is not None:
+                    imported_grade = grade["override_score"]
+                    is_override_grade = True
+
+            if student_reg_id is not None:
+                grades.append({"student_reg_id": student_reg_id,
+                               "imported_grade": imported_grade,
+                               "is_override_grade": is_override_grade,
+                               "comment": comment})
 
         if self.import_conversion is not None:
             import_conversion_data = self.import_conversion.json_data()

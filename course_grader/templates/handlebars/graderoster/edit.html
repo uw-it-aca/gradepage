@@ -57,7 +57,7 @@
             {{> grade }}
             {{/if}}
             <div id="status-{{ item_id }}" class="gp-grading-status">
-                <span class="gp-imported-grade">{{#if import_source}}{{ trans "grade_import_status" }}{{/if}}</span>
+                <span class="gp-imported-grade">{{#if import_source}}{{ trans "grade_import_status" }}{{#if is_override_grade}}OVERRIDE{{/if}}{{/if}}</span>
                 <span role="alert" id="" class="text-danger gp-invalid-grade"></span>
             </div>
         </li>
