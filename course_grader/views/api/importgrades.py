@@ -139,6 +139,7 @@ class ImportGrades(GradeFormHandler):
                     "student_id": item.student_label(separator="-"),
                     "import_source": grade_import.source,
                     "import_grade": grade["imported_grade"],
+                    "is_override_grade": grade["is_override_grade"],
                     "comment": grade["comment"],
                     "grade": converted_grades.get(grade["student_reg_id"],
                                                   grade["imported_grade"]),
