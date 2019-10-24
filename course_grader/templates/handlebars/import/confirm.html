@@ -9,8 +9,8 @@
 
                 <div class="pull-right gp-grade-entered">
                     <span class="gp-review-grade">{{#if is_override_grade}}<span class="gp-override-icon fa-stack" title="Override grade imported from Canvas Gradebook">
-                  <i class="fas fa-circle fa-stack-2x"></i>
-                  <i class="fas fa-marker fa-flip-horizontal fa-stack-1x fa-inverse"></i>
+                  <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
+                  <i class="fas fa-marker fa-flip-horizontal fa-stack-1x fa-inverse" aria-hidden="true"></i>
         </span>{{/if}}{{ imported_grade }}% <span class="sr-only">{{ trans "conversion_confirm_grade_text" }}</span> <i class="fas fa-long-arrow-alt-right"></i> <strong>{{ converted_grade }}</strong></span>
                 </div>
 
