@@ -230,6 +230,7 @@ GradePage.Import = (function ($) {
             grade_count = 0,
             valid_grade_count = 0,
             valid_percentage_count = 0,
+            override_grade_count = 0,
             min_valid = 0.5,
             student,
             len = students.length,
@@ -247,6 +248,10 @@ GradePage.Import = (function ($) {
                 } else if (valid_percentage(students[i])) {
                     valid_percentage_count += 1;
                 }
+
+                if (student.is_override_grade) {
+                    override_grade_count += 1;
+                }
             }
         }
 
@@ -254,6 +259,7 @@ GradePage.Import = (function ($) {
         data.grade_import.has_valid_grades = false;
         data.grade_import.has_valid_percentages = false;
         data.grade_import.is_canvas_import = (data.grade_import.source === "canvas");
+        data.grade_import.override_grade_count = override_grade_count;
         data.grade_import.muted_assignment_count = data.grade_import.muted_assignments.length;
 
         if (grade_count > 0) {

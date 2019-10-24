@@ -54,6 +54,8 @@ class GradeFormHandler(RESTDispatch):
         if "import_grade" in data:
             grade.import_grade = data["import_grade"]
             action = "imported"
+        if "is_override_grade" in data:
+            grade.is_override_grade = data["is_override_grade"]
         if "comment" in data:
             grade.comment = data["comment"]
         grade.save()

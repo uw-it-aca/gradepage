@@ -14,6 +14,7 @@
 @gp-text: #404652;
 @gp-checked: #777777;
 @gp-link: #108BCC;
+@gp-override-icon: #c09853;
 
 /*** less mixins ***/
 
@@ -41,7 +42,7 @@ a:hover, a:focus {color:#108BCC; text-decoration:underline; }
 
 .gp-alert { padding: 3px; margin-bottom: 0; border-bottom: 1px solid transparent; border-top:none; border-left:none; border-right:none; border-radius: 0;font-size:.9em;
 	.gp-alert-text { font-size:80%;
-        .fa { float: left; padding-top: 3px; }
+        .fas { float: left; padding-top: 3px; }
         .gp-persistent-message { display: block; padding-left: 20px; }
     }
 }
@@ -73,6 +74,14 @@ a:hover, a:focus {color:#108BCC; text-decoration:underline; }
 	   //color:#fff;
 
    }
+}
+
+.alert-override-grades {
+    .gp-override-icon {
+        float: left;
+        padding-top: 5px;
+        margin-right: 5px;
+    }
 }
 
 .gp-import-confirm-note {
@@ -207,7 +216,7 @@ abbr[title], acronym[title] {
 
 .gp-app-icon { color: @purple-light; /*font-size: 22px;*/ margin-right: 1px; }
 .gp-app-name { font-family: 'Raleway', sans-serif; font-weight: 800; color: @purple-light; text-transform: uppercase; font-size: 23px; }
-.gp-app-tagline { color: #aaa; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 100; font-size: 20px;/*margin-left: 150px;*/vertical-align: middle; }
+.gp-app-tagline { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 100; font-size: 20px;/*margin-left: 150px;*/vertical-align: middle; }
 
 /** admin override bar ***/
 
@@ -502,6 +511,11 @@ abbr[title], acronym[title] {
 							font-weight: normal;
 							font-size:85%;
 							clear:both;
+                                .gp-override-icon {
+                                    font-size:55%;
+                                    height:2.2em;
+                                    color: @gp-override-icon;
+                                }
 							}
 
                         @media @phablet { top:20px; right: 10px; }
@@ -513,6 +527,13 @@ abbr[title], acronym[title] {
             	        .gp-review-incomplete-letter {font-family:Verdana, Geneva, sans-serif;}
             	        .gp-review-default-grade {font-size:.39em;margin:0;line-height:1.4em;color:#999;width:100%;}
             	        .gp-review-writing {font-size:.5em; padding-left:10px; line-height:1.4em;}
+                        .gp-review-grade {
+                            .gp-override-icon {
+                                font-size:8px;
+                                color: @gp-override-icon;
+                                height:2.2em;
+                            }
+                        }
                     }
 
 
