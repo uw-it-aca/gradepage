@@ -14,6 +14,7 @@
 @gp-text: #404652;
 @gp-checked: #777777;
 @gp-link: #108BCC;
+@gp-override-icon: #c09853;
 
 /*** less mixins ***/
 
@@ -73,6 +74,14 @@ a:hover, a:focus {color:#108BCC; text-decoration:underline; }
 	   //color:#fff;
 
    }
+}
+
+.alert-override-grades {
+    .gp-override-icon {
+        float: left;
+        padding-top: 5px;
+        margin-right: 5px;
+    }
 }
 
 .gp-import-confirm-note {
@@ -502,6 +511,11 @@ abbr[title], acronym[title] {
 							font-weight: normal;
 							font-size:85%;
 							clear:both;
+                                .gp-override-icon {
+                                    font-size:55%;
+                                    height:2.2em;
+                                    color: @gp-override-icon;
+                                }
 							}
 
                         @media @phablet { top:20px; right: 10px; }
@@ -513,6 +527,12 @@ abbr[title], acronym[title] {
             	        .gp-review-incomplete-letter {font-family:Verdana, Geneva, sans-serif;}
             	        .gp-review-default-grade {font-size:.39em;margin:0;line-height:1.4em;color:#999;width:100%;}
             	        .gp-review-writing {font-size:.5em; padding-left:10px; line-height:1.4em;}
+                        .gp-review-grade {
+                            .gp-override-icon {
+                                font-size:8px;
+                                color: @gp-override-icon;
+                            }
+                        }
                     }
 
 
