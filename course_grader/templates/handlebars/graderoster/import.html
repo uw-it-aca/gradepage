@@ -8,9 +8,9 @@
         <span class="gp-override-icon fa-stack">
           <i class="fas fa-circle fa-stack-2x"></i>
           <i class="fas fa-marker fa-flip-horizontal fa-stack-1x fa-inverse"></i>
-        </span> 
+        </span>
 
-<p>{{{ trans "You have one final grade override in this Canvas Gradebook.  This grade WILL BE included in the imported grades." "You have %(override_grade_count)s final grade overrides in this Canvas Gradebook.  These grades WILL BE included in the imported grades." override_grade_count}}}
+        <p>{{{ trans "You have one final grade override in this Canvas Gradebook.  This grade WILL BE included in the imported grades." "You have %(override_grade_count)s final grade overrides in this Canvas Gradebook.  These grades WILL BE included in the imported grades." override_grade_count}}}
         <a target="_blank" href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/">{{ trans "learn_more" }}</a>.
     </div>
     {{/if}}
@@ -24,6 +24,18 @@
                 <li>{{ name }}</li>{{/each}}
             </ul>
     </div>
+    {{else}}
+    {{#if unposted_submission_count}}
+    <div role="alert" class="alert alert-danger alert-muted-assignment">
+        <i class="fas fa-exclamation-circle"></i> <p>{{{ trans "You have <strong>one unposted submission</strong> in this Canvas Gradebook." "You have <strong>%(muted_assignment_count)s unposted submissions</strong> in this Canvas Gradebook." unposted_submission_count }}}
+        {{ trans "The grade for this submission WILL NOT be represented in the imported grade." "Grades for these submissions WILL NOT be represented in the imported grade." unposted_submission_count }}
+
+        <ul>{{{ trans "The assignment for <strong>%(section_name)s</strong> is:" "The assignments for <strong>%(section_name)s</strong> are:" muted_assignment_count }}}
+            {{#each unposted_submission_assignments}}
+            <li>{{ name }}</li>{{/each}}
+        </ul>
+    </div>
+    {{/if}}
     {{/if}}
 
     {{#if has_valid_percentages}}
