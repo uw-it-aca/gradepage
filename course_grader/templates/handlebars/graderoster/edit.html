@@ -57,9 +57,9 @@
             {{> grade }}
             {{/if}}
             <div id="status-{{ item_id }}" class="gp-grading-status">
-                <span class="gp-imported-grade">{{#if import_source}}{{ trans "grade_import_status" }}{{#if is_override_grade}}<span class="gp-override-icon fa-stack">
-                  <i class="fas fa-circle fa-stack-2x" title="Override grade imported from Canvas Gradebook"></i>
-                  <i class="fas fa-marker fa-flip-horizontal fa-stack-1x fa-inverse"></i>
+                <span class="gp-imported-grade">{{#if import_source}}{{ trans "grade_import_status" }}{{#if is_override_grade}}<span class="gp-override-icon fa-stack" title="Override grade imported from Canvas Gradebook">
+                  <i class="fas fa-circle fa-stack-2x" title="Override grade imported from Canvas Gradebook" aria-hidden="true"></i>
+                  <i class="fas fa-marker fa-flip-horizontal fa-stack-1x fa-inverse" aria-hidden="true"></i>
         </span>{{/if}}{{/if}}</span>
                 <span role="alert" id="" class="text-danger gp-invalid-grade"></span>
             </div>
