@@ -231,12 +231,15 @@ GradePage.Import = (function ($) {
             valid_grade_count = 0,
             valid_percentage_count = 0,
             override_grade_count = 0,
+            muted_assignment_count = 0,
+            unposted_assignment_count = 0,
             min_valid = 0.5,
             student,
-            len = students.length,
+            warning,
+            len,
             i;
 
-        for (i = 0; i < len; i++) {
+        for (i = 0, len = students.length; i < len; i++) {
             student = students[i];
             if (!student.is_auditor && !student.is_withdrawn &&
                     student.imported_grade !== null &&
@@ -255,12 +258,22 @@ GradePage.Import = (function ($) {
             }
         }
 
+        for (i = 0, len = grade_warnings.length; i < len; i++) {
+            warning = grade_warnings[i];
+            if (warning.unposted_submission_count > 0) {
+                unposted_assignment_count += 1;
+            } else if (warning.muted) {
+                muted_assignment_count += 1;
+            }
+        }
+
         data.grade_import.grade_count = grade_count;
         data.grade_import.has_valid_grades = false;
         data.grade_import.has_valid_percentages = false;
         data.grade_import.is_canvas_import = (data.grade_import.source === "canvas");
         data.grade_import.override_grade_count = override_grade_count;
-        data.grade_import.muted_assignment_count = data.grade_import.muted_assignments.length;
+        data.grade_import.muted_assignment_count = muted_assignment_count;
+        data.grade_import.unposted_assignment_count = unposted_assignment_count;
 
         if (grade_count > 0) {
             if (valid_grade_count / grade_count >= min_valid) {

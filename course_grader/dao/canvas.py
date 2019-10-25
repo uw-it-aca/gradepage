@@ -37,7 +37,7 @@ def grades_for_section(section, instructor):
         enrollments = canvas.get_enrollments_for_section_by_sis_id(sis_id)
         section_sis_ids.add(sis_id)
 
-    grade_data = {"grades": [], "muted_assignments": []}
+    grade_data = {"grades": [], "grade_warnings": []}
 
     courses = set()
     for enrollment in enrollments:
@@ -58,13 +58,17 @@ def grades_for_section(section, instructor):
                 assignment_data = {"course_id": course_id,
                                    "assignment_id": assignment.assignment_id,
                                    "name": assignment.name,
+                                   "muted": True,
                                    "unposted_submission_count": 0}
 
                 for sub in canvas_s.get_submissions_by_course_and_assignment(
                         course_id, assignment.assignment_id):
-                    if sub.assignment_visible and sub.posted_at is None:
+                    if sub.posted_at is None:
                         assignment_data["unposted_submission_count"] += 1
 
-                grade_data["muted_assignments"].append(assignment_data)
+                if assignment_data["unposted_submission_count"] > 0:
+                    assignment_data["muted"] = False
+
+                grade_data["grade_warnings"].append(assignment_data)
 
     return grade_data
