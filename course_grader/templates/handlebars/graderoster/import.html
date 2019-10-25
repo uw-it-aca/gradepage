@@ -20,7 +20,7 @@
         <i class="fas fa-exclamation-circle"></i> <p>{{{ trans "You have <strong>one muted assignment</strong> in this Canvas Gradebook." "You have <strong>%(muted_assignment_count)s muted assignments</strong> in this Canvas Gradebook." muted_assignment_count }}} {{ trans "The grade for this assignment WILL NOT be represented in the imported grade." "Grades for these assignments WILL NOT be represented in the imported grade." muted_assignment_count }}
         <a target="_blank" href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/">{{ trans "learn_more" }}</a>.</p>
         <ul>{{{ trans "The muted assignment for <strong>%(section_name)s</strong> is:" "The muted assignments for <strong>%(section_name)s</strong> are:" muted_assignment_count }}}
-        {{#each grade_warnings}}
+        {{#each warnings}}
             {{#if muted}}<li>{{ name }}</li>{{/if}}{{/each}}
         </ul>
     </div>
@@ -28,10 +28,10 @@
     {{#if unposted_assignment_count}}
     <div role="alert" class="alert alert-danger alert-unposted-submission">
         <i class="fas fa-exclamation-circle"></i> <p>{{{ trans "You have <strong>one assignment that contains unposted submissions</strong> in this Canvas Gradebook." "You have <strong>%(unposted_assignment_count)s assignments that contain unposted submissions</strong> in this Canvas Gradebook." unposted_assignment_count }}}
-        "Grades for unposted submissions WILL NOT be represented in the imported grade."
+        Grades for unposted submissions WILL NOT be represented in the imported grade.
 
         <ul>{{{ trans "The assignment for <strong>%(section_name)s</strong> is:" "The assignments for <strong>%(section_name)s</strong> are:" unposted_assignment_count }}}
-        {{#each grade_warnings}}
+        {{#each warnings}}
             {{#if unposted_submission_count}}
             <li>{{ name }} ({{{ trans "One unposted submission" "%(unposted_submission_count)s unposted submissions" unposted_submission_count}}})</li>{{/if}}{{/each}}
         </ul>
