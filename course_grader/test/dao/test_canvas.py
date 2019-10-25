@@ -41,4 +41,4 @@ class CanvasDAOFunctionsTest(TestCase):
 
         r = grades_for_section(section, user)
         self.assertEquals(len(r['grades']), 1)
-        self.assertEquals(len(r['muted_assignments']), 0)
+        self.assertEquals(len(r['warnings']), 0)
