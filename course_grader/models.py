@@ -274,4 +274,4 @@ class GradeImport(models.Model):
                 "imported_by": self.imported_by,
                 "imported_grades": grades,
                 "import_conversion": import_conversion_data,
-                "grade_warnings": grade_data.get("grade_warnings", [])}
+                "warnings": grade_data.get("warnings", [])}

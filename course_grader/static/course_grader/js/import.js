@@ -258,8 +258,8 @@ GradePage.Import = (function ($) {
             }
         }
 
-        for (i = 0, len = grade_warnings.length; i < len; i++) {
-            warning = grade_warnings[i];
+        for (i = 0, len = data.grade_import.warnings.length; i < len; i++) {
+            warning = data.grade_import.warnings[i];
             if (warning.unposted_submission_count > 0) {
                 unposted_assignment_count += 1;
             } else if (warning.muted) {
