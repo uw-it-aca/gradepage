@@ -6,35 +6,43 @@
     {{#if override_grade_count}}
     <div role="alert" class="alert alert-warning alert-override-grades">
         <span class="gp-override-icon fa-stack">
+            <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
+            <i class="fas fa-marker fa-flip-horizontal fa-stack-1x fa-inverse" aria-hidden="true"></i>
+        </span>
 
-          <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
-          <i class="fas fa-marker fa-flip-horizontal fa-stack-1x fa-inverse" aria-hidden="true"></i>
-        </span> 
-
-        <p>{{{ trans "You have one final grade override in this Canvas Gradebook.  This grade WILL BE included in the imported grades." "You have %(override_grade_count)s final grade overrides in this Canvas Gradebook.  These grades WILL BE included in the imported grades." override_grade_count}}}
-        <a target="_blank" href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/">{{ trans "learn_more" }}</a>.
+        <p>{{{ trans "You have one final grade override in this Canvas Gradebook.  This grade WILL BE included in the imported grades." "You have <strong>%(override_grade_count)s final grade overrides</strong> in this Canvas Gradebook.  These grades WILL BE included in the imported grades." override_grade_count}}}
+        <a target="_blank" href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/">{{ trans "learn_more" }}</a>.</p>
     </div>
     {{/if}}
 
     {{#if muted_assignment_count}}
     <div role="alert" class="alert alert-danger alert-muted-assignment">
-        <i class="fas fa-exclamation-circle"></i> <p>{{{ trans "You have <strong>one muted assignment</strong> in this Canvas Gradebook." "You have <strong>%(muted_assignment_count)s muted assignments</strong> in this Canvas Gradebook." muted_assignment_count }}} {{ trans "The grade for this assignment WILL NOT be represented in the imported grade." "Grades for these assignments WILL NOT be represented in the imported grade." muted_assignment_count }}
+      <span class="gp-muted-assignment-icon">
+        <i class="fas fa-exclamation-circle fa-2x" aria-hidden="true"></i>
+      </span>
+        <p>{{{ trans "You have <strong>one assignment</strong> in this Canvas Gradebook that contains hidden grades." "You have <strong>%(muted_assignment_count)s assignments</strong> in this Canvas Gradebook that contain hidden grades." muted_assignment_count }}} {{ trans "Grades for this assignment WILL NOT be represented in the imported grade." "Grades for these assignments WILL NOT be represented in the imported grade." muted_assignment_count }}
         <a target="_blank" href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/">{{ trans "learn_more" }}</a>.</p>
-        <ul>{{{ trans "The muted assignment for <strong>%(section_name)s</strong> is:" "The muted assignments for <strong>%(section_name)s</strong> are:" muted_assignment_count }}}
-                {{#each muted_assignments}}
-                <li>{{ name }}</li>{{/each}}
-            </ul>
-    </div>
-    {{else}}
-    {{#if unposted_submission_count}}
-    <div role="alert" class="alert alert-danger alert-muted-assignment">
-        <i class="fas fa-exclamation-circle"></i> <p>{{{ trans "You have <strong>one unposted submission</strong> in this Canvas Gradebook." "You have <strong>%(muted_assignment_count)s unposted submissions</strong> in this Canvas Gradebook." unposted_submission_count }}}
-        {{ trans "The grade for this submission WILL NOT be represented in the imported grade." "Grades for these submissions WILL NOT be represented in the imported grade." unposted_submission_count }}
-
         <ul>{{{ trans "The assignment for <strong>%(section_name)s</strong> is:" "The assignments for <strong>%(section_name)s</strong> are:" muted_assignment_count }}}
-            {{#each unposted_submission_assignments}}
+        {{#each warnings}}
             <li>{{ name }}</li>{{/each}}
         </ul>
+    </div>
+    {{else}}
+    {{#if unposted_assignment_count}}
+    <div role="alert" class="alert alert-danger alert-unposted-submission">
+        <span class="gp-unposted-submission-icon">
+          <i class="fas fa-exclamation-circle fa-2x" aria-hidden="true"></i>
+        </span>
+        <p>{{{ trans "You have <strong>one assignment that contains unposted submissions</strong> in this Canvas Gradebook." "You have <strong>%(unposted_assignment_count)s assignments that contain unposted submissions</strong> in this Canvas Gradebook." unposted_assignment_count }}}
+        Grades for unposted submissions <strong>WILL NOT</strong> be represented in the imported grade.
+        </p>
+        <p>
+          <ul>{{{ trans "The assignment for <strong>%(section_name)s</strong> is:" "The assignments for <strong>%(section_name)s</strong> are:" unposted_assignment_count }}}
+          {{#each warnings}}
+              {{#if unposted_submission_count}}
+              <li>{{ name }} ({{{ trans "One unposted submission" "%(unposted_submission_count)s unposted submissions" unposted_submission_count}}})</li>{{/if}}{{/each}}
+          </ul>
+        </p>
     </div>
     {{/if}}
     {{/if}}

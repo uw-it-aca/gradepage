@@ -227,11 +227,6 @@ class GradeImport(models.Model):
     def json_data(self):
         try:
             grade_data = json.loads(self.document)
-
-            # Prior to Winter 2015, imports were stored as a list
-            if isinstance(grade_data, list):
-                grade_data = {"grades": grade_data}
-
         except Exception as ex:
             grade_data = {}
 
@@ -274,4 +269,4 @@ class GradeImport(models.Model):
                 "imported_by": self.imported_by,
                 "imported_grades": grades,
                 "import_conversion": import_conversion_data,
-                "muted_assignments": grade_data.get("muted_assignments", [])}
+                "warnings": grade_data.get("warnings", [])}
