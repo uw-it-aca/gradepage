@@ -33,7 +33,7 @@ class ConversionScales(GradeFormHandler):
     def response_content(self):
         imports = GradeImport.objects.get_imports_by_person(self.user)
 
-        seen_sections = {}
+        section_ids = set()
         return_data = []
         for term in self.all_terms:
             conversions_in_term = []
@@ -49,17 +49,15 @@ class ConversionScales(GradeFormHandler):
                     # Wrong scale type
                     continue
 
-                if grade_import.section_id in seen_sections:
-                    # Already seen a scale for this section
-                    continue
+                if grade_import.section_id not in section_ids:
+                    section_ids.add(grade_import.section_id)
 
-                conversion_data["section_id"] = grade_import.section_id
+                    conversion_data["section_id"] = grade_import.section_id
 
-                parts = grade_import.section_id.split("-")
-                conversion_data["section"] = " ".join(parts[2:5])
+                    parts = grade_import.section_id.split("-")
+                    conversion_data["section"] = " ".join(parts[2:5])
 
-                seen_sections[grade_import.section_id] = True
-                conversions_in_term.append(conversion_data)
+                    conversions_in_term.append(conversion_data)
 
             if len(conversions_in_term):
                 return_data.append({

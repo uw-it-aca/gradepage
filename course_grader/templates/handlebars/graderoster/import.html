@@ -20,11 +20,11 @@
       <span class="gp-muted-assignment-icon">
         <i class="fas fa-exclamation-circle fa-2x" aria-hidden="true"></i>
       </span>
-        <p>{{{ trans "You have <strong>one muted assignment</strong> in this Canvas Gradebook." "You have <strong>%(muted_assignment_count)s muted assignments</strong> in this Canvas Gradebook." muted_assignment_count }}} {{ trans "The grade for this assignment WILL NOT be represented in the imported grade." "Grades for these assignments WILL NOT be represented in the imported grade." muted_assignment_count }}
+        <p>{{{ trans "You have <strong>one assignment</strong> in this Canvas Gradebook that contains hidden grades." "You have <strong>%(muted_assignment_count)s assignments</strong> in this Canvas Gradebook that contain hidden grades." muted_assignment_count }}} {{ trans "Grades for this assignment WILL NOT be represented in the imported grade." "Grades for these assignments WILL NOT be represented in the imported grade." muted_assignment_count }}
         <a target="_blank" href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/">{{ trans "learn_more" }}</a>.</p>
-        <ul>{{{ trans "The muted assignment for <strong>%(section_name)s</strong> is:" "The muted assignments for <strong>%(section_name)s</strong> are:" muted_assignment_count }}}
+        <ul>{{{ trans "The assignment for <strong>%(section_name)s</strong> is:" "The assignments for <strong>%(section_name)s</strong> are:" muted_assignment_count }}}
         {{#each warnings}}
-            {{#if muted}}<li>{{ name }}</li>{{/if}}{{/each}}
+            <li>{{ name }}</li>{{/each}}
         </ul>
     </div>
     {{else}}
