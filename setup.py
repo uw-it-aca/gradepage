@@ -29,7 +29,7 @@ setup(
         'UW-RestClients-Core>=1.2.1,<2.0',
         'UW-RestClients-SWS>=2.2.4,<3.0',
         'UW-RestClients-PWS>=2.1,<3.0',
-        'UW-RestClients-Canvas>=1.1.4,<2.0',
+        'UW-RestClients-Canvas>=1.1.5,<2.0',
         'UW-RestClients-Catalyst>=1.0,<2.0',
         'UW-RestClients-Django-Utils>=2.1.6,<3.0',
         'UW-RestClients-Graderoster>=1.0.2,<2.0',
