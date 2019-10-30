@@ -52,7 +52,7 @@ def hidden_grades_for_course(course_id):
 
 
 def grades_for_section(section, instructor):
-    grade_data = {"grades": [], "warnings": []}
+    grade_data = {"grades": [], "warnings": [], "grading_standards": []}
     course_ids = set()
 
     # Use the canvas section resource, since individual sections
@@ -79,5 +79,8 @@ def grades_for_section(section, instructor):
 
     for course_id in course_ids:
         grade_data["warnings"].extend(hidden_grades_for_course(course_id))
+        grading_standard = grading_standard_for_course(course_id)
+        if grading_standard:
+            grade_data["grading_standards"].append(grading_standard)
 
     return grade_data
