@@ -130,7 +130,6 @@ GradePage.Import = (function ($) {
         /*jshint validthis: true */
         var selected = $(this).val(),
             selected_data,
-            el,
             i,
             j;
 
@@ -160,6 +159,25 @@ GradePage.Import = (function ($) {
         $("#select-previous-scale").val("0");
     }
 
+    function select_course_scale() {
+        /*jshint validthis: true */
+        var selected = $(this).val(),
+            i;
+
+        for (i = 0; i < import_data.grade_import.course_grading_scales.length; i++) {
+            data = import_data.grade_import.course_grading_scales[i];
+            if (selected === data.grading_standard_id) {
+                initialize_calculator({
+                    "default_scale": data.scale,
+                    "default_scale_values": data.grade_scale,
+                    "default_calculator_values": data.calculator_values
+                }).find("input:first").focus();
+                break;
+            }
+        }
+        $("#select-course-scale").val("0");
+    }
+
     function draw_conversion_calculator(opts) {
         var template = Handlebars.compile($("#convert-tmpl").html());
 
@@ -169,6 +187,7 @@ GradePage.Import = (function ($) {
         conversion_scale_data = {};
         initialize_calculator(opts);
         $("#select-previous-scale").change(select_previous_scale);
+        $("#select-course-scale").change(select_course_scale);
     }
 
     function draw_review_grades(ev, data) {

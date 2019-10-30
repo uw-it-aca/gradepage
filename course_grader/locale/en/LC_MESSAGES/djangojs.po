@@ -397,6 +397,12 @@ msgstr "Grades can be adjusted on next page."
 msgid "convert_grades"
 msgstr "Convert grades for"
 
+msgid "course_scale_label_sr"
+msgstr "Convert grades using the scale in your course:"
+
+msgid "course_scale_label"
+msgstr "Use the conversion scale from your course"
+
 msgid "previous_scale_label_sr"
 msgstr "Convert grades using a scale that you have used before:"
 
