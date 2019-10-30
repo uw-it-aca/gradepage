@@ -12,7 +12,7 @@
             <select id="select-course-scale">
                 <option role="presentation" value="0" selected disabled>{{ trans "course_scale_label" }} &gt;</option>
                 {{#each course_grading_scales}}
-                    <option value="{{ grading_standard_id }}">{{ course_name }}</option>
+                    <option value="{{ grading_standard_id }}">{{ course_name }}&nbsp;({{ grading_standard_name }})</option>
                 {{/each}}
             </select>
         </div>
