@@ -165,7 +165,7 @@ GradePage.Import = (function ($) {
             i;
 
         for (i = 0; i < import_data.grade_import.course_grading_scales.length; i++) {
-            data = import_data.grade_import.course_grading_scales[i];
+            var data = import_data.grade_import.course_grading_scales[i];
             if (selected === data.grading_standard_id) {
                 initialize_calculator({
                     "default_scale": data.scale,
