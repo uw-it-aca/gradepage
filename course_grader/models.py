@@ -162,6 +162,41 @@ class ImportConversion(models.Model):
             "lowest_valid_grade": self.lowest_valid_grade,
         }
 
+    @staticmethod
+    def from_grading_standard(data):
+        import_conversion = ImportConversion()
+
+        grade_scale = []
+        for item in sorted(data.get("grading_scheme", []),
+                           key=lambda s: s.get("value"), reverse=True):
+            if item["value"] > 0:
+                grade_scale.append({
+                    "grade": item["name"],
+                    "min_percentage": item["value"]*100,
+                })
+
+        # First and last grade_scale values become the calculator end points
+        calculator_values = [{
+            "grade": grade_scale[0]["grade"],
+            "percentage": grade_scale[0]["min_percentage"],
+            "is_first": True
+        }, {
+            "grade": grade_scale[-1]["grade"],
+            "percentage": grade_scale[-1]["min_percentage"],
+            "is_last": True
+        }]
+
+        if grade_scale[-1]["grade"] == "1.7":
+            import_conversion.scale = ImportConversion.GRADUATE_SCALE
+            import_conversion.lowest_valid_grade = 0.0
+        elif grade_scale[-1]["grade"] == "0.7":
+            import_conversion.scale = ImportConversion.UNDERGRADUATE_SCALE
+            import_conversion.lowest_valid_grade = 0.0
+
+        import_conversion.grade_scale = json.dumps(grade_scale)
+        import_conversion.calculator_values = json.dumps(calculator_values)
+        return import_conversion
+
 
 class GradeImportManager(models.Manager):
     def get_last_import_by_section_id(self, section_id):
@@ -261,6 +296,11 @@ class GradeImport(models.Model):
         else:
             import_conversion_data = None
 
+        grading_standards = []
+        for standard in grade_data.get("grading_standards", []):
+            data = ImportConversion.from_grading_standard(standard).json_data()
+            grading_standards.append(data)
+
         return {"id": self.pk,
                 "source": self.source,
                 "source_name": dict(self.SOURCE_CHOICES)[self.source],
@@ -269,4 +309,5 @@ class GradeImport(models.Model):
                 "imported_by": self.imported_by,
                 "imported_grades": grades,
                 "import_conversion": import_conversion_data,
-                "warnings": grade_data.get("warnings", [])}
+                "warnings": grade_data.get("warnings", []),
+                "grading_standards": grading_standards}
