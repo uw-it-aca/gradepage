@@ -6,6 +6,16 @@
             <h3>{{ trans "conversion_header" }}</h3>
             <p>{{ trans "conversion_instructions" }}</p>
         </div>
+        {{#if grading_standards}}
+        <div id="gp-select-course">
+            <label for="select-course-scale" classs="sr-only">{{ trans "course_scale_label_sr" }}</label>
+            <select id="select-course-scale">
+                {{#each grading_standards}}
+                    <option value="{{ id }}">{{ course }}</option>
+                {{/each}}
+            </select>
+        </div>
+        {{/if}}
         <div id="gp-select-previous">
             <label for="select-previous-scale" class="sr-only">{{ trans "previous_scale_label_sr" }}</label>
             <select id="select-previous-scale">

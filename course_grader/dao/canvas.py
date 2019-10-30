@@ -15,8 +15,11 @@ def assignment_muted(assignment):
 def grading_standard_for_course(course_id):
     course = Courses().get_course(course_id)
     if course.grading_standard_id:
-        return GradingStandards().get_grading_standard_for_course(
+        json_data = GradingStandards().get_grading_standard_for_course(
             course_id, course.grading_standard_id).json_data()
+        json_data["course_id"] = course_id
+        json_data["course_name"] = course.name
+        return json_data
 
 
 def hidden_grades_for_course(course_id):

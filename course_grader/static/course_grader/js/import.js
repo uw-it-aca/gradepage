@@ -164,7 +164,7 @@ GradePage.Import = (function ($) {
         var template = Handlebars.compile($("#convert-tmpl").html());
 
         $(".gp-grade-roster-state").text(gettext("convert_grades"));
-        $("#graderoster-content").html(template({}));
+        $("#graderoster-content").html(template(import_data.grade_import));
 
         conversion_scale_data = {};
         initialize_calculator(opts);

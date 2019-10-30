@@ -38,11 +38,14 @@ class CanvasDAOFunctionsTest(TestCase):
     @mock.patch.object(Courses, 'get_course')
     def test_grading_standard_for_course(self, mock_get_course):
         mock_get_course.return_value = CanvasCourse(course_id=1234567,
-                                                    grading_standard_id=54321)
+                                                    grading_standard_id=54321,
+                                                    name='Train 101 A')
 
         gs_data = grading_standard_for_course(1234567)
         self.assertEqual(gs_data['context_id'], 1234567)
         self.assertEqual(len(gs_data['grading_scheme']), 35)
+        self.assertEqual(gs_data['course_id'], 1234567)
+        self.assertEqual(gs_data['course_name'], 'Train 101 A')
 
     @override_settings(CANVAS_PER_PAGE=0)
     def test_hidden_grades_for_course(self):

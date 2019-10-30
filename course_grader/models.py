@@ -152,6 +152,10 @@ class ImportConversion(models.Model):
     grade_scale = models.TextField()
     calculator_values = models.TextField(null=True)
     lowest_valid_grade = models.CharField(max_length=5, null=True)
+    grading_standard_id = models.IntegerField(null=True)
+    grading_standard_name = models.CharField(max_length=50, null=True)
+    course_id = models.IntegerField(null=True)
+    course_name = models.CharField(max_length=50, null=True)
 
     def json_data(self):
         return {
@@ -160,6 +164,10 @@ class ImportConversion(models.Model):
             "grade_scale": json.loads(self.grade_scale),
             "calculator_values": json.loads(self.calculator_values),
             "lowest_valid_grade": self.lowest_valid_grade,
+            "grading_standard_id": self.grading_standard_id,
+            "grading_standard_name": self.grading_standard_name,
+            "course_id": self.course_id,
+            "course_name": self.course_name,
         }
 
     @staticmethod
@@ -193,6 +201,10 @@ class ImportConversion(models.Model):
             import_conversion.scale = ImportConversion.UNDERGRADUATE_SCALE
             import_conversion.lowest_valid_grade = 0.0
 
+        import_conversion.grading_standard_id = data.get("id")
+        import_conversion.grading_standard_name = data.get("title")
+        import_conversion.course_id = data.get("course_id")
+        import_conversion.course_name = data.get("course_name")
         import_conversion.grade_scale = json.dumps(grade_scale)
         import_conversion.calculator_values = json.dumps(calculator_values)
         return import_conversion
@@ -296,10 +308,10 @@ class GradeImport(models.Model):
         else:
             import_conversion_data = None
 
-        grading_standards = []
+        course_grading_scales = []
         for standard in grade_data.get("grading_standards", []):
             data = ImportConversion.from_grading_standard(standard).json_data()
-            grading_standards.append(data)
+            course_grading_scales.append(data)
 
         return {"id": self.pk,
                 "source": self.source,
@@ -310,4 +322,4 @@ class GradeImport(models.Model):
                 "imported_grades": grades,
                 "import_conversion": import_conversion_data,
                 "warnings": grade_data.get("warnings", []),
-                "grading_standards": grading_standards}
+                "course_grading_scales": course_grading_scales}
