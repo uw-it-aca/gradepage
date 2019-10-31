@@ -23,6 +23,11 @@ class InvalidSection(Exception):
         return "Section not found."
 
 
+class InvalidGradingScale(Exception):
+    def __str__(self):
+        return "Invalid Grading Scale"
+
+
 class MissingInstructorParam(Exception):
     def __str__(self):
         return "Missing instructor UWRegID"

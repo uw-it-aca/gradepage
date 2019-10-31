@@ -6,6 +6,7 @@ from course_grader.dao.canvas import grades_for_section as canvas_grades
 from course_grader.dao.catalyst import grades_for_section as catalyst_grades
 from course_grader.dao.gradesubmission import submit_grades
 from course_grader.dao.notification import notify_grade_submitters
+from course_grader.exceptions import InvalidGradingScale
 from logging import getLogger
 import json
 
@@ -175,13 +176,19 @@ class ImportConversion(models.Model):
         import_conversion = ImportConversion()
 
         grade_scale = []
-        for item in sorted(data.get("grading_scheme", []),
-                           key=lambda s: s.get("value"), reverse=True):
+        for item in data.get("grading_scheme", []):
             if item["value"] > 0:
                 grade_scale.append({
-                    "grade": item["name"],
-                    "min_percentage": item["value"]*100,
+                    "grade": item["name"], "min_percentage": item["value"]*100,
                 })
+        grade_scale.sort(key=lambda x: x.get("min_percentage"), reverse=True)
+
+        if grade_scale[-1]["grade"] == "1.7":
+            import_conversion.scale = ImportConversion.GRADUATE_SCALE
+        elif grade_scale[-1]["grade"] == "0.7":
+            import_conversion.scale = ImportConversion.UNDERGRADUATE_SCALE
+        else:
+            raise InvalidGradingScale()
 
         # First and last grade_scale values become the calculator end points
         calculator_values = [{
@@ -194,19 +201,13 @@ class ImportConversion(models.Model):
             "is_last": True
         }]
 
-        if grade_scale[-1]["grade"] == "1.7":
-            import_conversion.scale = ImportConversion.GRADUATE_SCALE
-            import_conversion.lowest_valid_grade = 0.0
-        elif grade_scale[-1]["grade"] == "0.7":
-            import_conversion.scale = ImportConversion.UNDERGRADUATE_SCALE
-            import_conversion.lowest_valid_grade = 0.0
-
         import_conversion.grading_standard_id = data.get("id")
         import_conversion.grading_standard_name = data.get("title")
         import_conversion.course_id = data.get("course_id")
         import_conversion.course_name = data.get("course_name")
         import_conversion.grade_scale = json.dumps(grade_scale)
         import_conversion.calculator_values = json.dumps(calculator_values)
+        import_conversion.lowest_valid_grade = 0.0
         return import_conversion
 
 
@@ -310,8 +311,11 @@ class GradeImport(models.Model):
 
         course_grading_scales = []
         for standard in grade_data.get("grading_standards", []):
-            data = ImportConversion.from_grading_standard(standard).json_data()
-            course_grading_scales.append(data)
+            try:
+                conversion = ImportConversion.from_grading_standard(standard)
+                course_grading_scales.append(conversion.json_data())
+            except InvalidGradingScale:
+                pass  # TODO: log
 
         return {"id": self.pk,
                 "source": self.source,
