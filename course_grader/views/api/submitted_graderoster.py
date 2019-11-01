@@ -66,8 +66,8 @@ class SubmittedGradeRoster(RESTDispatch):
             section = section_from_label(model.section_id)
             instructor = person_from_regid(model.instructor_id)
             submitter = person_from_regid(model.submitted_by)
-            graderoster = GradeRoster(
-                data=etree.fromstring(model.document.strip()),
+            graderoster = GradeRoster.from_xhtml(
+                etree.fromstring(model.document.strip()),
                 section=section, instructor=instructor)
 
         except SubmittedGradeRosterModel.DoesNotExist:

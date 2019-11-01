@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 from restclients_core.exceptions import DataFailureException
+from uw_sws_graderoster.models import GradingScale
 from course_grader.dao.canvas import grades_for_section as canvas_grades
 from course_grader.dao.catalyst import grades_for_section as catalyst_grades
 from course_grader.dao.gradesubmission import submit_grades
@@ -135,21 +136,7 @@ class Grade(models.Model):
 class ImportConversion(models.Model):
     """ Represents a grade import conversion scale.
     """
-    UNDERGRADUATE_SCALE = "ug"
-    GRADUATE_SCALE = "gr"
-    PASSFAIL_SCALE = "pf"
-    CREDIT_SCALE = "cnc"
-    HIGHPASSFAIL_SCALE = "hpf"
-
-    SCALE_CHOICES = (
-        (UNDERGRADUATE_SCALE, "Undergraduate Scale (4.0-0.7)"),
-        (GRADUATE_SCALE, "Graduate Scale (4.0-1.7)"),
-        (PASSFAIL_SCALE, "School of Medicine Pass/No Pass"),
-        (CREDIT_SCALE, "Credit/No Credit Scale"),
-        (HIGHPASSFAIL_SCALE, "Honors/High Pass/Pass/Fail Scale")
-    )
-
-    scale = models.CharField(max_length=5, choices=SCALE_CHOICES)
+    scale = models.CharField(max_length=5, choices=GradingScale.SCALE_CHOICES)
     grade_scale = models.TextField()
     calculator_values = models.TextField(null=True)
     lowest_valid_grade = models.CharField(max_length=5, null=True)
@@ -172,6 +159,13 @@ class ImportConversion(models.Model):
         }
 
     @staticmethod
+    def valid_scale(scale):
+        scale = scale.lower()
+        if scale in dict(GradingScale.SCALE_CHOICES):
+            return scale
+        raise InvalidGradingScale()
+
+    @staticmethod
     def from_grading_standard(data):
         import_conversion = ImportConversion()
 
@@ -179,16 +173,10 @@ class ImportConversion(models.Model):
         for item in data.get("grading_scheme", []):
             if item["value"] > 0:
                 grade_scale.append({
-                    "grade": item["name"], "min_percentage": item["value"]*100,
+                    "grade": item["name"],
+                    "min_percentage": item["value"]*100,
                 })
         grade_scale.sort(key=lambda x: x.get("min_percentage"), reverse=True)
-
-        if grade_scale[-1]["grade"] == "1.7":
-            import_conversion.scale = ImportConversion.GRADUATE_SCALE
-        elif grade_scale[-1]["grade"] == "0.7":
-            import_conversion.scale = ImportConversion.UNDERGRADUATE_SCALE
-        else:
-            raise InvalidGradingScale()
 
         # First and last grade_scale values become the calculator end points
         calculator_values = [{
@@ -201,13 +189,18 @@ class ImportConversion(models.Model):
             "is_last": True
         }]
 
+        grades = [x['grade'] for x in grade_scale]
+        import_conversion.scale = GradingScale().is_any_scale(grades)
+        if not import_conversion.scale:
+            raise InvalidGradingScale()
+
+        import_conversion.grade_scale = json.dumps(grade_scale)
+        import_conversion.calculator_values = json.dumps(calculator_values)
+        import_conversion.lowest_valid_grade = 0.0
         import_conversion.grading_standard_id = data.get("id")
         import_conversion.grading_standard_name = data.get("title")
         import_conversion.course_id = data.get("course_id")
         import_conversion.course_name = data.get("course_name")
-        import_conversion.grade_scale = json.dumps(grade_scale)
-        import_conversion.calculator_values = json.dumps(calculator_values)
-        import_conversion.lowest_valid_grade = 0.0
         return import_conversion
 
 
