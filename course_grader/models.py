@@ -9,6 +9,7 @@ from course_grader.dao.gradesubmission import submit_grades
 from course_grader.dao.notification import notify_grade_submitters
 from course_grader.exceptions import InvalidGradingScale
 from logging import getLogger
+from decimal import Decimal
 import json
 
 logger = getLogger(__name__)
@@ -166,15 +167,19 @@ class ImportConversion(models.Model):
         raise InvalidGradingScale()
 
     @staticmethod
+    def decimal_to_percentage(value):
+        return float(Decimal(str(value))*100)
+
+    @staticmethod
     def from_grading_scheme(data):
-        import_conversion = ImportConversion()
+        ic = ImportConversion()
 
         grade_scale = []
         for item in data.get("grading_scheme", []):
             if item["value"] > 0:
                 grade_scale.append({
                     "grade": item["name"],
-                    "min_percentage": item["value"]*100,
+                    "min_percentage": ic.decimal_to_percentage(item["value"]),
                 })
         grade_scale.sort(key=lambda x: x.get("min_percentage"), reverse=True)
 
@@ -190,18 +195,18 @@ class ImportConversion(models.Model):
         }]
 
         grades = [x['grade'] for x in grade_scale]
-        import_conversion.scale = GradingScale().is_any_scale(grades)
-        if not import_conversion.scale:
+        ic.scale = GradingScale().is_any_scale(grades)
+        if not ic.scale:
             raise InvalidGradingScale()
 
-        import_conversion.grade_scale = json.dumps(grade_scale)
-        import_conversion.calculator_values = json.dumps(calculator_values)
-        import_conversion.lowest_valid_grade = 0.0
-        import_conversion.grading_scheme_id = data.get("id")
-        import_conversion.grading_scheme_name = data.get("title")
-        import_conversion.course_id = data.get("course_id")
-        import_conversion.course_name = data.get("course_name")
-        return import_conversion
+        ic.grade_scale = json.dumps(grade_scale)
+        ic.calculator_values = json.dumps(calculator_values)
+        ic.lowest_valid_grade = 0.0
+        ic.grading_scheme_id = data.get("id")
+        ic.grading_scheme_name = data.get("title")
+        ic.course_id = data.get("course_id")
+        ic.course_name = data.get("course_name")
+        return ic
 
 
 class GradeImportManager(models.Manager):

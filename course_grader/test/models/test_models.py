@@ -63,3 +63,14 @@ class ImportConversionTest(TestCase):
 
         self.assertRaises(InvalidGradingScale,
                           ImportConversion.from_grading_scheme, gs_data)
+
+    def test_decimal_to_percentage(self):
+        ic = ImportConversion()
+        self.assertEqual(ic.decimal_to_percentage(0.0), 0)
+        self.assertEqual(ic.decimal_to_percentage(1), 100.0)
+        self.assertEqual(ic.decimal_to_percentage(0.1), 10.0)
+        self.assertEqual(ic.decimal_to_percentage(0.01), 1.0)
+        self.assertEqual(ic.decimal_to_percentage(0.001), 0.1)
+        self.assertEqual(ic.decimal_to_percentage(0.999), 99.9)
+        self.assertEqual(ic.decimal_to_percentage(0.278), 27.8)
+        self.assertEqual(ic.decimal_to_percentage(0.539), 53.9)
