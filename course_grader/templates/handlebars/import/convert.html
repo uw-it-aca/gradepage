@@ -6,13 +6,13 @@
             <h3>{{ trans "conversion_header" }}</h3>
             <p>{{ trans "conversion_instructions" }}</p>
         </div>
-        {{#if course_grading_scales}}
+        {{#if course_grading_schemes}}
         <div id="gp-select-course">
             <label for="select-course-scale" class="sr-only">{{ trans "course_scale_label_sr" }}</label>
             <select id="select-course-scale">
                 <option role="presentation" value="0" selected disabled>{{ trans "course_scale_label" }} &gt;</option>
-                {{#each course_grading_scales}}
-                    <option value="{{ grading_standard_id }}">{{ course_name }}&nbsp;({{ grading_standard_name }})</option>
+                {{#each course_grading_schemes}}
+                    <option value="{{ grading_scheme_id }}">{{ course_name }}&nbsp;({{ grading_scheme_name }})</option>
                 {{/each}}
             </select>
         </div>
