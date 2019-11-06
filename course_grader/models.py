@@ -183,24 +183,13 @@ class ImportConversion(models.Model):
                 })
         grade_scale.sort(key=lambda x: x.get("min_percentage"), reverse=True)
 
-        # First and last grade_scale values become the calculator end points
-        calculator_values = [{
-            "grade": grade_scale[0]["grade"],
-            "percentage": grade_scale[0]["min_percentage"],
-            "is_first": True
-        }, {
-            "grade": grade_scale[-1]["grade"],
-            "percentage": grade_scale[-1]["min_percentage"],
-            "is_last": True
-        }]
-
         grades = [x['grade'] for x in grade_scale]
         ic.scale = GradingScale().is_any_scale(grades)
         if not ic.scale:
             raise InvalidGradingScale()
 
         ic.grade_scale = json.dumps(grade_scale)
-        ic.calculator_values = json.dumps(calculator_values)
+        ic.calculator_values = json.dumps([])
         ic.lowest_valid_grade = 0.0
         ic.grading_scheme_id = data.get("id")
         ic.grading_scheme_name = data.get("title")

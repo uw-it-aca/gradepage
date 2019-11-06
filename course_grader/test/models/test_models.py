@@ -27,9 +27,7 @@ class ImportConversionTest(TestCase):
         ic = ImportConversion.from_grading_scheme(gs_data).json_data()
         self.assertEqual(ic['scale'], 'ug')
         self.assertEqual(len(ic['grade_scale']), 34)
-        self.assertEqual(ic['calculator_values'], [
-            {'grade': '4.0', 'is_first': True, 'percentage': 95.0},
-            {'grade': '0.7', 'is_last': True, 'percentage': 20.0}])
+        self.assertEqual(ic['calculator_values'], [])
         self.assertEqual(ic['lowest_valid_grade'], 0.0)
         self.assertEqual(ic['grading_scheme_id'], 54321)
         self.assertEqual(ic['grading_scheme_name'], 'Scale1')
@@ -43,9 +41,7 @@ class ImportConversionTest(TestCase):
         ic = ImportConversion.from_grading_scheme(gs_data).json_data()
         self.assertEqual(ic['scale'], 'cnc')
         self.assertEqual(len(ic['grade_scale']), 2)
-        self.assertEqual(ic['calculator_values'], [
-            {'grade': 'CR', 'is_first': True, 'percentage': 90.0},
-            {'grade': 'NC', 'is_last': True, 'percentage': 50.0}])
+        self.assertEqual(ic['calculator_values'], [])
         self.assertEqual(ic['lowest_valid_grade'], 0.0)
 
     @mock.patch.object(Courses, 'get_course')
