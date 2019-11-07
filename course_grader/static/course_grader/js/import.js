@@ -130,7 +130,6 @@ GradePage.Import = (function ($) {
         /*jshint validthis: true */
         var selected = $(this).val(),
             selected_data,
-            el,
             i,
             j;
 
@@ -160,15 +159,35 @@ GradePage.Import = (function ($) {
         $("#select-previous-scale").val("0");
     }
 
+    function select_course_scale() {
+        /*jshint validthis: true */
+        var selected = $(this).val(),
+            i;
+
+        for (i = 0; i < import_data.grade_import.course_grading_schemes.length; i++) {
+            var data = import_data.grade_import.course_grading_schemes[i];
+            if (selected === data.grading_scheme_id.toString()) {
+                initialize_calculator({
+                    "default_scale": data.scale,
+                    "default_scale_values": data.grade_scale,
+                    "default_calculator_values": data.calculator_values
+                }).find("input:first").focus();
+                break;
+            }
+        }
+        $("#select-course-scale").val("0");
+    }
+
     function draw_conversion_calculator(opts) {
         var template = Handlebars.compile($("#convert-tmpl").html());
 
         $(".gp-grade-roster-state").text(gettext("convert_grades"));
-        $("#graderoster-content").html(template({}));
+        $("#graderoster-content").html(template(import_data.grade_import));
 
         conversion_scale_data = {};
         initialize_calculator(opts);
         $("#select-previous-scale").change(select_previous_scale);
+        $("#select-course-scale").change(select_course_scale);
     }
 
     function draw_review_grades(ev, data) {
@@ -231,8 +250,8 @@ GradePage.Import = (function ($) {
             valid_grade_count = 0,
             valid_percentage_count = 0,
             override_grade_count = 0,
-            muted_assignment_count = 0,
-            unposted_assignment_count = 0,
+            unposted_grade_count = 0,
+            unposted_with_override_grade_count = 0,
             min_valid = 0.5,
             student,
             warning,
@@ -246,24 +265,22 @@ GradePage.Import = (function ($) {
                     student.imported_grade !== "") {
                 grade_count += 1;
 
-                if (valid_grade(students[i])) {
+                if (valid_grade(student)) {
                     valid_grade_count += 1;
-                } else if (valid_percentage(students[i])) {
+                } else if (valid_percentage(student)) {
                     valid_percentage_count += 1;
                 }
 
                 if (student.is_override_grade) {
                     override_grade_count += 1;
                 }
-            }
-        }
 
-        for (i = 0, len = data.grade_import.warnings.length; i < len; i++) {
-            warning = data.grade_import.warnings[i];
-            if (warning.unposted_submission_count > 0) {
-                unposted_assignment_count += 1;
-            } else if (warning.muted) {
-                muted_assignment_count += 1;
+                if (student.has_unposted_grade) {
+                    unposted_grade_count += 1;
+                    if (student.is_override_grade) {
+                        unposted_with_override_grade_count += 1;
+                    }
+                }
             }
         }
 
@@ -272,8 +289,8 @@ GradePage.Import = (function ($) {
         data.grade_import.has_valid_percentages = false;
         data.grade_import.is_canvas_import = (data.grade_import.source === "canvas");
         data.grade_import.override_grade_count = override_grade_count;
-        data.grade_import.muted_assignment_count = muted_assignment_count;
-        data.grade_import.unposted_assignment_count = unposted_assignment_count;
+        data.grade_import.unposted_grade_count = unposted_grade_count;
+        data.grade_import.unposted_with_override_grade_count = unposted_with_override_grade_count;
 
         if (grade_count > 0) {
             if (valid_grade_count / grade_count >= min_valid) {

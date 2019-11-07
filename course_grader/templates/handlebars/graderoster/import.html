@@ -10,41 +10,20 @@
             <i class="fas fa-marker fa-flip-horizontal fa-stack-1x fa-inverse" aria-hidden="true"></i>
         </span>
 
-        <p>{{{ trans "You have one final grade override in this Canvas Gradebook.  This grade WILL BE included in the imported grades." "You have <strong>%(override_grade_count)s final grade overrides</strong> in this Canvas Gradebook.  These grades WILL BE included in the imported grades." override_grade_count}}}
+        <p>{{{ trans "You have one final grade override in this Canvas Grade Import.  This grade WILL BE included in the imported grades." "You have <strong>%(override_grade_count)s final grade overrides</strong> in this Canvas Grade Import.  These grades WILL BE included in the imported grades." override_grade_count}}}
         <a target="_blank" href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/">{{ trans "learn_more" }}</a>.</p>
     </div>
     {{/if}}
 
-    {{#if muted_assignment_count}}
-    <div role="alert" class="alert alert-danger alert-muted-assignment">
-      <span class="gp-muted-assignment-icon fa-fw">
-        <i class="fas fa-exclamation-circle fa-2x" aria-hidden="true"></i>
-      </span>
-        <p>{{{ trans "You have <strong>one assignment</strong> in this Canvas Gradebook with muted or unposted grades." "You have <strong>%(muted_assignment_count)s assignments</strong> in this Canvas Gradebook with muted or unposted grades." muted_assignment_count }}} {{{ trans "Grades for this assignment <strong>WILL NOT</strong> be represented in the imported grade." "Grades for these assignments <strong>WILL NOT</strong> be represented in the imported grade." muted_assignment_count }}}
-        <a target="_blank" href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/">{{ trans "learn_more" }}</a>.</p>
-        <ul>{{{ trans "The assignment for <strong>%(section_name)s</strong> is:" "The assignments for <strong>%(section_name)s</strong> are:" muted_assignment_count }}}
-        {{#each warnings}}
-            <li>{{ name }}</li>{{/each}}
-        </ul>
-    </div>
-    {{else}}
-    {{#if unposted_assignment_count}}
-    <div role="alert" class="alert alert-danger alert-unposted-submission">
-        <span class="gp-unposted-submission-icon">
+    {{#if unposted_grade_count}}
+    <div role="alert" class="alert alert-danger alert-unposted-grade">
+        <span class="gp-unposted-grade-icon">
           <i class="fas fa-exclamation-circle fa-2x" aria-hidden="true"></i>
         </span>
-        <p>{{{ trans "You have <strong>one assignment that contains unposted submissions</strong> in this Canvas Gradebook." "You have <strong>%(unposted_assignment_count)s assignments that contain unposted submissions</strong> in this Canvas Gradebook." unposted_assignment_count }}}
-        Grades for unposted submissions <strong>WILL NOT</strong> be represented in the imported grade.
-        </p>
-        <p>
-          <ul>{{{ trans "The assignment for <strong>%(section_name)s</strong> is:" "The assignments for <strong>%(section_name)s</strong> are:" unposted_assignment_count }}}
-          {{#each warnings}}
-              {{#if unposted_submission_count}}
-              <li>{{ name }} ({{{ trans "One unposted submission" "%(unposted_submission_count)s unposted submissions" unposted_submission_count}}})</li>{{/if}}{{/each}}
-          </ul>
-        </p>
+        <p>{{{ trans "You have <strong>one student with unposted grades</strong> in this Canvas Grade Import." "You have <strong>%(unposted_grade_count)s students with unposted grades</strong> in this Canvas Grade Import." unposted_grade_count }}}
+        Unposted grades <strong>ARE NOT</strong> represented in the imported final grade.
+        <a target="_blank" href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/">{{ trans "learn_more" }}</a>.</p>
     </div>
-    {{/if}}
     {{/if}}
 
     {{#if has_valid_percentages}}

@@ -1,5 +1,6 @@
 from django.conf import settings
 from userservice.user import UserService
+from uw_sws_graderoster.models import GradingScale
 from course_grader.dao.person import person_display_name
 from course_grader.dao.term import submission_deadline_warning
 from course_grader.views.rest_dispatch import RESTDispatch
@@ -8,11 +9,6 @@ from course_grader.exceptions import OverrideNotPermitted
 from logging import getLogger
 
 logger = getLogger(__name__)
-
-# Assign numeric strings, for mixed sorting with 4.0 scale grades
-grade_order = {"": "9.9", "I": "9.8", "W": "9.7", "HW": "9.5",
-               "HP": "7.3", "H": "7.2", "P": "7.1", "F": "7.0",
-               "CR": "6.1", "NC": "6.0", "N": "5"}
 
 
 class GradeFormHandler(RESTDispatch):
@@ -81,8 +77,7 @@ def sorted_students(students):
 
 
 def sorted_grades(grades):
-    return sorted(grades, key=lambda s: grade_order.get(s, s),
-                  reverse=True)
+    return GradingScale().sorted_scale(grades)
 
 
 def item_is_submitted(item):
