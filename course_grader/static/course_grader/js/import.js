@@ -162,10 +162,11 @@ GradePage.Import = (function ($) {
     function select_course_scale() {
         /*jshint validthis: true */
         var selected = $(this).val(),
+            data,
             i;
 
         for (i = 0; i < import_data.grade_import.course_grading_schemes.length; i++) {
-            var data = import_data.grade_import.course_grading_schemes[i];
+            data = import_data.grade_import.course_grading_schemes[i];
             if (selected === data.grading_scheme_id.toString()) {
                 initialize_calculator({
                     "default_scale": data.scale,
@@ -187,7 +188,13 @@ GradePage.Import = (function ($) {
         conversion_scale_data = {};
         initialize_calculator(opts);
         $("#select-previous-scale").change(select_previous_scale);
+
         $("#select-course-scale").change(select_course_scale);
+        if (import_data.grade_import.course_grading_schemes.length) {
+            $("#gp-select-course").show();
+        } else {
+            $("#gp-select-course").hide();
+        }
     }
 
     function draw_review_grades(ev, data) {
@@ -254,7 +261,6 @@ GradePage.Import = (function ($) {
             unposted_with_override_grade_count = 0,
             min_valid = 0.5,
             student,
-            warning,
             len,
             i;
 
