@@ -401,7 +401,7 @@ msgid "course_scale_label_sr"
 msgstr "Convert grades using a Canvas grading scheme:"
 
 msgid "course_scale_label"
-msgstr "Use a Canvas grading scheme from your course"
+msgstr "Use the Canvas grading scheme from your course"
 
 msgid "previous_scale_label_sr"
 msgstr "Convert grades using a scale that you have used before:"
