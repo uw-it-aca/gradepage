@@ -18,22 +18,22 @@ class ConversionScales(GradeFormHandler):
         try:
             self.user = person_from_user()
             self.all_terms = all_viewable_terms()
-            self.scale = kwargs.get("scale", "").lower()
+            self.scale = ImportConversion.valid_scale(
+                kwargs.get("scale", "").strip())
         except InvalidUser as ex:
             return self.error_response(403, "{}".format(ex))
+        except InvalidGradingScale as ex:
+            return self.error_response(400, "{}".format(ex))
         except Exception as ex:
             logger.error("GET terms failed: {}".format(ex))
             return self.error_response(500, "{}".format(ex))
-
-        if self.scale not in dict(ImportConversion.SCALE_CHOICES):
-            return self.error_response(400, "Invalid scale")
 
         return self.response_content()
 
     def response_content(self):
         imports = GradeImport.objects.get_imports_by_person(self.user)
 
-        seen_sections = {}
+        section_ids = set()
         return_data = []
         for term in self.all_terms:
             conversions_in_term = []
@@ -49,17 +49,15 @@ class ConversionScales(GradeFormHandler):
                     # Wrong scale type
                     continue
 
-                if grade_import.section_id in seen_sections:
-                    # Already seen a scale for this section
-                    continue
+                if grade_import.section_id not in section_ids:
+                    section_ids.add(grade_import.section_id)
 
-                conversion_data["section_id"] = grade_import.section_id
+                    conversion_data["section_id"] = grade_import.section_id
 
-                parts = grade_import.section_id.split("-")
-                conversion_data["section"] = " ".join(parts[2:5])
+                    parts = grade_import.section_id.split("-")
+                    conversion_data["section"] = " ".join(parts[2:5])
 
-                seen_sections[grade_import.section_id] = True
-                conversions_in_term.append(conversion_data)
+                    conversions_in_term.append(conversion_data)
 
             if len(conversions_in_term):
                 return_data.append({

@@ -53,8 +53,8 @@ def graderoster_for_section(section, instructor, requestor,
         if model.submitted_by not in people:
             people[model.submitted_by] = person_from_regid(model.submitted_by)
 
-        graderoster = GradeRoster(
-            data=etree.fromstring(model.document.strip()),
+        graderoster = GradeRoster.from_xhtml(
+            etree.fromstring(model.document.strip()),
             section=section, instructor=people[instructor_id])
 
         grade_imp = None

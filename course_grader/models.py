@@ -2,11 +2,14 @@ from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 from restclients_core.exceptions import DataFailureException
+from uw_sws_graderoster.models import GradingScale
 from course_grader.dao.canvas import grades_for_section as canvas_grades
 from course_grader.dao.catalyst import grades_for_section as catalyst_grades
 from course_grader.dao.gradesubmission import submit_grades
 from course_grader.dao.notification import notify_grade_submitters
+from course_grader.exceptions import InvalidGradingScale
 from logging import getLogger
+from decimal import Decimal
 import json
 
 logger = getLogger(__name__)
@@ -98,6 +101,7 @@ class Grade(models.Model):
     no_grade_now = models.BooleanField(default=False)
     import_source = models.CharField(max_length=50, null=True)
     import_grade = models.CharField(max_length=100, null=True)
+    is_override_grade = models.BooleanField(default=False)
     comment = models.CharField(max_length=1000, null=True)
     last_modified = models.DateTimeField(auto_now=True)
     modified_by = models.CharField(max_length=32)
@@ -120,6 +124,7 @@ class Grade(models.Model):
                 "is_incomplete": self.is_incomplete,
                 "import_source": self.import_source,
                 "import_grade": self.import_grade,
+                "is_override_grade": self.is_override_grade,
                 "comment": self.comment,
                 "last_modified": self.last_modified.isoformat(),
                 "modified_by": self.modified_by}
@@ -132,24 +137,14 @@ class Grade(models.Model):
 class ImportConversion(models.Model):
     """ Represents a grade import conversion scale.
     """
-    UNDERGRADUATE_SCALE = "ug"
-    GRADUATE_SCALE = "gr"
-    PASSFAIL_SCALE = "pf"
-    CREDIT_SCALE = "cnc"
-    HIGHPASSFAIL_SCALE = "hpf"
-
-    SCALE_CHOICES = (
-        (UNDERGRADUATE_SCALE, "Undergraduate Scale (4.0-0.7)"),
-        (GRADUATE_SCALE, "Graduate Scale (4.0-1.7)"),
-        (PASSFAIL_SCALE, "School of Medicine Pass/No Pass"),
-        (CREDIT_SCALE, "Credit/No Credit Scale"),
-        (HIGHPASSFAIL_SCALE, "Honors/High Pass/Pass/Fail Scale")
-    )
-
-    scale = models.CharField(max_length=5, choices=SCALE_CHOICES)
+    scale = models.CharField(max_length=5, choices=GradingScale.SCALE_CHOICES)
     grade_scale = models.TextField()
     calculator_values = models.TextField(null=True)
     lowest_valid_grade = models.CharField(max_length=5, null=True)
+    grading_scheme_id = models.IntegerField(null=True)
+    grading_scheme_name = models.CharField(max_length=50, null=True)
+    course_id = models.IntegerField(null=True)
+    course_name = models.CharField(max_length=50, null=True)
 
     def json_data(self):
         return {
@@ -158,7 +153,49 @@ class ImportConversion(models.Model):
             "grade_scale": json.loads(self.grade_scale),
             "calculator_values": json.loads(self.calculator_values),
             "lowest_valid_grade": self.lowest_valid_grade,
+            "grading_scheme_id": self.grading_scheme_id,
+            "grading_scheme_name": self.grading_scheme_name,
+            "course_id": self.course_id,
+            "course_name": self.course_name,
         }
+
+    @staticmethod
+    def valid_scale(scale):
+        scale = scale.lower()
+        if scale in dict(GradingScale.SCALE_CHOICES):
+            return scale
+        raise InvalidGradingScale()
+
+    @staticmethod
+    def decimal_to_percentage(value):
+        return float(Decimal(str(value))*100)
+
+    @staticmethod
+    def from_grading_scheme(data):
+        ic = ImportConversion()
+
+        grade_scale = []
+        for item in data.get("grading_scheme", []):
+            if item["value"] > 0:
+                grade_scale.append({
+                    "grade": item["name"],
+                    "min_percentage": ic.decimal_to_percentage(item["value"]),
+                })
+        grade_scale.sort(key=lambda x: x.get("min_percentage"), reverse=True)
+
+        grades = [x['grade'] for x in grade_scale]
+        ic.scale = GradingScale().is_any_scale(grades)
+        if not ic.scale:
+            raise InvalidGradingScale()
+
+        ic.grade_scale = json.dumps(grade_scale)
+        ic.calculator_values = json.dumps([])
+        ic.lowest_valid_grade = 0.0
+        ic.grading_scheme_id = data.get("id")
+        ic.grading_scheme_name = data.get("title")
+        ic.course_id = data.get("course_id")
+        ic.course_name = data.get("course_name")
+        return ic
 
 
 class GradeImportManager(models.Manager):
@@ -225,33 +262,47 @@ class GradeImport(models.Model):
     def json_data(self):
         try:
             grade_data = json.loads(self.document)
-
-            # Prior to Winter 2015, imports were stored as a list
-            if isinstance(grade_data, list):
-                grade_data = {"grades": grade_data}
-
         except Exception as ex:
             grade_data = {}
 
         grades = []
         for grade in grade_data.get("grades", []):
+            student_reg_id = None
+            imported_grade = None
+            is_override_grade = False
+            has_unposted_grade = False
+            comment = None
+
             if self.source == self.CATALYST_SOURCE:
-                grades.append({"student_reg_id": grade["person_id"],
-                               "imported_grade": grade["class_grade"],
-                               "comment": grade["notes"]})
+                student_reg_id = grade["person_id"]
+                imported_grade = grade["class_grade"]
+                comment = grade["notes"]
 
             elif self.source == self.CANVAS_SOURCE:
-                grades.append({"student_reg_id": grade["sis_user_id"],
-                               "imported_grade": grade["current_score"],
-                               "comment": None})
+                student_reg_id = grade["sis_user_id"]
+                imported_grade = grade["current_score"]
 
-            else:
-                continue
+                if grade["override_score"] is not None:
+                    imported_grade = grade["override_score"]
+                    is_override_grade = True
 
-        if self.import_conversion is not None:
-            import_conversion_data = self.import_conversion.json_data()
-        else:
-            import_conversion_data = None
+                if grade["unposted_current_score"] != grade["current_score"]:
+                    has_unposted_grade = True
+
+            if student_reg_id is not None:
+                grades.append({"student_reg_id": student_reg_id,
+                               "imported_grade": imported_grade,
+                               "is_override_grade": is_override_grade,
+                               "has_unposted_grade": has_unposted_grade,
+                               "comment": comment})
+
+        course_grading_schemes = []
+        for scheme in grade_data.get("course_grading_schemes", []):
+            try:
+                conversion = ImportConversion.from_grading_scheme(scheme)
+                course_grading_schemes.append(conversion.json_data())
+            except InvalidGradingScale:
+                pass
 
         return {"id": self.pk,
                 "source": self.source,
@@ -260,5 +311,6 @@ class GradeImport(models.Model):
                 "imported_date": self.imported_date.isoformat(),
                 "imported_by": self.imported_by,
                 "imported_grades": grades,
-                "import_conversion": import_conversion_data,
-                "muted_assignments": grade_data.get("muted_assignments", [])}
+                "import_conversion": self.import_conversion.json_data() if (
+                    self.import_conversion is not None) else None,
+                "course_grading_schemes": course_grading_schemes}

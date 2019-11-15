@@ -9,8 +9,8 @@ logger = getLogger(__name__)
 
 
 def submit_grades(model):
-    graderoster = GradeRoster(
-        data=etree.fromstring(model.document.strip()),
+    graderoster = GradeRoster.from_xhtml(
+        etree.fromstring(model.document.strip()),
         section=section_from_label(model.section_id),
         instructor=person_from_regid(model.instructor_id))
 

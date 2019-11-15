@@ -290,6 +290,7 @@ class GradeRoster(GradeFormHandler):
             withdrawn_week = None
             import_source = None
             import_grade = None
+            is_override_grade = False
 
             if item.duplicate_code is not None:
                 data["has_duplicate_codes"] = True
@@ -341,6 +342,7 @@ class GradeRoster(GradeFormHandler):
                     if saved_grade.import_grade is not None:
                         import_source = sources[saved_grade.import_source]
                         import_grade = saved_grade.import_grade
+                        is_override_grade = saved_grade.is_override_grade
                 except KeyError:
                     pass
 
@@ -371,6 +373,7 @@ class GradeRoster(GradeFormHandler):
                 "grade_status": item.status_message,
                 "import_source": import_source,
                 "import_grade": import_grade,
+                "is_override_grade": is_override_grade,
             }
             data["students"].append(student_data)
 

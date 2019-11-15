@@ -3,14 +3,26 @@
 {{#if grade_count}}
     <p>{{{ trans "One grade found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>." "%(grade_count)s total grades found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>." grade_count }}}</p>
 
-    {{#if muted_assignment_count}}
-    <div role="alert" class="alert alert-danger alert-muted-assignment">
-        <i class="fa fa-exclamation-circle"></i> <p>{{{ trans "You have <strong>one muted assignment</strong> in this Canvas Gradebook." "You have <strong>%(muted_assignment_count)s muted assignments</strong> in this Canvas Gradebook." muted_assignment_count }}} {{ trans "The grade for this assignment WILL NOT be represented in the imported grade." "Grades for these assignments WILL NOT be represented in the imported grade." muted_assignment_count }}
+    {{#if override_grade_count}}
+    <div role="alert" class="alert alert-warning alert-override-grades">
+        <span class="gp-override-icon fa-stack">
+            <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
+            <i class="fas fa-marker fa-flip-horizontal fa-stack-1x fa-inverse" aria-hidden="true"></i>
+        </span>
+
+        <p>{{{ trans "You have one final grade override in this Canvas Grade Import.  This grade WILL BE included in the imported grades." "You have <strong>%(override_grade_count)s final grade overrides</strong> in this Canvas Grade Import.  These grades WILL BE included in the imported grades." override_grade_count}}}
+        <a target="_blank" href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/new-gradebook/final-grade-override/">{{ trans "learn_more" }}</a>.</p>
+    </div>
+    {{/if}}
+
+    {{#if unposted_grade_count}}
+    <div role="alert" class="alert alert-danger alert-unposted-grade">
+        <span class="gp-unposted-grade-icon">
+          <i class="fas fa-exclamation-circle fa-2x" aria-hidden="true"></i>
+        </span>
+        <p>{{{ trans "You have <strong>one student with unposted or muted grades</strong> in this Canvas Grade Import." "You have <strong>%(unposted_grade_count)s students with unposted or muted grades</strong> in this Canvas Grade Import." unposted_grade_count }}}
+        Unposted or muted grades <strong>ARE NOT</strong> represented in the imported final grade.
         <a target="_blank" href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/">{{ trans "learn_more" }}</a>.</p>
-        <ul>{{{ trans "The muted assignment for <strong>%(section_name)s</strong> is:" "The muted assignments for <strong>%(section_name)s</strong> are:" muted_assignment_count }}}
-                {{#each muted_assignments}}
-                <li>{{ name }}</li>{{/each}}
-            </ul>
     </div>
     {{/if}}
 
