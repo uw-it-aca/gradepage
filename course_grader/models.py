@@ -282,11 +282,14 @@ class GradeImport(models.Model):
                 student_reg_id = grade["sis_user_id"]
                 imported_grade = grade["current_score"]
 
-                if grade["override_score"] is not None:
+                if ("override_score" in grade and
+                        grade["override_score"] is not None):
                     imported_grade = grade["override_score"]
                     is_override_grade = True
 
-                if grade["unposted_current_score"] != grade["current_score"]:
+                if ("unposted_current_score" in grade and
+                        grade["unposted_current_score"] !=
+                        grade["current_score"]):
                     has_unposted_grade = True
 
             if student_reg_id is not None:
