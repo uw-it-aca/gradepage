@@ -70,3 +70,9 @@ class ImportConversionTest(TestCase):
         self.assertEqual(ic.decimal_to_percentage(0.999), 99.9)
         self.assertEqual(ic.decimal_to_percentage(0.278), 27.8)
         self.assertEqual(ic.decimal_to_percentage(0.539), 53.9)
+
+    def test_leading_zero(self):
+        ic = ImportConversion()
+        self.assertEqual(ic.leading_zero('0.1'), '0.1')
+        self.assertEqual(ic.leading_zero('.1'), '0.1')
+        self.assertEqual(ic.leading_zero('P'), 'P')
