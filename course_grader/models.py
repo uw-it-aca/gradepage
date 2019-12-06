@@ -171,6 +171,10 @@ class ImportConversion(models.Model):
         return float(Decimal(str(value))*100)
 
     @staticmethod
+    def leading_zero(value):
+        return "0" + value if value.startswith(".") else value
+
+    @staticmethod
     def from_grading_scheme(data):
         ic = ImportConversion()
 
@@ -178,7 +182,7 @@ class ImportConversion(models.Model):
         for item in data.get("grading_scheme", []):
             if item["value"] > 0:
                 grade_scale.append({
-                    "grade": item["name"],
+                    "grade": ic.leading_zero(item["name"]),
                     "min_percentage": ic.decimal_to_percentage(item["value"]),
                 })
         grade_scale.sort(key=lambda x: x.get("min_percentage"), reverse=True)
