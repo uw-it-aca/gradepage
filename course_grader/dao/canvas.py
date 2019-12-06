@@ -3,13 +3,24 @@ from uw_canvas.courses import Courses
 from uw_canvas.enrollments import Enrollments
 from uw_canvas.grading_standards import GradingStandards
 from course_grader.dao.section import section_from_url
+from restclients_core.exceptions import DataFailureException
 
 
 def grading_scheme_for_course(course_id):
     course = Courses().get_course(course_id)
     if course.grading_standard_id:
-        json_data = GradingStandards().get_grading_standard_for_course(
-            course_id, course.grading_standard_id).json_data()
+        canvas = GradingStandards()
+        try:
+            grading_standard = canvas.get_grading_standard_for_course(
+                course_id, course.grading_standard_id)
+        except DataFailureException as ex:
+            if ex.status != 404:
+                raise
+
+            grading_standard = canvas.find_grading_standard_for_account(
+                course.account_id, course.grading_standard_id)
+
+        json_data = grading_standard.json_data()
         json_data["course_id"] = course_id
         json_data["course_name"] = course.name
         return json_data
