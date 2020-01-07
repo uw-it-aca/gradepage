@@ -370,24 +370,6 @@ msgstr ""
 msgid "%(grade_count)s total grades found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>."
 msgstr ""
 
-msgid "You have <strong>one muted assignment</strong> in this Canvas Gradebook."
-msgstr ""
-
-msgid "You have <strong>%(muted_assignment_count)s muted assignments</strong> in this Canvas Gradebook."
-msgstr ""
-
-msgid "The grade for this assignment WILL NOT be included in the imported grade."
-msgstr ""
-
-msgid "Grades for these assignments WILL NOT be included in the imported grade."
-msgstr ""
-
-msgid "The muted assignment for <strong>%(section_name)s</strong> is:"
-msgstr ""
-
-msgid "The muted assignments for <strong>%(section_name)s</strong> are:"
-msgstr ""
-
 msgid "import_save_grades"
 msgstr "Import grades"
 
