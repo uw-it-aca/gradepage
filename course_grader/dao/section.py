@@ -81,6 +81,7 @@ def all_gradable_sections(person, term):
         'delete_flag': [Section.DELETE_FLAG_ACTIVE,
                         Section.DELETE_FLAG_SUSPENDED]
     }
+
     section_refs = get_sections_by_instructor_and_term(*args, **kwargs)
     section_refs.extend(get_sections_by_delegate_and_term(*args, **kwargs))
 

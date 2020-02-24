@@ -1,4 +1,3 @@
-from django.conf import settings
 from course_grader.dao import display_datetime
 from course_grader.dao.person import person_display_name
 from course_grader.dao.section import section_url_token, section_display_name
@@ -18,13 +17,11 @@ def url_for_term(term):
 
 
 def url_for_section(section_id):
-    return "{host}/section/{section_id}".format(
-        host=getattr(settings, "GRADEPAGE_HOST", ""), section_id=section_id)
+    return "/section/{section_id}".format(section_id)
 
 
 def url_for_grading_status(section_id):
-    return "{host}/api/v1/grading_status/{section_id}".format(
-        host=getattr(settings, "GRADEPAGE_HOST", ""), section_id=section_id)
+    return "/api/v1/grading_status/{}".format(section_id)
 
 
 def section_status_params(section, instructor):
