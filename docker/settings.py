@@ -63,7 +63,7 @@ if os.getenv('ENV') == 'localdev':
     DEBUG = True
     GRADEPAGE_SUPPORT_GROUP = 'u_test_group'
     GRADEPAGE_ADMIN_GROUP = 'u_test_group'
-    CURRENT_DATETIME_OVERRIDE = '2013-05-30 00:00:00'
+    CURRENT_DATETIME_OVERRIDE = '2013-06-17 10:00:00'
     PAST_TERMS_VIEWABLE = 1
 else:
     GRADEPAGE_SUPPORT_GROUP = os.getenv('SUPPORT_GROUP', '')
