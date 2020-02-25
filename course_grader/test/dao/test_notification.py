@@ -9,6 +9,7 @@ from course_grader.dao.notification import *
 
 @fdao_sws_override
 @fdao_pws_override
+@override_settings(TIME_ZONE='UTC')
 class NotificationDAOFunctionsTest(TestCase):
     def setUp(self):
         pws = PWS()

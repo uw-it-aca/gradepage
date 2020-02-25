@@ -6,6 +6,7 @@ from course_grader.dao.message import (
 
 
 @fdao_sws_override
+@override_settings(TIME_ZONE='UTC')
 class MessageDAOFunctionsTest(TestCase):
     fixtures = ['persistent_messages.json']
 
