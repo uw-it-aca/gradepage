@@ -6,7 +6,6 @@ from course_grader.dao.message import (
 
 
 @fdao_sws_override
-@override_settings(USE_TZ=False)
 class MessageDAOFunctionsTest(TestCase):
     fixtures = ['persistent_messages.json']
 

@@ -54,7 +54,6 @@ class RestDispatchTest(TestCase):
 @fdao_sws_override
 @fdao_pws_override
 class ViewAPIFunctionsTest(TestCase):
-    @override_settings(USE_TZ=False)
     def test_graderoster_status_params(self):
         section = get_section_by_label('2013,spring,TRAIN,101/A')
         user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
