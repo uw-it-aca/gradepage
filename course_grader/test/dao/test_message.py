@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from uw_sws.util import fdao_sws_override
 from course_grader.dao.term import current_term
 from course_grader.dao.message import (
@@ -6,6 +6,7 @@ from course_grader.dao.message import (
 
 
 @fdao_sws_override
+@override_settings(USE_TZ=False)
 class MessageDAOFunctionsTest(TestCase):
     fixtures = ['persistent_messages.json']
 

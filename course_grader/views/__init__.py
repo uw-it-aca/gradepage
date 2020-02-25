@@ -17,7 +17,7 @@ def url_for_term(term):
 
 
 def url_for_section(section_id):
-    return "/section/{section_id}".format(section_id)
+    return "/section/{}".format(section_id)
 
 
 def url_for_grading_status(section_id):
