@@ -7,7 +7,7 @@ from course_grader.dao.graderoster import graderoster_for_section
 from course_grader.dao.section import (
     section_from_param, is_grader_for_section, section_display_name)
 from course_grader.dao.person import person_from_user, person_from_request
-from course_grader.dao.term import all_viewable_terms
+from course_grader.dao.term import all_viewable_terms, is_grading_period_open
 from course_grader.views import (
     section_status_params, clean_section_id, url_for_section,
     url_for_grading_status)
@@ -80,7 +80,7 @@ class GradeRoster(GradeFormHandler):
 
         section_id = kwargs.get("section_id")
 
-        if self.section.is_grading_period_open():
+        if is_grading_period_open(self.section.term):
             kwargs["saved_grades"] = self.saved_grades(section_id)
 
         content = self.response_content(**kwargs)
@@ -230,7 +230,7 @@ class GradeRoster(GradeFormHandler):
     def response_content(self, **kwargs):
         section_id = kwargs.get("section_id")
         saved_grades = kwargs.get("saved_grades", {})
-        grading_period_open = self.section.is_grading_period_open()
+        is_grading_period_open = is_grading_period_open(self.section.term)
         allows_writing_credit = self.graderoster.allows_writing_credit
         sources = dict(GradeImport.SOURCE_CHOICES)
 
@@ -265,7 +265,7 @@ class GradeRoster(GradeFormHandler):
                 data["grade_import_count"] += 1
             data["submissions"].append(submission_status)
 
-        if grading_period_open:
+        if is_grading_period_open:
             for choice in GradeImport.SOURCE_CHOICES:
                 data["import_choices"].append({"value": choice[0],
                                                "label": choice[1]})
@@ -317,7 +317,7 @@ class GradeRoster(GradeFormHandler):
                         withdrawn_week = m.group("week")
                     grade = ""
 
-            elif grading_period_open and not item.is_auditor:
+            elif is_grading_period_open and not item.is_auditor:
                 grade_url = "/api/v1/graderoster/{}".format(section_id)
 
                 # Use an existing grade_choices list, or add this one

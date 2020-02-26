@@ -27,7 +27,7 @@ setup(
         'django-user-agents',
         'django-userservice>=3.1.2',
         'UW-RestClients-Core>=1.3.2,<2.0',
-        'UW-RestClients-SWS>=2.2.6,<3.0',
+        'UW-RestClients-SWS>=2.2.7,<3.0',
         'UW-RestClients-PWS>=2.1,<3.0',
         'UW-RestClients-Canvas>=1.1.9,<2.0',
         'UW-RestClients-Catalyst>=1.0,<2.0',

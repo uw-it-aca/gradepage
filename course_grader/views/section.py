@@ -6,7 +6,8 @@ from course_grader.models import GradeImport
 from course_grader.dao.section import (
     section_from_param, section_display_name, section_url_token)
 from course_grader.dao.person import person_from_user
-from course_grader.dao.term import current_term
+from course_grader.dao.term import (
+    current_term, is_grading_period_open, is_grading_period_past)
 from course_grader.dao.message import get_messages_for_term
 from course_grader.views import url_for_term
 from course_grader.exceptions import InvalidSection, MissingInstructorParam
@@ -49,8 +50,8 @@ def section(request, url_token):
             response = render(request, "503.html", {})
         return response
 
-    if (not section.is_grading_period_open() and
-            not section.term.is_grading_period_past()):
+    if (not is_grading_period_open(section.term) and
+            not is_grading_period_past(section.term)):
         # future grading period
         return HttpResponseRedirect("/")
 
@@ -74,7 +75,7 @@ def section(request, url_token):
             section_url_token(section, instructor)),
     })
 
-    if now_term.is_grading_period_open():
+    if is_grading_period_open(now_term):
         import_id = request.GET.get("cgb_source_id", None)
         if valid_gradebook_id(import_id):
             params["auto_import_id"] = import_id

@@ -2,7 +2,8 @@ from django.conf import settings
 from userservice.user import UserService
 from uw_sws_graderoster.models import GradingScale
 from course_grader.dao.person import person_display_name
-from course_grader.dao.term import submission_deadline_warning
+from course_grader.dao.term import (
+    submission_deadline_warning, is_grading_period_open)
 from course_grader.views.rest_dispatch import RESTDispatch
 from course_grader.models import Grade
 from course_grader.exceptions import OverrideNotPermitted
@@ -131,7 +132,7 @@ def graderoster_status_params(graderoster, secondary_section_id=None):
             data["grade_import"] = grade_import.json_data() if (
                 grade_import is not None) else None
 
-    if (section.is_grading_period_open() and data["unsubmitted_count"]):
+    if (is_grading_period_open(section.term) and data["unsubmitted_count"]):
         data["deadline_warning"] = submission_deadline_warning(section.term)
 
     return data

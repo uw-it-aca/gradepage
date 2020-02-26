@@ -1,6 +1,7 @@
 from course_grader.dao import current_datetime, display_datetime
 from course_grader.dao.term import (
-    next_gradable_term, previous_gradable_term, submission_deadline_warning)
+    next_gradable_term, previous_gradable_term, submission_deadline_warning,
+    is_grading_period_open)
 from persistent_message.models import Message
 
 
@@ -45,7 +46,7 @@ def get_closed_grading_messages(params={}):
 
 
 def get_messages_for_term(term, params={}):
-    if term.is_grading_period_open():
+    if is_grading_period_open(term):
         return get_open_grading_messages(term, params)
     else:
         return get_closed_grading_messages(params)
