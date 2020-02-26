@@ -42,7 +42,7 @@ class NotificationDAOFunctionsTest(TestCase):
             subject, 'Bill Teacher submitted four grades for CSS 161 A')
         self.assertEquals(text, (
             '\nBill Teacher submitted grades for four students to the '
-            'Registrar on August 27 at 5:01 PM UTC.  These grades have '
+            'Registrar on August 27 at  5:01 PM UTC.  These grades have '
             'been successfully processed and will be available to the '
             'students via MyUW.\n\nTo view or print a copy of this grade '
             'submission for your records, go to: https://localhost/section/'
@@ -52,7 +52,7 @@ class NotificationDAOFunctionsTest(TestCase):
             'edu/registra/staffFaculty/gradeChange/\n\n\n'))
         self.assertEquals(html, (
             '\n<p>Bill Teacher submitted grades for four students to the '
-            'Registrar on August 27 at 5:01 PM UTC.  These grades have '
+            'Registrar on August 27 at  5:01 PM UTC.  These grades have '
             'been successfully processed and will be available to the '
             'students via MyUW.\n</p>\n\n<a href="https://localhost/section/'
             '2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE">View '
@@ -72,14 +72,14 @@ class NotificationDAOFunctionsTest(TestCase):
             subject, 'Failed grade submission attempt for CSS 161 A')
         self.assertEquals(text, (
             '\nBill Teacher unsuccessfully submitted grades for four '
-            'students to the Registrar on August 27 at 5:01 AM UTC.  There '
+            'students to the Registrar on August 27 at  5:01 PM UTC.  There '
             'was a problem processing these grades and they have not been '
             'submitted.\n\nNo changes can be made through GradePage.  To '
             'change submitted grades, use the Change of Grade form: https://'
             'depts.washington.edu/registra/staffFaculty/gradeChange/\n\n\n'))
         self.assertEquals(html, (
             '\n<p>Bill Teacher unsuccessfully submitted grades for four '
-            'students to the Registrar on August 27 at 5:01 PM UTC.  There '
+            'students to the Registrar on August 27 at  5:01 PM UTC.  There '
             'was a problem processing these grades and they have not been '
             'submitted.  For more information, see the <a href="https://'
             'localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE000'
@@ -99,7 +99,7 @@ class NotificationDAOFunctionsTest(TestCase):
             subject, 'Failed grade submission attempt for CSS 161 A')
         self.assertEquals(text, (
             '\nBill Teacher submitted grades for four students to the '
-            'Registrar on August 27 at 5:01 PM UTC.  These grades have '
+            'Registrar on August 27 at  5:01 PM UTC.  These grades have '
             'been successfully processed and will be available to the '
             'students via MyUW.\n\nHowever, one grade failed to be submitted '
             'successfully.  For more information, see the grade submission '
@@ -110,7 +110,7 @@ class NotificationDAOFunctionsTest(TestCase):
             'Change/\n\n\n'))
         self.assertEquals(html, (
             '\n<p>Bill Teacher submitted grades for four students to the '
-            'Registrar on August 27 at 5:01 PM UTC.  These grades have '
+            'Registrar on August 27 at  5:01 PM UTC.  These grades have '
             'been successfully processed and will be available to the '
             'students via MyUW.\n</p>\n\n<p>However, one grade failed to be '
             'submitted successfully.  For more information, see the <a '

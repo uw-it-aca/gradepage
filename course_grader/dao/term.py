@@ -39,7 +39,6 @@ def term_from_date(date):
 
 
 def current_term():
-    print(current_datetime())
     return term_from_date(current_datetime().date())
 
 
