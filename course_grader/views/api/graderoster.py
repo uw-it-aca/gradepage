@@ -230,7 +230,7 @@ class GradeRoster(GradeFormHandler):
     def response_content(self, **kwargs):
         section_id = kwargs.get("section_id")
         saved_grades = kwargs.get("saved_grades", {})
-        is_grading_period_open = is_grading_period_open(self.section.term)
+        grading_period_open = is_grading_period_open(self.section.term)
         allows_writing_credit = self.graderoster.allows_writing_credit
         sources = dict(GradeImport.SOURCE_CHOICES)
 
@@ -265,7 +265,7 @@ class GradeRoster(GradeFormHandler):
                 data["grade_import_count"] += 1
             data["submissions"].append(submission_status)
 
-        if is_grading_period_open:
+        if grading_period_open:
             for choice in GradeImport.SOURCE_CHOICES:
                 data["import_choices"].append({"value": choice[0],
                                                "label": choice[1]})
@@ -317,7 +317,7 @@ class GradeRoster(GradeFormHandler):
                         withdrawn_week = m.group("week")
                     grade = ""
 
-            elif is_grading_period_open and not item.is_auditor:
+            elif grading_period_open and not item.is_auditor:
                 grade_url = "/api/v1/graderoster/{}".format(section_id)
 
                 # Use an existing grade_choices list, or add this one

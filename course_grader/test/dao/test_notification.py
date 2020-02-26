@@ -31,7 +31,7 @@ class NotificationDAOFunctionsTest(TestCase):
         self.assertEquals(r[1], 'fred@uw.edu')
         self.assertEquals(r[2], 'james@uw.edu')
 
-    @override_settings(CURRENT_DATETIME_OVERRIDE="2013-08-04 10:00:00")
+    @override_settings(CURRENT_DATETIME_OVERRIDE="2013-09-04 10:00:00")
     def test_create_message_success(self):
         for item in self.graderoster.items:
             item.status_code = '200'
@@ -62,7 +62,7 @@ class NotificationDAOFunctionsTest(TestCase):
             'edu/registra/staffFaculty/gradeChange/">Change of Grade form'
             '</a>.</p>\n\n\n'))
 
-    @override_settings(CURRENT_DATETIME_OVERRIDE="2013-08-04 10:00:00")
+    @override_settings(CURRENT_DATETIME_OVERRIDE="2013-09-04 10:00:00")
     def test_create_message_failure(self):
         for item in self.graderoster.items:
             item.status_code = '400'
@@ -89,7 +89,7 @@ class NotificationDAOFunctionsTest(TestCase):
             'use the <a href="https://depts.washington.edu/registra/staff'
             'Faculty/gradeChange/">Change of Grade form</a>.</p>\n\n\n'))
 
-    @override_settings(CURRENT_DATETIME_OVERRIDE="2013-08-04 10:00:00")
+    @override_settings(CURRENT_DATETIME_OVERRIDE="2013-09-04 10:00:00")
     def test_create_message_partial(self):
         for item in self.graderoster.items:
             item.status_code = '200'
