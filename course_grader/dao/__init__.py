@@ -2,6 +2,15 @@ from django.conf import settings
 from django.utils.timezone import (
     get_default_timezone, localtime, is_naive, make_aware)
 from datetime import datetime
+from uw_sws import SWS_DAO
+
+
+def __update_get(self, url, response):
+    pass
+
+
+# Replace the SWS _update_get method to prevent tampering with mocked resources
+SWS_DAO._update_get = __update_get
 
 
 def current_datetime():

@@ -1,2 +1,8 @@
 [run]
 source = gradepage
+parallel = True
+
+[paths]
+source =
+  course_grader/
+  /app/course_grader/

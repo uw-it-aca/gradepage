@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from course_grader.dao.person import PWS
 from course_grader.dao.section import get_section_by_label
 from course_grader.dao.graderoster import get_graderoster
@@ -54,6 +54,7 @@ class RestDispatchTest(TestCase):
 @fdao_sws_override
 @fdao_pws_override
 class ViewAPIFunctionsTest(TestCase):
+    @override_settings(TIME_ZONE='UTC')
     def test_graderoster_status_params(self):
         section = get_section_by_label('2013,spring,TRAIN,101/A')
         user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')

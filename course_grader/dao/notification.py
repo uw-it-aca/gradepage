@@ -3,6 +3,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template import loader
 from django.contrib.humanize.templatetags.humanize import apnumber
 from course_grader.dao.section import section_url_token, section_display_name
+from course_grader.dao.term import is_grading_period_open
 from course_grader.dao.person import person_from_regid, person_display_name
 from course_grader.dao import current_datetime, display_datetime
 from course_grader.exceptions import GradesNotSubmitted
@@ -68,7 +69,7 @@ def create_message(graderoster, submitter):
         "gradepage_url": gradepage_host,
         "section_url": "{host}/section/{section_id}".format(
             host=gradepage_host, section_id=section_id),
-        "grading_window_open": section.term.is_grading_period_open(),
+        "grading_window_open": is_grading_period_open(section.term),
     }
 
     if params["grading_window_open"]:
