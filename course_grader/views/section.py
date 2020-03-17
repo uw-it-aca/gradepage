@@ -9,7 +9,8 @@ from course_grader.dao.person import person_from_user
 from course_grader.dao.term import (
     current_term, is_grading_period_open, is_grading_period_past)
 from course_grader.dao.message import get_messages_for_term
-from course_grader.views import url_for_term
+from course_grader.views import (
+    url_for_term, url_for_graderoster, url_for_import)
 from course_grader.exceptions import InvalidSection, MissingInstructorParam
 from restclients_core.exceptions import DataFailureException
 from uw_catalyst.gradebook import valid_gradebook_id
@@ -60,6 +61,7 @@ def section(request, url_token):
     else:
         section_name = section_display_name(section)
 
+    url_token = section_url_token(section, instructor)
     params.update({
         "page_title": section_name,
         "section_quarter": section.term.get_quarter_display(),
@@ -69,10 +71,8 @@ def section(request, url_token):
         "section_sln": section.sln,
         "section_name": section_name,
         "is_independent_study": section.is_independent_study,
-        "graderoster_url": "/api/v1/graderoster/{}".format(
-            section_url_token(section, instructor)),
-        "import_url": "/api/v1/import/{}".format(
-            section_url_token(section, instructor)),
+        "graderoster_url": url_for_graderoster(url_token),
+        "import_url": url_for_import(url_token),
     })
 
     if is_grading_period_open(now_term):

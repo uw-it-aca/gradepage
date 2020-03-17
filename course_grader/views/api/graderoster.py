@@ -10,7 +10,7 @@ from course_grader.dao.person import person_from_user, person_from_request
 from course_grader.dao.term import all_viewable_terms, is_grading_period_open
 from course_grader.views import (
     section_status_params, clean_section_id, url_for_section,
-    url_for_grading_status)
+    url_for_grading_status, url_for_graderoster)
 from course_grader.views.api import (
     GradeFormHandler, graderoster_status_params, item_is_submitted,
     sorted_students, sorted_grades)
@@ -319,7 +319,7 @@ class GradeRoster(GradeFormHandler):
                     grade = ""
 
             elif grading_period_open and not item.is_auditor:
-                grade_url = "/api/v1/graderoster/{}".format(section_id)
+                grade_url = url_for_graderoster(section_id)
 
                 # Use an existing grade_choices list, or add this one
                 grade_choices_csv = ",".join(item.grade_choices)

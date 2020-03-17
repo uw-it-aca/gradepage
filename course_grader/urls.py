@@ -15,36 +15,40 @@ from course_grader.views.api.submitted_graderoster import (
 
 
 urlpatterns = [
-    re_path(r'^$', home),
-    re_path(r'^section/(?P<url_token>[^/]*)$', section),
-    re_path(r'^api/v1/sections/(?P<term_id>[^/]*)$', Sections.as_view()),
+    re_path(r'^$', home, name='home'),
+    re_path(r'^section/(?P<url_token>[^/]*)$', section, name='section'),
+    re_path(
+        r'^api/v1/sections/(?P<term_id>[^/]*)$',
+        Sections.as_view(), name='section-list'),
     re_path(
         r'^api/v1/graderoster/(?P<section_id>[^/]*)$',
-        GradeRoster.as_view()),
+        GradeRoster.as_view(), name='graderoster-edit'),
     re_path(
         r'^api/v1/graderoster/(?P<section_id>[^/]*)/export$',
-        GradeRosterExport.as_view()),
+        GradeRosterExport.as_view(), name='graderoster-export'),
     re_path(
         r'^api/v1/grading_status/(?P<section_id>[^/]*)$',
-        GradeRosterStatus.as_view()),
-    re_path(r'^api/v1/import/(?P<section_id>[^/]*)$', ImportGrades.as_view()),
+        GradeRosterStatus.as_view(), name='grading-status'),
+    re_path(
+        r'^api/v1/import/(?P<section_id>[^/]*)$',
+        ImportGrades.as_view(), name='grade-import'),
     re_path(
         r'^api/v1/import/(?P<section_id>[^/]*)/(?P<import_id>[\d]*)$',
-        ImportGrades.as_view()),
+        ImportGrades.as_view(), name='grade-import-id'),
     re_path(
         r'^api/v1/conversion_scales/(?P<scale>[a-z]*)$',
-        ConversionScales.as_view()),
+        ConversionScales.as_view(), name='conversion-scales'),
 
     # support urls
-    re_path(r'^support/status/?$', status, name='gradepage_status'),
-    re_path(r'^support/search/?$', graderosters, name='search_graderosters'),
-    re_path(r'^support/imports/?$', grade_imports, name='grade_imports'),
+    re_path(r'^support/status/?$', status, name='gradepage-status'),
+    re_path(r'^support/search/?$', graderosters, name='graderoster-search'),
+    re_path(r'^support/imports/?$', grade_imports, name='grade-import-search'),
     re_path(
         r'^api/v1/submitted_graderosters/(?P<term_id>[^/]*)$',
-        SubmissionsByTerm.as_view(), name="term_submissions"),
+        SubmissionsByTerm.as_view(), name='term-submissions'),
     re_path(
         r'^api/v1/submitted_graderoster/(?P<graderoster_id>[\d]*)$',
-        SubmittedGradeRoster.as_view(), name='submitted_graderoster'),
+        SubmittedGradeRoster.as_view(), name='graderoster-download'),
 ]
 
 # debug routes for developing error pages
