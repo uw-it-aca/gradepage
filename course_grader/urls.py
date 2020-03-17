@@ -6,7 +6,8 @@ from course_grader.views.section import section
 from course_grader.views.support.status import status
 from course_grader.views.support.search import graderosters, grade_imports
 from course_grader.views.api.sections import Sections
-from course_grader.views.api.graderoster import GradeRoster, GradeRosterStatus
+from course_grader.views.api.graderoster import (
+    GradeRoster, GradeRosterStatus, GradeRosterExport)
 from course_grader.views.api.importgrades import ImportGrades
 from course_grader.views.api.conversionscales import ConversionScales
 from course_grader.views.api.submitted_graderoster import (
@@ -20,6 +21,9 @@ urlpatterns = [
     re_path(
         r'^api/v1/graderoster/(?P<section_id>[^/]*)$',
         GradeRoster.as_view()),
+    re_path(
+        r'^api/v1/graderoster/(?P<section_id>[^/]*)/export$',
+        GradeRosterExport.as_view()),
     re_path(
         r'^api/v1/grading_status/(?P<section_id>[^/]*)$',
         GradeRosterStatus.as_view()),
