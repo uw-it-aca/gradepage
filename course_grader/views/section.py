@@ -10,7 +10,7 @@ from course_grader.dao.term import (
     current_term, is_grading_period_open, is_grading_period_past)
 from course_grader.dao.message import get_messages_for_term
 from course_grader.views import (
-    url_for_term, url_for_graderoster, url_for_import)
+    url_for_term, url_for_graderoster, url_for_import, url_for_export)
 from course_grader.exceptions import InvalidSection, MissingInstructorParam
 from restclients_core.exceptions import DataFailureException
 from uw_catalyst.gradebook import valid_gradebook_id

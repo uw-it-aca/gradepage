@@ -401,19 +401,18 @@ class GradeRosterExport(GradeRoster):
 
         content = self.response_content(**kwargs)
         for item in content.get("graderoster").get("students"):
-            grade = "{}".format("X" if item.no_grade_now else item.grade)
-            if not len(grade):
-                grade = ""
-            if item.is_incomplete:
+            grade = "{}".format(
+                "X" if item.get("no_grade_now") else item.get("grade"))
+            if item.get("has_incomplete"):
                 grade = "I," + grade
-            if item.is_writing:
+            if item.get("has_writing_credit"):
                 grade += ",W"
 
             writer.writerow([
-                item.student_number,
+                item.get("student_number"),
                 "{first_name} {last_name}".format(
-                    first_name=item.student_firstname,
-                    last_name=item.student_lastname),
+                    first_name=item.get("student_firstname"),
+                    last_name=item.get("student_lastname")),
                 grade,
                 "",
             ])
