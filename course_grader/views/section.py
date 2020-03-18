@@ -73,6 +73,7 @@ def section(request, url_token):
         "is_independent_study": section.is_independent_study,
         "graderoster_url": url_for_graderoster(url_token),
         "import_url": url_for_import(url_token),
+        "export_url": url_for_export(url_token),
     })
 
     if is_grading_period_open(now_term):

@@ -23,16 +23,20 @@ def url_for_section(section_id):
     return reverse("section", kwargs={"url_token": section_id})
 
 
-def url_for_grading_status(section_id):
-    return reverse("grading-status", kwargs={"section_id": section_id})
-
-
 def url_for_graderoster(section_id):
     return reverse("graderoster-edit", kwargs={"section_id": section_id})
 
 
+def url_for_grading_status(section_id):
+    return reverse("grading-status", kwargs={"section_id": section_id})
+
+
 def url_for_import(section_id):
     return reverse("grade-import", kwargs={"section_id": section_id})
+
+
+def url_for_export(section_id):
+    return reverse("graderoster-export", kwargs={"section_id": section_id})
 
 
 def section_status_params(section, instructor):

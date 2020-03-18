@@ -57,8 +57,11 @@ class GradeRoster(GradeFormHandler):
                 self.valid_user_override()
 
             if (re.match(r"(GET|PUT|POST)", request.method)):
+                submitted_graderosters_only = kwargs.get(
+                    "submitted_graderosters_only", False)
                 self.graderoster = graderoster_for_section(
-                    self.section, self.instructor, self.user)
+                    self.section, self.instructor, self.user,
+                    submitted_graderosters_only=submitted_graderosters_only)
 
         except (InvalidUser, GradingNotPermitted, OverrideNotPermitted) as ex:
             logger.info("Grading for {} not permitted for {}".format(
@@ -384,15 +387,12 @@ class GradeRoster(GradeFormHandler):
 @method_decorator(never_cache, name='dispatch')
 class GradeRosterExport(GradeRoster):
     def get(self, request, *args, **kwargs):
+        kwargs["submitted_graderosters_only"] = True
         error = self._authorize(request, *args, **kwargs)
         if error is not None:
             return error
 
         section_id = kwargs.get("section_id")
-
-        if is_grading_period_open(self.section.term):
-            kwargs["saved_grades"] = self.saved_grades(section_id)
-
         response = self.csv_response(filename=section_id)
         csv.register_dialect("unix_newline", lineterminator="\n")
         writer = csv.writer(response, dialect="unix_newline")
@@ -401,12 +401,20 @@ class GradeRosterExport(GradeRoster):
 
         content = self.response_content(**kwargs)
         for item in content.get("graderoster").get("students"):
+            grade = "{}".format("X" if item.no_grade_now else item.grade)
+            if not len(grade):
+                grade = ""
+            if item.is_incomplete:
+                grade = "I," + grade
+            if item.is_writing:
+                grade += ",W"
+
             writer.writerow([
                 item.student_number,
                 "{first_name} {last_name}".format(
                     first_name=item.student_firstname,
                     last_name=item.student_lastname),
-                item.grade,
+                grade,
                 "",
             ])
 

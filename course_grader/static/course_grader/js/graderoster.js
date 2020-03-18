@@ -454,6 +454,7 @@ GradePage.GradeRoster = (function ($) {
         });
 
         $(".gp-grade-roster-state").text(gettext("submitted_grades"));
+        $(".gp-btn-export-container").show();  // Export button
         $(".gp-btn-print-container").show();  // Print button
         $("#graderoster-content").html(template(data.graderoster));
         $(".gp-submitted-grade").empty();
