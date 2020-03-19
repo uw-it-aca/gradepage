@@ -92,6 +92,51 @@ class ViewFunctionsTest(TestCase):
                     '/api/v1/grading_status/2013-spring-T%20RAIN-'
                     '101-A-9136CCB8F66711D5BE060004AC494FFE'))
 
+    def test_url_for_graderoster(self):
+        self.assertEquals(
+            url_for_graderoster((
+                '2013-spring-TRAIN-101-A-'
+                '9136CCB8F66711D5BE060004AC494FFE')), (
+                '/api/v1/graderoster/2013-spring-TRAIN-'
+                '101-A-9136CCB8F66711D5BE060004AC494FFE'))
+
+        self.assertEquals(
+            url_for_graderoster((
+                '2013-spring-T RAIN-101-A-'
+                '9136CCB8F66711D5BE060004AC494FFE')), (
+                '/api/v1/graderoster/2013-spring-T%20RAIN-'
+                '101-A-9136CCB8F66711D5BE060004AC494FFE'))
+
+    def test_url_for_import(self):
+        self.assertEquals(
+            url_for_import((
+                '2013-spring-TRAIN-101-A-'
+                '9136CCB8F66711D5BE060004AC494FFE')), (
+                '/api/v1/import/2013-spring-TRAIN-'
+                '101-A-9136CCB8F66711D5BE060004AC494FFE'))
+
+        self.assertEquals(
+            url_for_import((
+                '2013-spring-T RAIN-101-A-'
+                '9136CCB8F66711D5BE060004AC494FFE')), (
+                '/api/v1/import/2013-spring-T%20RAIN-'
+                '101-A-9136CCB8F66711D5BE060004AC494FFE'))
+
+    def test_url_for_export(self):
+        self.assertEquals(
+            url_for_import((
+                '2013-spring-TRAIN-101-A-'
+                '9136CCB8F66711D5BE060004AC494FFE')), (
+                '/api/v1/export/2013-spring-TRAIN-'
+                '101-A-9136CCB8F66711D5BE060004AC494FFE'))
+
+        self.assertEquals(
+            url_for_export((
+                '2013-spring-T RAIN-101-A-'
+                '9136CCB8F66711D5BE060004AC494FFE')), (
+                '/api/v1/export/2013-spring-T%20RAIN-'
+                '101-A-9136CCB8F66711D5BE060004AC494FFE'))
+
     def test_section_status_params(self):
         section = get_section_by_label('2013,summer,TRAIN,101/A')
         user = PWS().get_person_by_netid('javerage')

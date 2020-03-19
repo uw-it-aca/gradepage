@@ -24,7 +24,7 @@ urlpatterns = [
         r'^api/v1/graderoster/(?P<section_id>[^/]*)$',
         GradeRoster.as_view(), name='graderoster-edit'),
     re_path(
-        r'^api/v1/graderoster/(?P<section_id>[^/]*)/export$',
+        r'^api/v1/export/(?P<section_id>[^/]*)$',
         GradeRosterExport.as_view(), name='graderoster-export'),
     re_path(
         r'^api/v1/grading_status/(?P<section_id>[^/]*)$',
