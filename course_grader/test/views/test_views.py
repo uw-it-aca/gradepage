@@ -124,7 +124,7 @@ class ViewFunctionsTest(TestCase):
 
     def test_url_for_export(self):
         self.assertEquals(
-            url_for_import((
+            url_for_export((
                 '2013-spring-TRAIN-101-A-'
                 '9136CCB8F66711D5BE060004AC494FFE')), (
                 '/api/v1/export/2013-spring-TRAIN-'
