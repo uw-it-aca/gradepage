@@ -7,7 +7,8 @@ from course_grader.dao.graderoster import graderoster_for_section
 from course_grader.dao.section import (
     section_from_param, is_grader_for_section, section_display_name)
 from course_grader.dao.person import person_from_user, person_from_request
-from course_grader.dao.term import all_viewable_terms, is_grading_period_open
+from course_grader.dao.term import (
+    all_viewable_terms, is_grading_period_open, is_grading_period_past)
 from course_grader.views import (
     section_status_params, clean_section_id, url_for_section,
     url_for_grading_status, url_for_graderoster)
@@ -388,9 +389,16 @@ class GradeRoster(GradeFormHandler):
 class GradeRosterExport(GradeRoster):
     def get(self, request, *args, **kwargs):
         kwargs["submitted_graderosters_only"] = True
-        error = self._authorize(request, *args, **kwargs)
-        if error is not None:
-            return error
+        err_response = self._authorize(request, *args, **kwargs)
+        if err_response is None:
+            content = self.response_content(**kwargs)
+            students = content.get("graderoster").get("students")
+        else:
+            if (err_response.status == 404 and
+                    is_grading_period_past(self.section.term)):
+                students = []
+            else:
+                return err_response
 
         section_id = kwargs.get("section_id")
         response = self.csv_response(filename=section_id)
@@ -399,22 +407,22 @@ class GradeRosterExport(GradeRoster):
         writer.writerow([
             "Student number", "Student name", "Grade from", "Grade to"])
 
-        content = self.response_content(**kwargs)
-        for item in content.get("graderoster").get("students"):
-            grade = "{}".format(
-                "X" if item.get("no_grade_now") else item.get("grade"))
-            if item.get("has_incomplete"):
-                grade = "I," + grade
-            if item.get("has_writing_credit"):
-                grade += ",W"
+        for student in students:
+            grade = student.get("grade", "")
+            if student.get("no_grade_now"):
+                grade = "X"
+            elif student.get("has_incomplete"):
+                grade = "Incomplete; " + grade
+            if student.get("has_writing_credit"):
+                grade += "; Writing Credit"
 
             writer.writerow([
-                item.get("student_number"),
+                student.get("student_number"),
                 "{first_name} {last_name}".format(
-                    first_name=item.get("student_firstname"),
-                    last_name=item.get("student_lastname")),
+                    first_name=student.get("student_firstname"),
+                    last_name=student.get("student_lastname")),
                 grade,
-                "",
+                student.get("saved_grade", ""),
             ])
 
         logger.info("Graderoster exported: {}".format(section_id))
