@@ -18,6 +18,14 @@ def submission_deadline_warning(term):
     return (current_datetime() >= warning_start)
 
 
+def is_grading_period_open(term):
+    return term.is_grading_period_open(current_datetime())
+
+
+def is_grading_period_past(term):
+    return term.is_grading_period_past(current_datetime())
+
+
 def term_from_param(param):
     valid = re.compile(r"^2\d{3}-(?:winter|spring|summer|autumn)$", re.I)
     if not valid.match(param):

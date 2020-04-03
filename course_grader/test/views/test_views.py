@@ -51,14 +51,14 @@ class ViewFunctionsTest(TestCase):
                 url_for_section((
                     '2013-spring-TRAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE')), (
-                    'https://abc.edu/section/2013-spring-TRAIN-101-'
+                    '/section/2013-spring-TRAIN-101-'
                     'A-9136CCB8F66711D5BE060004AC494FFE'))
 
             self.assertEquals(
                 url_for_section((
                     '2013-spring-T RAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE')), (
-                    'https://abc.edu/section/2013-spring-T RAIN-101-'
+                    '/section/2013-spring-T RAIN-101-'
                     'A-9136CCB8F66711D5BE060004AC494FFE'))
 
     def test_url_for_grading_status(self):
@@ -82,14 +82,14 @@ class ViewFunctionsTest(TestCase):
                 url_for_grading_status((
                     '2013-spring-TRAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE')), (
-                    'https://abc.edu/api/v1/grading_status/2013-spring-TRAIN-'
+                    '/api/v1/grading_status/2013-spring-TRAIN-'
                     '101-A-9136CCB8F66711D5BE060004AC494FFE'))
 
             self.assertEquals(
                 url_for_grading_status((
                     '2013-spring-T RAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE')), (
-                    'https://abc.edu/api/v1/grading_status/2013-spring-T RAIN-'
+                    '/api/v1/grading_status/2013-spring-T RAIN-'
                     '101-A-9136CCB8F66711D5BE060004AC494FFE'))
 
     def test_section_status_params(self):

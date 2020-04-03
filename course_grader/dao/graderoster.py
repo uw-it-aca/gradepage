@@ -2,6 +2,8 @@ from uw_sws_graderoster import get_graderoster
 from uw_sws_graderoster.models import GradeRoster
 from course_grader.dao.person import person_from_regid
 from course_grader.dao.section import get_section_by_url, is_grader_for_section
+from course_grader.dao.term import (
+    is_grading_period_open, is_grading_period_past)
 from course_grader.exceptions import (
     GradingNotPermitted, ReceiptNotFound, GradingPeriodNotOpen)
 from course_grader.models import SubmittedGradeRoster, GradeImport
@@ -37,7 +39,8 @@ def graderoster_for_section(section, instructor, requestor,
 
     # If submitted_graderosters_only is False and grading period is open,
     # start with a "live" graderoster
-    if (not submitted_graderosters_only and section.is_grading_period_open()):
+    if (not submitted_graderosters_only and
+            is_grading_period_open(section.term)):
         ret_graderoster = get_graderoster(section, instructor, requestor)
         ret_graderoster.secondary_section = secondary_section
         ret_graderoster.submissions = {}
@@ -90,7 +93,7 @@ def graderoster_for_section(section, instructor, requestor,
         try:
             ret_graderoster = submitted_graderosters.pop(0)
         except IndexError:
-            if section.term.is_grading_period_past():
+            if is_grading_period_past(section.term):
                 raise ReceiptNotFound()
             else:
                 if submitted_graderosters_only:

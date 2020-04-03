@@ -1,8 +1,8 @@
-from django.conf import settings
 from course_grader.dao import display_datetime
 from course_grader.dao.person import person_display_name
 from course_grader.dao.section import section_url_token, section_display_name
-from course_grader.dao.term import submission_deadline_warning
+from course_grader.dao.term import (
+    is_grading_period_open, is_grading_period_past)
 import re
 
 
@@ -18,19 +18,19 @@ def url_for_term(term):
 
 
 def url_for_section(section_id):
-    return "{host}/section/{section_id}".format(
-        host=getattr(settings, "GRADEPAGE_HOST", ""), section_id=section_id)
+    return "/section/{}".format(section_id)
 
 
 def url_for_grading_status(section_id):
-    return "{host}/api/v1/grading_status/{section_id}".format(
-        host=getattr(settings, "GRADEPAGE_HOST", ""), section_id=section_id)
+    return "/api/v1/grading_status/{}".format(section_id)
 
 
 def section_status_params(section, instructor):
     section_id = section_url_token(section, instructor)
-    grading_period_open = section.is_grading_period_open()
-    submission_deadline = section.term.grade_submission_deadline.isoformat()
+    grading_period_open = is_grading_period_open(section.term)
+    grading_deadline = None
+    if section.term.grade_submission_deadline is not None:
+        grading_deadline = section.term.grade_submission_deadline.isoformat()
 
     if section.is_independent_study:
         display_name = section_display_name(section, instructor)
@@ -44,10 +44,10 @@ def section_status_params(section, instructor):
         "status_url": None,
         "grading_status": None,
         "grading_period_open": grading_period_open,
-        "grade_submission_deadline": submission_deadline,
+        "grade_submission_deadline": grading_deadline,
     }
 
-    if (grading_period_open or section.term.is_grading_period_past()):
+    if (grading_period_open or is_grading_period_past(section.term)):
         if (section.is_primary_section and section.allows_secondary_grading):
             data["grading_status"] = (
                 "Secondary grading is enabled for this course.")
