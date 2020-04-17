@@ -2,7 +2,6 @@ from .base_urls import *
 from django.urls import include, re_path
 from django.views.i18n import JavaScriptCatalog
 
-
 urlpatterns += [
     re_path(r'^', include('course_grader.urls')),
     re_path(r'^support/?', include('userservice.urls')),
