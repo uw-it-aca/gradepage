@@ -27,11 +27,6 @@ TEMPLATES[0]['OPTIONS']['context_processors'] += [
     'course_grader.context_processors.debug_mode',
 ]
 
-STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-]
-
 COMPRESS_OFFLINE = True
 COMPRESS_ROOT = '/static/'
 
