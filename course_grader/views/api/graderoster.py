@@ -7,10 +7,11 @@ from course_grader.dao.graderoster import graderoster_for_section
 from course_grader.dao.section import (
     section_from_param, is_grader_for_section, section_display_name)
 from course_grader.dao.person import person_from_user, person_from_request
-from course_grader.dao.term import all_viewable_terms, is_grading_period_open
+from course_grader.dao.term import (
+    all_viewable_terms, is_grading_period_open, is_grading_period_past)
 from course_grader.views import (
     section_status_params, clean_section_id, url_for_section,
-    url_for_grading_status)
+    url_for_grading_status, url_for_graderoster)
 from course_grader.views.api import (
     GradeFormHandler, graderoster_status_params, item_is_submitted,
     sorted_students, sorted_grades)
@@ -20,6 +21,7 @@ from restclients_core.exceptions import DataFailureException
 from datetime import datetime
 from logging import getLogger
 import json
+import csv
 import re
 
 logger = getLogger(__name__)
@@ -56,8 +58,11 @@ class GradeRoster(GradeFormHandler):
                 self.valid_user_override()
 
             if (re.match(r"(GET|PUT|POST)", request.method)):
+                submitted_graderosters_only = kwargs.get(
+                    "submitted_graderosters_only", False)
                 self.graderoster = graderoster_for_section(
-                    self.section, self.instructor, self.user)
+                    self.section, self.instructor, self.user,
+                    submitted_graderosters_only=submitted_graderosters_only)
 
         except (InvalidUser, GradingNotPermitted, OverrideNotPermitted) as ex:
             logger.info("Grading for {} not permitted for {}".format(
@@ -318,7 +323,7 @@ class GradeRoster(GradeFormHandler):
                     grade = ""
 
             elif grading_period_open and not item.is_auditor:
-                grade_url = "/api/v1/graderoster/{}".format(section_id)
+                grade_url = url_for_graderoster(section_id)
 
                 # Use an existing grade_choices list, or add this one
                 grade_choices_csv = ",".join(item.grade_choices)
@@ -378,6 +383,50 @@ class GradeRoster(GradeFormHandler):
             data["students"].append(student_data)
 
         return {"graderoster": data}
+
+
+@method_decorator(never_cache, name='dispatch')
+class GradeRosterExport(GradeRoster):
+    def get(self, request, *args, **kwargs):
+        kwargs["submitted_graderosters_only"] = True
+        err_response = self._authorize(request, *args, **kwargs)
+        if err_response is None:
+            content = self.response_content(**kwargs)
+            students = content.get("graderoster").get("students")
+        else:
+            if (err_response.status == 404 and
+                    is_grading_period_past(self.section.term)):
+                students = []
+            else:
+                return err_response
+
+        section_id = kwargs.get("section_id")
+        response = self.csv_response(filename=section_id)
+        csv.register_dialect("unix_newline", lineterminator="\n")
+        writer = csv.writer(response, dialect="unix_newline")
+        writer.writerow([
+            "Student number", "Student name", "Grade from", "Grade to"])
+
+        for student in students:
+            grade = student.get("grade", "")
+            if student.get("no_grade_now"):
+                grade = "X"
+            elif student.get("has_incomplete"):
+                grade = "Incomplete; " + grade
+            if student.get("has_writing_credit"):
+                grade += "; Writing Credit"
+
+            writer.writerow([
+                student.get("student_number"),
+                "{first_name} {last_name}".format(
+                    first_name=student.get("student_firstname"),
+                    last_name=student.get("student_lastname")),
+                grade,
+                student.get("saved_grade", ""),
+            ])
+
+        logger.info("Graderoster exported: {}".format(section_id))
+        return response
 
 
 @method_decorator(never_cache, name='dispatch')
