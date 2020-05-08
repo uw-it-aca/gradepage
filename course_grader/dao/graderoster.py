@@ -7,6 +7,7 @@ from course_grader.dao.term import (
 from course_grader.exceptions import (
     GradingNotPermitted, ReceiptNotFound, GradingPeriodNotOpen)
 from course_grader.models import SubmittedGradeRoster, GradeImport
+from restclients_core.exceptions import DataFailureException
 from lxml import etree
 from logging import getLogger
 import re
@@ -43,9 +44,16 @@ def graderoster_for_section(section, instructor, requestor,
     if (not submitted_graderosters_only and (
             is_grading_period_open(section.term) or
             is_grading_period_past(section.term))):
-        ret_graderoster = get_graderoster(section, instructor, requestor)
-        ret_graderoster.secondary_section = secondary_section
-        ret_graderoster.submissions = {}
+        try:
+            ret_graderoster = get_graderoster(section, instructor, requestor)
+            ret_graderoster.secondary_section = secondary_section
+            ret_graderoster.submissions = {}
+        except DataFailureException as ex:
+            # 404s for past terms are ok
+            if ex.status == 404 and is_grading_period_past(section.term):
+                pass
+            else:
+                raise
 
     # Look for submission receipts in the SubmittedGradeRoster table
     people = {instructor.uwregid: instructor}
