@@ -388,19 +388,16 @@ class GradeRoster(GradeFormHandler):
 @method_decorator(never_cache, name='dispatch')
 class GradeRosterExport(GradeRoster):
     def get(self, request, *args, **kwargs):
-        kwargs["submitted_graderosters_only"] = True
+        section_id = kwargs.get("section_id")
+
         err_response = self._authorize(request, *args, **kwargs)
         if err_response is None:
             content = self.response_content(**kwargs)
             students = content.get("graderoster").get("students")
+            saved_grades = self.saved_grades(section_id)
         else:
-            if (err_response.status == 404 and
-                    is_grading_period_past(self.section.term)):
-                students = []
-            else:
-                return err_response
+            return err_response
 
-        section_id = kwargs.get("section_id")
         response = self.csv_response(filename=section_id)
         csv.register_dialect("unix_newline", lineterminator="\n")
         writer = csv.writer(response, dialect="unix_newline")
@@ -416,13 +413,27 @@ class GradeRosterExport(GradeRoster):
             if student.get("has_writing_credit"):
                 grade += "; Writing Credit"
 
+            saved_grade = ""
+            if not student.get("date_graded"):
+                try:
+                    saved = saved_grades[student.get("student_id")]
+                    saved_grade = saved_grade.grade
+                    if saved.no_grade_now is True:
+                        saved_grade = "X"
+                    elif saved.is_incomplete:
+                        saved_grade = "Incomplete; " + saved_grade
+                    elif saved.is_writing:
+                        saved_grade += "; Writing Credit"
+                except KeyError:
+                    pass
+
             writer.writerow([
                 student.get("student_number"),
                 "{first_name} {last_name}".format(
                     first_name=student.get("student_firstname"),
                     last_name=student.get("student_lastname")),
                 grade,
-                student.get("saved_grade", ""),
+                saved_grade,
             ])
 
         logger.info("Graderoster exported: {}".format(section_id))
