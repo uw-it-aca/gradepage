@@ -37,10 +37,12 @@ def graderoster_for_section(section, instructor, requestor,
             raise GradingNotPermitted(section.section_label(),
                                       requestor.uwregid)
 
-    # If submitted_graderosters_only is False and grading period is open,
+    # If submitted_graderosters_only is False and
+    # grading period is open or grading period is past,
     # start with a "live" graderoster
-    if (not submitted_graderosters_only and
-            is_grading_period_open(section.term)):
+    if (not submitted_graderosters_only and (
+            is_grading_period_open(section.term) or
+            is_grading_period_past(section.term))):
         ret_graderoster = get_graderoster(section, instructor, requestor)
         ret_graderoster.secondary_section = secondary_section
         ret_graderoster.submissions = {}
