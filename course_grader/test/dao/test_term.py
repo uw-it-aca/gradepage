@@ -67,3 +67,29 @@ class TermDAOFunctionsTest(TestCase):
             self.assertEquals(terms[0].quarter, 'autumn')
             self.assertEquals(terms[1].quarter, 'summer')
             self.assertEquals(terms[2].quarter, 'spring')
+
+    def test_is_graderoster_available_for_term(self):
+        term = term_from_param('2013-winter')
+        # Grading period is not yet open for term
+        with self.settings(CURRENT_DATETIME_OVERRIDE='2013-02-01 00:00:00'):
+            self.assertFalse(is_graderoster_available_for_term(term))
+
+        # Grading period is open for term
+        with self.settings(CURRENT_DATETIME_OVERRIDE='2013-03-24 00:00:00'):
+            self.assertTrue(is_graderoster_available_for_term(term))
+
+        # Current term, date is grade_submission_deadline + 1 day
+        with self.settings(CURRENT_DATETIME_OVERRIDE='2013-03-27 17:00:00'):
+            self.assertTrue(is_graderoster_available_for_term(term))
+
+        # Prior term, date is current term.census_day
+        with self.settings(CURRENT_DATETIME_OVERRIDE='2013-04-12 08:00:00'):
+            self.assertTrue(is_graderoster_available_for_term(term))
+
+        # Prior term, date is current term.last_day_instruction
+        with self.settings(CURRENT_DATETIME_OVERRIDE='2013-06-07 08:00:00'):
+            self.assertTrue(is_graderoster_available_for_term(term))
+
+        # Prior term, date is current term.grade_submission_deadline
+        with self.settings(CURRENT_DATETIME_OVERRIDE='2013-06-18 08:00:00'):
+            self.assertFalse(is_graderoster_available_for_term(term))
