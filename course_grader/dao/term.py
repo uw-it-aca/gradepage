@@ -65,3 +65,17 @@ def all_viewable_terms():
         terms.append(term)
         term = get_term_before(term)
     return terms
+
+
+def is_graderoster_available_for_term(term):
+    if is_grading_period_open(term):
+        return True
+
+    # Return True if the current date is after term.grade_submission_deadline,
+    # but on or before the following term.last_day_instruction
+    curr_dt = current_datetime()
+    if (curr_dt > term.grade_submission_deadline and
+            curr_dt.date() <= get_term_after(term).last_day_instruction):
+        return True
+
+    return False
