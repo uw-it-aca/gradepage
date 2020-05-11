@@ -54,7 +54,7 @@ environmentVariables:
   - name: CANVAS_ENV
     value: EVAL
   - name: CANVAS_TIMEOUT
-    value: 10
+    value: "10"
   - name: CATALYST_ENV
     value: EVAL
   - name: AUTH
