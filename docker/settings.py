@@ -4,15 +4,15 @@ import os
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS += [
-    'compressor',
-    'django.contrib.humanize',
-    'django_user_agents',
-    'userservice',
+    'course_grader.apps.CourseGraderConfig',
     'supporttools',
+    'userservice',
     'persistent_message',
     'rc_django',
     'grade_conversion_calculator',
-    'course_grader.apps.CourseGraderConfig',
+    'django.contrib.humanize',
+    'django_user_agents',
+    'compressor',
 ]
 
 MIDDLEWARE += [
@@ -27,18 +27,14 @@ TEMPLATES[0]['OPTIONS']['context_processors'] += [
     'course_grader.context_processors.debug_mode',
 ]
 
-COMPRESS_OFFLINE = True
 COMPRESS_ROOT = '/static/'
-
-COMPRESS_PRECOMPILERS = (
-    ('text/less', 'lessc {infile} {outfile}'),
-)
 
 STATICFILES_FINDERS += (
     'compressor.finders.CompressorFinder',
 )
 
-COMPRESS_PRECOMPILERS += (
+COMPRESS_PRECOMPILERS = (
+    ('text/less', 'lessc {infile} {outfile}'),
     ('text/x-sass', 'pyscss {infile} > {outfile}'),
     ('text/x-scss', 'pyscss {infile} > {outfile}'),
 )
@@ -52,6 +48,10 @@ COMPRESS_JS_FILTERS = [
     'compressor.filters.jsmin.JSMinFilter',
 ]
 
+COMPRESS_OFFLINE = True
+COMPRESS_OFFLINE_CONTEXT = {
+    'wrapper_template': 'persistent_message/manage_wrapper.html',
+}
 
 if os.getenv('ENV') == 'localdev':
     DEBUG = True
@@ -60,28 +60,27 @@ if os.getenv('ENV') == 'localdev':
     CURRENT_DATETIME_OVERRIDE = '2013-06-17 10:00:00'
     PAST_TERMS_VIEWABLE = 1
 else:
-    GRADEPAGE_SUPPORT_GROUP = os.getenv('SUPPORT_GROUP', '')
-    GRADEPAGE_ADMIN_GROUP = os.getenv('ADMIN_GROUP', '')
-    RESTCLIENTS_DAO_CACHE_CLASS = 'course_grader.cache.RestClientsCache'
+    GRADEPAGE_SUPPORT_GROUP = os.getenv('SUPPORT_GROUP', 'u_acadev_gradepage_support')
+    GRADEPAGE_ADMIN_GROUP = os.getenv('ADMIN_GROUP', 'u_acadev_gradepage_admins')
+    RESTCLIENTS_DAO_CACHE_CLASS = 'course_grader.cache.RestClientsMemcachedCache'
     PAST_TERMS_VIEWABLE = 4
 
 ALLOW_GRADE_SUBMISSION_OVERRIDE = (os.getenv('ENV') != 'prod')
 USERSERVICE_VALIDATION_MODULE = 'course_grader.dao.person.is_netid'
 USERSERVICE_OVERRIDE_AUTH_MODULE = 'course_grader.views.support.can_override_user'
 RESTCLIENTS_ADMIN_AUTH_MODULE = 'course_grader.views.support.can_proxy_restclient'
-RESTCLIENTS_DAO_CACHE_CLASS = 'course_grader.cache.RestClientsCache'
 PERSISTENT_MESSAGE_AUTH_MODULE = 'course_grader.views.support.can_manage_persistent_messages'
 
-EMAIL_BACKEND = ''
-EMAIL_HOST = ''
-EMAIL_NOREPLY_ADDRESS = 'GradePage ' + os.getenv('EMAIL_NOREPLY_ADDRESS', '')
-SAFE_EMAIL_RECIPIENT = os.getenv('SAFE_EMAIL_RECIPIENT', '')
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'saferecipient.EmailBackend')
+EMAIL_HOST = 'appsubmit.cac.washington.edu'
+EMAIL_NOREPLY_ADDRESS = os.getenv('EMAIL_NOREPLY_ADDRESS')
+SAFE_EMAIL_RECIPIENT = os.getenv('SAFE_EMAIL_RECIPIENT')
 
 GRADEPAGE_HOST = 'https://' + os.getenv('CLUSTER_CNAME', 'localhost')
 SUBMISSION_DEADLINE_WARNING_HOURS = 48
 GRADE_RETENTION_YEARS = 5
 
-GRADEPAGE_SUPPORT_EMAIL = os.getenv('GRADEPAGE_SUPPORT_EMAIL', '')
+GRADEPAGE_SUPPORT_EMAIL = 'help@uw.edu'
 REGISTRAR_SUPPORT_EMAIL = os.getenv('REGISTRAR_SUPPORT_EMAIL', '')
 REGISTRAR_SUPPORT_PHONE = os.getenv('REGISTRAR_SUPPORT_EMAIL', '')
 

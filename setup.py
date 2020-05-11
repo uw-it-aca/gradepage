@@ -26,6 +26,7 @@ setup(
         'django-compressor',
         'django-user-agents',
         'django-userservice>=3.1.2',
+        'psycopg2<3.0',
         'UW-RestClients-Core>=1.3.2,<2.0',
         'UW-RestClients-SWS>=2.2.7,<3.0',
         'UW-RestClients-PWS>=2.1,<3.0',
