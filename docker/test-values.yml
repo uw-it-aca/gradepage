@@ -11,7 +11,7 @@ ingress:
       paths:
         - "/"
   annotations:
-  cert-manager.io/cluster-issuer: letsencrypt
+    cert-manager.io/cluster-issuer: letsencrypt
 externalService:
   enabled: true
   name: gradepage-db-service
