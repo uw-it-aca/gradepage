@@ -20,6 +20,7 @@ from userservice.user import UserService
 from restclients_core.exceptions import DataFailureException
 from datetime import datetime
 from logging import getLogger
+import time
 import json
 import csv
 import re
@@ -388,6 +389,7 @@ class GradeRoster(GradeFormHandler):
 @method_decorator(never_cache, name='dispatch')
 class GradeRosterExport(GradeRoster):
     def get(self, request, *args, **kwargs):
+        start_time = time.time()
         section_id = kwargs.get("section_id")
 
         err_response = self._authorize(request, *args, **kwargs)
@@ -436,7 +438,11 @@ class GradeRosterExport(GradeRoster):
                 saved_grade,
             ])
 
-        logger.info("Graderoster exported: {}".format(section_id))
+        logger.info((
+            "Graderoster exported for section: {}, grading_open: {}, "
+            "time_taken: {}").format(
+                section_id, is_grading_period_open(self.section.term),
+                time.time() - start_time))
         return response
 
 
