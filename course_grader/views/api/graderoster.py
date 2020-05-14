@@ -439,10 +439,13 @@ class GradeRosterExport(GradeRoster):
             ])
 
         logger.info((
-            "Graderoster exported for section: {}, grading_open: {}, "
-            "time_taken: {}").format(
-                section_id, is_grading_period_open(self.section.term),
-                time.time() - start_time))
+            "Graderoster exported for section: {section_id}, "
+            "grading_open: {grading_open}, current_term: {current_term}, "
+            "time_taken: {time_taken}").format(
+                section_id=section_id,
+                grading_open=is_grading_period_open(self.section.term),
+                current_term=current_term(),
+                time_taken=time.time() - start_time))
         return response
 
 
