@@ -407,27 +407,32 @@ class GradeRosterExport(GradeRoster):
             "Student number", "Student name", "Grade from", "Grade to"])
 
         for student in students:
-            grade = student.get("grade", "")
-            if student.get("no_grade_now"):
-                grade = "X"
-            elif student.get("has_incomplete"):
-                grade = "Incomplete; " + grade
-            if student.get("has_writing_credit"):
-                grade += "; Writing Credit"
-
             saved_grade = ""
-            if not student.get("date_graded"):
-                try:
-                    saved = saved_grades[student.get("student_id")]
-                    saved_grade = saved_grade.grade
-                    if saved.no_grade_now is True:
-                        saved_grade = "X"
-                    elif saved.is_incomplete:
-                        saved_grade = "Incomplete; " + saved_grade
-                    elif saved.is_writing:
-                        saved_grade += "; Writing Credit"
-                except KeyError:
-                    pass
+            if student.get("is_auditor"):
+                grade = "Auditor"
+            elif student.get("is_withdrawn"):
+                grade = "Withdrawn week " + student.get("withdrawn_week")
+            else:
+                grade = student.get("grade", "")
+                if student.get("no_grade_now"):
+                    grade = "X"
+                elif student.get("has_incomplete"):
+                    grade = "Incomplete; " + grade
+                if student.get("has_writing_credit"):
+                    grade += "; Writing Credit"
+
+                if not student.get("date_graded"):
+                    try:
+                        saved = saved_grades[student.get("student_id")]
+                        saved_grade = saved_grade.grade
+                        if saved.no_grade_now is True:
+                            saved_grade = "X"
+                        elif saved.is_incomplete:
+                            saved_grade = "Incomplete; " + saved_grade
+                        elif saved.is_writing:
+                            saved_grade += "; Writing Credit"
+                    except KeyError:
+                        pass
 
             writer.writerow([
                 student.get("student_number"),
