@@ -8,7 +8,8 @@ from course_grader.dao.section import (
     section_from_param, is_grader_for_section, section_display_name)
 from course_grader.dao.person import person_from_user, person_from_request
 from course_grader.dao.term import (
-    all_viewable_terms, is_grading_period_open, is_grading_period_past)
+    all_viewable_terms, is_grading_period_open, is_grading_period_past,
+    current_term)
 from course_grader.views import (
     section_status_params, clean_section_id, url_for_section,
     url_for_grading_status, url_for_graderoster)
