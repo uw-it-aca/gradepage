@@ -419,7 +419,7 @@ class GradeRosterExport(GradeRoster):
         csv_header = render_to_string("export.txt", {
             "user_name": person_display_name(self.user),
             "user_email": "{}@uw.edu".format(self.user.uwnetid),
-            "quarter": self.section.term.quarter,
+            "quarter": self.section.term.quarter.title(),
             "year": self.section.term.year,
             "curriculum_abbr": self.section.curriculum_abbr,
             "course_number": self.section.course_number,
@@ -461,8 +461,8 @@ class GradeRosterExport(GradeRoster):
             writer.writerow([
                 student.get("student_number"),
                 "{last_name}, {first_name}".format(
-                    first_name=student.get("student_firstname"),
-                    last_name=student.get("student_lastname")),
+                    first_name=student.get("student_firstname").strip(),
+                    last_name=student.get("student_lastname").strip()),
                 grade,
                 saved_grade,
             ])
