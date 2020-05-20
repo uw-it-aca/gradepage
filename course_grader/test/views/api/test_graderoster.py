@@ -27,15 +27,16 @@ class GradeRosterExportTest(TestCase):
         response = view.create_response(mock_content)
         self.assertEqual(response.get('Content-Disposition'),
                          'attachment; filename="2013-spring-TRAIN-101-A.csv"')
+
         self.assertEqual(response.content, (
-            b'Student Grade Change List,,,\nINSTRUCTIONS:,,,\nComplete this '
-            b'spreadsheet and upload the file using the UW Registrar\'s Online'
-            b' Change of Grade Request Form.,,,\n'
-            b'https://apps.registrar.washington.edu/grade-change/pages/change.'
-            b'php,,,\nDO NOT EMAIL this spreadsheet'
-            b' with student grade information.,,,\n,,,\nINSTRUCTORS NAME AND'
-            b' EMAIL:,"Jamesy McJamesy",javerage@uw.edu,\n,,,\nCOURSE PREFIX'
-            b' AND NUMBER (AND SECTION):,TRAIN,101,A\n,,,\nQUARTER AND YEAR:'
-            b',spring,2013,\n,,,\n,,,\n,,,\nSTUDENT NUMBER,"STUDENT NAME ('
-            b'LAST, FIRST)",GRADE FROM,GRADE TO\n000000,"Average, J",4.0,\n')
-        )
+            b',,,\nStudent Grade Change List,,,\nINSTRUCTIONS:,,,\nComplete '
+            b'this spreadsheet and upload the file using the UW Registrar\'s '
+            b'Online Change of Grade Request Form.,,,\nhttps://apps.registrar.'
+            b'washington.edu/grade-change/pages/change.php,,,\nDO NOT EMAIL '
+            b'this spreadsheet with student grade information.,,,\n,,,\n'
+            b'INSTRUCTOR NAME AND EMAIL:,,,\n"Jamesy McJamesy",javerage@uw.edu'
+            b',,\n,,,\nCOURSE PREFIX AND NUMBER (AND SECTION):,,,\n"TRAIN 101 '
+            b'A",,,\n,,,\nQUARTER AND YEAR:,,,\nSpring 2013,,,\n,,,\n,,,\n,,,'
+            b'\nSTUDENT NUMBER,"STUDENT NAME (LAST, FIRST)",GRADE FROM,GRADE '
+            b'TO\n000000,"Average, J",4.0,\n'
+        ))
