@@ -1,4 +1,5 @@
 from django.template.context_processors import csrf
+from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
@@ -6,7 +7,8 @@ from course_grader.models import SubmittedGradeRoster, Grade, GradeImport
 from course_grader.dao.graderoster import graderoster_for_section
 from course_grader.dao.section import (
     section_from_param, is_grader_for_section, section_display_name)
-from course_grader.dao.person import person_from_user, person_from_request
+from course_grader.dao.person import (
+    person_from_user, person_from_request, person_display_name)
 from course_grader.dao.term import (
     all_viewable_terms, is_grading_period_open, is_grading_period_past,
     current_term)
@@ -396,18 +398,39 @@ class GradeRosterExport(GradeRoster):
         err_response = self._authorize(request, *args, **kwargs)
         if err_response is None:
             content = self.response_content(**kwargs)
-            students = content.get("graderoster").get("students")
             saved_grades = self.saved_grades(section_id)
         else:
             return err_response
 
-        response = self.csv_response(filename=section_id)
+        response = self.create_response(content, saved_grades)
+
+        logger.info((
+            "Graderoster exported for section: {section_id}, "
+            "grading_open: {grading_open}, current_term: {current_term}, "
+            "time_taken: {time_taken}").format(
+                section_id=section_id,
+                grading_open=is_grading_period_open(self.section.term),
+                current_term=current_term(),
+                time_taken=time.time() - start_time))
+
+        return response
+
+    def create_response(self, content, saved_grades={}):
+        csv_header = render_to_string("export.txt", {
+            "user_name": person_display_name(self.user),
+            "user_email": "{}@uw.edu".format(self.user.uwnetid),
+            "quarter": self.section.term.quarter,
+            "year": self.section.term.year,
+            "curriculum_abbr": self.section.curriculum_abbr,
+            "course_number": self.section.course_number,
+            "section_id": self.section.section_id,
+        })
+        response = self.csv_response(
+            content=csv_header, filename=self.section.section_label())
         csv.register_dialect("unix_newline", lineterminator="\n")
         writer = csv.writer(response, dialect="unix_newline")
-        writer.writerow([
-            "Student number", "Student name", "Grade from", "Grade to"])
 
-        for student in students:
+        for student in content.get("graderoster").get("students", []):
             saved_grade = ""
             if student.get("is_auditor"):
                 grade = "Auditor"
@@ -437,21 +460,13 @@ class GradeRosterExport(GradeRoster):
 
             writer.writerow([
                 student.get("student_number"),
-                "{first_name} {last_name}".format(
+                "{last_name}, {first_name}".format(
                     first_name=student.get("student_firstname"),
                     last_name=student.get("student_lastname")),
                 grade,
                 saved_grade,
             ])
 
-        logger.info((
-            "Graderoster exported for section: {section_id}, "
-            "grading_open: {grading_open}, current_term: {current_term}, "
-            "time_taken: {time_taken}").format(
-                section_id=section_id,
-                grading_open=is_grading_period_open(self.section.term),
-                current_term=current_term(),
-                time_taken=time.time() - start_time))
         return response
 
 
