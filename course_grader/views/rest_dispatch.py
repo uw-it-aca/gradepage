@@ -28,8 +28,9 @@ class RESTDispatch(View):
                             content_type="application/json")
 
     @staticmethod
-    def csv_response(status=200, filename="file"):
-        response = HttpResponse(status=status,
+    def csv_response(content="", status=200, filename="file"):
+        response = HttpResponse(content=content,
+                                status=status,
                                 content_type="text/csv")
         response["Content-Disposition"] = (
             'attachment; filename="{}.csv"').format(
