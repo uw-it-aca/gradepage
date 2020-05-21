@@ -38,5 +38,5 @@ class GradeRosterExportTest(TestCase):
             b',,\n,,,\nCOURSE PREFIX AND NUMBER (AND SECTION):,,,\n"TRAIN 101 '
             b'A",,,\n,,,\nQUARTER AND YEAR:,,,\nSpring 2013,,,\n,,,\n,,,\n,,,'
             b'\nSTUDENT NUMBER,"STUDENT NAME (LAST, FIRST)",GRADE FROM,GRADE '
-            b'TO\n000000,"Average, J",4.0,\n'
+            b'TO\n000000,"AVERAGE, J",4.0,\n'
         ))

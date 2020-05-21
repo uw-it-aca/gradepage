@@ -460,9 +460,9 @@ class GradeRosterExport(GradeRoster):
 
             writer.writerow([
                 student.get("student_number"),
-                "{last_name}, {first_name}".format(
-                    first_name=student.get("student_firstname").strip(),
-                    last_name=student.get("student_lastname").strip()),
+                "{last}, {first}".format(
+                    first=student.get("student_firstname", "").strip().upper(),
+                    last=student.get("student_lastname", "").strip().upper()),
                 grade,
                 saved_grade,
             ])
