@@ -51,6 +51,8 @@ environmentVariables:
     value: EVAL
   - name: SWS_ENV
     value: EVAL
+  - name: SWS_TIMEOUT
+    value: '10'
   - name: CANVAS_ENV
     value: EVAL
   - name: CANVAS_TIMEOUT
