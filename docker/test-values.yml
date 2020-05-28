@@ -102,6 +102,10 @@ environmentVariablesSecrets:
     name: REGISTRAR_SUPPORT_PHONE
     secretName: test.gradepage.uw.edu-secrets
     secretKey: registrar-support-phone
+  emailHost:
+    name: EMAIL_HOST
+    secretName: test.gradepage.uw.edu-secrets
+    secretKey: email-host
   emailNoreplyAddress:
     name: EMAIL_NOREPLY_ADDRESS
     secretName: test.gradepage.uw.edu-secrets

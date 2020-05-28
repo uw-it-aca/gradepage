@@ -53,7 +53,7 @@ COMPRESS_OFFLINE_CONTEXT = {
     'wrapper_template': 'persistent_message/manage_wrapper.html',
 }
 
-if os.getenv('ENV') == 'localdev':
+if os.getenv('ENV', '') == 'localdev':
     DEBUG = True
     GRADEPAGE_SUPPORT_GROUP = 'u_test_group'
     GRADEPAGE_ADMIN_GROUP = 'u_test_group'
@@ -65,16 +65,21 @@ else:
     RESTCLIENTS_DAO_CACHE_CLASS = 'course_grader.cache.RestClientsMemcachedCache'
     PAST_TERMS_VIEWABLE = 4
 
-ALLOW_GRADE_SUBMISSION_OVERRIDE = (os.getenv('ENV') != 'prod')
+ALLOW_GRADE_SUBMISSION_OVERRIDE = (os.getenv('ENV', '') != 'prod')
 USERSERVICE_VALIDATION_MODULE = 'course_grader.dao.person.is_netid'
 USERSERVICE_OVERRIDE_AUTH_MODULE = 'course_grader.views.support.can_override_user'
 RESTCLIENTS_ADMIN_AUTH_MODULE = 'course_grader.views.support.can_proxy_restclient'
 PERSISTENT_MESSAGE_AUTH_MODULE = 'course_grader.views.support.can_manage_persistent_messages'
 
-EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'saferecipient.EmailBackend')
-EMAIL_HOST = 'appsubmit.cac.washington.edu'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = 587
+EMAIL_TIMEOUT = 15
 EMAIL_NOREPLY_ADDRESS = os.getenv('EMAIL_NOREPLY_ADDRESS')
-SAFE_EMAIL_RECIPIENT = os.getenv('SAFE_EMAIL_RECIPIENT')
+if os.getenv('ENV', '') == 'prod':
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+else:
+    EMAIL_BACKEND = 'saferecipient.EmailBackend'
+    SAFE_EMAIL_RECIPIENT = os.getenv('SAFE_EMAIL_RECIPIENT')
 
 GRADEPAGE_HOST = 'https://' + os.getenv('CLUSTER_CNAME', 'localhost')
 SUBMISSION_DEADLINE_WARNING_HOURS = 48
