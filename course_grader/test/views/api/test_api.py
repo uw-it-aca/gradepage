@@ -9,6 +9,8 @@ from course_grader.views.rest_dispatch import RESTDispatch, timeout_error
 from course_grader.views.api import *
 
 
+@fdao_sws_override
+@fdao_pws_override
 class RestDispatchTest(TestCase):
     def test_data_failure_error(self):
         ex = DataFailureException(url='/', status=404, msg='Not found')

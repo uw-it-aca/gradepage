@@ -6,24 +6,29 @@
         <div id="graderoster-header">
 
     <div class="container">
-    	<div class="clearfix gp-back-link hidden-print">
+        <div class="clearfix gp-back-link hidden-print">
             <a href="{{ term_url }}"><i class="fas fa-long-arrow-alt-left"></i> Back to {{section_quarter}} {{section_year}}</a>
-        	<div class="pull-right gp-btn-print-container" style="display: none;">
-        	    <a href="javascript:window.print()" class="btn btn-default btn-sm hidden-print" role="button"><i class="fas fa-print"></i> Print this page</a>
-        	</div>
-		</div>
-	</div>
+            <div class="gp-btn-wrap clearfix">
+                <div class="pull-right gp-btn-print-container" style="display: none;">
+                    <a href="javascript:window.print()" class="btn btn-default btn-sm hidden-print" role="button"><i class="fas fa-print"></i> Print this page</a>
+                </div>
+                <div class="pull-right gp-btn-export-container" style="display: none;">
+                    <a href="{{ export_url }}" class="btn btn-default btn-sm hidden-print" role="button"><i class="fas fa-file-download"></i> Change of grade template</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="gp-global-header gp-grade-roster-header-global">
         <div class="container">
-        	<div class="pull-right gp-grade-roster-header-info">
+            <div class="pull-right gp-grade-roster-header-info">
 
-            	<a href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/" target="_blank" title="Information on assigning and submitting grades">
-	            	<span style="font-size:1em;" class="fa-stack fa-lg">
-	  					<i style="color:#fff;" class="fas fa-circle fa-stack-2x"></i>
-	 			 		<i style="color:#108BCC;" class="fas fa-info fa-stack-1x"></i>
-					</span>
-				</a>
-				<div class="gp-save-status gp-saved"></div>
+                <a href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/" target="_blank" title="Information on assigning and submitting grades">
+                    <span style="font-size:1em;" class="fa-stack fa-lg">
+                          <i style="color:#fff;" class="fas fa-circle fa-stack-2x"></i>
+                          <i style="color:#108BCC;" class="fas fa-info fa-stack-1x"></i>
+                    </span>
+                </a>
+                <div class="gp-save-status gp-saved"></div>
             </div>
             <div class="gp-section-title">
             <h2 id="grade-roster" class="gp-page-header" style="display:inline-block;"><div class="gp-grade-roster-state"></div> {{ section_name }}</h2>
@@ -33,7 +38,7 @@
     </div>
     <div class="gp-global-header-fixed gp-grade-roster-header-global-fixed">
         <div class="container clearfix" style="padding-top:10px; padding-bottom:10px;">
-        	<div class="pull-left gp-overflow-fixed">
+            <div class="pull-left gp-overflow-fixed">
             <a tabindex="-1" href="/" title="GradePage Home"> <span class="gp-app-name"><span class="sr-only"><abbr title="University of Washington" >UW </abbr>GRADEPAGE</span>{% if not request.user_agent.is_mobile and not request.user_agent.is_tablet%}<img src="{% static "course_grader/img/gp-logo.png" %}" alt="" width="140" height="23" />{%else%} <img src="{% static "course_grader/img/gp-logo-icon2.png" %}" alt="" width="" height="23" />{% endif %}</span></a>
             <!--<span class="gp-grade-roster-state"></span> for--> <span class="gp-fixed-section-name" style="vertical-align: middle; padding-left: 10px;">{{ section_name }}</span></div>
             <div class="gp-save-status gp-saved pull-right"></div>
@@ -66,8 +71,8 @@
 {% block extra_js %}
     <script type="text/javascript">
         window.gradepage = {
-            graderoster_url: "{{ graderoster_url|safe }}",
-            import_url: "{{ import_url|safe }}",{% if auto_import_id %}
+            graderoster_url: "{{ graderoster_url }}",
+            import_url: "{{ import_url}}",{% if auto_import_id %}
             auto_import: {id: "{{ auto_import_id }}", source: "{{ auto_import_src }}"},{% endif %}
             csrftoken: "{{ csrf_token }}",
             is_mobile: {% if request.user_agent.is_mobile %}true{% else %}false{% endif %},

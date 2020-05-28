@@ -1,3 +1,4 @@
+from django.urls import reverse
 from course_grader.dao import display_datetime
 from course_grader.dao.person import person_display_name
 from course_grader.dao.section import section_url_token, section_display_name
@@ -13,16 +14,28 @@ def clean_section_id(section_id):
 
 
 def url_for_term(term):
-    return "/?term={year}-{quarter}".format(
-        year=term.year, quarter=term.quarter)
+    return "{path}?term={year}-{quarter}".format(
+        path=reverse("home"), year=term.year, quarter=term.quarter)
 
 
 def url_for_section(section_id):
-    return "/section/{}".format(section_id)
+    return reverse("section", kwargs={"url_token": section_id})
+
+
+def url_for_graderoster(section_id):
+    return reverse("graderoster-edit", kwargs={"section_id": section_id})
 
 
 def url_for_grading_status(section_id):
-    return "/api/v1/grading_status/{}".format(section_id)
+    return reverse("grading-status", kwargs={"section_id": section_id})
+
+
+def url_for_import(section_id):
+    return reverse("grade-import", kwargs={"section_id": section_id})
+
+
+def url_for_export(section_id):
+    return reverse("graderoster-export", kwargs={"section_id": section_id})
 
 
 def section_status_params(section, instructor):

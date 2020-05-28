@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
+from django.urls import reverse
 from course_grader.dao.term import term_from_param, all_viewable_terms
 from course_grader.dao.message import get_messages_for_term
 from course_grader.exceptions import InvalidTerm
@@ -58,8 +59,9 @@ def home(request):
         "selected_quarter": selected_term.get_quarter_display(),
         "selected_year": selected_term.year,
         "terms": opt_terms,
-        "sections_url": "/api/v1/sections/{year}-{quarter}".format(
-            year=selected_term.year, quarter=selected_term.quarter),
+        "sections_url": reverse(
+            "section-list", kwargs={"term_id": "{year}-{quarter}".format(
+                year=selected_term.year, quarter=selected_term.quarter)}),
         "page_title": "{quarter} {year}".format(
             quarter=selected_term.get_quarter_display(),
             year=selected_term.year),

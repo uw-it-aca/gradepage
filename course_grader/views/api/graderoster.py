@@ -1,4 +1,5 @@
 from django.template.context_processors import csrf
+from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
@@ -6,11 +7,14 @@ from course_grader.models import SubmittedGradeRoster, Grade, GradeImport
 from course_grader.dao.graderoster import graderoster_for_section
 from course_grader.dao.section import (
     section_from_param, is_grader_for_section, section_display_name)
-from course_grader.dao.person import person_from_user, person_from_request
-from course_grader.dao.term import all_viewable_terms, is_grading_period_open
+from course_grader.dao.person import (
+    person_from_user, person_from_request, person_display_name)
+from course_grader.dao.term import (
+    all_viewable_terms, is_grading_period_open, is_grading_period_past,
+    current_term)
 from course_grader.views import (
     section_status_params, clean_section_id, url_for_section,
-    url_for_grading_status)
+    url_for_grading_status, url_for_graderoster)
 from course_grader.views.api import (
     GradeFormHandler, graderoster_status_params, item_is_submitted,
     sorted_students, sorted_grades)
@@ -19,7 +23,9 @@ from userservice.user import UserService
 from restclients_core.exceptions import DataFailureException
 from datetime import datetime
 from logging import getLogger
+import time
 import json
+import csv
 import re
 
 logger = getLogger(__name__)
@@ -56,8 +62,11 @@ class GradeRoster(GradeFormHandler):
                 self.valid_user_override()
 
             if (re.match(r"(GET|PUT|POST)", request.method)):
+                submitted_graderosters_only = kwargs.get(
+                    "submitted_graderosters_only", False)
                 self.graderoster = graderoster_for_section(
-                    self.section, self.instructor, self.user)
+                    self.section, self.instructor, self.user,
+                    submitted_graderosters_only=submitted_graderosters_only)
 
         except (InvalidUser, GradingNotPermitted, OverrideNotPermitted) as ex:
             logger.info("Grading for {} not permitted for {}".format(
@@ -318,7 +327,7 @@ class GradeRoster(GradeFormHandler):
                     grade = ""
 
             elif grading_period_open and not item.is_auditor:
-                grade_url = "/api/v1/graderoster/{}".format(section_id)
+                grade_url = url_for_graderoster(section_id)
 
                 # Use an existing grade_choices list, or add this one
                 grade_choices_csv = ",".join(item.grade_choices)
@@ -378,6 +387,87 @@ class GradeRoster(GradeFormHandler):
             data["students"].append(student_data)
 
         return {"graderoster": data}
+
+
+@method_decorator(never_cache, name='dispatch')
+class GradeRosterExport(GradeRoster):
+    def get(self, request, *args, **kwargs):
+        start_time = time.time()
+        section_id = kwargs.get("section_id")
+
+        err_response = self._authorize(request, *args, **kwargs)
+        if err_response is None:
+            content = self.response_content(**kwargs)
+            saved_grades = self.saved_grades(section_id)
+        else:
+            return err_response
+
+        response = self.create_response(content, saved_grades)
+
+        logger.info((
+            "Graderoster exported for section: {section_id}, "
+            "grading_open: {grading_open}, current_term: {current_term}, "
+            "time_taken: {time_taken}").format(
+                section_id=section_id,
+                grading_open=is_grading_period_open(self.section.term),
+                current_term=current_term(),
+                time_taken=time.time() - start_time))
+
+        return response
+
+    def create_response(self, content, saved_grades={}):
+        csv_header = render_to_string("export.txt", {
+            "user_name": person_display_name(self.user),
+            "user_email": "{}@uw.edu".format(self.user.uwnetid),
+            "quarter": self.section.term.quarter.title(),
+            "year": self.section.term.year,
+            "curriculum_abbr": self.section.curriculum_abbr,
+            "course_number": self.section.course_number,
+            "section_id": self.section.section_id,
+        })
+        response = self.csv_response(
+            content=csv_header, filename=self.section.section_label())
+        csv.register_dialect("unix_newline", lineterminator="\n")
+        writer = csv.writer(response, dialect="unix_newline")
+
+        for student in content.get("graderoster").get("students", []):
+            saved_grade = ""
+            if student.get("is_auditor"):
+                grade = "Auditor"
+            elif student.get("is_withdrawn"):
+                grade = "Withdrawn week " + student.get("withdrawn_week")
+            else:
+                grade = student.get("grade", "")
+                if student.get("no_grade_now"):
+                    grade = "X"
+                elif student.get("has_incomplete"):
+                    grade = "Incomplete; " + grade
+                if student.get("has_writing_credit"):
+                    grade += "; Writing Credit"
+
+                if not student.get("date_graded"):
+                    try:
+                        saved = saved_grades[student.get("student_id")]
+                        saved_grade = saved_grade.grade
+                        if saved.no_grade_now is True:
+                            saved_grade = "X"
+                        elif saved.is_incomplete:
+                            saved_grade = "Incomplete; " + saved_grade
+                        elif saved.is_writing:
+                            saved_grade += "; Writing Credit"
+                    except KeyError:
+                        pass
+
+            writer.writerow([
+                student.get("student_number"),
+                "{last}, {first}".format(
+                    first=student.get("student_firstname", "").strip().upper(),
+                    last=student.get("student_lastname", "").strip().upper()),
+                grade,
+                saved_grade,
+            ])
+
+        return response
 
 
 @method_decorator(never_cache, name='dispatch')

@@ -3,14 +3,13 @@ from uw_sws_graderoster.models import GradeRoster
 from course_grader.dao.person import person_from_regid
 from course_grader.dao.section import get_section_by_url, is_grader_for_section
 from course_grader.dao.term import (
-    is_grading_period_open, is_grading_period_past)
+    is_graderoster_available_for_term, is_grading_period_past)
 from course_grader.exceptions import (
     GradingNotPermitted, ReceiptNotFound, GradingPeriodNotOpen)
 from course_grader.models import SubmittedGradeRoster, GradeImport
 from lxml import etree
 from logging import getLogger
 import re
-
 
 logger = getLogger(__name__)
 
@@ -37,10 +36,10 @@ def graderoster_for_section(section, instructor, requestor,
             raise GradingNotPermitted(section.section_label(),
                                       requestor.uwregid)
 
-    # If submitted_graderosters_only is False and grading period is open,
-    # start with a "live" graderoster
+    # If submitted_graderosters_only is False and a graderoster is available
+    # for this term, start with a "live" graderoster
     if (not submitted_graderosters_only and
-            is_grading_period_open(section.term)):
+            is_graderoster_available_for_term(section.term)):
         ret_graderoster = get_graderoster(section, instructor, requestor)
         ret_graderoster.secondary_section = secondary_section
         ret_graderoster.submissions = {}
