@@ -41,8 +41,8 @@ cronjob:
   enabled: false
 certs:
   mounted: true
-  certPath: /certs/test.gradepage.uw.edu-uwca.cert
-  keyPath: /certs/test.gradepage.uw.edu-uwca.key
+  certPath: /certs/test-client.gradepage.uw.edu-uwca.cert
+  keyPath: /certs/test-client.gradepage.uw.edu-uwca.key
   secretName: test.gradepage.uw.edu-uwca-certs
 environmentVariables:
   - name: ENV
