@@ -134,17 +134,16 @@ LOGGING = {
         'stdout': {
             'class': 'logging.StreamHandler',
             'stream': sys.stdout,
-            'filters': ['stdout_stream'],
+            'filters': ['add_user', 'stdout_stream'],
             'formatter': 'course_grader',
         },
         'stderr': {
             'class': 'logging.StreamHandler',
             'stream': sys.stderr,
-            'filters': ['stderr_stream'],
+            'filters': ['add_user', 'stderr_stream'],
             'formatter': 'course_grader',
         },
         'course_grader': {
-            'level': 'INFO',
             'filters': ['info_only', 'add_user', 'stdout_stream'],
             'formatter': 'course_grader',
             'class': 'logging.StreamHandler',
