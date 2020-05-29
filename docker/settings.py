@@ -144,6 +144,7 @@ LOGGING = {
             'formatter': 'course_grader',
         },
         'course_grader': {
+            'level': 'INFO',
             'filters': ['info_only', 'add_user', 'stdout_stream'],
             'formatter': 'course_grader',
             'class': 'logging.StreamHandler',
@@ -179,7 +180,7 @@ LOGGING = {
         },
         'course_grader': {
             'handlers': ['course_grader', 'course_grader_errors'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': True,
         },
         'restclients_core': {
