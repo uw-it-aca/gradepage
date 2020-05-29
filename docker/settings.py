@@ -105,6 +105,9 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'filters': {
+        'info_only': {
+            '()': 'course_grader.log.InfoFilter'
+        },
         'add_user': {
             '()': 'course_grader.log.UserFilter'
         },
@@ -141,8 +144,7 @@ LOGGING = {
             'formatter': 'course_grader',
         },
         'course_grader': {
-            'level': 'INFO',
-            'filters': ['add_user', 'stdout_stream'],
+            'filters': ['info_only', 'add_user', 'stdout_stream'],
             'formatter': 'course_grader',
             'class': 'logging.StreamHandler',
             'stream': sys.stdout,
