@@ -100,3 +100,94 @@ if os.getenv('AUTH', 'NONE') == 'SAML_MOCK':
         'scopedAffiliations': ['student@washington.edu', 'member@washington.edu'],
         'isMemberOf': ['u_test_group', 'u_test_another_group'],
     }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'add_user': {
+            '()': 'course_grader.log.UserFilter'
+        },
+        'stdout_stream': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': lambda record: record.levelno < logging.WARN
+        },
+        'stderr_stream': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': lambda record: record.levelno > logging.INFO
+        }
+    },
+    'formatters': {
+        'course_grader': {
+            'format': '%(levelname)-4s %(asctime)s %(user)s %(actas)s %(message)s [%(name)s]',
+            'datefmt': '[%Y-%m-%d %H:%M:%S]',
+        },
+        'restclients_timing': {
+            'format': '%(levelname)-4s restclients_timing %(module)s %(asctime)s %(message)s [%(name)s]',
+            'datefmt': '[%Y-%m-%d %H:%M:%S]',
+        },
+    },
+    'handlers': {
+        'stdout': {
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
+            'filters': ['stdout_stream'],
+            'formatter': 'course_grader',
+        },
+        'stderr': {
+            'class': 'logging.StreamHandler',
+            'stream': sys.stderr,
+            'filters': ['stderr_stream'],
+            'formatter': 'course_grader',
+        },
+        'course_grader': {
+            'level': 'INFO',
+            'filters': ['add_user', 'stdout_stream'],
+            'formatter': 'course_grader',
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
+        },
+        'course_grader_errors': {
+            'level': 'ERROR',
+            'filters': ['add_user', 'stderr_stream'],
+            'formatter': 'course_grader',
+            'class': 'logging.StreamHandler',
+            'stream': sys.stderr,
+        },
+        'restclients_timing': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
+            'filters': ['stdout_stream'],
+            'formatter': 'restclients_timing',
+        },
+        'null': {
+            'class': 'logging.NullHandler',
+        },
+    },
+    'loggers': {
+        'django.security.DisallowedHost': {
+            'handlers': ['null'],
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['stderr'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'course_grader': {
+            'handlers': ['course_grader', 'course_grader_errors'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'restclients_core': {
+            'handlers': ['restclients_timing'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        '': {
+            'handlers': ['stdout', 'stderr'],
+            'level': 'INFO' if os.getenv('ENV', 'localdev') == 'prod' else 'DEBUG'
+        }
+    }
+}
