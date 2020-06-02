@@ -1,0 +1,134 @@
+ingress:
+  enabled: true
+  tls:
+    gradepage:
+      secretName: prod.gradepage.uw.edu-cert
+      hosts:
+        - prod.gradepage.uw.edu
+  hosts:
+    gradepage:
+      host: prod.gradepage.uw.edu
+      paths:
+        - "/"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+externalService:
+  enabled: true
+  name: gradepage-db-service
+  type: ClusterIP
+  serviceAddress: 172.18.0.16
+  servicePort: 3306
+database:
+  engine: mysql
+  name: gradepage_prod
+  hostname: gradepage-db-service
+  secretName: gradepage.uw.edu-db
+repo: gradepage
+instance: prod
+image:
+  repository: registry.hub.docker.com/acait/gradepage
+  tag: IMAGE_TAG
+replicaCount: 2
+minReplicas: 2
+maxReplicas: 4
+targetAverageUtilization: 90
+resources:
+  limits:
+    cpu: 600m
+  requests:
+    cpu: 200m
+memcached:
+  enabled: true
+  replicaCount: 2
+  updateStrategy:
+    type: RollingUpdate
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+cronjob:
+  enabled: true
+  jobs:
+    - name: submit-graderosters
+      schedule: "*/10 8-19 * * 1-5"
+      command: '["bash"]'
+      args: '["-c", "(cd /app && source ./bin/activate && ./bin/python manage.py submit_graderosters)"]'
+    - name: delete-grades
+      schedule: "10 2 * * 3"
+      command: '["bash"]'
+      args: '["-c", "(cd /data/gradepage/live && ./bin/python manage.py delete_grades --commit)"]'
+certs:
+  mounted: true
+  certPath: /certs/client.gradepage.uw.edu-uwca.cert
+  keyPath: /certs/client.gradepage.uw.edu-uwca.key
+  secretName: gradepage.uw.edu-uwca-certs
+environmentVariables:
+  - name: ENV
+    value: prod
+
+  - name: PWS_ENV
+    value: PROD
+
+  - name: SWS_ENV
+    value: PROD
+  - name: SWS_TIMEOUT
+    value: '10'
+
+  - name: CANVAS_ENV
+    value: PROD
+  - name: CANVAS_TIMEOUT
+    value: '10'
+
+  - name: CATALYST_ENV
+    value: PROD
+
+  - name: AUTH
+    value: SAML
+  - name: SAML_ENTITY_ID
+    value: https://prod.gradepage.uw.edu/saml2
+  - name: CLUSTER_CNAME
+    value: prod.gradepage.uw.edu
+  - name: SAML_USER_ATTRIBUTE
+    value: uwnetid
+  - name: SAML_FORCE_AUTHN
+    value: 'True'
+  - name: SP_USE_2FA
+    value: 'True'
+  - name: SP_CERT
+    value: ''
+  - name: IDP_CERT
+    value: 'MIID/TCCAuWgAwIBAgIJAMoYJbDt9lKKMA0GCSqGSIb3DQEBBQUAMFwxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJXQTEhMB8GA1UEChMYVW5pdmVyc2l0eSBvZiBXYXNoaW5ndG9uMR0wGwYDVQQDExRpZHAudS53YXNoaW5ndG9uLmVkdTAeFw0xMTA0MjYxOTEwMzlaFw0yMTA0MjMxOTEwMzlaMFwxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJXQTEhMB8GA1UEChMYVW5pdmVyc2l0eSBvZiBXYXNoaW5ndG9uMR0wGwYDVQQDExRpZHAudS53YXNoaW5ndG9uLmVkdTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMH9G8m68L0Hf9bmf4/7c+ERxgDQrbq50NfSi2YTQWc1veUIPYbZy1agSNuc4dwn3RtC0uOQbdNTYUAiVTcYgaYceJVB7syWf9QyGIrglZPMu98c5hWb7vqwvs6d3s2Sm7tBib2v6xQDDiZ4KJxpdAvsoPQlmGdgpFfmAsiYrnYFXLTHgbgCc/YhV8lubTakUdI3bMYWfh9dkj+DVGUmt2gLtQUzbuH8EU44vnXgrQYSXNQkmRcyoE3rj4Rhhbu/p5D3P+nuOukLYFOLRaNeiiGyTu3P7gtc/dy/UjUrf+pH75UUU7Lb369dGEfZwvVtITXsdyp0pBfun4CP808H9N0CAwEAAaOBwTCBvjAdBgNVHQ4EFgQUP5smx3ZYKODMkDglkTbduvLcGYAwgY4GA1UdIwSBhjCBg4AUP5smx3ZYKODMkDglkTbduvLcGYChYKReMFwxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJXQTEhMB8GA1UEChMYVW5pdmVyc2l0eSBvZiBXYXNoaW5ndG9uMR0wGwYDVQQDExRpZHAudS53YXNoaW5ndG9uLmVkdYIJAMoYJbDt9lKKMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADggEBAEo7c2CNHEI+Fvz5DhwumU+WHXqwSOK47MxXwNJVpFQ9GPR2ZGDAq6hzLJLAVWcY4kB3ECDkRtysAWSFHm1roOU7xsU9f0C17QokoXfLNC0d7KoivPM6ctl8aRftU5moyFJkkJX3qSExXrl053uxTOQVPms4ypkYv1A/FBZWgSC8eNoYnBnv1Mhy4m8bfeEN7qT9rFoxh4cVjMH1Ykq7JWyFXLEB4ifzH4KHyplt5Ryv61eh6J1YPFa2RurVTyGpHJZeOLUIBvJu15GzcexuDDXe0kg7sHD6PbK0xzEF/QeXP/hXzMxR9kQXB/IR/b2k4ien+EM3eY/ueBcTZ95dgVM='
+
+environmentVariablesSecrets:
+  djangoSecret:
+    name: DJANGO_SECRET
+    secretName: gradepage.uw.edu-secrets
+    secretKey: django-secret
+  canvasAPIToken:
+    name: CANVAS_OAUTH_BEARER
+    secretName: gradepage.uw.edu-secrets
+    secretKey: canvas-api-token
+  canvasAccountID:
+    name: CANVAS_ACCOUNT_ID
+    secretName: gradepage.uw.edu-secrets
+    secretKey: canvas-account-id
+  registrarSupportEmail:
+    name: REGISTRAR_SUPPORT_EMAIL
+    secretName: gradepage.uw.edu-secrets
+    secretKey: registrar-support-email
+  registrarSupportPhone:
+    name: REGISTRAR_SUPPORT_PHONE
+    secretName: gradepage.uw.edu-secrets
+    secretKey: registrar-support-phone
+  emailHost:
+    name: EMAIL_HOST
+    secretName: gradepage.uw.edu-secrets
+    secretKey: email-host
+  emailNoreplyAddress:
+    name: EMAIL_NOREPLY_ADDRESS
+    secretName: gradepage.uw.edu-secrets
+    secretKey: email-noreply-address
+  safeEmailRecipient:
+    name: SAFE_EMAIL_RECIPIENT
+    secretName: gradepage.uw.edu-secrets
+    secretKey: safe-email-recipient
