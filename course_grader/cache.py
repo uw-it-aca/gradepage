@@ -17,11 +17,12 @@ def get_cache_time(service, url):
             return 10 * ONE_MINUTE
         if re.match(r'^/student/v\d/section', url):
             return 10 * ONE_MINUTE
+        return ONE_MINUTE
 
     if 'pws' == service:
         return ONE_DAY
 
-    return ONE_MINUTE
+    return 0
 
 
 class RestClientsCache(TimedCache):

@@ -12,6 +12,8 @@ ingress:
         - "/"
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
+readiness:
+  enabled: true
 externalService:
   enabled: true
   name: gradepage-db-service
@@ -51,12 +53,12 @@ cronjob:
   jobs:
     - name: submit-graderosters
       schedule: "*/10 8-19 * * 1-5"
-      command: '["bash"]'
-      args: '["-c", "(cd /app && source ./bin/activate && ./bin/python manage.py submit_graderosters)"]'
+      command: ["/scripts/management_command.sh"]
+      args: ["submit_graderosters"]
     - name: delete-grades
       schedule: "10 2 * * 3"
-      command: '["bash"]'
-      args: '["-c", "(cd /data/gradepage/live && ./bin/python manage.py delete_grades --commit)"]'
+      command: ["/scripts/management_command.sh"]
+      args: ["delete_grades", "--commit"]
 certs:
   mounted: true
   certPath: /certs/client.gradepage.uw.edu-uwca.cert
@@ -95,7 +97,7 @@ environmentVariables:
   - name: SP_USE_2FA
     value: 'True'
   - name: SP_CERT
-    value: ''
+    value: 'MIIGhzCCBW+gAwIBAgIQLKDyhS3nWu2p/iuUlW/7GzANBgkqhkiG9w0BAQsFADB2MQswCQYDVQQGEwJVUzELMAkGA1UECBMCTUkxEjAQBgNVBAcTCUFubiBBcmJvcjESMBAGA1UEChMJSW50ZXJuZXQyMREwDwYDVQQLEwhJbkNvbW1vbjEfMB0GA1UEAxMWSW5Db21tb24gUlNBIFNlcnZlciBDQTAeFw0yMDA2MDUwMDAwMDBaFw0yMTA2MDUyMzU5NTlaMIGyMQswCQYDVQQGEwJVUzEOMAwGA1UEERMFOTgxOTUxEzARBgNVBAgTCldhc2hpbmd0b24xEDAOBgNVBAcTB1NlYXR0bGUxGTAXBgNVBAkTEDQ1NDUgMTV0aCBBdmUgTkUxITAfBgNVBAoTGFVuaXZlcnNpdHkgb2YgV2FzaGluZ3RvbjEOMAwGA1UECxMFVVctSVQxHjAcBgNVBAMTFXByb2QuZ3JhZGVwYWdlLnV3LmVkdTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAPM8JHGSH1Oh1UtuBhKkuisJRYCpRC10nzzDD4Z2isWXWjXpIsK/zb6ZEkKXV9kwmTDqY+UoH+1jF+Egyf0NMd46IjaWW9+MQEkwbbT0PUu6shtxDIrWrZcgM7xeGTgM80Gj/MMn4zH15M20dnZJVBCiZ07cyDe/HBwlT91mqcrmlH/PJ1BhpwLTwR51e8sdHw0qo3BPBtQ5lYdekXoMV4rNF1eUBYZlJIEMzVzehlEv+CH7P+3LyTyEgLikKOP2VQmpg0AEOg6V6NUGOMYxO7IPrrfBYxnfcLllL02hu3Tfr7c6LBCHV/vMvx91PKBcTGwawpX1IlteEgpZ5uLneNUCAwEAAaOCAtIwggLOMB8GA1UdIwQYMBaAFB4Fo3ePbJbiW4dLprSGrHEADOc4MB0GA1UdDgQWBBSO9IT9uxoPu/vBkvTJ4go3WiPHpjAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwZwYDVR0gBGAwXjBSBgwrBgEEAa4jAQQDAQEwQjBABggrBgEFBQcCARY0aHR0cHM6Ly93d3cuaW5jb21tb24ub3JnL2NlcnQvcmVwb3NpdG9yeS9jcHNfc3NsLnBkZjAIBgZngQwBAgIwRAYDVR0fBD0wOzA5oDegNYYzaHR0cDovL2NybC5pbmNvbW1vbi1yc2Eub3JnL0luQ29tbW9uUlNBU2VydmVyQ0EuY3JsMHUGCCsGAQUFBwEBBGkwZzA+BggrBgEFBQcwAoYyaHR0cDovL2NydC51c2VydHJ1c3QuY29tL0luQ29tbW9uUlNBU2VydmVyQ0FfMi5jcnQwJQYIKwYBBQUHMAGGGWh0dHA6Ly9vY3NwLnVzZXJ0cnVzdC5jb20wIAYDVR0RBBkwF4IVcHJvZC5ncmFkZXBhZ2UudXcuZWR1MIIBBQYKKwYBBAHWeQIEAgSB9gSB8wDxAHYAfT7y+I//iFVoJMLAyp5SiXkrxQ54CX8uapdomX4i8NcAAAFyhUHHXQAABAMARzBFAiB8cgpFpsSKXt3QmsaAaCGI++zCv6kpw8zTlHSuGTqG9AIhALbqsczz+U1uKBtqM0Kr/bFUEtITX8r1fvjwUytychJJAHcAlCC8Ho7VjWyIcx+CiyIsDdHaTV5sT5Q9YdtOL1hNosIAAAFyhUHHhAAABAMASDBGAiEAvxHiPWTisKW+dAzq/TBCEhsoYSnFu84C/Yldo0AnZmQCIQDDDJIMZ75AAiTbo3lPb4ZFWUd1qZW6HhdoMaKXAtPAojANBgkqhkiG9w0BAQsFAAOCAQEAYLPHv/pQv+VhzFsoOTDay+VGHg6x78+2S50hn93jI2+65XgGNqAqTIRLlC+I3VVjH4pUeDKKzb/cYeMNIpTCbbrqkhY5sHB7enoRpTJwWvE+2TrZKXu3OJOlIYLteiiKEimjkGqU8ISZvahgxiyxjbxYnNHSU5WdUm1AxemHhAVxLPsFFHg9WlqeFJ3PUWsWbY/dYeOrLQzb9qY4qTxu3CAHD0bNoAWl4F/jAyiKdxw0ocKGpxhny9ZNppOC4hAhghYFXEwvLvXgufbxvn8oVwawEdSy1t5yZZCb53mqrrJOiLRGoNBmgG3AYVSt8Z/eTLbDqrRtkT8YClUKmz6JZg=='
   - name: IDP_CERT
     value: 'MIID/TCCAuWgAwIBAgIJAMoYJbDt9lKKMA0GCSqGSIb3DQEBBQUAMFwxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJXQTEhMB8GA1UEChMYVW5pdmVyc2l0eSBvZiBXYXNoaW5ndG9uMR0wGwYDVQQDExRpZHAudS53YXNoaW5ndG9uLmVkdTAeFw0xMTA0MjYxOTEwMzlaFw0yMTA0MjMxOTEwMzlaMFwxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJXQTEhMB8GA1UEChMYVW5pdmVyc2l0eSBvZiBXYXNoaW5ndG9uMR0wGwYDVQQDExRpZHAudS53YXNoaW5ndG9uLmVkdTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMH9G8m68L0Hf9bmf4/7c+ERxgDQrbq50NfSi2YTQWc1veUIPYbZy1agSNuc4dwn3RtC0uOQbdNTYUAiVTcYgaYceJVB7syWf9QyGIrglZPMu98c5hWb7vqwvs6d3s2Sm7tBib2v6xQDDiZ4KJxpdAvsoPQlmGdgpFfmAsiYrnYFXLTHgbgCc/YhV8lubTakUdI3bMYWfh9dkj+DVGUmt2gLtQUzbuH8EU44vnXgrQYSXNQkmRcyoE3rj4Rhhbu/p5D3P+nuOukLYFOLRaNeiiGyTu3P7gtc/dy/UjUrf+pH75UUU7Lb369dGEfZwvVtITXsdyp0pBfun4CP808H9N0CAwEAAaOBwTCBvjAdBgNVHQ4EFgQUP5smx3ZYKODMkDglkTbduvLcGYAwgY4GA1UdIwSBhjCBg4AUP5smx3ZYKODMkDglkTbduvLcGYChYKReMFwxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJXQTEhMB8GA1UEChMYVW5pdmVyc2l0eSBvZiBXYXNoaW5ndG9uMR0wGwYDVQQDExRpZHAudS53YXNoaW5ndG9uLmVkdYIJAMoYJbDt9lKKMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADggEBAEo7c2CNHEI+Fvz5DhwumU+WHXqwSOK47MxXwNJVpFQ9GPR2ZGDAq6hzLJLAVWcY4kB3ECDkRtysAWSFHm1roOU7xsU9f0C17QokoXfLNC0d7KoivPM6ctl8aRftU5moyFJkkJX3qSExXrl053uxTOQVPms4ypkYv1A/FBZWgSC8eNoYnBnv1Mhy4m8bfeEN7qT9rFoxh4cVjMH1Ykq7JWyFXLEB4ifzH4KHyplt5Ryv61eh6J1YPFa2RurVTyGpHJZeOLUIBvJu15GzcexuDDXe0kg7sHD6PbK0xzEF/QeXP/hXzMxR9kQXB/IR/b2k4ien+EM3eY/ueBcTZ95dgVM='
 
