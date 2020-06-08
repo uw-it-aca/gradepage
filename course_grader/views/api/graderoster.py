@@ -435,15 +435,18 @@ class GradeRosterExport(GradeRoster):
             if student.get("is_auditor"):
                 grade = "Auditor"
             elif student.get("is_withdrawn"):
-                grade = "Withdrawn week " + student.get("withdrawn_week")
+                grade = "Withdrawn"
+                if student.get("withdrawn_week"):
+                    grade = "Withdrawn week {}".format(
+                        student.get("withdrawn_week"))
             else:
                 grade = student.get("grade", "")
                 if student.get("no_grade_now"):
                     grade = "X"
                 elif student.get("has_incomplete"):
-                    grade = "Incomplete; " + grade
+                    grade = "Incomplete; {}".format(grade)
                 if student.get("has_writing_credit"):
-                    grade += "; Writing Credit"
+                    grade = "{}; Writing Credit".format(grade)
 
                 if not student.get("date_graded"):
                     try:
@@ -452,9 +455,10 @@ class GradeRosterExport(GradeRoster):
                         if saved.no_grade_now is True:
                             saved_grade = "X"
                         elif saved.is_incomplete:
-                            saved_grade = "Incomplete; " + saved_grade
+                            saved_grade = "Incomplete; {}".format(saved_grade)
                         elif saved.is_writing:
-                            saved_grade += "; Writing Credit"
+                            saved_grade = "{}; Writing Credit".format(
+                                saved_grade)
                     except KeyError:
                         pass
 
