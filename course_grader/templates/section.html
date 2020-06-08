@@ -71,8 +71,8 @@
 {% block extra_js %}
     <script type="text/javascript">
         window.gradepage = {
-            graderoster_url: "{{ graderoster_url }}",
-            import_url: "{{ import_url}}",{% if auto_import_id %}
+            graderoster_url: "{{ graderoster_url|safe }}",
+            import_url: "{{ import_url|safe }}",{% if auto_import_id %}
             auto_import: {id: "{{ auto_import_id }}", source: "{{ auto_import_src }}"},{% endif %}
             csrftoken: "{{ csrf_token }}",
             is_mobile: {% if request.user_agent.is_mobile %}true{% else %}false{% endif %},
