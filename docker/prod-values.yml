@@ -130,7 +130,3 @@ environmentVariablesSecrets:
     name: EMAIL_NOREPLY_ADDRESS
     secretName: gradepage.uw.edu-secrets
     secretKey: email-noreply-address
-  safeEmailRecipient:
-    name: SAFE_EMAIL_RECIPIENT
-    secretName: gradepage.uw.edu-secrets
-    secretKey: safe-email-recipient
