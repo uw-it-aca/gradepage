@@ -22,8 +22,6 @@ def get_cache_time(service, url):
     if 'pws' == service:
         return ONE_DAY
 
-    return 0
-
 
 class RestClientsCache(TimedCache):
     def getCache(self, service, url, headers):
