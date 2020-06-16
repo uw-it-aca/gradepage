@@ -451,7 +451,7 @@ class GradeRosterExport(GradeRoster):
                 if not student.get("date_graded"):
                     try:
                         saved = saved_grades[student.get("student_id")]
-                        saved_grade = saved_grade.grade
+                        saved_grade = saved.grade
                         if saved.no_grade_now is True:
                             saved_grade = "X"
                         elif saved.is_incomplete:
