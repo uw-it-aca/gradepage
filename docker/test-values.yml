@@ -2,7 +2,7 @@ ingress:
   enabled: true
   tls:
     gradepage:
-      secretName: test.gradepage.uw.edu-cert
+      secretName: test.gradepage.uw.edu-ingress-cert
       hosts:
         - test.gradepage.uw.edu
   hosts:
@@ -12,6 +12,7 @@ ingress:
         - "/"
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256"
 readiness:
   enabled: true
 externalService:
@@ -24,7 +25,7 @@ database:
   engine: mysql
   name: gradepage_test
   hostname: gradepage-db-service
-  secretName: test.gradepage.uw.edu-db
+  secretName: test.gradepage.uw.edu-sql-secrets
 repo: gradepage
 instance: test
 image:
@@ -56,12 +57,12 @@ environmentVariables:
   - name: SWS_ENV
     value: EVAL
   - name: SWS_TIMEOUT
-    value: '10'
+    value: "10"
 
   - name: CANVAS_ENV
     value: EVAL
   - name: CANVAS_TIMEOUT
-    value: '10'
+    value: "10"
 
   - name: CATALYST_ENV
     value: EVAL
@@ -72,16 +73,57 @@ environmentVariables:
     value: https://test.gradepage.uw.edu/saml2
   - name: CLUSTER_CNAME
     value: test.gradepage.uw.edu
-  - name: SAML_USER_ATTRIBUTE
-    value: uwnetid
   - name: SAML_FORCE_AUTHN
-    value: 'True'
+    value: "True"
   - name: SP_USE_2FA
-    value: 'True'
-  - name: SP_CERT
-    value: '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'
-  - name: IDP_CERT
-    value: 'MIID/TCCAuWgAwIBAgIJAMoYJbDt9lKKMA0GCSqGSIb3DQEBBQUAMFwxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJXQTEhMB8GA1UEChMYVW5pdmVyc2l0eSBvZiBXYXNoaW5ndG9uMR0wGwYDVQQDExRpZHAudS53YXNoaW5ndG9uLmVkdTAeFw0xMTA0MjYxOTEwMzlaFw0yMTA0MjMxOTEwMzlaMFwxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJXQTEhMB8GA1UEChMYVW5pdmVyc2l0eSBvZiBXYXNoaW5ndG9uMR0wGwYDVQQDExRpZHAudS53YXNoaW5ndG9uLmVkdTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMH9G8m68L0Hf9bmf4/7c+ERxgDQrbq50NfSi2YTQWc1veUIPYbZy1agSNuc4dwn3RtC0uOQbdNTYUAiVTcYgaYceJVB7syWf9QyGIrglZPMu98c5hWb7vqwvs6d3s2Sm7tBib2v6xQDDiZ4KJxpdAvsoPQlmGdgpFfmAsiYrnYFXLTHgbgCc/YhV8lubTakUdI3bMYWfh9dkj+DVGUmt2gLtQUzbuH8EU44vnXgrQYSXNQkmRcyoE3rj4Rhhbu/p5D3P+nuOukLYFOLRaNeiiGyTu3P7gtc/dy/UjUrf+pH75UUU7Lb369dGEfZwvVtITXsdyp0pBfun4CP808H9N0CAwEAAaOBwTCBvjAdBgNVHQ4EFgQUP5smx3ZYKODMkDglkTbduvLcGYAwgY4GA1UdIwSBhjCBg4AUP5smx3ZYKODMkDglkTbduvLcGYChYKReMFwxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJXQTEhMB8GA1UEChMYVW5pdmVyc2l0eSBvZiBXYXNoaW5ndG9uMR0wGwYDVQQDExRpZHAudS53YXNoaW5ndG9uLmVkdYIJAMoYJbDt9lKKMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADggEBAEo7c2CNHEI+Fvz5DhwumU+WHXqwSOK47MxXwNJVpFQ9GPR2ZGDAq6hzLJLAVWcY4kB3ECDkRtysAWSFHm1roOU7xsU9f0C17QokoXfLNC0d7KoivPM6ctl8aRftU5moyFJkkJX3qSExXrl053uxTOQVPms4ypkYv1A/FBZWgSC8eNoYnBnv1Mhy4m8bfeEN7qT9rFoxh4cVjMH1Ykq7JWyFXLEB4ifzH4KHyplt5Ryv61eh6J1YPFa2RurVTyGpHJZeOLUIBvJu15GzcexuDDXe0kg7sHD6PbK0xzEF/QeXP/hXzMxR9kQXB/IR/b2k4ien+EM3eY/ueBcTZ95dgVM='
+    value: "True"
+
+externalSecrets:
+  enabled: true
+  secrets:
+    - name: test.gradepage.uw.edu-secrets
+      externalKey: axdd/kv/data/gradepage/test/secrets
+      data:
+        - name: canvas-account-id
+          property: canvas-account-id
+        - name: canvas-api-token
+          property: canvas-api-token
+        - name: django-secret
+          property: django-secret
+        - name: email-host
+          property: email-host
+        - name: email-noreply-address
+          property: email-noreply-address
+        - name: registrar-support-email
+          property: registrar-support-email
+        - name: registrar-support-phone
+          property: registrar-support-phone
+        - name: safe-email-recipient
+          property: safe-email-recipient
+    - name: test.gradepage.uw.edu-sql-secrets
+      externalKey: axdd/kv/data/gradepage/test/sql-secrets
+      data:
+        - name: username
+          property: username
+        - name: password
+          property: password
+    - name: test.gradepage.uw.edu-uwca-certs
+      externalKey: axdd/kv/data/gradepage/test/uwca-certs
+      data:
+        - name: test-client.gradepage.uw.edu-uwca.cert
+          property: test-client.gradepage.uw.edu-uwca.cert
+        - name: test-client.gradepage.uw.edu-uwca.key
+          property: test-client.gradepage.uw.edu-uwca.key
+    - name: test.gradepage.uw.edu-ic-certs
+      externalKey: axdd/kv/data/gradepage/test/ic-certs
+      data:
+        - name: test.gradepage.uw.edu-ic.cert
+          property: test.gradepage.uw.edu-ic.cert
+    - name: test.gradepage.uw.edu-uw-idp-cert
+      externalKey: axdd/kv/data/idp-cert
+      data:
+        - name: uw-idp-cert
+          property: cert
 
 environmentVariablesSecrets:
   djangoSecret:
@@ -116,3 +158,11 @@ environmentVariablesSecrets:
     name: SAFE_EMAIL_RECIPIENT
     secretName: test.gradepage.uw.edu-secrets
     secretKey: safe-email-recipient
+  samlSPCert:
+    name: SP_CERT
+    secretName: test.gradepage.uw.edu-ic-certs
+    secretKey: test.gradepage.uw.edu-ic.cert
+  samlIDPCert:
+    name: IDP_CERT
+    secretName: test.gradepage.uw.edu-uw-idp-cert
+    secretKey: uw-idp-cert
