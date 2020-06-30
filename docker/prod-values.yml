@@ -124,8 +124,6 @@ externalSecrets:
           property: registrar-support-email
         - name: registrar-support-phone
           property: registrar-support-phone
-        - name: safe-email-recipient
-          property: safe-email-recipient
     - name: gradepage.uw.edu-sql-secrets
       externalKey: axdd/kv/data/gradepage/prod/sql-secrets
       data:
