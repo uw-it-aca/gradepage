@@ -180,7 +180,7 @@ environmentVariablesSecrets:
     secretKey: email-noreply-address
   samlSPCert:
     name: SP_CERT
-    secretName: prod.gradepage.uw.edu-ic-certs
+    secretName: gradepage.uw.edu-ic-certs
     secretKey: prod.gradepage.uw.edu-ic.cert
   samlIDPCert:
     name: IDP_CERT
