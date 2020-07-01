@@ -115,11 +115,11 @@ LOGGING = {
         },
         'stdout_stream': {
             '()': 'django.utils.log.CallbackFilter',
-            'callback': lambda record: record.levelno < logging.WARN
+            'callback': lambda record: record.levelno < logging.WARNING
         },
         'stderr_stream': {
             '()': 'django.utils.log.CallbackFilter',
-            'callback': lambda record: record.levelno > logging.INFO
+            'callback': lambda record: record.levelno > logging.ERROR
         }
     },
     'formatters': {
