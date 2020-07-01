@@ -25,6 +25,10 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
     nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256"
+lifecycle:
+  enabled: true
+  preStop:
+    enabled: true
 readiness:
   enabled: true
 externalService:
@@ -58,7 +62,7 @@ metrics:
   serviceMonitor:
     enabled: true
 cronjob:
-  enabled: true
+  enabled: false
   jobs:
     - name: submit-graderosters
       schedule: "*/10 8-19 * * 1-5"
@@ -124,6 +128,8 @@ externalSecrets:
           property: registrar-support-email
         - name: registrar-support-phone
           property: registrar-support-phone
+        - name: gradepage-support-email
+          property: gradepage-support-email
     - name: gradepage.uw.edu-sql-secrets
       externalKey: axdd/kv/data/gradepage/prod/sql-secrets
       data:
@@ -170,6 +176,10 @@ environmentVariablesSecrets:
     name: REGISTRAR_SUPPORT_PHONE
     secretName: gradepage.uw.edu-secrets
     secretKey: registrar-support-phone
+  gradepageSupportEmail:
+    name: GRADEPAGE_SUPPORT_EMAIL
+    secretName: test.gradepage.uw.edu-secrets
+    secretKey: gradepage-support-email
   emailHost:
     name: EMAIL_HOST
     secretName: gradepage.uw.edu-secrets

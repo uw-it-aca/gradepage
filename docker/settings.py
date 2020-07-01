@@ -87,9 +87,9 @@ GRADEPAGE_HOST = 'https://' + os.getenv('CLUSTER_CNAME', 'localhost')
 SUBMISSION_DEADLINE_WARNING_HOURS = 48
 GRADE_RETENTION_YEARS = 5
 
-GRADEPAGE_SUPPORT_EMAIL = 'help@uw.edu'
+GRADEPAGE_SUPPORT_EMAIL = os.getenv('GRADEPAGE_SUPPORT_EMAIL', '')
 REGISTRAR_SUPPORT_EMAIL = os.getenv('REGISTRAR_SUPPORT_EMAIL', '')
-REGISTRAR_SUPPORT_PHONE = os.getenv('REGISTRAR_SUPPORT_EMAIL', '')
+REGISTRAR_SUPPORT_PHONE = os.getenv('REGISTRAR_SUPPORT_PHONE', '')
 
 SUPPORTTOOLS_PARENT_APP = 'GradePage'
 SUPPORTTOOLS_PARENT_APP_URL = '/'
@@ -115,11 +115,11 @@ LOGGING = {
         },
         'stdout_stream': {
             '()': 'django.utils.log.CallbackFilter',
-            'callback': lambda record: record.levelno < logging.WARN
+            'callback': lambda record: record.levelno < logging.WARNING
         },
         'stderr_stream': {
             '()': 'django.utils.log.CallbackFilter',
-            'callback': lambda record: record.levelno > logging.INFO
+            'callback': lambda record: record.levelno > logging.ERROR
         }
     },
     'formatters': {
