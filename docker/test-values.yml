@@ -17,6 +17,8 @@ lifecycle:
   enabled: true
   preStop:
     enabled: true
+affinity:
+   podsSpanNodes: true
 readiness:
   enabled: true
 externalService:
@@ -40,10 +42,6 @@ memcached:
   replicaCount: 1
   updateStrategy:
     type: RollingUpdate
-metrics:
-  enabled: true
-  serviceMonitor:
-    enabled: true
 cronjob:
   enabled: false
 certs:
