@@ -10,7 +10,7 @@ ONE_DAY = 60 * 60 * 24
 def get_cache_time(service, url):
     if 'sws' == service:
         if re.match(r'^/student/v\d/term/current', url):
-            return ONE_MINUTE
+            return 10 * ONE_MINUTE
         if re.match(r'^/student/v\d/term/', url):
             return ONE_DAY
         if re.match(r'^/student/v\d/course/', url):
@@ -20,7 +20,7 @@ def get_cache_time(service, url):
         return ONE_MINUTE
 
     if 'pws' == service:
-        return ONE_DAY
+        return ONE_HOUR
 
 
 class RestClientsCache(TimedCache):
