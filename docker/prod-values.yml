@@ -1,6 +1,6 @@
 autoscaling:
   enabled: true
-  minReplicas: 2
+  minReplicas: 1
   maxReplicas: 10
 targetAverageUtilization: 100
 resources:
@@ -10,16 +10,18 @@ resources:
   requests:
     cpu: 256m
     memory: 1024Mi
+affinity:
+   podsSpanNodes: true
 ingress:
   enabled: true
   tls:
     gradepage:
-      secretName: prod.gradepage.uw.edu-ingress-cert
+      secretName: gradepage.uw.edu-ingress-cert
       hosts:
-        - prod.gradepage.uw.edu
+        - gradepage.uw.edu
   hosts:
     gradepage:
-      host: prod.gradepage.uw.edu
+      host: gradepage.uw.edu
       paths:
         - "/"
   annotations:
@@ -57,12 +59,8 @@ memcached:
     - "-v"
   updateStrategy:
     type: RollingUpdate
-metrics:
-  enabled: true
-  serviceMonitor:
-    enabled: true
 cronjob:
-  enabled: false
+  enabled: true
   jobs:
     - name: submit-graderosters
       schedule: "*/10 8-19 * * 1-5"
@@ -100,9 +98,9 @@ environmentVariables:
   - name: AUTH
     value: SAML
   - name: SAML_ENTITY_ID
-    value: https://prod.gradepage.uw.edu/saml2
+    value: https://gradepage.uw.edu/shibboleth
   - name: CLUSTER_CNAME
-    value: prod.gradepage.uw.edu
+    value: gradepage.uw.edu
   - name: SAML_FORCE_AUTHN
     value: "True"
   - name: SP_USE_2FA
@@ -147,8 +145,8 @@ externalSecrets:
     - name: gradepage.uw.edu-ic-certs
       externalKey: axdd/kv/data/gradepage/prod/ic-certs
       data:
-        - name: prod.gradepage.uw.edu-ic.cert
-          property: prod.gradepage.uw.edu-ic.cert
+        - name: gradepage.uw.edu-ic.cert
+          property: gradepage.uw.edu-ic.cert
     - name: gradepage.uw.edu-uw-idp-cert
       externalKey: axdd/kv/data/idp-cert
       data:
@@ -191,7 +189,7 @@ environmentVariablesSecrets:
   samlSPCert:
     name: SP_CERT
     secretName: gradepage.uw.edu-ic-certs
-    secretKey: prod.gradepage.uw.edu-ic.cert
+    secretKey: gradepage.uw.edu-ic.cert
   samlIDPCert:
     name: IDP_CERT
     secretName: gradepage.uw.edu-uw-idp-cert
