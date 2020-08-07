@@ -1,8 +1,6 @@
 from .base_settings import *
 import os
 
-ALLOWED_HOSTS = ['*']
-
 INSTALLED_APPS += [
     'course_grader.apps.CourseGraderConfig',
     'supporttools',
