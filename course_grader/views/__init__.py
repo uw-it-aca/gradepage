@@ -40,7 +40,7 @@ def url_for_export(section_id):
 
 def section_status_params(section, instructor):
     section_id = section_url_token(section, instructor)
-    grading_period_open = is_grading_period_open(section.term)
+    grading_period_open = is_grading_period_open(section)
     grading_deadline = None
     if section.term.grade_submission_deadline is not None:
         grading_deadline = section.term.grade_submission_deadline.isoformat()

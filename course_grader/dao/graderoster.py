@@ -39,7 +39,7 @@ def graderoster_for_section(section, instructor, requestor,
     # If submitted_graderosters_only is False and a graderoster is available
     # for this term, start with a "live" graderoster
     if (not submitted_graderosters_only and
-            is_graderoster_available_for_term(section.term)):
+            is_graderoster_available_for_term(section)):
         ret_graderoster = get_graderoster(section, instructor, requestor)
         ret_graderoster.secondary_section = secondary_section
         ret_graderoster.submissions = {}

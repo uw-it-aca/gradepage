@@ -69,7 +69,7 @@ def create_message(graderoster, submitter):
         "gradepage_url": gradepage_host,
         "section_url": "{host}/section/{section_id}".format(
             host=gradepage_host, section_id=section_id),
-        "grading_window_open": is_grading_period_open(section.term),
+        "grading_window_open": is_grading_period_open(section),
     }
 
     if params["grading_window_open"]:

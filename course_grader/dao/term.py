@@ -18,8 +18,8 @@ def submission_deadline_warning(term):
     return (current_datetime() >= warning_start)
 
 
-def is_grading_period_open(term):
-    return term.is_grading_period_open(current_datetime())
+def is_grading_period_open(term_or_section):
+    return term_or_section.is_grading_period_open(current_datetime())
 
 
 def is_grading_period_past(term):
@@ -67,15 +67,16 @@ def all_viewable_terms():
     return terms
 
 
-def is_graderoster_available_for_term(term):
-    if is_grading_period_open(term):
+def is_graderoster_available_for_term(section):
+    if is_grading_period_open(section):
         return True
 
     # Return True if the current date is after term.grade_submission_deadline,
     # but on or before the following term.last_day_instruction
     curr_dt = current_datetime()
-    if (curr_dt > term.grade_submission_deadline and
-            curr_dt.date() <= get_term_after(term).last_day_instruction):
+    if (curr_dt > section.term.grade_submission_deadline and
+            curr_dt.date() <= get_term_after(
+                section.term).last_day_instruction):
         return True
 
     return False
