@@ -51,7 +51,7 @@ def section(request, url_token):
             response = render(request, "503.html", {})
         return response
 
-    if (not is_grading_period_open(section.term) and
+    if (not is_grading_period_open(section) and
             not is_grading_period_past(section.term)):
         # future grading period
         return HttpResponseRedirect("/")
@@ -76,7 +76,7 @@ def section(request, url_token):
         "export_url": url_for_export(url_token),
     })
 
-    if is_grading_period_open(now_term):
+    if is_grading_period_open(section):
         import_id = request.GET.get("cgb_source_id", None)
         if valid_gradebook_id(import_id):
             params["auto_import_id"] = import_id

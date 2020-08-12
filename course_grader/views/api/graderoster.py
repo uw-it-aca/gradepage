@@ -89,7 +89,7 @@ class GradeRoster(GradeFormHandler):
 
         section_id = kwargs.get("section_id")
 
-        if is_grading_period_open(self.section.term):
+        if is_grading_period_open(self.section):
             kwargs["saved_grades"] = self.saved_grades(section_id)
 
         content = self.response_content(**kwargs)
@@ -239,7 +239,7 @@ class GradeRoster(GradeFormHandler):
     def response_content(self, **kwargs):
         section_id = kwargs.get("section_id")
         saved_grades = kwargs.get("saved_grades", {})
-        grading_period_open = is_grading_period_open(self.section.term)
+        grading_period_open = is_grading_period_open(self.section)
         allows_writing_credit = self.graderoster.allows_writing_credit
         sources = dict(GradeImport.SOURCE_CHOICES)
 
@@ -409,7 +409,7 @@ class GradeRosterExport(GradeRoster):
             "grading_open: {grading_open}, current_term: {current_term}, "
             "time_taken: {time_taken}").format(
                 section_id=section_id,
-                grading_open=is_grading_period_open(self.section.term),
+                grading_open=is_grading_period_open(self.section),
                 current_term=current_term(),
                 time_taken=time.time() - start_time))
 

@@ -132,7 +132,7 @@ def graderoster_status_params(graderoster, secondary_section_id=None):
             data["grade_import"] = grade_import.json_data() if (
                 grade_import is not None) else None
 
-    if (is_grading_period_open(section.term) and data["unsubmitted_count"]):
+    if (is_grading_period_open(section) and data["unsubmitted_count"]):
         data["deadline_warning"] = submission_deadline_warning(section.term)
 
     return data
