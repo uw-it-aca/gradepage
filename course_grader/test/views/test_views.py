@@ -146,4 +146,7 @@ class ViewFunctionsTest(TestCase):
         self.assertEquals(p['grading_period_open'], False)
         self.assertEquals(
             p['grade_submission_deadline'], '2013-08-27T17:00:00')
-        self.assertEquals(p['grading_status'], None)
+        self.assertEquals(
+            p['grading_status'], (
+                'Summer B-term grade submission opens on August 16 '
+                'at  8:00 AM PDT.'))
