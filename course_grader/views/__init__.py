@@ -71,5 +71,9 @@ def section_status_params(section, instructor):
         data["grading_status"] = (
             "Summer full-term grade submission opens on {}.".format(
                 display_datetime(section.term.grading_period_open)))
+    elif section.is_summer_b_term():
+        data["grading_status"] = (
+            "Summer B-term grade submission opens on {}.".format(
+                display_datetime(section.term.grading_period_open)))
 
     return data
