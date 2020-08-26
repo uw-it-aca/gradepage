@@ -35,6 +35,7 @@ def get_closed_grading_messages(params={}):
         "next_year": next_term.year,
         "next_quarter": next_term.get_quarter_display(),
         "next_window_open_date": display_datetime(next_open_date),
+        "grade_submission_deadline": prev_term.grade_submission_deadline,
     })
 
     if (next_term.first_day_quarter < current_datetime().date()):
