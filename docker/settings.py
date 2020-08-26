@@ -72,8 +72,10 @@ PERSISTENT_MESSAGE_AUTH_MODULE = 'course_grader.views.support.can_manage_persist
 EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT = 587
 EMAIL_TIMEOUT = 15
+EMAIL_USE_TLS = True
 EMAIL_SSL_CERTFILE = os.getenv('CERT_PATH', '')
 EMAIL_SSL_KEYFILE = os.getenv('KEY_PATH', '')
+
 EMAIL_NOREPLY_ADDRESS = os.getenv('EMAIL_NOREPLY_ADDRESS')
 if os.getenv('ENV', 'localdev') == 'prod':
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
