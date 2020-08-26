@@ -1,4 +1,3 @@
-from django.utils.timezone import get_default_timezone, make_aware
 from course_grader.dao import current_datetime, display_datetime
 from course_grader.dao.term import (
     next_gradable_term, previous_gradable_term, submission_deadline_warning,
@@ -14,8 +13,7 @@ def get_open_grading_messages(term, params={}):
     params.update({
         "year": term.year,
         "quarter": term.get_quarter_display(),
-        "grade_submission_deadline": make_aware(term.grade_submission_deadline,
-                                                get_default_timezone()),
+        "grade_submission_deadline": term.grade_submission_deadline,
     })
     return _get_persistent_messages(tags, params)
 
