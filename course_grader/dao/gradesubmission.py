@@ -55,7 +55,7 @@ def submit_grades(model):
                         message=graderoster.items[idx].status_message))
 
         except Exception as ex:
-            pass
+            logger.error("Error logging grade: {}".format(ex))
 
     return graderoster
 
