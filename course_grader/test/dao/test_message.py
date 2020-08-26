@@ -39,7 +39,7 @@ class MessageDAOFunctionsTest(TestCase):
 
     def test_get_open_grading_messages(self):
         # Grading open
-        with self.settings(CURRENT_DATETIME_OVERRIDE='2013-12-10 00:00:00',
+        with self.settings(CURRENT_DATETIME_OVERRIDE='2013-12-15 00:00:00',
                            SUBMISSION_DEADLINE_WARNING_HOURS=48):
             messages = get_open_grading_messages(current_term())
             self.assertEqual(messages['message_level'], 'warning')
@@ -52,7 +52,16 @@ class MessageDAOFunctionsTest(TestCase):
                            SUBMISSION_DEADLINE_WARNING_HOURS=48):
             messages = get_open_grading_messages(current_term())
             self.assertEqual(messages['message_level'], 'danger')
-            self.assertEqual(messages['messages'][0].startswith(
-                '<strong>Attention!</strong> The grading period closes'), True)
-            self.assertEqual(messages['messages'][0].endswith(
-                'Grades cannot be submitted online after deadline.'), True)
+            self.assertEqual(messages['messages'][0], (
+                '<strong>Attention!</strong> The grading period closes at '
+                '<strong>5:00 PM tomorrow</strong>! Grades cannot be '
+                'submitted online after the deadline.'))
+
+        with self.settings(CURRENT_DATETIME_OVERRIDE='2013-12-17 16:00:00',
+                           SUBMISSION_DEADLINE_WARNING_HOURS=48):
+            messages = get_open_grading_messages(current_term())
+            self.assertEqual(messages['message_level'], 'danger')
+            self.assertEqual(messages['messages'][0], (
+                '<strong>Attention!</strong> The grading period closes at '
+                '<strong>5:00 PM today</strong>! Grades cannot be '
+                'submitted online after the deadline.'))

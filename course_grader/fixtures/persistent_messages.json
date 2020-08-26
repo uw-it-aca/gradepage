@@ -81,7 +81,7 @@
         "model": "persistent_message.message",
         "pk": 4,
         "fields": {
-            "content": "{% load humanize %}<strong>Attention!</strong> The grading period closes {{ grade_submission_deadline|naturaltime }}! Grades cannot be submitted online after deadline.",
+            "content": "<strong>Attention!</strong> The grading period closes at <strong>{{ rel_grade_submission_deadline }}</strong>! Grades cannot be submitted online after the deadline.",
             "level": 40,
             "begins": "2018-01-01T00:00:00Z",
             "created": "2018-01-01T00:00:00Z",
