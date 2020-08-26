@@ -37,7 +37,7 @@ class NotificationDAOFunctionsTest(TestCase):
             item.status_code = '200'
 
         (subject, text, html) = create_message(self.graderoster, self.user)
-        return
+
         self.assertEquals(
             subject, 'Bill Teacher submitted four grades for CSS 161 A')
         self.assertEquals(text, (
@@ -67,7 +67,7 @@ class NotificationDAOFunctionsTest(TestCase):
             item.status_code = '400'
 
         (subject, text, html) = create_message(self.graderoster, self.user)
-        return
+
         self.assertEquals(
             subject, 'Failed grade submission attempt for CSS 161 A')
         self.assertEquals(text, (
@@ -94,7 +94,7 @@ class NotificationDAOFunctionsTest(TestCase):
         self.graderoster.items[0].status_code = '400'
 
         (subject, text, html) = create_message(self.graderoster, self.user)
-        return
+
         self.assertEquals(
             subject, 'Failed grade submission attempt for CSS 161 A')
         self.assertEquals(text, (
