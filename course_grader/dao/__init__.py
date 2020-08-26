@@ -16,16 +16,9 @@ SWS_DAO._update_get = __update_get
 def current_datetime():
     override_dt = getattr(settings, "CURRENT_DATETIME_OVERRIDE", None)
     if override_dt is not None:
-        now_dt = datetime.strptime(override_dt, "%Y-%m-%d %H:%M:%S")
+        return datetime.strptime(override_dt, "%Y-%m-%d %H:%M:%S")
     else:
-        now_dt = datetime.now()
-    return datetime_aware(now_dt)
-
-
-def datetime_aware(dt):
-    if is_naive(dt):
-        return make_aware(dt, get_default_timezone())
-    return localtime(dt)
+        return datetime.now()
 
 
 def display_datetime(dt):

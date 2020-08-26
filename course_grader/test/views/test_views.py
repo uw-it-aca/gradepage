@@ -142,7 +142,7 @@ class ViewFunctionsTest(TestCase):
         user = PWS().get_person_by_netid('javerage')
 
         p = section_status_params(section, user)
-        return
+
         self.assertEquals(p['grading_period_open'], False)
         self.assertEquals(
             p['grade_submission_deadline'], '2013-08-27T17:00:00')
