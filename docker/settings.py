@@ -60,7 +60,7 @@ if os.getenv('ENV', 'localdev') == 'localdev':
 else:
     GRADEPAGE_SUPPORT_GROUP = os.getenv('SUPPORT_GROUP', 'u_acadev_gradepage_support')
     GRADEPAGE_ADMIN_GROUP = os.getenv('ADMIN_GROUP', 'u_acadev_gradepage_admins')
-    RESTCLIENTS_DAO_CACHE_CLASS = 'course_grader.cache.RestClientsMemcachedCache'
+    RESTCLIENTS_DAO_CACHE_CLASS = 'course_grader.cache.RestClientsCache'
     PAST_TERMS_VIEWABLE = 4
 
 ALLOW_GRADE_SUBMISSION_OVERRIDE = (os.getenv('ENV', 'localdev') != 'prod')
