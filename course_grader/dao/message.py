@@ -7,13 +7,20 @@ from persistent_message.models import Message
 
 def get_open_grading_messages(term, params={}):
     tags = ["is_open"]
+    rel_grade_submission_deadline = ""
     if submission_deadline_warning(term):
         tags.append("just_before_deadline")
+        delta = term.grade_submission_deadline - current_datetime()
+        if delta.days == 0:
+            rel_grade_submission_deadline = "5:00 PM today"
+        elif delta.days == 1:
+            rel_grade_submission_deadline = "5:00 PM tomorrow"
 
     params.update({
         "year": term.year,
         "quarter": term.get_quarter_display(),
         "grade_submission_deadline": term.grade_submission_deadline,
+        "rel_grade_submission_deadline": rel_grade_submission_deadline,
     })
     return _get_persistent_messages(tags, params)
 
@@ -35,6 +42,7 @@ def get_closed_grading_messages(params={}):
         "next_year": next_term.year,
         "next_quarter": next_term.get_quarter_display(),
         "next_window_open_date": display_datetime(next_open_date),
+        "grade_submission_deadline": prev_term.grade_submission_deadline,
     })
 
     if (next_term.first_day_quarter < current_datetime().date()):

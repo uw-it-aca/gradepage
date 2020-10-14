@@ -22,10 +22,11 @@ setup(
     packages=['course_grader'],
     include_package_data=True,
     install_requires = [
-        'Django>=2.0.13,<2.1',
+        'Django>=2.1,<2.2',
         'django-compressor',
         'django-user-agents',
         'django-userservice>=3.1.2',
+        'uw-memcached-clients>=1.0.2,<2.0',
         'UW-RestClients-Core>=1.3.3,<2.0',
         'UW-RestClients-SWS>=2.2.7,<3.0',
         'UW-RestClients-PWS>=2.1,<3.0',
