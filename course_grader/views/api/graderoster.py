@@ -389,7 +389,7 @@ class GradeRoster(GradeFormHandler):
         return {"graderoster": data}
 
 
-@method_decorator(never_cache, name='dispatch')
+@method_decorator(never_cache, name="dispatch")
 class GradeRosterExport(GradeRoster):
     def get(self, request, *args, **kwargs):
         start_time = time.time()
@@ -406,11 +406,13 @@ class GradeRosterExport(GradeRoster):
 
         logger.info((
             "Graderoster exported for section: {section_id}, "
-            "grading_open: {grading_open}, current_term: {current_term}, "
-            "time_taken: {time_taken}").format(
+            "grading_open: {grading_open}, submitted: {submitted}, "
+            "current_term: {current_term}, time_taken: {time_taken}").format(
                 section_id=section_id,
                 grading_open=is_grading_period_open(self.section),
-                current_term=current_term(),
+                submitted=content.get("graderoster").get(
+                    "has_successful_submissions"),
+                current_term=current_term().canvas_sis_id(),
                 time_taken=time.time() - start_time))
 
         return response
