@@ -54,6 +54,8 @@ memcached:
   replicaCount: 3
   command:
     - "memcached"
+    - "-m"
+    - "256"
     - "-o"
     - "modern"
     - "-v"
