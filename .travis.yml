@@ -32,7 +32,7 @@ after_success:
 - |
   if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     case "$TRAVIS_BRANCH" in
-      "master")
+      "main")
         export APP_INSTANCE="prod";
         ;;
       "qa")
