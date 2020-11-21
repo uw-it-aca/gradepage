@@ -22,7 +22,7 @@ setup(
     packages=['course_grader'],
     include_package_data=True,
     install_requires = [
-        'Django>=2.1,<2.2',
+        'Django>=2.2.13,<3.0',
         'django-compressor',
         'django-user-agents',
         'django-userservice>=3.1.2',
