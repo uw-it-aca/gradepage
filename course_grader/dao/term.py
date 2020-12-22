@@ -19,7 +19,6 @@ def submission_deadline_warning(term):
 
 
 def is_grading_period_open(term_or_section):
-    return True
     return term_or_section.is_grading_period_open(current_datetime())
 
 
@@ -69,7 +68,6 @@ def all_viewable_terms():
 
 
 def is_graderoster_available_for_term(section):
-    return True
     if is_grading_period_open(section):
         return True
 
