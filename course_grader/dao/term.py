@@ -9,7 +9,10 @@ from uw_sws.term import (
 from course_grader.dao import current_datetime
 from course_grader.exceptions import InvalidTerm
 from datetime import timedelta
+from logging import getLogger
 import re
+
+logger = getLogger(__name__)
 
 
 def submission_deadline_warning(term):
@@ -19,6 +22,10 @@ def submission_deadline_warning(term):
 
 
 def is_grading_period_open(term_or_section):
+    try:
+        logger.info("GSD {}:".format(term.grade_submission_deadline))
+    except Exception:
+        logger.info("GSD {}:".format(section.term.grade_submission_deadline))
     return term_or_section.is_grading_period_open(current_datetime())
 
 
