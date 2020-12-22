@@ -68,6 +68,7 @@ def all_viewable_terms():
 
 
 def is_graderoster_available_for_term(section):
+    return True
     if is_grading_period_open(section):
         return True
 
