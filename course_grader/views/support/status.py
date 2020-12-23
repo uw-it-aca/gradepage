@@ -5,7 +5,8 @@ from django.utils import timezone
 from uw_saml.decorators import group_required
 from uw_sws.models import Term
 from course_grader.models import SubmittedGradeRoster, GradeImport
-from course_grader.dao.term import term_from_param, current_term
+from course_grader.dao.term import (
+    term_from_param, current_term, current_datetime)
 from datetime import datetime, timedelta
 from logging import getLogger
 import json
@@ -86,6 +87,7 @@ def status(request):
         "selected_quarter": selected_term.get_quarter_display(),
         "grading_period_open": grading_period_open,
         "grade_submission_deadline": selected_term.grade_submission_deadline,
+        "current_datetime": current_datetime(),
         "chart_data": json.dumps(chart_data),
         "term_id": term_id
     }
