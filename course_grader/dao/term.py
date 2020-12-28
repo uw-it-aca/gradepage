@@ -22,12 +22,6 @@ def submission_deadline_warning(term):
 
 
 def is_grading_period_open(term_or_section):
-    try:
-        logger.info("GSD {}:".format(
-            term_or_section.grade_submission_deadline))
-    except Exception:
-        logger.info("GSD {}:".format(
-            term_or_section.term.grade_submission_deadline))
     return term_or_section.is_grading_period_open(current_datetime())
 
 

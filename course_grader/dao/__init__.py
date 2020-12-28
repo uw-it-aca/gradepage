@@ -2,10 +2,7 @@ from django.conf import settings
 from django.utils.timezone import (
     get_default_timezone, localtime, is_naive, make_aware)
 from datetime import datetime
-from logging import getLogger
-from uw_sws import SWS_DAO
-
-logger = getLogger(__name__)
+from uw_sws import SWS_DAO, sws_now
 
 
 def __update_get(self, url, response):
@@ -21,9 +18,7 @@ def current_datetime():
     if override_dt is not None:
         return datetime.strptime(override_dt, "%Y-%m-%d %H:%M:%S")
     else:
-        current_dt = datetime.now()
-        logger.info("CURRENT TIME: {}".format(current_dt))
-        return datetime.now()
+        return sws_now()
 
 
 def display_datetime(dt):

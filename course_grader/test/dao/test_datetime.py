@@ -1,5 +1,5 @@
 from django.test import TestCase
-from course_grader.dao import *
+from course_grader.dao import current_datetime, display_datetime, sws_now
 from django.utils.timezone import utc
 from datetime import datetime
 
@@ -15,7 +15,7 @@ class DateTimeFunctionsTest(TestCase):
 
         with self.settings(CURRENT_DATETIME_OVERRIDE=None):
             self.assertEquals(current_datetime().strftime('%Y-%m-%d %H:%M'),
-                              datetime.now().strftime('%Y-%m-%d %H:%M'))
+                              sws_now().strftime('%Y-%m-%d %H:%M'))
 
     def test_display_datetime(self):
         with self.settings(TIME_ZONE='UTC'):

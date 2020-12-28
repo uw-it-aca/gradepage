@@ -1,7 +1,9 @@
-FROM acait/django-container:1.1.19 as app-container
+FROM acait/django-container:1.2.5 as app-container
 
 USER root
+
 RUN apt-get update && apt-get install mysql-client libmysqlclient-dev -y
+
 USER acait
 
 ADD --chown=acait:acait course_grader/VERSION /app/course_grader/
@@ -22,7 +24,7 @@ RUN . /app/bin/activate && pip install nodeenv && nodeenv -p &&\
 RUN . /app/bin/activate && python manage.py collectstatic --noinput &&\
     python manage.py compress -f
 
-FROM acait/django-test-container:1.1.19 as app-test-container
+FROM acait/django-test-container:1.2.5 as app-test-container
 
 COPY --from=app-container /app/ /app/
 COPY --from=app-container /static/ /static/
