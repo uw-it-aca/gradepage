@@ -6,6 +6,7 @@
 <h2>GradePage Status for {{ selected_quarter }} {{ selected_year }}</h2>
 <div class="well">
     <div>
+        Current Time: {{ current_datetime|date:"D, M j Y g:i A T" }}<br/>
         Grading Period Open: {{ grading_period_open|date:"D, M j Y g:i A T" }}<br/>
         Grade Submission Deadline: {{ grade_submission_deadline|date:"D, M j Y g:i A T" }}<br/>
         Sections submitted: {{ graderosters|length }}
