@@ -1,11 +1,12 @@
 sudo: required
+
 language: python
 python:
 - '3.6'
+
 services:
 - docker
-os:
-- linux
+
 env:
   global:
   - RELEASE_NAME="gradepage"
@@ -16,40 +17,34 @@ env:
   - secure: M4DJRQc68An9FGzfhpzkGlBbLBNNdc+SCvxGidsAkG95xOqAqRvDyJLKbflzNLAFt1iVU2ff1EyNYBJeRPrQu4IHx0X4FfdrDdTooaHl84IGBbgWDUlIstLbjQwMnIJDqmZQrLnG81L95+NBe4kp1WZk9r9kQdYx5iXkv0JlXzjtAWE8tq5lRl13LldFA7g3kwaXV6brO3Wr7GdNCwb7Sho8eW5k53LmBC5A50u5FGYDl8ttkCXfB3GjQVavy/oFKVmduxxv9PHnhjkmpcwUzkN70oD3VM7HaeuBP2QF9kQKYYDbAzznHDr3wOYwRbIahx77LmU/rDvrETQAjYHLVSJZPw0UIjWJTQrhkkzGUHFSpu4mYvopegayBHZkweM/wrPoSKE5C/AyX/B50px1da8aIQARfb+yiQcDebaDEa6+ed3SYUXT9P8dMJ2ZFZe8zYQC1q5M54gHsJl8DKGPuTk+kgQdMycVSk198i2x2iA20RfSUiS3sAHQKDC2fvi8/DTbdST17bSdZvY1ZA1Ae2IgUrEziauoixK5FnviHutfzbKden6tYVCulr8PS3Yz/emFqZFhLPVEjIfj8apYjgarW8D+3Y30Ym46bNx7Le3Jnk/3uqqJQiGGcnj6JlL4Wd/8dphIKZXslBgKR6ozxtPiXMpu+IE1Na1Qsp1nO8U=
   - secure: 52rIYlSZXi+wZbCDUy5uRqGq6MM3P5ZqeBg/jxx+25hhMcMQCRyPyJqMt3My46V+LCNWxHPterxU3c7rY1PYSGVzL6GAsgw4S63hV7CMA8jVzj0xOCzfEzdmHZlrFBT6n1iAY6nDB/tDYaGA5qcWIPtAt6Gr8pDBEWgr5RjDhqO4M+9aby0xaBaBH/YZz9V0i/uc3lx5CTiLVaZ+yskW/xdxMSt33pu1FVthzthKAprowyQwO9IiBa45OIl/mhXucfDAmNC4zuf+T7bp3vYQjdIrA6y79eUPTa8UMds8CPXWr+tGfZoE4X5WUmfUvXlZRCkZaJiTxHslQecidIWlHuQiEtYfSGxkLL66Pz4MDPeuIuycVzZtsKwUObMwiCTdbeJZ8EpwB2fZNBpD3sg/WjZKTow34ri4FV8cmA8kMY0FsYG9cgV45N6jQqdbA6BWp2wCqECR/6pxRtQs9znkYzqsmR4Klr54AWWmMd7ApgV3iNKasIYUEw4ahUc6vr+OslF/RrTGhkTkgSpKO7NK8KgOMSedx4AicNhqjYaLwEjt3GdfZUngxJi7n/PZ6+R1gXccE/47wX7JWj1c/wpzVFSQSljwubXBSYinbjfPqtYoB9WhCTr0KwemadZAwjdE5jjqJS5uZnuGJ40783cyTVToZFvuXCmzAl9ezxB0/bA=
   - secure: DlxECNDy5sqdeSanIpOzIzZe1ThrVl3aN9ON1vPfoOHv230or6Rk8cdgVauMp5anfbYTwROf8m9MQpMKMTnR+O7NSRJTjGUjQWDRVkTUSK/BHLFR3GJangGq5wybXcxGinK26IRyJj7aPOYBggEmod65UyE5zaF2KLLdjQJy30B/yt2BY3uwlHdJH971TMw+cSTwDNjz7g444gzwVvSbGxKyPbk66JIREB/Df50QZcNwyTEKH5fK6fDljppTcWl559srd6R6N5RJ7ikjak3RlCOV63I33C/rbZhLuH83X1b7iOkOa66jfeu7dDD1sOdaty61IGDQxnvlsyUpZUI0yOdDdEI025A9pl1jDOTMPX039W3c4XNh9WbfAeRn7IT8gj/9EefCPJbmp4X9o0svDf0ezn2BF0l5TcGyPDc1/71wnOou+FVq8QIu6rkJjn4DG5bR7BdK2vY2QQgLXcn5Tocf3BIf7NoHRuneJPsyDPqLS9W2EKcbnlrN5W7e2CFR8Cfm8VttLz7ucu7tlMx5ssFp1TEXKVvmdtmk2Lu7Xfp3mf76FOvkq1p0xxqLS/O+UkPYuogWOzEnrDz/GXQGm8X5lkPiNCADicjFW7vLirS0EapuPaDs+WL5bnw/pJxnmBYefPxgM9g2/EnN5MEUNXiZMGUPrS4y7QDccOQdsEs=
+
 install:
 - docker build --target app-container -t "$IMAGE_TAG" .
-- docker build -t "${IMAGE_TAG}-test" .
+- docker build -t app-test-container .
+
 before_script:
 - pip install coverage
 - pip install coveralls
+
 script:
-- docker run -u root -it -v /tmp:/coverage -e DJANGO_APP="$DJANGO_APP" -e "ENV=localdev"
-  -e "AUTH=SAML_MOCK" "${IMAGE_TAG}-test" bash -c ". ./travis-ci/test.sh"
+- docker run -u root -it -v /tmp:/coverage -e DJANGO_APP="$DJANGO_APP" -e "ENV=localdev" -e "AUTH=SAML_MOCK" app-test-container bash -c ". ./travis-ci/test.sh"
+
 after_success:
 - cp /tmp/.coverage.* .
 - coverage combine
 - coveralls
-- |
-  if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-    case "$TRAVIS_BRANCH" in
-      "main")
-        export APP_INSTANCE="prod";
-        ;;
-      "qa")
-        export APP_INSTANCE="test";
-        ;;
-      *)
-        unset APP_INSTANCE
-        ;;
-    esac
-    if [[ "$APP_INSTANCE" ]]; then
-      curl -Ls ${DEPLOY_SCRIPT_BASE}/travis-ci/deploy.sh | bash;
-    fi
-  fi
-cache:
-  directories:
-  - "$HOME/helm"
-  - "$HOME/kubeval"
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: >-
+      curl -Ls ${DEPLOY_SCRIPT_BASE}/travis-ci/deploy.sh | bash
+    on:
+      all_branches: true
+      condition: >-
+        $TRAVIS_PULL_REQUEST == "false" &&
+        $TRAVIS_BRANCH =~ ^(main|qa)$
+
 notifications:
   slack:
     secure: bgGViuJPtyDmNQoB1ruD2x2ZPYDEksExmjytHB5Y26unuTs7kDR8/3mQiDRqKcwvrwMZ/sVYgqMCU6x9yZuBbx/pD60c+lBP8rTF/Phm5hg6+LAstMxPrGm8B4+0SKO3eMED6RaFzZpnIOAQkFK7wMXEAf2rMRukU5EGpzYHpEluCqj0Y3AsgToGbFi49StcxMjZ4dgMOVb/AAl2vxmO7umxXvXa2rcBieJdG+dMdPYIMZiyIBvNDWqm2h61FS3iQRlsmaOOXZWCl5iGhTqes2JCsGNS5eFf8MysBKP1O+FWbaqSx4AULSxUKBb4lYGrtU8vKy66LyvtxBOhwq4x9+e6KdA9MLBl9YDccPj0W5mTlXuB0FqDHeH8mgD7ip3/BoiNu6K8d+T867D0mib3+K/iQxFBpwBfvUkCjurK2IP9TUz4bkyY7KI6PF69KZGROgymh0uHDCq/4zhyWehwoYUZW14LY6f6Pmral3kvK8MDLBMiNXj75Mr6URZ/1xDAsInlw9l3Qb95CUAr2hI6UJ7a9VYdQQEdGPOHhlqKVFtWHnocCK0q0o+mTqt+7v2HzsXQrauHhVqbjlyUfzlc/PK+F0TNNZx3krZCQ+foK4tSi5lqkCJ8m9mIKMG0YYTnp4QqwIxB4XJiTTIt3IppVNWubLqfFvFKUMjTabNtzAk=
