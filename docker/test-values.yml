@@ -35,7 +35,7 @@ database:
 repo: gradepage
 instance: test
 image:
-  repository: registry.hub.docker.com/acait/gradepage
+  repository: gcr.io/uwit-mci-axdd/gradepage
   tag: IMAGE_TAG
 memcached:
   enabled: true
