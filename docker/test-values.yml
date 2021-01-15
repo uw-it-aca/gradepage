@@ -21,6 +21,8 @@ affinity:
    podsSpanNodes: true
 readiness:
   enabled: true
+securityPolicy:
+  enabled: true
 externalService:
   enabled: true
   name: gradepage-db-service
