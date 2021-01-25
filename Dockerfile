@@ -19,7 +19,7 @@ ADD --chown=acait:acait docker/app_start.sh /scripts
 RUN chmod u+x /scripts/app_start.sh
 
 RUN . /app/bin/activate && pip install nodeenv && nodeenv -p &&\
-    npm install -g npm && ./bin/npm install less -g
+    npm install -g npm && ./bin/npm install less@3.13.1 -g
 
 RUN . /app/bin/activate && python manage.py collectstatic --noinput &&\
     python manage.py compress -f
