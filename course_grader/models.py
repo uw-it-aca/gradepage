@@ -33,8 +33,8 @@ class SubmittedGradeRosterManager(models.Manager):
     def resubmit_failed(self):
         compare_dt = datetime.now(timezone.utc) - timedelta(minutes=10)
         fails = super(SubmittedGradeRosterManager, self).get_queryset().filter(
+            Q(status_code__isnull=False) | Q(submitted_date__lt=compare_dt),
             accepted_date__isnull=True,
-            Q(status_code__isnull=False) | Q(submitted_date__lt=compare_dt)
         ).order_by('submitted_date')
 
         for roster in fails:
