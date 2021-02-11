@@ -9,10 +9,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         translation.activate(settings.LANGUAGE_CODE)
-
-        models = SubmittedGradeRoster.objects.filter(
-            accepted_date__isnull=True,
-            status_code__isnull=False).order_by("submitted_date")
-
-        for model in models:
-            model.submit()
+        SubmittedGradeRoster.objects.resubmit_failed()

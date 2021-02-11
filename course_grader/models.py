@@ -8,6 +8,7 @@ from course_grader.dao.catalyst import grades_for_section as catalyst_grades
 from course_grader.dao.gradesubmission import submit_grades
 from course_grader.dao.notification import notify_grade_submitters
 from course_grader.exceptions import InvalidGradingScale
+from datetime import datetime, timedelta, timezone
 from logging import getLogger
 from decimal import Decimal
 import json
@@ -28,6 +29,16 @@ class SubmittedGradeRosterManager(models.Manager):
 
         return super(SubmittedGradeRosterManager, self).get_queryset().filter(
             *args, **kwargs).order_by('secondary_section_id')
+
+    def resubmit_failed(self):
+        compare_dt = datetime.now(timezone.utc) - timedelta(minutes=10)
+        fails = super(SubmittedGradeRosterManager, self).get_queryset().filter(
+            Q(status_code__isnull=False) | Q(submitted_date__lt=compare_dt),
+            accepted_date__isnull=True,
+        ).order_by('submitted_date')
+
+        for roster in fails:
+            roster.submit()
 
     def get_status_by_term(self, term):
         return super(SubmittedGradeRosterManager, self).get_queryset().filter(
