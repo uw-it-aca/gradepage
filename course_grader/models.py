@@ -8,7 +8,7 @@ from course_grader.dao.catalyst import grades_for_section as catalyst_grades
 from course_grader.dao.gradesubmission import submit_grades
 from course_grader.dao.notification import notify_grade_submitters
 from course_grader.exceptions import InvalidGradingScale
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from logging import getLogger
 from decimal import Decimal
 import json
