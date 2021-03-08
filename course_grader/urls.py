@@ -8,7 +8,7 @@ from course_grader.views.support.search import graderosters, grade_imports
 from course_grader.views.api.sections import Sections
 from course_grader.views.api.graderoster import (
     GradeRoster, GradeRosterStatus, GradeRosterExport)
-from course_grader.views.api.importgrades import ImportGrades
+from course_grader.views.api.importgrades import ImportGrades, UploadGrades
 from course_grader.views.api.conversionscales import ConversionScales
 from course_grader.views.api.submitted_graderoster import (
     SubmissionsByTerm, SubmittedGradeRoster)
@@ -35,6 +35,9 @@ urlpatterns = [
     re_path(
         r'^api/v1/import/(?P<section_id>[^/]*)/(?P<import_id>[\d]*)$',
         ImportGrades.as_view(), name='grade-import-id'),
+    re_path(
+        r'^api/v1/import_file/(?P<section_id>[^/]*)$',
+        UploadGrades.as_view(), name='grade-import-file'),
     re_path(
         r'^api/v1/conversion_scales/(?P<scale>[a-z]*)$',
         ConversionScales.as_view(), name='conversion-scales'),

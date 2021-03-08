@@ -216,7 +216,7 @@ class ImportGrades(GradeFormHandler):
         return self.json_response({"grade_import": return_data})
 
 
-class Uploadgrades(ImportGrades):
+class UploadGrades(ImportGrades):
     def post(self, request, *args, **kwargs):
         error = self._authorize(request, *args, **kwargs)
         if error is not None:
