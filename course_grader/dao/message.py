@@ -11,9 +11,10 @@ def get_open_grading_messages(term, params={}):
     if submission_deadline_warning(term):
         tags.append("just_before_deadline")
         delta = term.grade_submission_deadline - current_datetime()
-        if delta.days == 0:
+        seconds_remaining = (delta.days * 24 * 3600) + delta.seconds
+        if seconds_remaining < (17 * 3600):
             rel_grade_submission_deadline = "5:00 PM today"
-        elif delta.days == 1:
+        elif seconds_remaining < (41 * 3600):
             rel_grade_submission_deadline = "5:00 PM tomorrow"
 
     params.update({
