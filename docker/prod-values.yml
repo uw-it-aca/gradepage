@@ -66,7 +66,7 @@ cronjob:
   enabled: true
   jobs:
     - name: submit-graderosters
-      schedule: "*/10 8-19 * * 1-5"
+      schedule: "*/20 * * * 1-5"
       command: ["/scripts/management_command.sh"]
       args: ["submit_graderosters"]
     - name: delete-grades
@@ -111,8 +111,6 @@ environmentVariables:
 
   - name: MEMCACHED_MAX_POOL_SIZE
     value: "10"
-  - name: WEBSERVER
-    value: nginx
 
 externalSecrets:
   enabled: true
