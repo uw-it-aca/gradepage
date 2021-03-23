@@ -66,7 +66,7 @@ cronjob:
   enabled: true
   jobs:
     - name: submit-graderosters
-      schedule: "*/10 14-23 * * 1-5"
+      schedule: "*/20 * * * 1-5"
       command: ["/scripts/management_command.sh"]
       args: ["submit_graderosters"]
     - name: delete-grades
