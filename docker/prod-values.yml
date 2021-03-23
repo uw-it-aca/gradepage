@@ -111,8 +111,6 @@ environmentVariables:
 
   - name: MEMCACHED_MAX_POOL_SIZE
     value: "10"
-  - name: WEBSERVER
-    value: nginx
 
 externalSecrets:
   enabled: true
