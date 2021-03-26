@@ -1,3 +1,6 @@
+# Copyright 2021 UW-IT, University of Washington
+# SPDX-License-Identifier: Apache-2.0
+
 from course_grader.dao import current_datetime, display_datetime
 from course_grader.dao.term import (
     next_gradable_term, previous_gradable_term, submission_deadline_warning,
