@@ -1,3 +1,6 @@
+# Copyright 2021 UW-IT, University of Washington
+# SPDX-License-Identifier: Apache-2.0
+
 from django.urls import reverse
 from course_grader.dao import display_datetime
 from course_grader.dao.person import person_display_name

@@ -1,3 +1,6 @@
+# Copyright 2021 UW-IT, University of Washington
+# SPDX-License-Identifier: Apache-2.0
+
 from django.test import TestCase, override_settings
 from course_grader.dao.person import PWS
 from course_grader.dao.section import get_section_by_label
