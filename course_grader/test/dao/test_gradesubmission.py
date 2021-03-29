@@ -1,3 +1,6 @@
+# Copyright 2021 UW-IT, University of Washington
+# SPDX-License-Identifier: Apache-2.0
+
 from django.test import TestCase
 from uw_sws_graderoster.models import GradeRosterItem
 from course_grader.dao.gradesubmission import *

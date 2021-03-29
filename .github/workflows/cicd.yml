@@ -88,6 +88,12 @@ jobs:
           push: false
           load: true
 
+      - name: Run Python Linters
+        uses: uw-it-aca/actions/python-linters@main
+        with:
+          app_name: ${DJANGO_APP}
+          exclude_paths: 'migrations'
+
       - name: Run Tests in Image
         id: tests
         shell: bash

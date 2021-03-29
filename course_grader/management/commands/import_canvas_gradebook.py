@@ -1,3 +1,6 @@
+# Copyright 2021 UW-IT, University of Washington
+# SPDX-License-Identifier: Apache-2.0
+
 from django.core.management.base import BaseCommand, CommandError
 from course_grader.dao.section import section_from_param
 from course_grader.dao.canvas import grades_for_section

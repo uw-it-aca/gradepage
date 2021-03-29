@@ -1,3 +1,6 @@
+# Copyright 2021 UW-IT, University of Washington
+# SPDX-License-Identifier: Apache-2.0
+
 from django.template.context_processors import csrf
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
