@@ -1,3 +1,6 @@
+# Copyright 2021 UW-IT, University of Washington
+# SPDX-License-Identifier: Apache-2.0
+
 from course_grader.dao.person import person_from_netid
 from restclients_core.exceptions import InvalidNetID, DataFailureException
 from logging import getLogger
