@@ -4,7 +4,7 @@ GradePage.GradeRoster = (function ($) {
     "use strict";
 
     // Grades that are incompatible with incomplete
-    var incomplete_blacklist,
+    var incomplete_blocklist,
         inprogress_save_grade_id,
         remaining_template,
         import_scale_template;
@@ -24,7 +24,7 @@ GradePage.GradeRoster = (function ($) {
         }
 
         return $.grep(array, function (value) {
-            if (is_incomplete && incomplete_blacklist.contains(value)) {
+            if (is_incomplete && incomplete_blocklist.contains(value)) {
                 return false;
             }
             return matcher.test(value);
@@ -109,7 +109,7 @@ GradePage.GradeRoster = (function ($) {
         input.val(grade);
         if (grade_choices.contains(grade)) {
             is_incomplete = $("#incomplete-" + item_id).is(":checked");
-            if (is_incomplete && incomplete_blacklist.contains(grade)) {
+            if (is_incomplete && incomplete_blocklist.contains(grade)) {
                 invalid_grade(input, gettext("grade_invalid_incomplete"));
                 is_valid = false;
             } else {
@@ -229,7 +229,7 @@ GradePage.GradeRoster = (function ($) {
         student_id = $("#grade-" + item_id).data("student_id");
 
         if (is_incomplete && (grade === "" ||
-                              incomplete_blacklist.contains(grade))) {
+                              incomplete_blocklist.contains(grade))) {
             grade = (grade_choices.contains("0.0")) ? "0.0" :
                     (grade_choices.contains("NC")) ? "NC" : "";
             $("#grade-" + item_id).val(grade);
@@ -321,7 +321,7 @@ GradePage.GradeRoster = (function ($) {
 
         if (!window.gradepage.is_desktop) {
             wrapper.find(grade_input_selector() + " option").each(function () {
-                if (incomplete_blacklist.contains($(this).val())) {
+                if (incomplete_blocklist.contains($(this).val())) {
                     if (is_incomplete_checked) {
                         $(this).attr("disabled", "disabled");
                     } else {
@@ -580,7 +580,7 @@ GradePage.GradeRoster = (function ($) {
 
     function initialize() {
         if (window.gradepage.graderoster_url) {
-            incomplete_blacklist = [gettext("x_no_grade_now"), "N", "CR"];
+            incomplete_blocklist = [gettext("x_no_grade_now"), "N", "CR"];
             $.ajax({
                 url: window.gradepage.graderoster_url,
                 dataType: "json",

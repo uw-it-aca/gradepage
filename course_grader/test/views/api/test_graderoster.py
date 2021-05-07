@@ -1,3 +1,6 @@
+# Copyright 2021 UW-IT, University of Washington
+# SPDX-License-Identifier: Apache-2.0
+
 from django.test import TestCase, override_settings
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override

@@ -1,3 +1,6 @@
+# Copyright 2021 UW-IT, University of Washington
+# SPDX-License-Identifier: Apache-2.0
+
 from django.test import TestCase
 from uw_sws.util import fdao_sws_override
 from course_grader.dao.term import *
@@ -9,11 +12,11 @@ from course_grader.exceptions import InvalidTerm
 class TermDAOFunctionsTest(TestCase):
     def test_submission_deadline_warning(self):
         term = term_from_param('2013-autumn')
-        with self.settings(SUBMISSION_DEADLINE_WARNING_HOURS=48,
+        with self.settings(SUBMISSION_DEADLINE_WARNING_HOURS=41,
                            CURRENT_DATETIME_OVERRIDE='2013-10-15 00:00:00'):
             self.assertEquals(submission_deadline_warning(term), False)
 
-        with self.settings(SUBMISSION_DEADLINE_WARNING_HOURS=48,
+        with self.settings(SUBMISSION_DEADLINE_WARNING_HOURS=41,
                            CURRENT_DATETIME_OVERRIDE='2013-12-16 00:00:00'):
             self.assertEquals(submission_deadline_warning(term), True)
 
