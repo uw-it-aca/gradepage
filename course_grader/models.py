@@ -242,10 +242,12 @@ class GradeImport(models.Model):
     """
     CANVAS_SOURCE = "canvas"
     CATALYST_SOURCE = "catalyst"
+    CSV_SOURCE = "csv"
 
     SOURCE_CHOICES = (
         (CANVAS_SOURCE, "Canvas Gradebook"),
         (CATALYST_SOURCE, "Catalyst GradeBook"),
+        (CSV_SOURCE, "CSV File"),
     )
 
     section_id = models.CharField(max_length=100)
@@ -267,6 +269,9 @@ class GradeImport(models.Model):
                 data = catalyst_grades(section, instructor, self.source_id)
             elif self.source == self.CANVAS_SOURCE:
                 data = canvas_grades(section, instructor)
+            elif self.source == self.CSV_SOURCE:
+                # Convert csv document to normalized json
+                data = grades_from_csv(section, instructor, self.document)
             else:
                 return
 

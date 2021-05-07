@@ -217,3 +217,37 @@ class ImportGrades(GradeFormHandler):
                 return_data["students"].append(grade)
 
         return self.json_response({"grade_import": return_data})
+
+
+class UploadGrades(ImportGrades):
+    def post(self, request, *args, **kwargs):
+        error = self._authorize(request, *args, **kwargs)
+        if error is not None:
+            return error
+
+        uploaded_file = request.FILES.get("file")
+
+        try:
+            ufile = uploaded_file.read()
+            try:
+                document = ufile.decode("utf-8")
+            except UnicodeDecodeError as ex:
+                document = ufile.decode("utf-16")
+        except Exception as ex:
+            return self.error_response(status=400, message="Invalid document")
+
+        grade_import = GradeImport(
+            section_id=section_url_token(self.section, self.instructor),
+            term_id=self.section.term.term_label(),
+            imported_by=self.user.uwregid,
+            source=GradeImport.CSV_SOURCE,
+            document=document)
+
+        try:
+            grade_import.grades_for_section(self.section, self.instructor)
+        except Exception as ex:
+            logger.error("POST import failed for {}: {}".format(
+                self.section.section_label(), ex))
+            return self.error_response(400, "{}".format(ex))
+
+        return self.response_content(grade_import)
