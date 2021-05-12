@@ -4,32 +4,60 @@
 from course_grader.dao.person import person_from_netid
 from restclients_core.exceptions import InvalidNetID, DataFailureException
 from logging import getLogger
-from io import StringIO
 import csv
 
 logger = getLogger(__name__)
 
 
-def grades_for_section(section, instructor, csv_data):
+class InsensitiveDict(dict):
     """
-    Convert CSV document into normalized JSON
+    Override the get method to strip() and lower() the input key, and
+    strip() the returned value.
+    """
+    def get(self, k, default=None):
+        try:
+            return super().get(k.strip().lower(), default).strip()
+        except AttributeError:
+            return None
 
-    CSV Format:  uwnetid, grade, incomplete, default_grade, writing_credit
+
+class InsensitiveDictReader(csv.DictReader):
+    """
+    Override the csv.fieldnames property to strip() and lower() the fieldnames.
+    """
+    @property
+    def fieldnames(self):
+        return [field.strip().lower() for field in super().fieldnames]
+
+    def __next__(self):
+        return InsensitiveDict(super().__next__())
+
+
+def grades_for_section(section, instructor, csv_file):
+    """
+    Convert CSV file object into normalized JSON
+
+    Supported column names are:
+
+    "UWRegID" OR "SIS User ID" OR "StudentNo" (required),
+    "Grade" OR "Current Score" (required),
+    "Incomplete" (optional),
+    "Default Grade" (optional),
+    "Writing Credit" (optional)
+
+    All other field names are ignored.
     """
     grade_data = []
-    reader = csv.reader(StringIO(csv_data))
-    for row in reader:
-        netid = row.get("uwnetid")
-        try:
-            person = person_from_netid(netid)
-        except (InvalidNetID, DataFailureException) as ex:
-            log.info("SKIP import user {}: {}".format(netid, ex))
-            continue
-
+    for row in InsensitiveDictReader(csv_file):
         student_data = {
-            "student_reg_id": person.uwregid,
-            "imported_grade": "",
+            "student_reg_id": row.get("UWRegID") or row.get("SIS User ID"),
+            "student_no": row.get("StudentNo"),
+            "imported_grade": row.get("Grade") or row.get("Current Score"),
+            "is_incomplete": row.get("Incomplete"),
+            "default_grade": row.get("Default Grade"),
+            "is_writing": row.get("Writing Credit"),
         }
-        grade_data.append(student_data)
+        if (student_data["student_reg_id"] or student_data["student_no"]):
+            grade_data.append(student_data)
 
     return {"grades": grade_data}
