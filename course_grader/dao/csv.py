@@ -69,13 +69,14 @@ class GradeImportCSV(GradeImportSource):
         for row in InsensitiveDictReader(csv_file):
             student_data = {
                 "student_reg_id": row.get("UWRegID") or row.get("SIS User ID"),
-                "student_no": row.get("StudentNo"),
+                "student_number": row.get("StudentNo"),
                 "grade": row.get("Grade") or row.get("Current Score"),
                 "is_incomplete": row.get("Incomplete"),
                 "default_grade": row.get("Default Grade"),
                 "is_writing": row.get("Writing Credit"),
             }
-            if (student_data["student_reg_id"] or student_data["student_no"]):
+            if (student_data["student_reg_id"] or
+                    student_data["student_number"]):
                 grade_data.append(student_data)
 
         return {"grades": grade_data}

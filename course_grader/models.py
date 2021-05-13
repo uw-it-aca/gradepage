@@ -294,6 +294,7 @@ class GradeImport(models.Model):
         grades = []
         for grade in grade_data.get("grades", []):
             student_reg_id = grade.get("student_reg_id")
+            student_number = grade.get("student_number")
             imported_grade = grade.get("grade")
             is_override_grade = False
             has_unposted_grade = False
@@ -318,9 +319,10 @@ class GradeImport(models.Model):
                         grade["current_score"]):
                     has_unposted_grade = True
 
-            if student_reg_id is not None:
+            if student_reg_id or student_number:
                 grades.append({
                     "student_reg_id": student_reg_id,
+                    "student_number": student_number,
                     "imported_grade": imported_grade,
                     "is_override_grade": is_override_grade,
                     "has_unposted_grade": has_unposted_grade,
