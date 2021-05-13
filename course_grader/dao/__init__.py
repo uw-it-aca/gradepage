@@ -6,6 +6,7 @@ from django.utils.timezone import (
     get_default_timezone, localtime, is_naive, make_aware)
 from datetime import datetime
 from uw_sws import SWS_DAO, sws_now
+from abc import ABC, abstractmethod
 
 
 def __update_get(self, url, response):
@@ -31,3 +32,9 @@ def display_datetime(dt):
         dt = localtime(dt)
 
     return dt.strftime("%B %d at %l:%M %p %Z")
+
+
+class GradeImportSource(ABC):
+    @abstractmethod
+    def grades_for_section(self, section, instructor, **kwargs):
+        pass

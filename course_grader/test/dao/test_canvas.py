@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.test import TestCase, override_settings
-from course_grader.dao.canvas import *
+from course_grader.dao.canvas import (
+    GradeImportCanvas, grading_scheme_for_course)
 from course_grader.dao.person import PWS
 from course_grader.dao.section import get_section_by_label
 from uw_canvas.courses import Courses
@@ -36,6 +37,6 @@ class CanvasDAOFunctionsTest(TestCase):
         section = get_section_by_label('2013,spring,A B&C,101/A')
         user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
 
-        r = grades_for_section(section, user)
+        r = GradeImportCanvas().grades_for_section(section, user)
         self.assertEqual(len(r['grades']), 1)
         self.assertEqual(len(r['course_grading_schemes']), 0)

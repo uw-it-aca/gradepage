@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.test import TestCase, override_settings
-from course_grader.dao.csv import InsensitiveDictReader, grades_for_section
+from course_grader.dao.csv import InsensitiveDictReader, GradeImportCSV
 from course_grader.dao.section import get_section_by_label
 from course_grader.dao.person import PWS
 from uw_pws.util import fdao_pws_override
@@ -22,12 +22,12 @@ class CVSDAOFunctionsTest(TestCase):
             os.path.dirname(__file__), "..", "..", "resources", "csv"))
 
         f = open(os.path.join(resource_path, "test1.csv"))
-        r = grades_for_section(section, user, f)
+        r = GradeImportCSV().grades_for_section(section, user, fileobj=f)
         self.assertEqual(len(r.get("grades")), 6)
         f.close()
 
         f = open(os.path.join(resource_path, "test2.csv"))
-        r = grades_for_section(section, user, f)
+        r = GradeImportCSV().grades_for_section(section, user, fileobj=f)
         self.assertEqual(len(r.get("grades")), 6)
         f.close()
 

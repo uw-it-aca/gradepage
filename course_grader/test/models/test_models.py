@@ -2,13 +2,43 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.test import TestCase
-from course_grader.models import ImportConversion
+from course_grader.models import GradeImport, ImportConversion
 from course_grader.dao.canvas import grading_scheme_for_course
+from course_grader.dao.section import get_section_by_label
+from course_grader.dao.person import PWS
 from course_grader.exceptions import InvalidGradingScale
 from uw_canvas.courses import Courses
 from uw_canvas.models import CanvasCourse
 from uw_canvas.utilities import fdao_canvas_override
+from uw_pws.util import fdao_pws_override
+from uw_sws.util import fdao_sws_override
 import mock
+
+
+@fdao_sws_override
+@fdao_pws_override
+@fdao_canvas_override
+class GradeImportTest(TestCase):
+    def test_grades_for_section(self):
+        section = get_section_by_label('2013,summer,CSS,161/A')
+        user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
+
+        gi = GradeImport(source=GradeImport.CATALYST_SOURCE)
+        gi.grades_for_section(section, user)
+        data = gi.json_data()
+        self.assertEqual(len(data['imported_grades']), 3)
+
+        section = get_section_by_label('2013,spring,A B&C,101/A')
+        user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
+
+        gi = GradeImport(source=GradeImport.CANVAS_SOURCE)
+        gi.grades_for_section(section, user)
+        data = gi.json_data()
+        self.assertEqual(len(data['imported_grades']), 0)
+        self.assertEqual(len(data['course_grading_schemes']), 0)
+
+        gi = GradeImport(source='Bad')
+        self.assertRaises(KeyError, gi.grades_for_section, section, user)
 
 
 @fdao_canvas_override

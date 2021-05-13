@@ -19,6 +19,7 @@ from restclients_core.exceptions import DataFailureException
 from userservice.user import UserService
 from logging import getLogger
 import json
+import csv
 import re
 
 logger = getLogger(__name__)
@@ -227,24 +228,18 @@ class UploadGrades(ImportGrades):
 
         uploaded_file = request.FILES.get("file")
 
-        try:
-            ufile = uploaded_file.read()
-            try:
-                document = ufile.decode("utf-8")
-            except UnicodeDecodeError as ex:
-                document = ufile.decode("utf-16")
-        except Exception as ex:
-            return self.error_response(status=400, message="Invalid document")
+        if uploaded_file is None:
+            return self.error_response(status=400, message="Missing file")
 
         grade_import = GradeImport(
             section_id=section_url_token(self.section, self.instructor),
             term_id=self.section.term.term_label(),
             imported_by=self.user.uwregid,
-            source=GradeImport.CSV_SOURCE,
-            document=document)
+            source=GradeImport.CSV_SOURCE)
 
         try:
-            grade_import.grades_for_section(self.section, self.instructor)
+            grade_import.grades_for_section(
+                self.section, self.instructor, fileobj=uploaded_file)
         except Exception as ex:
             logger.error("POST import failed for {}: {}".format(
                 self.section.section_label(), ex))
