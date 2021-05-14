@@ -6,11 +6,10 @@ from django.db.models import Q
 from django.utils import timezone
 from restclients_core.exceptions import DataFailureException
 from uw_sws_graderoster.models import GradingScale
-from course_grader.dao.canvas import grades_for_section as canvas_grades
-from course_grader.dao.catalyst import grades_for_section as catalyst_grades
 from course_grader.dao.gradesubmission import submit_grades
 from course_grader.dao.notification import notify_grade_submitters
 from course_grader.exceptions import InvalidGradingScale
+from importlib import import_module
 from datetime import datetime, timedelta
 from logging import getLogger
 from decimal import Decimal
@@ -122,11 +121,15 @@ class Grade(models.Model):
 
     objects = GradeManager()
 
+    @property
     def student_label(self):
-        label = self.student_reg_id
+        if self.student_reg_id is None or not len(self.student_reg_id):
+            raise AttributeError("Missing student_reg_id")
+
         if self.duplicate_code is not None and len(self.duplicate_code):
-            label += "-{}".format(self.duplicate_code)
-        return label
+            return "-".join([self.student_reg_id, self.duplicate_code])
+        else:
+            return self.student_reg_id
 
     def json_data(self):
         return {"section_id": self.section_id,
@@ -250,6 +253,12 @@ class GradeImport(models.Model):
         (CSV_SOURCE, "CSV File"),
     )
 
+    _IMPORT_CLASSES = {
+        CANVAS_SOURCE: "course_grader.dao.canvas.GradeImportCanvas",
+        CATALYST_SOURCE: "course_grader.dao.catalyst.GradeImportCatalyst",
+        CSV_SOURCE: "course_grader.dao.csv.GradeImportCSV",
+    }
+
     section_id = models.CharField(max_length=100)
     term_id = models.CharField(max_length=20)
     source = models.CharField(max_length=20, choices=SOURCE_CHOICES)
@@ -263,17 +272,15 @@ class GradeImport(models.Model):
 
     objects = GradeImportManager()
 
-    def grades_for_section(self, section, instructor):
+    def grades_for_section(self, section, instructor, fileobj=None):
         try:
-            if self.source == self.CATALYST_SOURCE:
-                data = catalyst_grades(section, instructor, self.source_id)
-            elif self.source == self.CANVAS_SOURCE:
-                data = canvas_grades(section, instructor)
-            elif self.source == self.CSV_SOURCE:
-                # Convert csv document to normalized json
-                data = grades_from_csv(section, instructor, self.document)
-            else:
-                return
+            module = self._IMPORT_CLASSES[self.source]
+            module_name, class_name = module.rsplit(".", 1)
+            _class = getattr(import_module(module_name), class_name)
+            grade_source = _class()
+
+            data = grade_source.grades_for_section(
+                section, instructor, source_id=self.source_id, fileobj=fileobj)
 
             self.document = json.dumps(data)
             self.status_code = 200
@@ -290,8 +297,9 @@ class GradeImport(models.Model):
 
         grades = []
         for grade in grade_data.get("grades", []):
-            student_reg_id = None
-            imported_grade = None
+            student_reg_id = grade.get("student_reg_id")
+            student_number = grade.get("student_number")
+            imported_grade = grade.get("grade")
             is_override_grade = False
             has_unposted_grade = False
             comment = None
@@ -315,12 +323,18 @@ class GradeImport(models.Model):
                         grade["current_score"]):
                     has_unposted_grade = True
 
-            if student_reg_id is not None:
-                grades.append({"student_reg_id": student_reg_id,
-                               "imported_grade": imported_grade,
-                               "is_override_grade": is_override_grade,
-                               "has_unposted_grade": has_unposted_grade,
-                               "comment": comment})
+            if student_reg_id or student_number:
+                grades.append({
+                    "student_reg_id": student_reg_id,
+                    "student_number": student_number,
+                    "imported_grade": imported_grade,
+                    "is_override_grade": is_override_grade,
+                    "has_unposted_grade": has_unposted_grade,
+                    "comment": comment,
+                    "is_incomplete": grade.get("is_incomplete", False),
+                    "default_grade": grade.get("default_grade"),
+                    "is_writing": grade.get("is_writing", False),
+                })
 
         course_grading_schemes = []
         for scheme in grade_data.get("course_grading_schemes", []):

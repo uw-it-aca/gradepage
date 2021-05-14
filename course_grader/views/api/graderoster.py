@@ -234,8 +234,7 @@ class GradeRoster(GradeFormHandler):
         grade_lookup = {}
         for grade in Grade.objects.get_by_section_id_and_person(
                 section_id, self.user.uwregid):
-            student_id = grade.student_label()
-            grade_lookup[student_id] = grade
+            grade_lookup[grade.student_label] = grade
 
         return grade_lookup
 
