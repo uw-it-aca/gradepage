@@ -345,50 +345,55 @@ GradePage.Import = (function ($) {
     }
 
     function draw_upload_prompt() {
-        var template = Handlebars.compile($("#upload-tmpl").html());
-        $("#gp-import-modal-body").html(template());
+        var template = Handlebars.compile($("#upload-tmpl").html()),
+            data = {};
+
+        $(".gp-import-selector select").val("");
+        $("#gp-import-modal-body").html(template(data));
+        $("#gp-import-modal").modal({backdrop: "static"});
+
         //$("#gp-import-file").change();
         $("button.gp-btn-upload").click(create_upload);
     }
 
     function create_import(source, source_id) {
-        if (source === "csv") {
-            draw_upload_prompt();
-        } else {
-            var post_data = {"source": source};
-            if (source_id) {
-                post_data.source_id = source_id;
-            }
-            $.ajax({
-                url: window.gradepage.import_url,
-                dataType: "json",
-                contentType: "application/json",
-                data: JSON.stringify(post_data),
-                type: "POST",
-                headers: {
-                    "X-CSRFToken": window.gradepage.csrftoken
-                },
-                beforeSend: import_in_progress,
-                success: draw_import_success,
-                error: function (xhr) {
-                    var data;
-                    try {
-                        data = $.parseJSON(xhr.responseText);
-                    } catch (e) {
-                        data = {error: xhr.responseText};
-                    }
-                    $("#gp-import-modal-body").html(data.error);
-                },
-                complete: remove_auto_import
-            });
+        var post_data = {"source": source};
+        if (source_id) {
+            post_data.source_id = source_id;
         }
+        $.ajax({
+            url: window.gradepage.import_url,
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(post_data),
+            type: "POST",
+            headers: {
+                "X-CSRFToken": window.gradepage.csrftoken
+            },
+            beforeSend: import_in_progress,
+            success: draw_import_success,
+            error: function (xhr) {
+                var data;
+                try {
+                    data = $.parseJSON(xhr.responseText);
+                } catch (e) {
+                    data = {error: xhr.responseText};
+                }
+                $("#gp-import-modal-body").html(data.error);
+            },
+            complete: remove_auto_import
+        });
     }
 
     function select_import() {
         /*jshint validthis: true */
         var source = $(this).val();
         if (source !== "") {
-            create_import(source);
+            if (source === "csv") {
+                draw_upload_prompt();
+            } else {
+                create_import(source);
+            }
         }
     }
 
