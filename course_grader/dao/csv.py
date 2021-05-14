@@ -35,20 +35,19 @@ class InsensitiveDictReader(csv.DictReader):
 
 
 class GradeImportCSV(GradeImportSource):
-    def validate(self, fileobj):
-        csv_test = fileobj.read(1024)
+    def decode_file(self, csvfile):
         try:
-            document = csv_test.decode("utf-8")
+            return csvfile.decode("utf-8")
         except UnicodeDecodeError as ex:
-            document = csv_test.decode("utf-16")
+            return csvfile.decode("utf-16")
         except AttributeError:
-            document = csv_test
+            return csvfile
 
-        has_header = csv.Sniffer().has_header(document)
-        self.dialect = csv.Sniffer().sniff(document)
-
+    def validate(self, fileobj):
+        decoded_file = self.decode_file(fileobj.read(1024))
+        has_header = csv.Sniffer().has_header(decoded_file)
+        self.dialect = csv.Sniffer().sniff(decoded_file)
         fileobj.seek(0, 0)
-        return fileobj
 
     def grades_for_section(self, section, instructor, **kwargs):
         """
@@ -64,9 +63,12 @@ class GradeImportCSV(GradeImportSource):
 
         All other field names are ignored.
         """
-        csv_file = self.validate(kwargs.get("fileobj"))
+        fileobj = kwargs.get("fileobj")
+        self.validate(fileobj)
+        decoded_file = self.decode_file(fileobj.read()).splitlines()
+
         grade_data = []
-        for row in InsensitiveDictReader(csv_file):
+        for row in InsensitiveDictReader(decoded_file):
             student_data = {
                 "student_reg_id": row.get("UWRegID") or row.get("SIS User ID"),
                 "student_number": row.get("StudentNo"),
