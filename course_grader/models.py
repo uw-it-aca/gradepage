@@ -121,11 +121,15 @@ class Grade(models.Model):
 
     objects = GradeManager()
 
+    @property
     def student_label(self):
-        label = self.student_reg_id
+        if self.student_reg_id is None or not len(self.student_reg_id):
+            raise AttributeError("Missing student_reg_id")
+
         if self.duplicate_code is not None and len(self.duplicate_code):
-            label += "-{}".format(self.duplicate_code)
-        return label
+            return "-".join([self.student_reg_id, self.duplicate_code])
+        else:
+            return self.student_reg_id
 
     def json_data(self):
         return {"section_id": self.section_id,

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.test import TestCase
-from course_grader.models import GradeImport, ImportConversion
+from course_grader.models import Grade, GradeImport, ImportConversion
 from course_grader.dao.canvas import grading_scheme_for_course
 from course_grader.dao.section import get_section_by_label
 from course_grader.dao.person import PWS
@@ -13,6 +13,23 @@ from uw_canvas.utilities import fdao_canvas_override
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
 import mock
+
+
+class GradeTest(TestCase):
+    def test_student_label(self):
+        uwregid = 'FBB38FE46A7C11D5A4AE0004AC494FFE'
+
+        grade = Grade()
+        with self.assertRaises(AttributeError):  # Missing student_reg_id
+            x = grade.student_label
+
+        grade = Grade(student_reg_id=uwregid)
+        self.assertEqual(
+            grade.student_label, 'FBB38FE46A7C11D5A4AE0004AC494FFE')
+
+        grade = Grade(student_reg_id=uwregid, duplicate_code='A')
+        self.assertEqual(
+            grade.student_label, 'FBB38FE46A7C11D5A4AE0004AC494FFE-A')
 
 
 @fdao_sws_override
