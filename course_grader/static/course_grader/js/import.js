@@ -344,14 +344,13 @@ GradePage.Import = (function ($) {
                     data = {error: xhr.responseText};
                 }
                 data.filename = filename;
-                $("#gp-import-modal-body").html(data);
+                draw_upload_prompt(data);
             }
         });
     }
 
-    function draw_upload_prompt() {
-        var template = Handlebars.compile($("#upload-tmpl").html()),
-            data = {};
+    function draw_upload_prompt(data) {
+        var template = Handlebars.compile($("#upload-tmpl").html());
 
         $(".gp-import-selector select").val("");
         $("#gp-import-modal-body").html(template(data));
