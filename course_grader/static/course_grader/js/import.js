@@ -320,7 +320,11 @@ GradePage.Import = (function ($) {
     }
 
     function create_upload(ev) {
-        var formData = new FormData($("#gp-import-file")[0]);
+        var formData = new FormData(),
+            filename = $("#gp-import-file").val().split('\\').pop();
+
+        formData.append("file", $("#gp-import-file")[0].files[0]);
+
         $.ajax({
             url: window.gradepage.upload_url,
             contentType: false,
@@ -339,7 +343,8 @@ GradePage.Import = (function ($) {
                 } catch (e) {
                     data = {error: xhr.responseText};
                 }
-                $("#gp-import-modal-body").html(data.error);
+                data.filename = filename;
+                $("#gp-import-modal-body").html(data);
             }
         });
     }
