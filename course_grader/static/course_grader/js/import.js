@@ -319,16 +319,13 @@ GradePage.Import = (function ($) {
         //$("#gp-import-modal").modal("show");
     }
 
-    function create_import(source, source_id) {
-        var post_data = {"source": source};
-        if (source_id) {
-            post_data.source_id = source_id;
-        }
+    function create_upload(ev) {
+        var formData = new FormData($("#gp-import-file")[0]);
         $.ajax({
-            url: window.gradepage.import_url,
-            dataType: "json",
-            contentType: "application/json",
-            data: JSON.stringify(post_data),
+            url: window.gradepage.upload_url,
+            contentType: false,
+            processData: false,
+            data: formData,
             type: "POST",
             headers: {
                 "X-CSRFToken": window.gradepage.csrftoken
@@ -343,9 +340,48 @@ GradePage.Import = (function ($) {
                     data = {error: xhr.responseText};
                 }
                 $("#gp-import-modal-body").html(data.error);
-            },
-            complete: remove_auto_import
+            }
         });
+    }
+
+    function draw_upload_prompt() {
+        var template = Handlebars.compile($("#upload-tmpl").html());
+        $("#gp-import-modal-body").html(template());
+        //$("#gp-import-file").change();
+        $("button.gp-btn-upload").click(create_upload);
+    }
+
+    function create_import(source, source_id) {
+        if (source === "CSV File") {
+            draw_upload_prompt();
+        } else {
+            var post_data = {"source": source};
+            if (source_id) {
+                post_data.source_id = source_id;
+            }
+            $.ajax({
+                url: window.gradepage.import_url,
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(post_data),
+                type: "POST",
+                headers: {
+                    "X-CSRFToken": window.gradepage.csrftoken
+                },
+                beforeSend: import_in_progress,
+                success: draw_import_success,
+                error: function (xhr) {
+                    var data;
+                    try {
+                        data = $.parseJSON(xhr.responseText);
+                    } catch (e) {
+                        data = {error: xhr.responseText};
+                    }
+                    $("#gp-import-modal-body").html(data.error);
+                },
+                complete: remove_auto_import
+            });
+        }
     }
 
     function select_import() {

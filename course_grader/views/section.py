@@ -77,6 +77,7 @@ def section(request, url_token):
         "graderoster_url": url_for_graderoster(url_token),
         "import_url": url_for_import(url_token),
         "export_url": url_for_export(url_token),
+        "upload_url": url_for_upload(url_token),
     })
 
     if is_grading_period_open(section):
