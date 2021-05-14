@@ -352,7 +352,7 @@ GradePage.Import = (function ($) {
     }
 
     function create_import(source, source_id) {
-        if (source === "CSV File") {
+        if (source === "csv") {
             draw_upload_prompt();
         } else {
             var post_data = {"source": source};
