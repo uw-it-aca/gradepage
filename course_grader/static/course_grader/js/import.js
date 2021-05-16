@@ -250,6 +250,17 @@ GradePage.Import = (function ($) {
         $("#gp-import-modal").modal("hide");
     }
 
+    function draw_upload_prompt(data) {
+        var template = Handlebars.compile($("#upload-tmpl").html());
+
+        $(".gp-import-selector select").val("");
+        $("#gp-import-modal-body").html(template(data));
+        $("#gp-import-modal").modal({backdrop: "static"});
+
+        //$("#gp-import-file").change();
+        $("button.gp-btn-upload").click(create_upload);
+    }
+
     function draw_import_success(data) {
         var template = Handlebars.compile($("#import-tmpl").html()),
             students = data.grade_import.students,
@@ -293,7 +304,6 @@ GradePage.Import = (function ($) {
         data.grade_import.grade_count = grade_count;
         data.grade_import.has_valid_grades = false;
         data.grade_import.has_valid_percentages = false;
-        data.grade_import.is_canvas_import = (data.grade_import.source === "canvas");
         data.grade_import.override_grade_count = override_grade_count;
         data.grade_import.unposted_grade_count = unposted_grade_count;
         data.grade_import.unposted_with_override_grade_count = unposted_with_override_grade_count;
@@ -304,6 +314,8 @@ GradePage.Import = (function ($) {
             } else if (valid_percentage_count / grade_count >= min_valid) {
                 data.grade_import.has_valid_percentages = true;
             }
+        } else if (data.grade_import.source === "csv") {
+            return draw_upload_prompt(data.grade_import);
         }
 
         import_data = data;
@@ -347,17 +359,6 @@ GradePage.Import = (function ($) {
                 draw_upload_prompt(data);
             }
         });
-    }
-
-    function draw_upload_prompt(data) {
-        var template = Handlebars.compile($("#upload-tmpl").html());
-
-        $(".gp-import-selector select").val("");
-        $("#gp-import-modal-body").html(template(data));
-        $("#gp-import-modal").modal({backdrop: "static"});
-
-        //$("#gp-import-file").change();
-        $("button.gp-btn-upload").click(create_upload);
     }
 
     function create_import(source, source_id) {

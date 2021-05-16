@@ -264,6 +264,7 @@ class GradeImport(models.Model):
     source = models.CharField(max_length=20, choices=SOURCE_CHOICES)
     source_id = models.CharField(max_length=10, null=True)
     status_code = models.CharField(max_length=3, null=True)
+    file_name = models.CharField(max_length=100, null=True)
     document = models.TextField()
     imported_date = models.DateTimeField(auto_now=True)
     imported_by = models.CharField(max_length=32)
@@ -348,6 +349,7 @@ class GradeImport(models.Model):
                 "source": self.source,
                 "source_name": dict(self.SOURCE_CHOICES)[self.source],
                 "status_code": self.status_code,
+                "file_name": self.file_name,
                 "imported_date": self.imported_date.isoformat(),
                 "imported_by": self.imported_by,
                 "imported_grades": grades,
