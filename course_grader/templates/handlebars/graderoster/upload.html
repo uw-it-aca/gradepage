@@ -2,6 +2,12 @@
 <script id="upload-tmpl" type="text/x-handlebars-template">
 <form method="POST" enctype="multipart/form-data">
 
+{{#if error}}
+<div>
+{{error}}
+</div>
+{{/if}}
+
 <div>
   <label for="gp-import-file">Choose a csv file:</label>
   <input id="gp-import-file" type="file" name="import_file" accept=".csv" />

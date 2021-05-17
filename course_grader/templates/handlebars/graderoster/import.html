@@ -1,7 +1,11 @@
 {% verbatim %}
 <script id="import-tmpl" type="text/x-handlebars-template">
 {{#if grade_count}}
+    {{#if file_name}}
+    <p>{{{ trans "One grade found for <strong>%(section_name)s</strong> in the file <strong>%(file_name)s</strong>." "%(grade_count)s total grades found for <strong>%(section_name)s</strong> in the file <strong>%(file_name)s</strong>." grade_count }}}</p>
+    {{else}}
     <p>{{{ trans "One grade found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>." "%(grade_count)s total grades found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>." grade_count }}}</p>
+    {{/if}}
 
     {{#if override_grade_count}}
     <div role="alert" class="alert alert-warning alert-override-grades">

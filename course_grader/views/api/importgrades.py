@@ -203,7 +203,8 @@ class ImportGrades(GradeFormHandler):
 
             # Find the grade data for each graderoster item
             grade = next((g for g in imported_grades if (
-                g["student_reg_id"] == item.student_uwregid)), None)
+                g["student_reg_id"] == item.student_uwregid or
+                g["student_number"] == item.student_number)), None)
 
             if grade is not None:
                 item_id = "-".join([grade_import.section_id,
@@ -212,6 +213,7 @@ class ImportGrades(GradeFormHandler):
                 grade["section_id"] = self.section.section_id
                 grade["student_firstname"] = item.student_first_name
                 grade["student_lastname"] = item.student_surname
+                grade["student_reg_id"] = item.student_uwregid
                 grade["student_number"] = item.student_number
                 grade["is_auditor"] = item.is_auditor
                 grade["is_withdrawn"] = item.date_withdrawn is not None
@@ -235,7 +237,8 @@ class UploadGrades(ImportGrades):
             section_id=section_url_token(self.section, self.instructor),
             term_id=self.section.term.term_label(),
             imported_by=self.user.uwregid,
-            source=GradeImport.CSV_SOURCE)
+            source=GradeImport.CSV_SOURCE,
+            file_name=uploaded_file.name)
 
         try:
             grade_import.grades_for_section(
