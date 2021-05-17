@@ -136,7 +136,8 @@ class ImportGrades(GradeFormHandler):
 
             # Find the grade data for each graderoster item
             grade = next((g for g in import_data.get("imported_grades") if (
-                g["student_reg_id"] == item.student_uwregid)), None)
+                g["student_reg_id"] == item.student_uwregid or
+                g["student_number"] == item.student_number)), None)
 
             if grade is not None:
                 grade_data = {
@@ -147,6 +148,8 @@ class ImportGrades(GradeFormHandler):
                     "comment": grade["comment"],
                     "grade": converted_grades.get(grade["student_reg_id"],
                                                   grade["imported_grade"]),
+                    "is_writing": grade["is_writing"],
+                    "is_incomplete": grade["is_incomplete"],
                     "no_grade_now": False,
                 }
                 self.save_grade(section_id, grade_data)
