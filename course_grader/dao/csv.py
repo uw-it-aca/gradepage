@@ -58,7 +58,6 @@ class GradeImportCSV(GradeImportSource):
         "UWRegID" OR "SIS User ID" OR "StudentNo" (required),
         "Grade" OR "Current Score" (required),
         "Incomplete" (optional),
-        "Default Grade" (optional),
         "Writing Credit" (optional)
 
         All other field names are ignored.
@@ -74,7 +73,6 @@ class GradeImportCSV(GradeImportSource):
                 "student_number": row.get("StudentNo"),
                 "grade": row.get("Grade") or row.get("Current Score"),
                 "is_incomplete": row.get("Incomplete"),
-                "default_grade": row.get("Default Grade"),
                 "is_writing": row.get("Writing Credit"),
             }
             if (student_data["student_reg_id"] or

@@ -333,7 +333,6 @@ class GradeImport(models.Model):
                     "has_unposted_grade": has_unposted_grade,
                     "comment": comment,
                     "is_incomplete": grade.get("is_incomplete", False),
-                    "default_grade": grade.get("default_grade"),
                     "is_writing": grade.get("is_writing", False),
                 })
 
