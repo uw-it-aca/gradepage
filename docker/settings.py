@@ -50,7 +50,7 @@ COMPRESS_OFFLINE = True
 COMPRESS_OFFLINE_CONTEXT = {
     'wrapper_template': 'persistent_message/manage_wrapper.html',
 }
-
+DEBUG = True
 if os.getenv('ENV', 'localdev') == 'localdev':
     DEBUG = True
     GRADEPAGE_SUPPORT_GROUP = 'u_test_group'
