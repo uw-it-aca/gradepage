@@ -349,11 +349,14 @@ GradePage.Import = (function ($) {
             beforeSend: import_in_progress,
             success: draw_import_success,
             error: function (xhr) {
-                var data;
+                var data = {};
                 try {
                     data = $.parseJSON(xhr.responseText);
                 } catch (e) {
-                    data = {error: xhr.responseText};
+                    if (xhr.responseText.indexOf("Request Entity Too Large") !== -1) {
+                        data.file_too_large = true;
+                    }
+                    data.error = xhr.responseText;
                 }
                 data.filename = filename;
                 draw_upload_prompt(data);
