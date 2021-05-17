@@ -4,7 +4,11 @@
 
 {{#if error}}
   <div>
-  {{error}}
+  {{#if file_too_large}}
+    The file <strong>{{file_name}}</strong> exceeds the maximum allowed size (1 Mb).  Select a different source for import or enter grades manually.
+  {{else}}
+    {{error}}
+  {{/if}}
   </div>
 {{else}}
   {{#if file_name }}
