@@ -79,6 +79,10 @@ var AdminSupport = {};
                 type: "line",
                 name: "Canvas Gradebook Imports",
                 data: window.gradepage.charts.grade_imports.canvas
+            },{
+                type: "line",
+                name: "CSV File Imports",
+                data: window.gradepage.charts.grade_imports.csv
             }]
         });
     });
