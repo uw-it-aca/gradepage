@@ -42,5 +42,4 @@ class GradeImportSource(ABC):
         pass
 
     def is_true(self, val):
-        return True if (
-            val is not None and val.lower() in self.true_values) else None
+        return (val is not None and val.lower() in self.true_values)
