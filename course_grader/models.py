@@ -143,7 +143,8 @@ class Grade(models.Model):
                 "import_grade": self.import_grade,
                 "is_override_grade": self.is_override_grade,
                 "comment": self.comment,
-                "last_modified": self.last_modified.isoformat(),
+                "last_modified": self.last_modified.isoformat() if (
+                    self.last_modified is not None) else None,
                 "modified_by": self.modified_by}
 
     class Meta:
@@ -238,6 +239,11 @@ class GradeImportManager(models.Manager):
         return super(GradeImportManager, self).get_queryset().filter(
             term_id=term.term_label()
         ).order_by('imported_date').values('imported_date', 'source')
+
+    def clear_prior_imports_for_section(self, grade_import):
+        super(GradeImportManager, self).get_queryset().filter(
+            section_id=grade_import.section_id
+        ).exclude(pk=grade_import.pk).delete()
 
 
 class GradeImport(models.Model):
