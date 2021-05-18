@@ -368,7 +368,7 @@ GradePage.Import = (function ($) {
                     }
                     data.error = xhr.responseText;
                 }
-                data.filename = filename;
+                data.file_name = filename;
                 draw_upload_prompt(data);
             }
         });

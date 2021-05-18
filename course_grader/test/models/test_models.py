@@ -31,6 +31,28 @@ class GradeTest(TestCase):
         self.assertEqual(
             grade.student_label, 'FBB38FE46A7C11D5A4AE0004AC494FFE-A')
 
+    def test_json_data(self):
+        grade = Grade(student_reg_id='B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2',
+                      duplicate_code='A',
+                      grade='3.9',
+                      import_source='csv',
+                      import_grade='99',
+                      section_id='2013-spring-A B&C-101-A',
+                      modified_by='A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1')
+
+        d = grade.json_data()
+        self.assertEqual(d['section_id'], '2013-spring-A B&C-101-A')
+        self.assertEqual(d['student_reg_id'],
+                         'B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2')
+        self.assertEqual(d['duplicate_code'], 'A')
+        self.assertEqual(d['grade'], '3.9')
+        self.assertEqual(d['is_writing'], False)
+        self.assertEqual(d['is_incomplete'], False)
+        self.assertEqual(d['no_grade_now'], False)
+        self.assertEqual(d['import_grade'], '99')
+        self.assertEqual(d['import_source'], 'csv')
+        self.assertEqual(d['modified_by'], 'A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1')
+
 
 @fdao_sws_override
 @fdao_pws_override
