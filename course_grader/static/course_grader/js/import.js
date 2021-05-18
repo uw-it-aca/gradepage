@@ -250,6 +250,15 @@ GradePage.Import = (function ($) {
         $("#gp-import-modal").modal("hide");
     }
 
+    function update_upload_form() {
+        var filename = $("#gp-import-file").val();
+        if (filename) {
+            $("button.gp-btn-upload").removeAttr("disabled");
+        } else {
+            $("button.gp-btn-upload").attr("disabled", "disabled");
+        }
+    }
+
     function draw_upload_prompt(data) {
         var template = Handlebars.compile($("#upload-tmpl").html());
 
@@ -257,8 +266,9 @@ GradePage.Import = (function ($) {
         $("#gp-import-modal-body").html(template(data));
         $("#gp-import-modal").modal({backdrop: "static"});
 
-        //$("#gp-import-file").change();
+        $("#gp-import-file").change(update_upload_form);
         $("button.gp-btn-upload").click(create_upload);
+        update_upload_form();
     }
 
     function draw_import_success(data) {
@@ -358,7 +368,7 @@ GradePage.Import = (function ($) {
                     }
                     data.error = xhr.responseText;
                 }
-                data.filename = filename;
+                data.file_name = filename;
                 draw_upload_prompt(data);
             }
         });

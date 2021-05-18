@@ -35,6 +35,11 @@ def display_datetime(dt):
 
 
 class GradeImportSource(ABC):
+    true_values = ["1", "y", "yes", "true"]
+
     @abstractmethod
     def grades_for_section(self, section, instructor, **kwargs):
         pass
+
+    def is_true(self, val):
+        return (val is not None and val.lower() in self.true_values)
