@@ -2,8 +2,34 @@
 <script id="upload-tmpl" type="text/x-handlebars-template">
 <form method="POST" enctype="multipart/form-data">
 
+<div>
+  <p>You are importing final grades for section <strong>T SOC 165 D</strong> (20 grades expected)</p>
+  <p>Before importing, ensure your uploaded file follows the minimum requirements for grade submission:</p>
+  <p>File must include Comma Separated Values (CSV) with at least <strong>two required columns:</strong>
+<ol>
+  <li><strong>Student Identifier column</strong>, labeled with one of the following headers:
+    <ul>
+      <li>"UWRegID" <small>(Student UWRegID, found in Canvas Gradebook export)</small></li>
+      <li>"SIS User ID" <small>(Student Number, found in Catalyst Gradebook export)</small></li>
+      <li>"StudentNo" <small>(Student Number, found in MyUW Classlist download)</small></li>
+    </ul>
+  </li>
+  <li><strong>Student Final Grade column</strong>, labeled with one of the following headers:</li>
+    <ul>
+      <li>"Grade"</li>
+      <li>"Current Score" </li>
+    </ul>
+  </li>
+</ol>
+</div>
+
+<div class="upload-file-wrapper">
+  <label for="gp-import-file">Choose a CSV File to Upload</label>
+  <input id="gp-import-file" class="" type="file" name="import_file" accept=".csv"/>
+</div>
+
 {{#if error}}
-  <div>
+  <div class="alert alert-danger" role="alert">
   {{#if file_too_large}}
     The file <strong>{{file_name}}</strong> exceeds the maximum allowed size (1 Mb).  Select a different source for import or enter grades manually.
   {{else}}
@@ -13,19 +39,16 @@
 {{else}}
   {{#if file_name }}
     {{#unless grade_count}}
-      <div>
+      <div class="alert alert-danger" role="alert">
       No grades found for <strong>{{section_name}}</strong> in the file <strong>{{file_name}}</strong>.  Select a different source for import or enter grades manually.
       </div>
     {{/unless}}
   {{/if}}
 {{/if}}
 
-<div>
-  <label for="gp-import-file">Choose a csv file:</label>
-  <input id="gp-import-file" type="file" name="import_file" accept=".csv" />
+<div class="clearfix">
+<button type="button" class="pull-right btn btn-default gp-btn-upload" title="Upload a file"><i class="fas fa-caret-right"></i> Next</button>
 </div>
-
-<button type="button" class="btn btn-default gp-btn-upload" title="Upload a file"><i class="fas fa-caret-right"></i> Next</button>
 
 </form>
 </script>
