@@ -24,6 +24,10 @@ class CVSDAOFunctionsTest(TestCase):
         f = open(os.path.join(resource_path, "test1.csv"))
         r = GradeImportCSV().grades_for_section(section, user, fileobj=f)
         self.assertEqual(len(r.get("grades")), 6)
+        self.assertEqual(
+            len([g for g in r["grades"] if g["is_incomplete"] is True]), 2)
+        self.assertEqual(
+            len([g for g in r["grades"] if g["is_writing"] is True]), 2)
         f.close()
 
         f = open(os.path.join(resource_path, "test2.csv"))
