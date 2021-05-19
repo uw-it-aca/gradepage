@@ -654,6 +654,7 @@ GradePage.GradeRoster = (function ($) {
 
     return {
         initialize: initialize,
-        normalize_grade: normalize_grade
+        normalize_grade: normalize_grade,
+        grade_input_selector: grade_input_selector
     };
 }(jQuery));

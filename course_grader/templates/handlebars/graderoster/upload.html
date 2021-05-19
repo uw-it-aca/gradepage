@@ -2,6 +2,11 @@
 <script id="upload-tmpl" type="text/x-handlebars-template">
 <form method="POST" enctype="multipart/form-data">
 
+<p>
+You are importing final grades for section <strong>{{section_name}}</strong> (
+{{{ trans "One grade expected" "%(expected_grade_count)s grades expected" expected_grade_count }}})
+</p>
+
 {{#if error}}
   <div>
     There was an error processing the file <strong>{{file_name}}</strong>:

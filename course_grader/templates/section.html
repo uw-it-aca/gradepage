@@ -72,6 +72,7 @@
 {% block extra_js %}
     <script type="text/javascript">
         window.gradepage = {
+            section_name: "{{ section_name }}",
             graderoster_url: "{{ graderoster_url|safe }}",
             upload_url: "{{ upload_url|safe }}",
             import_url: "{{ import_url|safe }}",{% if auto_import_id %}
