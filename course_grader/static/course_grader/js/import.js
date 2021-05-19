@@ -410,10 +410,12 @@ GradePage.Import = (function ($) {
 
     function select_import() {
         /*jshint validthis: true */
-        var source = $(this).val();
+        var source = $(this).val(),
+            data;
         if (source !== "") {
             if (source === "csv") {
-                draw_upload_prompt();
+                data = {};
+                draw_upload_prompt(data);
             } else {
                 create_import(source);
             }
