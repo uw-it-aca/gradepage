@@ -3,7 +3,10 @@
 <form method="POST" enctype="multipart/form-data">
 
 <div>
-  <p>You are importing final grades for section <strong>SECTION NAME</strong> (## grades expected)</p>
+  <p>
+  You are importing final grades for section <strong>{{section_name}}</strong> (
+  {{{ trans "One grade expected" "%(expected_grade_count)s grades expected" expected_grade_count }}})
+  </p>
   <p>Before importing, ensure your uploaded file follows the minimum requirements for grade submission:</p>
   <p>File must include Comma Separated Values (CSV) with at least <strong>two required columns:</strong>
 <ol>

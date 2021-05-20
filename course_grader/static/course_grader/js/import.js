@@ -262,6 +262,11 @@ GradePage.Import = (function ($) {
     function draw_upload_prompt(data) {
         var template = Handlebars.compile($("#upload-tmpl").html());
 
+        // Add context from the graderoster
+        data.section_name = window.gradepage.section_name;
+        data.expected_grade_count = $(".gp-roster-list").find(
+            GradePage.GradeRoster.grade_input_selector()).length;
+
         $(".gp-import-selector select").val("");
         $("#gp-import-modal-body").html(template(data));
         $("#gp-import-modal").modal({backdrop: "static"});
@@ -405,10 +410,12 @@ GradePage.Import = (function ($) {
 
     function select_import() {
         /*jshint validthis: true */
-        var source = $(this).val();
+        var source = $(this).val(),
+            data;
         if (source !== "") {
             if (source === "csv") {
-                draw_upload_prompt();
+                data = {};
+                draw_upload_prompt(data);
             } else {
                 create_import(source);
             }
