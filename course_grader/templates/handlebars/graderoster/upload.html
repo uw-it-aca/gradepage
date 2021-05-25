@@ -5,16 +5,13 @@
 <div class="gp-csv-import">
   <p>You are importing final grades for section <strong>{{section_name}}</strong></p>
   <div class="well">
-    <span class="gp-expected-grades" style="font-size:16px;">{{{ trans "One grade expected" "<strong>%(expected_grade_count)s</strong> final grades expected" expected_grade_count }}}</span><br>
-    <span>Expected grading format: 4.0 scale (2); CR/NC (1)</span>
+    <span class="gp-expected-grades">{{{ trans "One grade expected" "<strong>%(expected_grade_count)s</strong> grades expected" expected_grade_count }}}</span><br>
+    <small>Expected valid grading format: {Undergraduate 4.0}</small>
   </div>
 
-  <p>GradePage supports CSV file exports from a Canvas Gradebook or a downloaded MyUW Classlist<span>&#42;</span> <a href="#"><i class="fa fa-info-circle" aria-hidden="true"></i></a>
-  </p>
+  <p>GradePage supports CSV file exports from a Canvas Gradebook or a downloaded MyUW Classlist<span>&#42;</span> <a href="#"><i class="fa fa-info-circle" aria-hidden="true"></i></a></p>
 
-  <div style="margin-top:2.5rem;">
-    <p>To begin import, choose your supported CSV file and click <strong>Next</strong> to continue.</p>
-  </div>
+  <p class="gp-import-instructions">To begin import, choose your supported CSV file and click <strong>Next</strong> to continue.</p>
 
   <div class="upload-file-wrapper">
     <label for="gp-import-file" class="sr-only">Select a CSV File to Import</label>
