@@ -2,7 +2,7 @@
 <script id="import-tmpl" type="text/x-handlebars-template">
 {{#if grade_count}}
     {{#if file_name}}
-    <p>{{{ trans "One grade found out of (number) grade expected for <strong>%(section_name)s</strong> in the file <strong>%(file_name)s</strong>." "%(grade_count)s grades found out of (number) grades expected for <strong>%(section_name)s</strong> in the file <strong>%(file_name)s</strong>." grade_count }}}</p>
+    <p>{{{ trans "<strong>One grade</strong> found out of %(expected_grade_count)s grade expected for <strong>%(section_name)s</strong> in the file <strong>%(file_name)s</strong>." "<strong>%(grade_count)s</strong> grades found out of %(expected_grade_count)s grades expected for <strong>%(section_name)s</strong> in the file <strong>%(file_name)s</strong>." grade_count }}}</p>
     <ul>
       <li>To continue, click <strong>Import Grades</strong>. You will have a chance to adjust and review grades in the next screen.</li>
       <li>To re-import CSV, click <strong>Cancel</strong></li>
