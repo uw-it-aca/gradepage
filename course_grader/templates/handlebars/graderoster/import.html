@@ -3,10 +3,6 @@
 {{#if grade_count}}
     {{#if file_name}}
     <p>{{{ trans "<strong>One grade</strong> found out of %(expected_grade_count)s grade expected for <strong>%(section_name)s</strong> in the file <strong>%(file_name)s</strong>." "<strong>%(grade_count)s</strong> grades found out of %(expected_grade_count)s grades expected for <strong>%(section_name)s</strong> in the file <strong>%(file_name)s</strong>." grade_count }}}</p>
-    <ul>
-      <li>To continue, click <strong>Import Grades</strong>. You will have a chance to adjust and review grades on the next screen.</li>
-      <li>To re-import CSV, click <strong>Cancel</strong></li>
-    </ul>
     {{else}}
     <p>{{{ trans "One grade found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>." "%(grade_count)s total grades found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>." grade_count }}}</p>
     {{/if}}
@@ -47,8 +43,10 @@
         </ul>
         </fieldset>
     {{else}}
-        {{#if has_valid_grades}}
-        {{/if}}
+        <ul>
+        <li>To continue, click <strong>{{ trans "import_save_grades" }}</strong>. You will have a chance to adjust and review grades on the next screen.</li>
+        <li>To re-import CSV, click <strong>Cancel</strong></li>
+        </ul>
         <div class="clearfix">
         <button type="button" class="btn btn-primary gp-import-save-import pull-right">{{ trans "import_save_grades" }}</button>
         </div>
