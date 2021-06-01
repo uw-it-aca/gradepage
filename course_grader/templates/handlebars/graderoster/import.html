@@ -2,11 +2,15 @@
 <script id="import-tmpl" type="text/x-handlebars-template">
 {{#if grade_count}}
     {{#if file_name}}
-    <p>{{{ trans "<strong>1</strong> of <strong>%(expected_grade_count)s</strong> grades found for <strong>%(section_name)s</strong> in the file <strong>%(file_name)s</strong>" "<strong>%(grade_count)s</strong> of <strong>%(expected_grade_count)s</strong> grades found for <strong>%(section_name)s</strong> in the file <strong>%(file_name)s</strong>" grade_count }}}</p>
-    <ul>
-      <li>To continue, click <strong>Import Grades</strong>. You will have a chance to enter, adjust, and review grades on the next screen.</li>
-      <li>To re-import CSV, click <strong>Cancel</strong></li>
+    <div class="gp-csv-import-grades-found">
+    <p>You are importing final grades for section <strong>{{section_name}}</strong></p>
+    <div class="well">
+        <i class="fa fa-check-circle text-success" aria-hidden="true"></i>  {{{ trans "<strong>1</strong> of <strong>%(expected_grade_count)s</strong> grades found in the file <strong>%(file_name)s</strong>" "<strong>%(grade_count)s</strong> of <strong>%(expected_grade_count)s</strong> grades found in the file <strong>%(file_name)s</strong>" grade_count }}}
+    </div>
+    <p>To continue, click <strong>Import Grades</strong><br><small><em>You will have a chance to enter, adjust, and review grades on the next screen.</em></small></p>
+    <p>To re-import CSV, click <strong>Cancel</strong></p>
     </ul>
+    </div>
     {{else}}
     <p>{{{ trans "One grade found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>." "%(grade_count)s total grades found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>." grade_count }}}</p>
     {{/if}}
