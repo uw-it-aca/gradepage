@@ -332,6 +332,8 @@ GradePage.Import = (function ($) {
         } else if (data.grade_import.source === "csv") {
             return draw_upload_prompt(data.grade_import);
         }
+        data.grade_import.expected_grade_count = $(".gp-roster-list").find(
+            GradePage.GradeRoster.grade_input_selector()).length;
 
         import_data = data;
         $("#gp-import-modal-body").html(template(data.grade_import));
