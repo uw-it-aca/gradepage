@@ -3,13 +3,10 @@
 {{#if grade_count}}
     {{#if file_name}}
     <div class="gp-csv-import-grades-found">
-    <p>You are importing final grades for section <strong>{{section_name}}</strong></p>
-    <div class="well">
-        <i class="fa fa-check-circle text-success" aria-hidden="true"></i>  {{{ trans "<strong>%(grade_count)s</strong> of <strong>%(expected_grade_count)s</strong> grades found in the file <strong>%(file_name)s</strong>" }}}
-    </div>
-    <p>To continue, click <strong>Import Grades</strong><br><small><em>You will have a chance to enter, adjust, and review grades on the next screen.</em></small></p>
-    <p>To re-import CSV, click <strong>Cancel</strong></p>
-    </ul>
+      <p>You are importing final grades for section <strong>{{section_name}}</strong></p>
+      <div class="well">
+        <i class="fa fa-check-circle text-success" aria-hidden="true"></i> <strong>{{grade_count}}</strong> of <strong>{{expected_grade_count}}</strong> grades found in the file <strong>{{file_name}}</strong>
+      </div>
     </div>
     {{else}}
     <p>{{{ trans "One grade found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>." "%(grade_count)s total grades found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>." grade_count }}}</p>
@@ -51,10 +48,8 @@
         </ul>
         </fieldset>
     {{else}}
-        <ul>
-        <li>To continue, click <strong>{{ trans "import_save_grades" }}</strong>. You will have a chance to adjust and review grades on the next screen.</li>
-        <li>To re-import CSV, click <strong>Cancel</strong></li>
-        </ul>
+        <p>To continue, click <strong>{{ trans "import_save_grades" }}</strong><br><small><em>You will have a chance to enter, adjust, and review grades on the next screen.</em></small></p>
+        <p>To re-import CSV, click <strong>Cancel</strong></p>
         <div class="clearfix">
         <button type="button" class="btn btn-primary gp-import-save-import pull-right">{{ trans "import_save_grades" }}</button>
         </div>
