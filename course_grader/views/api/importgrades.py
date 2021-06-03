@@ -247,8 +247,8 @@ class UploadGrades(ImportGrades):
             grade_import.grades_for_section(
                 self.section, self.instructor, fileobj=uploaded_file)
         except Exception as ex:
-            logger.error("POST import failed for {}: {}".format(
-                self.section.section_label(), ex))
+            logger.error("POST upload {} failed for {}: {}".format(
+                uploaded_file.name, self.section.section_label(), ex))
             return self.error_response(400, "{}".format(ex))
 
         return self.response_content(grade_import)

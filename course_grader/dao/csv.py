@@ -45,7 +45,7 @@ class GradeImportCSV(GradeImportSource):
 
     def validate(self, fileobj):
         decoded_file = self.decode_file(fileobj.read(1024))
-        has_header = csv.Sniffer().has_header(decoded_file)
+        self.has_header = csv.Sniffer().has_header(decoded_file)
         self.dialect = csv.Sniffer().sniff(decoded_file)
         fileobj.seek(0, 0)
 
@@ -67,7 +67,7 @@ class GradeImportCSV(GradeImportSource):
         decoded_file = self.decode_file(fileobj.read()).splitlines()
 
         grade_data = []
-        for row in InsensitiveDictReader(decoded_file):
+        for row in InsensitiveDictReader(decoded_file, dialect=self.dialect):
             student_data = {
                 "student_reg_id": row.get("UWRegID") or row.get("SIS User ID"),
                 "student_number": row.get("StudentNo"),
