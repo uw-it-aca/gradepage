@@ -5,6 +5,7 @@ from django.test import TestCase, override_settings
 from course_grader.dao.csv import InsensitiveDictReader, GradeImportCSV
 from course_grader.dao.section import get_section_by_label
 from course_grader.dao.person import PWS
+from course_grader.exceptions import InvalidCSV
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
 import os
@@ -36,6 +37,15 @@ class CVSDAOFunctionsTest(TestCase):
         r = grade_import.validate(fileobj)
         self.assertEqual(grade_import.has_header, True)
         self.assertEqual(grade_import.dialect.delimiter, ",")
+
+        fileobj = open(os.path.join(self.resource_path, "missing_header.csv"))
+        self.assertRaisesRegex(
+            InvalidCSV, "Missing header row$", grade_import.validate, fileobj)
+
+        fileobj = open(os.path.join(self.resource_path, "missing_grade.csv"))
+        self.assertRaisesRegex(
+            InvalidCSV, "Missing grade header$", grade_import.validate,
+            fileobj)
 
     def test_grades_for_section(self):
         # Section/user do not matter here
