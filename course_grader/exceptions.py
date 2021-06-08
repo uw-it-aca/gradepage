@@ -69,3 +69,11 @@ class OverrideNotPermitted(Exception):
 class GradesNotSubmitted(Exception):
     def __str__(self):
         return "No grades were submitted"
+
+
+class InvalidCSV(Exception):
+    def __init__(self, error):
+        self.error = error
+
+    def __str__(self):
+        return "Invalid CSV file: {}".format(self.error)

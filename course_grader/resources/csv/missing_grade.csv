@@ -1,0 +1,7 @@
+StudentNo,UWNetID,LastName,FirstName,Section,Credits,Class,Major,Email
+"8000000","javerage","Average","J","AB","2.0","GRADUATE","Biology","javerage@uw.edu"
+"4000000","jjulius","Julius","J","AB","2.0","GRADUATE","Oceanography","jjulius@uw.edu"
+"1000000","baverage","Average","Bill P","AC","2.0","GRADUATE","Oceanography","baverage@uw.edu"
+"7000000","student1","Student 1","","AA","2.0","UNDERGRADUATE","Health Services","student1@uw.edu"
+"9000000","student2","Student","2","AA","2.0","NON_MATRIC","Non Matriculated","student2@uw.edu"
+"2000000","student3","Student","3","AC","2.0","NON_MATRIC","Non Matriculated","student3@uw.edu"
