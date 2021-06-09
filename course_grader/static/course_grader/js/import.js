@@ -36,7 +36,7 @@ GradePage.Import = (function ($) {
     }
 
     function save_in_progress() {
-        $("#gp-import-modal-body").html(gettext("import_save_in_progress"));
+        $("#gp-import-modal-body").html(gettext("import_in_progress"));
         $("#gp-import-modal").modal({backdrop: "static"});
     }
 
