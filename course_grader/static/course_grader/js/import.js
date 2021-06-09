@@ -36,7 +36,7 @@ GradePage.Import = (function ($) {
     }
 
     function save_in_progress() {
-        $("#gp-import-modal-body").html(gettext("import_save_in_progress"));
+        $("#gp-import-modal-body").html(gettext("import_in_progress"));
         $("#gp-import-modal").modal({backdrop: "static"});
     }
 
@@ -223,6 +223,7 @@ GradePage.Import = (function ($) {
             students[i].converted_grade = converted_grade;
         }
 
+        $(window).scrollTop(0);
         $(".gp-grade-roster-state").text(gettext("review_import_grades"));
         $("#graderoster-content").html(template(import_data.grade_import));
         $("button.gp-btn-convert-back").click(function (ev) {
