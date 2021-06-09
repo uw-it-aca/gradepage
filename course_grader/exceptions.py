@@ -72,8 +72,8 @@ class GradesNotSubmitted(Exception):
 
 
 class InvalidCSV(Exception):
-    def __init__(self, error):
+    def __init__(self, error="Invalid CSV file"):
         self.error = error
 
     def __str__(self):
-        return "Invalid CSV file: {}".format(self.error)
+        return self.error
