@@ -53,6 +53,11 @@ class CVSDAOFunctionsTest(TestCase):
         self.assertEqual(grade_import.has_header, True)
         self.assertEqual(grade_import.dialect.delimiter, ",")
 
+        fileobj = open(os.path.join(self.resource_path, "unk_delimiter.csv"))
+        r = grade_import.validate(fileobj)
+        self.assertEqual(grade_import.has_header, True)
+        self.assertEqual(grade_import.dialect.delimiter, ",")
+
     def test_grades_for_section(self):
         # Section/user do not matter here
         section = get_section_by_label("2013,spring,A B&C,101/A")
