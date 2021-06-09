@@ -3,6 +3,7 @@
 
 from course_grader.dao import GradeImportSource
 from course_grader.dao.person import person_from_netid
+from course_grader.exceptions import InvalidCSV
 from restclients_core.exceptions import InvalidNetID, DataFailureException
 from logging import getLogger
 import csv
@@ -44,9 +45,21 @@ class GradeImportCSV(GradeImportSource):
             return csvfile
 
     def validate(self, fileobj):
-        decoded_file = self.decode_file(fileobj.read(1024))
+        decoded_file = self.decode_file(fileobj.read(4096))
         self.has_header = csv.Sniffer().has_header(decoded_file)
         self.dialect = csv.Sniffer().sniff(decoded_file)
+
+        reader = InsensitiveDictReader(decoded_file.splitlines(),
+                                       dialect=self.dialect)
+        if ("grade" not in reader.fieldnames and
+                "current score" not in reader.fieldnames):
+            raise InvalidCSV("Missing grade header")
+
+        if ("uwregid" not in reader.fieldnames and
+                "sis user id" not in reader.fieldnames and
+                "studentno" not in reader.fieldnames):
+            raise InvalidCSV("Missing student identifer header")
+
         fileobj.seek(0, 0)
 
     def grades_for_section(self, section, instructor, **kwargs):
