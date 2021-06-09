@@ -45,12 +45,14 @@ class GradeImportCSV(GradeImportSource):
             return csvfile
 
     def validate(self, fileobj):
-        decoded_file = self.decode_file(fileobj.read(4096))
+        # Read the first line of the file to validate the header
+        decoded_file = self.decode_file(fileobj.readline())
         self.has_header = csv.Sniffer().has_header(decoded_file)
         self.dialect = csv.Sniffer().sniff(decoded_file)
 
         reader = InsensitiveDictReader(decoded_file.splitlines(),
                                        dialect=self.dialect)
+
         if ("grade" not in reader.fieldnames and
                 "current score" not in reader.fieldnames):
             raise InvalidCSV("Missing grade header")
