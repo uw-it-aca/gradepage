@@ -78,4 +78,9 @@ class ExceptionsTest(TestCase):
         try:
             raise InvalidCSV("Missing header")
         except InvalidCSV as ex:
-            self.assertEquals(str(ex), "Invalid CSV file: Missing header")
+            self.assertEquals(str(ex), "Missing header")
+
+        try:
+            raise InvalidCSV()
+        except InvalidCSV as ex:
+            self.assertEquals(str(ex), "Invalid CSV file")
