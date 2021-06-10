@@ -19,13 +19,14 @@
   {{#if error}}
     <div class="alert alert-danger" role="alert">
       There was an error processing the file <strong>{{file_name}}</strong>:
-      <div>
-      {{#if file_too_large}}
+      <p>
+      {{#if file_limit_exceeded}}
         The file exceeds the allowed size (1 Mb).
       {{else}}
         {{error}}
       {{/if}}
-        Select a different file for import or enter grades manually.
+      </p>
+      <p>Select a different file for import or enter grades manually.</p>
       </div>
     </div>
   {{else}}

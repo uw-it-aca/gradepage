@@ -223,6 +223,10 @@ GradePage.Import = (function ($) {
             students[i].converted_grade = converted_grade;
         }
 
+        //students.sort(function (a, b) {
+        //    return b.converted_grade - a.converted_grade;
+        //});
+
         $(window).scrollTop(0);
         $(".gp-grade-roster-state").text(gettext("review_import_grades"));
         $("#graderoster-content").html(template(import_data.grade_import));
@@ -372,7 +376,7 @@ GradePage.Import = (function ($) {
                     data = $.parseJSON(xhr.responseText);
                 } catch (e) {
                     if (xhr.responseText.indexOf("Request Entity Too Large") !== -1) {
-                        data.file_too_large = true;
+                        data.file_limit_exceeded = true;
                     }
                     data.error = xhr.responseText;
                 }
