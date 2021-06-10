@@ -20,7 +20,7 @@
     <div class="alert alert-danger" role="alert">
       <p>There was an error verifying the file {{file_name}}:</p>
       <p><i class="fas fa-exclamation-circle"></i>
-        {{#if file_too_large}}<strong>The file exceeds the allowed size (1 Mb).</strong>
+        {{#if file_limit_exceeded}}<strong>The file exceeds the allowed size (1 Mb).</strong>
         {{else}}<strong>{{error}}</strong>
         {{/if}}
       </p>
