@@ -278,6 +278,7 @@ GradePage.Import = (function ($) {
 
         $("#gp-import-file").change(update_upload_form);
         $("button.gp-btn-upload").click(create_upload);
+        $("a.gp-upload-popover").popover();
         update_upload_form();
     }
 
