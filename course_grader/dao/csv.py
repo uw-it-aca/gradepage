@@ -16,11 +16,14 @@ class InsensitiveDict(dict):
     Override the get method to strip() and lower() the input key, and
     strip() the returned value.
     """
-    def get(self, k, default=None):
-        try:
-            return super().get(k.strip().lower(), default).strip()
-        except AttributeError:
-            return None
+    def get(self, *k, default=None):
+        for i in k:
+            if i.strip().lower() in self:
+                try:
+                    return super().get(i.strip().lower()).strip()
+                except AttributeError:
+                    break
+        return default
 
 
 class InsensitiveDictReader(csv.DictReader):
@@ -53,9 +56,9 @@ class GradeImportCSV(GradeImportSource):
         reader = InsensitiveDictReader(decoded_file.splitlines(),
                                        dialect=self.dialect)
 
-        if ("grade" not in reader.fieldnames and
-                "current score" not in reader.fieldnames):
-            raise InvalidCSV("Missing grade header")
+        if ("class grade" not in reader.fieldnames and
+                "classgrade" not in reader.fieldnames):
+            raise InvalidCSV("Missing \"Class Grade\" header")
 
         if ("uwregid" not in reader.fieldnames and
                 "sis user id" not in reader.fieldnames and
@@ -71,9 +74,9 @@ class GradeImportCSV(GradeImportSource):
         Supported column names are:
 
         "UWRegID" OR "SIS User ID" OR "StudentNo" (required),
-        "Grade" OR "Current Score" (required),
+        "Class Grade" OR "ClassGrade" (required),
         "Incomplete" (optional),
-        "WritingCredit" (optional)
+        "Writing Credit" OR "WritingCredit" (optional)
 
         All other field names are ignored.
         """
@@ -84,11 +87,12 @@ class GradeImportCSV(GradeImportSource):
         grade_data = []
         for row in InsensitiveDictReader(decoded_file, dialect=self.dialect):
             student_data = {
-                "student_reg_id": row.get("UWRegID") or row.get("SIS User ID"),
+                "student_reg_id": row.get("UWRegID", "SIS User ID"),
                 "student_number": row.get("StudentNo"),
-                "grade": row.get("Grade") or row.get("Current Score"),
+                "grade": row.get("Class Grade", "ClassGrade"),
                 "is_incomplete": self.is_true(row.get("Incomplete")),
-                "is_writing": self.is_true(row.get("WritingCredit")),
+                "is_writing": self.is_true(
+                    row.get("Writing Credit", "WritingCredit")),
             }
             if (student_data["student_reg_id"] or
                     student_data["student_number"]):

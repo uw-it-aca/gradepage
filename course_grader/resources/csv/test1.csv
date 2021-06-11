@@ -1,4 +1,4 @@
-StudentNo,UWNetID,LastName,FirstName,Section,Credits,Class,Major,Email,Grade,Incomplete,WritingCredit
+StudentNo,UWNetID,LastName,FirstName,Section,Credits,Class,Major,Email,ClassGrade,Incomplete,WritingCredit
 "8000000","javerage","Average","J","AB","2.0","GRADUATE","Biology","javerage@uw.edu","4.0",yes,yes
 "4000000","jjulius","Julius","J","AB","2.0","GRADUATE","Oceanography","jjulius@uw.edu","3.7",1,
 "1000000","baverage","Average","Bill P","AC","2.0","GRADUATE","Oceanography","baverage@uw.edu","3.9",no,
