@@ -18,22 +18,21 @@
 
   {{#if error}}
     <div class="alert alert-danger" role="alert">
-      There was an error processing the file <strong>{{file_name}}</strong>:
-      <p>
-      {{#if file_limit_exceeded}}
-        The file exceeds the allowed size (1 Mb).
-      {{else}}
-        {{error}}
-      {{/if}}
+      <p>There was an error verifying the file {{file_name}}:</p>
+      <p><i class="fas fa-exclamation-circle"></i>
+        {{#if file_limit_exceeded}}<strong>The file exceeds the allowed size (1 Mb).</strong>
+        {{else}}<strong>{{error}}</strong>
+        {{/if}}
       </p>
-      <p>Select a different file for import or enter grades manually.</p>
-      </div>
+        <p>Select a different file for import or enter grades manually. <br><a href="#">Learn more about correct CSV format for GradePage</a></p>
     </div>
   {{else}}
     {{#if file_name }}
     {{#unless grade_count}}
     <div class="alert alert-danger" role="alert">
-      No grades found for <strong>{{section_name}}</strong> in the file <strong>{{file_name}}</strong>.  Select a different file for import or enter grades manually.
+      <p>There was an error verifying the file {{file_name}}:</p>
+      <p><i class="fas fa-exclamation-circle"></i> <strong>No grades found for {{section_name}}</strong></p>
+    <p>Select a different file for import or enter grades manually. <br><a href="#">Learn more about correct CSV format for GradePage</a></p>
     </div>
     {{/unless}}
     {{/if}}
