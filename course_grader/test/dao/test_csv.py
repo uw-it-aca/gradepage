@@ -40,13 +40,13 @@ class CVSDAOFunctionsTest(TestCase):
 
         fileobj = open(os.path.join(self.resource_path, "missing_header.csv"))
         self.assertRaisesRegex(
-            InvalidCSV, "Missing grade header$", grade_import.validate,
-            fileobj)
+            InvalidCSV, "Missing \"Class Grade\" header$",
+            grade_import.validate, fileobj)
 
         fileobj = open(os.path.join(self.resource_path, "missing_grade.csv"))
         self.assertRaisesRegex(
-            InvalidCSV, "Missing grade header$", grade_import.validate,
-            fileobj)
+            InvalidCSV, "Missing \"Class Grade\" header$",
+            grade_import.validate, fileobj)
 
         fileobj = open(os.path.join(self.resource_path, "large_header.csv"))
         r = grade_import.validate(fileobj)
@@ -88,7 +88,8 @@ class InsensitiveDictReaderTest(CVSDAOFunctionsTest):
         self.assertEqual(row.get("Field2"), "øk2")
         self.assertEqual(row.get("Field3"), "ok3")
         self.assertEqual(row.get("Field4"), "ok4")
-        self.assertEqual(row.get("Field5"), "ok5")
-        self.assertEqual(row.get("Field6"), "")
-        self.assertEqual(row.get("Field7"), None)
+        self.assertEqual(row.get("Field 5", "Field5"), "ok5")
+        self.assertEqual(row.get("Field6", "field 6"), "")
+        self.assertEqual(row.get("Field7"), "")
+        self.assertEqual(row.get("Field8"), None)
         f.close()
