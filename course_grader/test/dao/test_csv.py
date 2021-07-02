@@ -40,12 +40,12 @@ class CVSDAOFunctionsTest(TestCase):
 
         fileobj = open(os.path.join(self.resource_path, "missing_header.csv"))
         self.assertRaisesRegex(
-            InvalidCSV, "Missing \"Class Grade\" header$",
+                InvalidCSV, "Missing header: grade$",
             grade_import.validate, fileobj)
 
         fileobj = open(os.path.join(self.resource_path, "missing_grade.csv"))
         self.assertRaisesRegex(
-            InvalidCSV, "Missing \"Class Grade\" header$",
+                InvalidCSV, "Missing header: grade$",
             grade_import.validate, fileobj)
 
         fileobj = open(os.path.join(self.resource_path, "large_header.csv"))
