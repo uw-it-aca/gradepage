@@ -18,24 +18,30 @@
   </div>
 
   {{#if error}}
-    <div class="alert alert-danger" role="alert">
-        <p>There was an error verifying the file {{file}}</p>
-        {{#if file_limit_exceeded}}<i class="fas fa-exclamation-circle"></i> <strong>The file exceeds the allowed size (1 Mb).</strong></p>
-          <p>Select a different file for import or enter grades manually. <br><a href="#">Learn more about correct CSV format for GradePage</a></p>
+  <div class="alert alert-danger" role="alert">
+    <p>There was an error verifying the file {{file_name}}</p>
+    {{#if file_limit_exceeded}}
+    <i class="fas fa-exclamation-circle"></i> <strong>The file exceeds the allowed size (1 Mb).</strong></p>
+    <p>Select a different file for import or enter grades manually. <br><a href="#">Learn more about correct CSV format for GradePage</a></p>
+    {{else}}
+      {{#if missing_header_grade}}
+      <i class="fas fa-exclamation-circle"></i><strong>Missing column heading: "Class Grade"</strong>
+      <ul>
+        <li>Confirm that the .csv file contains a column with the heading "Class Grade" and that the column contains the grades you want to submit.</li>
+      {{else}
+        {{#if missing_header_student}}
+        <i class="fas fa-exclamation-circle"></i><strong>Missing column heading: "SIS User ID" OR "StudentNo"</strong>
+        <ul>
+          <li>Confirm that the .csv file contains a column with the heading "SIS User ID" or "StudentNo".</li>
         {{else}}
-          {{#if is_missing_grade_header}}
-          <i class="fas fa-exclamation-circle"></i><strong>{{error}}</strong>
-           <ul>
-            <li>Confirm that the .csv file contains a column with the heading “Class Grade” and that the column contains the grades you want to submit.</li> 
-          {{#if is_missing_student_header}}
-          <i class="fas fa-exclamation-circle"></i><strong>{{error}}</strong>
-            <ul>
-              <li>Confirm that the .csv file contains a column with the heading SIS User ID or StudentNo.</li> 
-          {{/if}}
-          <li>Select a different file for import.</li>
-        </ul>
-        {{/if}}
-      <p>Or, <a href="#">see other options for submitting grades.</a></p>
+          <i class="fas fa-exclamation-circle"></i> <strong>{{error}}</strong></p>
+          <ul>
+        {{/if}
+        <li>Select a different file for import.</li>
+      </ul>
+      {{/if}
+    {{/if}}
+    <p>Or, <a href="#">see other options for submitting grades.</a></p>
     </div>
   {{else}}
     {{#if file_name }}
