@@ -58,12 +58,12 @@ class GradeImportCSV(GradeImportSource):
 
         if ("class grade" not in reader.fieldnames and
                 "classgrade" not in reader.fieldnames):
-            raise InvalidCSV("Missing \"Class Grade\" header")
+            raise InvalidCSV("Missing header: grade")
 
         if ("uwregid" not in reader.fieldnames and
                 "sis user id" not in reader.fieldnames and
                 "studentno" not in reader.fieldnames):
-            raise InvalidCSV("Missing student identifer header")
+            raise InvalidCSV("Missing header: student")
 
         fileobj.seek(0, 0)
 

@@ -18,21 +18,37 @@
   </div>
 
   {{#if error}}
-    <div class="alert alert-danger" role="alert">
-      <p>There was an error verifying the file {{file_name}}:</p>
-      <p><i class="fas fa-exclamation-circle"></i>
-        {{#if file_limit_exceeded}}<strong>The file exceeds the allowed size (1 Mb).</strong>
-        {{else}}<strong>{{error}}</strong>
+  <div class="alert alert-danger" role="alert">
+    <p>There was an error verifying the file {{file_name}}</p>
+    {{#if file_limit_exceeded}}
+    <i class="fas fa-exclamation-circle"></i> <strong>The file exceeds the allowed size (1 Mb).</strong></p>
+    <p>Select a different file for import or enter grades manually. <br><a href="#">Learn more about correct CSV format for GradePage</a></p>
+    {{else}}
+      {{#if missing_header_grade}}
+      <i class="fas fa-exclamation-circle"></i><strong>Missing column heading: "Class Grade"</strong>
+      <ul>
+        <li>Confirm that the .csv file contains a column with the heading "Class Grade" and that the column contains the grades you want to submit.</li>
+      {{else}}
+        {{#if missing_header_student}}
+        <i class="fas fa-exclamation-circle"></i><strong>Missing column heading: "SIS User ID" OR "StudentNo"</strong>
+        <ul>
+          <li>Confirm that the .csv file contains a column with the heading "SIS User ID" or "StudentNo".</li>
+        {{else}}
+          <i class="fas fa-exclamation-circle"></i> <strong>{{error}}</strong></p>
+          <ul>
         {{/if}}
-      </p>
-        <p>Select a different file for import or enter grades manually. <br><a href="#">Learn more about correct CSV format for GradePage</a></p>
+        <li>Select a different file for import.</li>
+      </ul>
+      {{/if}}
+    {{/if}}
+    <p>Or, <a href="#">see other options for submitting grades.</a></p>
     </div>
   {{else}}
-    {{#if file_name }}
+    {{#if file_name}}
     {{#unless grade_count}}
     <div class="alert alert-danger" role="alert">
-      <p>There was an error verifying the file {{file_name}}:</p>
-      <p><i class="fas fa-exclamation-circle"></i> <strong>No grades found for {{section_name}}</strong></p>
+      <p><i class="fas fa-exclamation-circle"></i> <strong>No grades found for {{section_name}}</strong><br>
+      <small>on the file {{file_name}}</small></p>
     <p>Select a different file for import or enter grades manually. <br><a href="#">Learn more about correct CSV format for GradePage</a></p>
     </div>
     {{/unless}}

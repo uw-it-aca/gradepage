@@ -282,6 +282,24 @@ GradePage.Import = (function ($) {
         update_upload_form();
     }
 
+    function draw_upload_error(xhr, filename) {
+        var data = {};
+        try {
+            data = $.parseJSON(xhr.responseText);
+        } catch (e) {
+            if (xhr.responseText.indexOf("Request Entity Too Large") !== -1) {
+                data.file_limit_exceeded = true;
+            } else if (xhr.responseText.indexOf("Missing header: grade") !== -1) {
+                data.missing_header_grade = true;
+            } else if (xhr.responseText.indexOf("Missing header: student") !== -1) {
+                data.missing_header_student = true;
+            }
+            data.error = xhr.responseText;
+        }
+        data.file_name = filename;
+        draw_upload_prompt(data);
+    }
+
     function draw_import_success(data) {
         var template = Handlebars.compile($("#import-tmpl").html()),
             students = data.grade_import.students,
@@ -372,17 +390,7 @@ GradePage.Import = (function ($) {
             beforeSend: import_in_progress,
             success: draw_import_success,
             error: function (xhr) {
-                var data = {};
-                try {
-                    data = $.parseJSON(xhr.responseText);
-                } catch (e) {
-                    if (xhr.responseText.indexOf("Request Entity Too Large") !== -1) {
-                        data.file_limit_exceeded = true;
-                    }
-                    data.error = xhr.responseText;
-                }
-                data.file_name = filename;
-                draw_upload_prompt(data);
+                draw_upload_error(xhr, filename);
             }
         });
     }
