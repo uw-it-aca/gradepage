@@ -286,14 +286,10 @@ GradePage.Import = (function ($) {
         var data = {};
         try {
             data = $.parseJSON(xhr.responseText);
+            data.missing_header_grade = (data.error === "Missing header: grade");
+            data.missing_header_student = (data.error === "Missing header: student");
         } catch (e) {
-            if (xhr.responseText.indexOf("Request Entity Too Large") !== -1) {
-                data.file_limit_exceeded = true;
-            } else if (xhr.responseText.indexOf("Missing header: grade") !== -1) {
-                data.missing_header_grade = true;
-            } else if (xhr.responseText.indexOf("Missing header: student") !== -1) {
-                data.missing_header_student = true;
-            }
+            data.file_limit_exceeded = (xhr.responseText.indexOf("Request Entity Too Large") !== -1);
             data.error = xhr.responseText;
         }
         data.file_name = filename;
