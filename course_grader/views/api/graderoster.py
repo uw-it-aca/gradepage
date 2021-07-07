@@ -258,6 +258,7 @@ class GradeRoster(GradeFormHandler):
                 "failed_submission_count": 0,
                 "has_inprogress_submissions": False,
                 "has_grade_imports": False,
+                "has_csv_import": False,
                 "grade_import_count": 0}
 
         secondary_section = getattr(self.graderoster, "secondary_section",
@@ -274,6 +275,9 @@ class GradeRoster(GradeFormHandler):
             if submission_status["grade_import"] is not None:
                 data["has_grade_imports"] = True
                 data["grade_import_count"] += 1
+                if (submission_status.get("grade_import").get(
+                        "source") == GradeImport.CSV_SOURCE):
+                    data["has_csv_import"] = True
             data["submissions"].append(submission_status)
 
         if grading_period_open:
