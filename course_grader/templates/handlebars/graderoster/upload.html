@@ -9,7 +9,7 @@
   </div>
 
   <p>Before you import the CSV of an exported Canvas Gradebook or downloaded MyUW class list, insert a new column with the heading “<strong>Class Grade</strong>” that contains the grades you want to submit.</p>
-  <p>An imported CSV file can contain letter grades, grade codes, or percentages. Percentages will need to be converted in the next step prior to import. <br><a href="#">Learn more about importing a CSV file.</a></p>
+  <p>An imported CSV file can contain letter grades, grade codes, or percentages. <a href="https://itconnect.uw.edu/learn/tools/gradepage/import-convert-csv/#convert" title="Lean about grade conversion on IT Connect" target="_blank">Percentages will need to be converted prior to import.</a> <br><a href="https://itconnect.uw.edu/learn/tools/gradepage/import-convert-csv/" title="Learn about importing a CSV on IT Connect" target="_blank">Learn more about importing a CSV file.</a></p>
   <p class="gp-import-instructions">To begin import, choose the CSV file, and then click <strong>Verify CSV.</strong></p>
 
   <div class="upload-file-wrapper">
@@ -32,6 +32,7 @@
       <ul>
         <li>Confirm that the .csv file contains a column with the heading "Class Grade" and that the column contains the grades you want to submit.</li>
         <li>Select a different file for import.</li>
+        <li><a href="https://itconnect.uw.edu/learn/tools/gradepage/import-convert-csv/#format" title="Learn about correct CSV format on IT Connect" target="_blank">Learn more about the correct CSV format for GradePage</a></li>
       </ul>
       {{else}}
         {{#if missing_header_student}}
@@ -50,7 +51,7 @@
         {{/if}}
       {{/if}}
     {{/if}}
-    <p>Or, <a href="#">see other options for submitting grades.</a></p>
+    <p>Or, <a href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/" title="Learn about other options to submit grades on IT Connect" target="_blank">see other options for submitting grades.</a></p>
     </div>
   {{else}}
     {{#if file_name}}
@@ -64,7 +65,7 @@
         <li>Confirm that the .csv file contains students from this quarter’s roster. </li>
         <li>Select a different file for import.</li>
       </ul>
-      <p>Or, <a href="#">see other options for submitting grades.</a></p>
+      <p>Or, <a href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/" title="Learn about other options to submit grades on IT Connect" target="_blank">see other options for submitting grades.</a></p>
     </div>
     {{/unless}}
     {{/if}}
