@@ -224,14 +224,14 @@ class GradeImportManager(models.Manager):
     def get_last_import_by_section_id(self, section_id):
         return super(GradeImportManager, self).get_queryset().filter(
             section_id=section_id,
-            import_conversion__isnull=False,
+            accepted_date__isnull=False,
             status_code='200'
         ).order_by('-imported_date')[0:1].get()
 
     def get_imports_by_person(self, person):
         return super(GradeImportManager, self).get_queryset().filter(
             imported_by=person.uwregid,
-            import_conversion__isnull=False,
+            accepted_date__isnull=False,
             status_code='200'
         ).order_by('section_id', '-imported_date')
 
@@ -276,6 +276,7 @@ class GradeImport(models.Model):
     imported_by = models.CharField(max_length=32)
     import_conversion = models.ForeignKey(
         ImportConversion, on_delete=models.CASCADE, null=True)
+    accepted_date = models.DateTimeField(null=True)
 
     objects = GradeImportManager()
 
@@ -294,6 +295,19 @@ class GradeImport(models.Model):
         except DataFailureException as ex:
             self.status_code = ex.status
 
+        self.save()
+
+    def save_conversion_data(self, data):
+        if data is not None:
+            import_conversion = ImportConversion(
+                scale=data.get("scale"),
+                grade_scale=json.dumps(data.get("grade_scale")),
+                calculator_values=json.dumps(data.get("calculator_values")),
+                lowest_valid_grade=data.get("lowest_valid_grade")
+            )
+            import_conversion.save()
+            self.import_conversion = import_conversion
+        self.accepted_date = datetime.now(timezone.utc)
         self.save()
 
     def json_data(self):
@@ -355,6 +369,8 @@ class GradeImport(models.Model):
                 "source_name": dict(self.SOURCE_CHOICES)[self.source],
                 "status_code": self.status_code,
                 "file_name": self.file_name,
+                "accepted_date": self.accepted_date.isoformat() if (
+                    self.accepted_date is not None) else None,
                 "imported_date": self.imported_date.isoformat(),
                 "imported_by": self.imported_by,
                 "imported_grades": grades,
