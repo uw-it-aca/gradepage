@@ -104,22 +104,12 @@ class ImportGrades(GradeFormHandler):
         except Exception as ex:
             return self.error_response(400, "Invalid import")
 
-        conv_data = put_data.get("conversion_scale", None)
-        if conv_data is not None:
-            try:
-                calculator_values = conv_data.get("calculator_values")
-                import_conversion = ImportConversion(
-                    scale=conv_data.get("scale"),
-                    grade_scale=json.dumps(conv_data.get("grade_scale")),
-                    calculator_values=json.dumps(calculator_values),
-                    lowest_valid_grade=conv_data.get("lowest_valid_grade")
-                )
-                import_conversion.save()
-                grade_import.import_conversion = import_conversion
-                grade_import.save()
-            except Exception as ex:
-                logger.error("PUT import error for {}: {}".format(
-                    section_id, ex))
+        conversion_data = put_data.get("conversion_scale", None)
+        try:
+            grade_import.save_conversion_data(conversion_data)
+        except Exception as ex:
+            logger.error("PUT import error for {}: {}".format(
+                section_id, ex))
 
         import_data = grade_import.json_data()
         converted_grades = put_data.get("converted_grades", {})

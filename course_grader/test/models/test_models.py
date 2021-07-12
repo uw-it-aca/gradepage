@@ -12,6 +12,7 @@ from uw_canvas.models import CanvasCourse
 from uw_canvas.utilities import fdao_canvas_override
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
+from datetime import datetime
 import mock
 
 
@@ -80,6 +81,16 @@ class GradeImportTest(TestCase):
 
         gi = GradeImport(source='Bad')
         self.assertRaises(KeyError, gi.grades_for_section, section, user)
+
+    def test_save_conversion_data(self):
+        gi = GradeImport(source=GradeImport.CANVAS_SOURCE)
+        self.assertEqual(gi.import_conversion, None)
+        self.assertEqual(gi.accepted_date, None)
+
+        gi.save_conversion_data(data=None)
+
+        self.assertEqual(gi.import_conversion, None)
+        self.assertIsInstance(gi.accepted_date, datetime)
 
 
 @fdao_canvas_override
