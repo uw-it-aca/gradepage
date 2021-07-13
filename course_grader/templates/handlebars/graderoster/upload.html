@@ -3,11 +3,11 @@
 <form method="POST" enctype="multipart/form-data">
 
 <div class="gp-csv-import">
-  <p>You are importing final grades for section <strong>{{section_name}}</strong></p>
+  <p>You are importing final grades for section <strong>{{{section_name}}}</strong></p>
   <div class="well">
     <span class="gp-expected-grades">{{{ trans "One grade expected" "<strong>%(expected_grade_count)s</strong> grades expected" expected_grade_count }}}</span>
   </div>
-  <p>The CSV is required to contain at least two columns: a column for student identifier (<strong>SIS User ID</strong> or <strong>StudentNo</strong>) and a column for grades to be submitted (<strong>Class Grade</strong>)</p>
+  <p>The CSV is required to contain at least two columns: a column for student identifier (<strong>SIS User ID</strong> or <strong>StudentNo</strong>) and a column for grades to be submitted (<strong>Class Grade</strong>).</p>
   <p>An imported CSV file can contain letter grades, grade codes, or percentages. <a href="https://itconnect.uw.edu/learn/tools/gradepage/import-convert-csv/#convert" title="Lean about grade conversion on IT Connect" target="_blank">Percentages will need to be converted prior to import.</a></p> 
   <p><a href="https://itconnect.uw.edu/learn/tools/gradepage/import-convert-csv/" title="Learn about importing a CSV on IT Connect" target="_blank">Learn more about formatting and importing a CSV file.</a></p>
   <p>To begin import, choose the CSV file, and then click <strong>Verify CSV.</strong></p>
@@ -57,7 +57,7 @@
     {{#if file_name}}
     {{#unless grade_count}}
     <div class="alert alert-danger gp-upload-error" role="alert">
-      <i class="fas fa-exclamation-circle"></i> <strong>No grades found for {{section_name}}</strong><br>
+      <i class="fas fa-exclamation-circle"></i> <strong>No grades found for {{{section_name}}}</strong><br>
       <small>on the file <em>{{file_name}}</em></small>
       <ul>
         <li>Confirm that the Class Grade column contains grade values.</li>
