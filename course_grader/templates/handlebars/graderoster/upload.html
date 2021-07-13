@@ -3,7 +3,7 @@
 <form method="POST" enctype="multipart/form-data">
 
 <div class="gp-csv-import">
-  <p>You are importing final grades for section <strong>{{section_name}}</strong></p>
+  <p>You are importing final grades for section <strong>{{{section_name}}}</strong></p>
   <div class="well well-sm">
     <span class="gp-expected-grades">{{{ trans "One grade expected" "<strong>%(expected_grade_count)s</strong> grades expected" expected_grade_count }}}</span>
   </div>
@@ -61,7 +61,7 @@
     {{#if file_name}}
     {{#unless grade_count}}
     <div class="alert alert-danger gp-upload-error" role="alert">
-      <i class="fas fa-exclamation-circle"></i> <strong>No grades found for {{section_name}}</strong><br>
+      <i class="fas fa-exclamation-circle"></i> <strong>No grades found for {{{section_name}}}</strong><br>
       <small>on the file <em>{{file_name}}</em></small>
       <ul>
         <li>Confirm that the Class Grade column contains grade values.</li>
