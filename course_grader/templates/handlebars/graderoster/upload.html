@@ -10,7 +10,7 @@
   The CSV is required to contain at least two columns:
     <ul>
       <li>a column for student identifier (<strong>SIS User ID</strong> or <strong>StudentNo</strong>) AND</li>
-      <li>a column for grades to be submitted (<strong>GradePage Import</strong>)</li>
+      <li>a column for grades to be submitted (<strong>ImportGrade</strong>)</li>
     </ul>
   <p>An imported CSV file can contain letter grades, grade codes, or percentages. <a href="https://itconnect.uw.edu/learn/tools/gradepage/import-convert-csv/#convert" title="Lean about grade conversion on IT Connect" target="_blank">Percentages will need to be converted prior to import.</a></p>
   <p><a href="https://itconnect.uw.edu/learn/tools/gradepage/import-convert-csv/" title="Learn about importing a CSV on IT Connect" target="_blank">Learn more about formatting and importing a CSV file.</a></p>
@@ -31,10 +31,10 @@
     </ul>
     {{else}}
       {{#if missing_header_grade}}
-      <i class="fas fa-exclamation-circle"></i> <strong>Missing column heading: "GradePage Import"</strong><br>
+      <i class="fas fa-exclamation-circle"></i> <strong>Missing column heading: "ImportGrade"</strong><br>
       <small>on file <em>{{file_name}}</em></small>
       <ul>
-        <li>Confirm that the .csv file contains a column with the heading "GradePage Import" and that the column contains the grades you want to submit.</li>
+        <li>Confirm that the .csv file contains a column with the heading "ImportGrade" and that the column contains the grades you want to submit.</li>
         <li>Select a different file for import.</li>
         <li><a href="https://itconnect.uw.edu/learn/tools/gradepage/import-convert-csv/#format" title="Learn about correct CSV format on IT Connect" target="_blank">Learn more about the correct CSV format for GradePage</a></li>
       </ul>
@@ -64,7 +64,7 @@
       <i class="fas fa-exclamation-circle"></i> <strong>No grades found for {{{section_name}}}</strong><br>
       <small>on the file <em>{{file_name}}</em></small>
       <ul>
-        <li>Confirm that the GradePage Import column contains grade values.</li>
+        <li>Confirm that the ImportGrade column contains grade values.</li>
         <li>Confirm that the SIS User ID or StudentNo column contains student identifiers.</li>
         <li>Confirm that the .csv file contains students from this section's roster. </li>
         <li>Select a different file for import.</li>
