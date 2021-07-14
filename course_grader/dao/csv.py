@@ -56,7 +56,8 @@ class GradeImportCSV(GradeImportSource):
         reader = InsensitiveDictReader(decoded_file.splitlines(),
                                        dialect=self.dialect)
 
-        if "gradepage import" not in reader.fieldnames:
+        if ("gradepage import" not in reader.fieldnames and
+                "gradepageimport" not in reader.fieldnames):
             raise InvalidCSV("Missing header: grade")
 
         if ("uwregid" not in reader.fieldnames and
@@ -73,7 +74,7 @@ class GradeImportCSV(GradeImportSource):
         Supported column names are:
 
         "UWRegID" OR "SIS User ID" OR "StudentNo" (required),
-        "GradePage Import" (required),
+        "GradePage Import" OR "GradePageImport" (required),
         "Incomplete" (optional),
         "Writing Credit" OR "WritingCredit" (optional)
 
@@ -88,7 +89,7 @@ class GradeImportCSV(GradeImportSource):
             student_data = {
                 "student_reg_id": row.get("UWRegID", "SIS User ID"),
                 "student_number": row.get("StudentNo"),
-                "grade": row.get("GradePage Import"),
+                "grade": row.get("GradePage Import", "GradePageImport"),
                 "is_incomplete": self.is_true(row.get("Incomplete")),
                 "is_writing": self.is_true(
                     row.get("Writing Credit", "WritingCredit")),
