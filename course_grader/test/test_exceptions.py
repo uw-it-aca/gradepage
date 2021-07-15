@@ -73,3 +73,14 @@ class ExceptionsTest(TestCase):
             raise GradesNotSubmitted()
         except GradesNotSubmitted as ex:
             self.assertEquals(str(ex), "No grades were submitted")
+
+    def test_InvalidCSV(self):
+        try:
+            raise InvalidCSV("Missing header")
+        except InvalidCSV as ex:
+            self.assertEquals(str(ex), "Missing header")
+
+        try:
+            raise InvalidCSV()
+        except InvalidCSV as ex:
+            self.assertEquals(str(ex), "Invalid CSV file")

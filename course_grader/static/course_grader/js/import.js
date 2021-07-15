@@ -36,7 +36,7 @@ GradePage.Import = (function ($) {
     }
 
     function save_in_progress() {
-        $("#gp-import-modal-body").html(gettext("import_save_in_progress"));
+        $("#gp-import-modal-body").html(gettext("import_in_progress"));
         $("#gp-import-modal").modal({backdrop: "static"});
     }
 
@@ -223,6 +223,11 @@ GradePage.Import = (function ($) {
             students[i].converted_grade = converted_grade;
         }
 
+        //students.sort(function (a, b) {
+        //    return b.converted_grade - a.converted_grade;
+        //});
+
+        $(window).scrollTop(0);
         $(".gp-grade-roster-state").text(gettext("review_import_grades"));
         $("#graderoster-content").html(template(import_data.grade_import));
         $("button.gp-btn-convert-back").click(function (ev) {
@@ -248,6 +253,47 @@ GradePage.Import = (function ($) {
             });
         });
         $("#gp-import-modal").modal("hide");
+    }
+
+    function update_upload_form() {
+        var filename = $("#gp-import-file").val();
+        if (filename) {
+            $("button.gp-btn-upload").removeAttr("disabled");
+        } else {
+            $("button.gp-btn-upload").attr("disabled", "disabled");
+        }
+    }
+
+    function draw_upload_prompt(data) {
+        var template = Handlebars.compile($("#upload-tmpl").html());
+
+        // Add context from the graderoster
+        data.section_name = window.gradepage.section_name;
+        data.expected_grade_count = $(".gp-roster-list").find(
+            GradePage.GradeRoster.grade_input_selector()).length;
+
+        $(".gp-import-selector select").val("");
+        $("#gp-import-modal-body").html(template(data));
+        $("#gp-import-modal").modal({backdrop: "static"});
+
+        $("#gp-import-file").change(update_upload_form);
+        $("button.gp-btn-upload").click(create_upload);
+        $("a.gp-upload-popover").popover();
+        update_upload_form();
+    }
+
+    function draw_upload_error(xhr, filename) {
+        var data = {};
+        try {
+            data = $.parseJSON(xhr.responseText);
+            data.missing_header_grade = (data.error === "Missing header: grade");
+            data.missing_header_student = (data.error === "Missing header: student");
+        } catch (e) {
+            data.file_limit_exceeded = (xhr.responseText.indexOf("Request Entity Too Large") !== -1);
+            data.error = xhr.responseText;
+        }
+        data.file_name = filename;
+        draw_upload_prompt(data);
     }
 
     function draw_import_success(data) {
@@ -293,7 +339,6 @@ GradePage.Import = (function ($) {
         data.grade_import.grade_count = grade_count;
         data.grade_import.has_valid_grades = false;
         data.grade_import.has_valid_percentages = false;
-        data.grade_import.is_canvas_import = (data.grade_import.source === "canvas");
         data.grade_import.override_grade_count = override_grade_count;
         data.grade_import.unposted_grade_count = unposted_grade_count;
         data.grade_import.unposted_with_override_grade_count = unposted_with_override_grade_count;
@@ -304,7 +349,11 @@ GradePage.Import = (function ($) {
             } else if (valid_percentage_count / grade_count >= min_valid) {
                 data.grade_import.has_valid_percentages = true;
             }
+        } else if (data.grade_import.source === "csv") {
+            return draw_upload_prompt(data.grade_import);
         }
+        data.grade_import.expected_grade_count = $(".gp-roster-list").find(
+            GradePage.GradeRoster.grade_input_selector()).length;
 
         import_data = data;
         $("#gp-import-modal-body").html(template(data.grade_import));
@@ -317,6 +366,29 @@ GradePage.Import = (function ($) {
                                       .click(save_grades);
         }
         //$("#gp-import-modal").modal("show");
+    }
+
+    function create_upload(ev) {
+        var formData = new FormData(),
+            filename = $("#gp-import-file").val().split('\\').pop();
+
+        formData.append("file", $("#gp-import-file")[0].files[0]);
+
+        $.ajax({
+            url: window.gradepage.upload_url,
+            contentType: false,
+            processData: false,
+            data: formData,
+            type: "POST",
+            headers: {
+                "X-CSRFToken": window.gradepage.csrftoken
+            },
+            beforeSend: import_in_progress,
+            success: draw_import_success,
+            error: function (xhr) {
+                draw_upload_error(xhr, filename);
+            }
+        });
     }
 
     function create_import(source, source_id) {
@@ -350,9 +422,15 @@ GradePage.Import = (function ($) {
 
     function select_import() {
         /*jshint validthis: true */
-        var source = $(this).val();
+        var source = $(this).val(),
+            data;
         if (source !== "") {
-            create_import(source);
+            if (source === "csv") {
+                data = {};
+                draw_upload_prompt(data);
+            } else {
+                create_import(source);
+            }
         }
     }
 

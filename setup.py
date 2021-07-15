@@ -8,7 +8,6 @@ See the README on `GitHub
 <https://github.com/uw-it-aca/gradepage>`_.
 """
 
-# The VERSION file is created by travis-ci, based on the tag name
 version_path = 'course_grader/VERSION'
 VERSION = open(os.path.join(os.path.dirname(__file__), version_path)).read()
 VERSION = VERSION.replace("\n", "")
@@ -30,7 +29,7 @@ setup(
         'UW-RestClients-Core~=1.3',
         'UW-RestClients-SWS~=2.3',
         'UW-RestClients-PWS~=2.1',
-        'UW-RestClients-Canvas~=1.1',
+        'UW-RestClients-Canvas>=1.2.3',
         'UW-RestClients-Catalyst~=1.0',
         'UW-RestClients-Graderoster~=1.1',
         'UW-RestClients-Django-Utils~=2.2',

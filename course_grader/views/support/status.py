@@ -58,7 +58,8 @@ def status(request):
         },
         "grade_imports": {
             "catalyst": [],
-            "canvas": []
+            "canvas": [],
+            "csv": [],
         }
     }
 

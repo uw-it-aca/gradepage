@@ -2,13 +2,95 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.test import TestCase
-from course_grader.models import ImportConversion
+from course_grader.models import Grade, GradeImport, ImportConversion
 from course_grader.dao.canvas import grading_scheme_for_course
+from course_grader.dao.section import get_section_by_label
+from course_grader.dao.person import PWS
 from course_grader.exceptions import InvalidGradingScale
 from uw_canvas.courses import Courses
 from uw_canvas.models import CanvasCourse
 from uw_canvas.utilities import fdao_canvas_override
+from uw_pws.util import fdao_pws_override
+from uw_sws.util import fdao_sws_override
+from datetime import datetime
 import mock
+
+
+class GradeTest(TestCase):
+    def test_student_label(self):
+        uwregid = 'FBB38FE46A7C11D5A4AE0004AC494FFE'
+
+        grade = Grade()
+        with self.assertRaises(AttributeError):  # Missing student_reg_id
+            x = grade.student_label
+
+        grade = Grade(student_reg_id=uwregid)
+        self.assertEqual(
+            grade.student_label, 'FBB38FE46A7C11D5A4AE0004AC494FFE')
+
+        grade = Grade(student_reg_id=uwregid, duplicate_code='A')
+        self.assertEqual(
+            grade.student_label, 'FBB38FE46A7C11D5A4AE0004AC494FFE-A')
+
+    def test_json_data(self):
+        grade = Grade(student_reg_id='B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2',
+                      duplicate_code='A',
+                      grade='3.9',
+                      import_source='csv',
+                      import_grade='99',
+                      section_id='2013-spring-A B&C-101-A',
+                      modified_by='A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1')
+
+        d = grade.json_data()
+        self.assertEqual(d['section_id'], '2013-spring-A B&C-101-A')
+        self.assertEqual(d['student_reg_id'],
+                         'B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2')
+        self.assertEqual(d['duplicate_code'], 'A')
+        self.assertEqual(d['grade'], '3.9')
+        self.assertEqual(d['is_writing'], False)
+        self.assertEqual(d['is_incomplete'], False)
+        self.assertEqual(d['no_grade_now'], False)
+        self.assertEqual(d['import_grade'], '99')
+        self.assertEqual(d['import_source'], 'csv')
+        self.assertEqual(d['modified_by'], 'A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1')
+
+
+@fdao_sws_override
+@fdao_pws_override
+@fdao_canvas_override
+class GradeImportTest(TestCase):
+    @mock.patch('course_grader.dao.canvas.grading_scheme_for_course')
+    def test_grades_for_section(self, mock_grading_scheme):
+        section = get_section_by_label('2013,summer,CSS,161/A')
+        user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
+
+        gi = GradeImport(source=GradeImport.CATALYST_SOURCE)
+        gi.grades_for_section(section, user)
+        data = gi.json_data()
+        self.assertEqual(len(data['imported_grades']), 3)
+
+        section = get_section_by_label('2013,spring,A B&C,101/A')
+        user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
+
+        mock_grading_scheme.return_value = None
+        gi = GradeImport(source=GradeImport.CANVAS_SOURCE)
+        gi.grades_for_section(section, user)
+        data = gi.json_data()
+        self.assertEqual(len(data['imported_grades']), 1)
+        self.assertEqual(len(data['course_grading_schemes']), 0)
+
+        gi = GradeImport(source='Bad')
+        self.assertRaises(KeyError, gi.grades_for_section, section, user)
+
+    def test_save_conversion_data(self):
+        gi = GradeImport(source=GradeImport.CANVAS_SOURCE)
+        self.assertEqual(gi.import_conversion, None)
+        self.assertEqual(gi.accepted_date, None)
+
+        gi.save_conversion_data(data=None)
+
+        self.assertEqual(gi.import_conversion, None)
+        self.assertIsInstance(gi.accepted_date, datetime)
 
 
 @fdao_canvas_override

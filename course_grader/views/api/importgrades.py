@@ -19,6 +19,7 @@ from restclients_core.exceptions import DataFailureException
 from userservice.user import UserService
 from logging import getLogger
 import json
+import csv
 import re
 
 logger = getLogger(__name__)
@@ -103,22 +104,12 @@ class ImportGrades(GradeFormHandler):
         except Exception as ex:
             return self.error_response(400, "Invalid import")
 
-        conv_data = put_data.get("conversion_scale", None)
-        if conv_data is not None:
-            try:
-                calculator_values = conv_data.get("calculator_values")
-                import_conversion = ImportConversion(
-                    scale=conv_data.get("scale"),
-                    grade_scale=json.dumps(conv_data.get("grade_scale")),
-                    calculator_values=json.dumps(calculator_values),
-                    lowest_valid_grade=conv_data.get("lowest_valid_grade")
-                )
-                import_conversion.save()
-                grade_import.import_conversion = import_conversion
-                grade_import.save()
-            except Exception as ex:
-                logger.error("PUT import error for {}: {}".format(
-                    section_id, ex))
+        conversion_data = put_data.get("conversion_scale", None)
+        try:
+            grade_import.save_conversion_data(conversion_data)
+        except Exception as ex:
+            logger.error("PUT import error for {}: {}".format(
+                section_id, ex))
 
         import_data = grade_import.json_data()
         converted_grades = put_data.get("converted_grades", {})
@@ -135,7 +126,8 @@ class ImportGrades(GradeFormHandler):
 
             # Find the grade data for each graderoster item
             grade = next((g for g in import_data.get("imported_grades") if (
-                g["student_reg_id"] == item.student_uwregid)), None)
+                g["student_reg_id"] == item.student_uwregid or
+                g["student_number"] == item.student_number)), None)
 
             if grade is not None:
                 grade_data = {
@@ -146,6 +138,8 @@ class ImportGrades(GradeFormHandler):
                     "comment": grade["comment"],
                     "grade": converted_grades.get(grade["student_reg_id"],
                                                   grade["imported_grade"]),
+                    "is_writing": grade["is_writing"],
+                    "is_incomplete": grade["is_incomplete"],
                     "no_grade_now": False,
                 }
                 self.save_grade(section_id, grade_data)
@@ -202,7 +196,8 @@ class ImportGrades(GradeFormHandler):
 
             # Find the grade data for each graderoster item
             grade = next((g for g in imported_grades if (
-                g["student_reg_id"] == item.student_uwregid)), None)
+                g["student_reg_id"] == item.student_uwregid or
+                g["student_number"] == item.student_number)), None)
 
             if grade is not None:
                 item_id = "-".join([grade_import.section_id,
@@ -211,9 +206,39 @@ class ImportGrades(GradeFormHandler):
                 grade["section_id"] = self.section.section_id
                 grade["student_firstname"] = item.student_first_name
                 grade["student_lastname"] = item.student_surname
+                grade["student_reg_id"] = item.student_uwregid
                 grade["student_number"] = item.student_number
                 grade["is_auditor"] = item.is_auditor
                 grade["is_withdrawn"] = item.date_withdrawn is not None
                 return_data["students"].append(grade)
 
         return self.json_response({"grade_import": return_data})
+
+
+class UploadGrades(ImportGrades):
+    def post(self, request, *args, **kwargs):
+        error = self._authorize(request, *args, **kwargs)
+        if error is not None:
+            return error
+
+        uploaded_file = request.FILES.get("file")
+
+        if uploaded_file is None:
+            return self.error_response(status=400, message="Missing file")
+
+        grade_import = GradeImport(
+            section_id=section_url_token(self.section, self.instructor),
+            term_id=self.section.term.term_label(),
+            imported_by=self.user.uwregid,
+            source=GradeImport.CSV_SOURCE,
+            file_name=uploaded_file.name)
+
+        try:
+            grade_import.grades_for_section(
+                self.section, self.instructor, fileobj=uploaded_file)
+        except Exception as ex:
+            logger.error("POST upload {} failed for {}: {}".format(
+                uploaded_file.name, self.section.section_label(), ex))
+            return self.error_response(400, "{}".format(ex))
+
+        return self.response_content(grade_import)

@@ -48,6 +48,8 @@ a:hover, a:focus {color:#108BCC; text-decoration:underline; }
 }
 .gp-alert-warning {color:#333; background-color: @warning; border-color:#ccc;}
 
+.gp-alert-feedback {color: #47473c;background-color: #f9f6b4; border-color: #ffecb5;}
+
 .gp-back-link { padding: 10px 0; }
 
 .gp-btn-wrap { margin-top: 10px; }
@@ -110,6 +112,20 @@ a:hover, a:focus {color:#108BCC; text-decoration:underline; }
         ul {
           li {margin-left: 20px;font-style: italic; list-style: square inside none;}
         }
+    }
+    .gp-csv-import {
+        ul {margin-left:15px; padding:8px;
+            li {list-style-type: disc;}
+        small {
+            margin-left:16px;
+            font-size: 90%;
+        }
+      }
+      .upload-file-wrapper {
+        border: dashed 1px #5585b1;
+        padding: 12px;
+        margin: 2rem 0;
+      }
     }
 }
 
@@ -388,6 +404,7 @@ abbr[title], acronym[title] {
     		.gp-confirmation-alert {margin-top:1em;
     			a {text-decoration: underline;}
     		}
+            .gp-csv-feedback-alert {margin-top:-1em;}
     		.gp-fine-print {font-size:75%;padding-top:10px;}
 
             .gp-duplicate-code {font-weight: 200; font-size: 80%;position:relative; top:10px;width:50%;}
@@ -468,7 +485,6 @@ abbr[title], acronym[title] {
 									.form-control {border-radius: 2px;/*border:1px solid @gp-text;*/ height:35px;}
                         			.gp-form-grade { position:relative; display:inline-block; margin-bottom: 0; background-color:#fff; min-width:142px;margin-top:1px;
 
-										.gp-grade-input {}
 
 										.gp-grade-select {background:none; width:100%;}
 
@@ -513,7 +529,6 @@ abbr[title], acronym[title] {
                     /* grading status */
                     .gp-grading-status { /*position: absolute; top: 5px; right: 5px;*/ min-width: 20px; min-height: 20px; text-align: right;  line-height: 1em; font-weight: bold; text-transform: uppercase;
                     	.gp-invalid-grade {clear:both; display:block; text-align:left; text-transform:none; font-size:90%;}
-                    	.gp-grade-status-msg {}
 
                     	.gp-imported-grade {
                     		float:left;

@@ -37,6 +37,10 @@ def url_for_import(section_id):
     return reverse("grade-import", kwargs={"section_id": section_id})
 
 
+def url_for_upload(section_id):
+    return reverse("grade-import-file", kwargs={"section_id": section_id})
+
+
 def url_for_export(section_id):
     return reverse("graderoster-export", kwargs={"section_id": section_id})
 

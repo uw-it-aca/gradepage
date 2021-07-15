@@ -6,11 +6,10 @@ from django.db.models import Q
 from django.utils import timezone
 from restclients_core.exceptions import DataFailureException
 from uw_sws_graderoster.models import GradingScale
-from course_grader.dao.canvas import grades_for_section as canvas_grades
-from course_grader.dao.catalyst import grades_for_section as catalyst_grades
 from course_grader.dao.gradesubmission import submit_grades
 from course_grader.dao.notification import notify_grade_submitters
 from course_grader.exceptions import InvalidGradingScale
+from importlib import import_module
 from datetime import datetime, timedelta
 from logging import getLogger
 from decimal import Decimal
@@ -122,11 +121,15 @@ class Grade(models.Model):
 
     objects = GradeManager()
 
+    @property
     def student_label(self):
-        label = self.student_reg_id
+        if self.student_reg_id is None or not len(self.student_reg_id):
+            raise AttributeError("Missing student_reg_id")
+
         if self.duplicate_code is not None and len(self.duplicate_code):
-            label += "-{}".format(self.duplicate_code)
-        return label
+            return "-".join([self.student_reg_id, self.duplicate_code])
+        else:
+            return self.student_reg_id
 
     def json_data(self):
         return {"section_id": self.section_id,
@@ -140,7 +143,8 @@ class Grade(models.Model):
                 "import_grade": self.import_grade,
                 "is_override_grade": self.is_override_grade,
                 "comment": self.comment,
-                "last_modified": self.last_modified.isoformat(),
+                "last_modified": self.last_modified.isoformat() if (
+                    self.last_modified is not None) else None,
                 "modified_by": self.modified_by}
 
     class Meta:
@@ -220,14 +224,14 @@ class GradeImportManager(models.Manager):
     def get_last_import_by_section_id(self, section_id):
         return super(GradeImportManager, self).get_queryset().filter(
             section_id=section_id,
-            import_conversion__isnull=False,
+            accepted_date__isnull=False,
             status_code='200'
         ).order_by('-imported_date')[0:1].get()
 
     def get_imports_by_person(self, person):
         return super(GradeImportManager, self).get_queryset().filter(
             imported_by=person.uwregid,
-            import_conversion__isnull=False,
+            accepted_date__isnull=False,
             status_code='200'
         ).order_by('section_id', '-imported_date')
 
@@ -236,45 +240,74 @@ class GradeImportManager(models.Manager):
             term_id=term.term_label()
         ).order_by('imported_date').values('imported_date', 'source')
 
+    def clear_prior_imports_for_section(self, grade_import):
+        super(GradeImportManager, self).get_queryset().filter(
+            section_id=grade_import.section_id
+        ).exclude(pk=grade_import.pk).delete()
+
 
 class GradeImport(models.Model):
     """ Represents a grade import.
     """
     CANVAS_SOURCE = "canvas"
     CATALYST_SOURCE = "catalyst"
+    CSV_SOURCE = "csv"
 
     SOURCE_CHOICES = (
         (CANVAS_SOURCE, "Canvas Gradebook"),
         (CATALYST_SOURCE, "Catalyst GradeBook"),
+        (CSV_SOURCE, "CSV File"),
     )
+
+    _IMPORT_CLASSES = {
+        CANVAS_SOURCE: "course_grader.dao.canvas.GradeImportCanvas",
+        CATALYST_SOURCE: "course_grader.dao.catalyst.GradeImportCatalyst",
+        CSV_SOURCE: "course_grader.dao.csv.GradeImportCSV",
+    }
 
     section_id = models.CharField(max_length=100)
     term_id = models.CharField(max_length=20)
     source = models.CharField(max_length=20, choices=SOURCE_CHOICES)
     source_id = models.CharField(max_length=10, null=True)
     status_code = models.CharField(max_length=3, null=True)
+    file_name = models.CharField(max_length=100, null=True)
     document = models.TextField()
     imported_date = models.DateTimeField(auto_now=True)
     imported_by = models.CharField(max_length=32)
     import_conversion = models.ForeignKey(
         ImportConversion, on_delete=models.CASCADE, null=True)
+    accepted_date = models.DateTimeField(null=True)
 
     objects = GradeImportManager()
 
-    def grades_for_section(self, section, instructor):
+    def grades_for_section(self, section, instructor, fileobj=None):
         try:
-            if self.source == self.CATALYST_SOURCE:
-                data = catalyst_grades(section, instructor, self.source_id)
-            elif self.source == self.CANVAS_SOURCE:
-                data = canvas_grades(section, instructor)
-            else:
-                return
+            module = self._IMPORT_CLASSES[self.source]
+            module_name, class_name = module.rsplit(".", 1)
+            _class = getattr(import_module(module_name), class_name)
+            grade_source = _class()
+
+            data = grade_source.grades_for_section(
+                section, instructor, source_id=self.source_id, fileobj=fileobj)
 
             self.document = json.dumps(data)
             self.status_code = 200
         except DataFailureException as ex:
             self.status_code = ex.status
 
+        self.save()
+
+    def save_conversion_data(self, data):
+        if data is not None:
+            import_conversion = ImportConversion(
+                scale=data.get("scale"),
+                grade_scale=json.dumps(data.get("grade_scale")),
+                calculator_values=json.dumps(data.get("calculator_values")),
+                lowest_valid_grade=data.get("lowest_valid_grade")
+            )
+            import_conversion.save()
+            self.import_conversion = import_conversion
+        self.accepted_date = datetime.now(timezone.utc)
         self.save()
 
     def json_data(self):
@@ -285,8 +318,9 @@ class GradeImport(models.Model):
 
         grades = []
         for grade in grade_data.get("grades", []):
-            student_reg_id = None
-            imported_grade = None
+            student_reg_id = grade.get("student_reg_id")
+            student_number = grade.get("student_number")
+            imported_grade = grade.get("grade")
             is_override_grade = False
             has_unposted_grade = False
             comment = None
@@ -310,12 +344,17 @@ class GradeImport(models.Model):
                         grade["current_score"]):
                     has_unposted_grade = True
 
-            if student_reg_id is not None:
-                grades.append({"student_reg_id": student_reg_id,
-                               "imported_grade": imported_grade,
-                               "is_override_grade": is_override_grade,
-                               "has_unposted_grade": has_unposted_grade,
-                               "comment": comment})
+            if student_reg_id or student_number:
+                grades.append({
+                    "student_reg_id": student_reg_id,
+                    "student_number": student_number,
+                    "imported_grade": imported_grade,
+                    "is_override_grade": is_override_grade,
+                    "has_unposted_grade": has_unposted_grade,
+                    "comment": comment,
+                    "is_incomplete": grade.get("is_incomplete", False),
+                    "is_writing": grade.get("is_writing", False),
+                })
 
         course_grading_schemes = []
         for scheme in grade_data.get("course_grading_schemes", []):
@@ -329,6 +368,9 @@ class GradeImport(models.Model):
                 "source": self.source,
                 "source_name": dict(self.SOURCE_CHOICES)[self.source],
                 "status_code": self.status_code,
+                "file_name": self.file_name,
+                "accepted_date": self.accepted_date.isoformat() if (
+                    self.accepted_date is not None) else None,
                 "imported_date": self.imported_date.isoformat(),
                 "imported_by": self.imported_by,
                 "imported_grades": grades,

@@ -57,6 +57,7 @@
     {% include "handlebars/graderoster/student.html" %}
     {% include "handlebars/graderoster/grade.html" %}
     {% include "handlebars/graderoster/import.html" %}
+    {% include "handlebars/graderoster/upload.html" %}
     {% include "handlebars/graderoster/scale.html" %}
     {% include "handlebars/graderoster/errors.html" %}
     {% include "handlebars/import/modal.html" %}
@@ -71,7 +72,9 @@
 {% block extra_js %}
     <script type="text/javascript">
         window.gradepage = {
+            section_name: "{{ section_name }}",
             graderoster_url: "{{ graderoster_url|safe }}",
+            upload_url: "{{ upload_url|safe }}",
             import_url: "{{ import_url|safe }}",{% if auto_import_id %}
             auto_import: {id: "{{ auto_import_id }}", source: "{{ auto_import_src }}"},{% endif %}
             csrftoken: "{{ csrf_token }}",

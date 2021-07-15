@@ -13,7 +13,8 @@ from course_grader.dao.term import (
     current_term, is_grading_period_open, is_grading_period_past)
 from course_grader.dao.message import get_messages_for_term
 from course_grader.views import (
-    url_for_term, url_for_graderoster, url_for_import, url_for_export)
+    url_for_term, url_for_graderoster, url_for_import, url_for_export,
+    url_for_upload)
 from course_grader.exceptions import InvalidSection, MissingInstructorParam
 from restclients_core.exceptions import DataFailureException
 from uw_catalyst.gradebook import valid_gradebook_id
@@ -77,6 +78,7 @@ def section(request, url_token):
         "graderoster_url": url_for_graderoster(url_token),
         "import_url": url_for_import(url_token),
         "export_url": url_for_export(url_token),
+        "upload_url": url_for_upload(url_token),
     })
 
     if is_grading_period_open(section):
