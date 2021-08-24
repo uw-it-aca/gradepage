@@ -76,7 +76,7 @@ class ViewAPIFunctionsTest(TestCase):
 
         p = graderoster_status_params(graderoster)
         self.assertEquals(p['unsubmitted_count'], 0)
-        self.assertEquals(p['submitted_count'], 1)
+        self.assertEquals(p['submitted_count'], 2)
         self.assertEquals('deadline_warning' in p, False)
 
     def test_item_is_submitted(self):
