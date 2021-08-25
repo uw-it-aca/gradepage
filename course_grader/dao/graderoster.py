@@ -1,7 +1,7 @@
 # Copyright 2021 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
-from uw_sws_graderoster import get_graderoster
+from uw_sws_graderoster import get_graderoster, DataFailureException
 from uw_sws_graderoster.models import GradeRoster
 from course_grader.dao.person import person_from_regid
 from course_grader.dao.section import get_section_by_url, is_grader_for_section
@@ -58,9 +58,15 @@ def graderoster_for_section(section, instructor, requestor,
         if model.submitted_by not in people:
             people[model.submitted_by] = person_from_regid(model.submitted_by)
 
-        graderoster = GradeRoster.from_xhtml(
-            etree.fromstring(model.document.strip()),
-            section=section, instructor=people[instructor_id])
+        try:
+            root = etree.fromstring(model.document.strip())
+        except etree.XMLSyntaxError as ex:
+            url = GradeRoster(section=section,
+                              instructor=instructor).graderoster_label()
+            raise DataFailureException(url, model.status_code, ex)
+
+        graderoster = GradeRoster.from_xhtml(root, section=section,
+                                             instructor=people[instructor_id])
 
         grade_imp = None
         # If submitted_graderosters_only is False and this graderoster has been
