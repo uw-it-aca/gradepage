@@ -8,7 +8,7 @@ from course_grader.dao.person import PWS
 from course_grader.exceptions import InvalidCSV
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
-from mock import mock_open, patch
+import mock
 import os
 
 
@@ -57,7 +57,7 @@ class CVSDAOFunctionsTest(TestCase):
         self.assertEqual(grade_import.has_header, True)
         self.assertEqual(grade_import.dialect.delimiter, ",")
 
-    @patch("course_grader.dao.csv.default_storage.open")
+    @mock.patch("course_grader.dao.csv.default_storage.open")
     def test_grades_for_section(self, mock_open):
         # Section/user do not matter here
         section = get_section_by_label("2013,spring,A B&C,101/A")
@@ -77,7 +77,7 @@ class CVSDAOFunctionsTest(TestCase):
         self.assertEqual(len(r.get("grades")), 6)
         f.close()
 
-    @patch("course_grader.dao.csv.default_storage.open")
+    @mock.patch("course_grader.dao.csv.default_storage.open")
     def test_write_files(self, mock_open):
         section = get_section_by_label("2013,spring,A B&C,101/A")
         user = PWS().get_person_by_regid("FBB38FE46A7C11D5A4AE0004AC494FFE")

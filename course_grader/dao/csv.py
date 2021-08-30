@@ -106,9 +106,10 @@ class GradeImportCSV(GradeImportSource):
 
     def _write_file(self, section, instructor, fileobj):
         """
-        Path format is term_id/section_id/uwnetid/original_file_name, i.e.
+        Writes a copy of the uploaded file to the default storage backend.
+        Path format is /[term_id]/[section_id]/[uwnetid]/[original_file_name]
 
-            2013-spring/CHEM-101-A/javerage/test1.csv
+        Ex: /2013-spring/CHEM-101-A/javerage/grades.csv
         """
         fname = os.path.join(
             section.term.canvas_sis_id(),
