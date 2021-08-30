@@ -1,4 +1,5 @@
 from .base_settings import *
+from google.oauth2 import service_account
 import os
 
 INSTALLED_APPS += [
@@ -57,11 +58,20 @@ if os.getenv('ENV', 'localdev') == 'localdev':
     GRADEPAGE_ADMIN_GROUP = 'u_test_group'
     CURRENT_DATETIME_OVERRIDE = '2013-06-17 10:00:00'
     PAST_TERMS_VIEWABLE = 1
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+    MEDIA_ROOT = os.getenv('IMPORT_DATA_ROOT', '/app/csv')
 else:
     GRADEPAGE_SUPPORT_GROUP = os.getenv('SUPPORT_GROUP', 'u_acadev_gradepage_support')
     GRADEPAGE_ADMIN_GROUP = os.getenv('ADMIN_GROUP', 'u_acadev_gradepage_admins')
     RESTCLIENTS_DAO_CACHE_CLASS = 'course_grader.cache.RestClientsCache'
     PAST_TERMS_VIEWABLE = 4
+    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    GS_PROJECT_ID = os.getenv('STORAGE_PROJECT_ID', '')
+    GS_BUCKET_NAME = os.getenv('STORAGE_BUCKET_NAME', '')
+    GS_LOCATION = os.path.join(os.getenv('IMPORT_DATA_ROOT', ''))
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+        '/gcs/credentials.json')
+    GS_FILE_OVERWRITE = False
 
 ALLOW_GRADE_SUBMISSION_OVERRIDE = (os.getenv('ENV', 'localdev') != 'prod')
 USERSERVICE_VALIDATION_MODULE = 'course_grader.dao.person.is_netid'

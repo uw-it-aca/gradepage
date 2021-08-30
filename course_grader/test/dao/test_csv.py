@@ -8,6 +8,7 @@ from course_grader.dao.person import PWS
 from course_grader.exceptions import InvalidCSV
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
+from mock import mock_open, patch
 import os
 
 
@@ -56,7 +57,8 @@ class CVSDAOFunctionsTest(TestCase):
         self.assertEqual(grade_import.has_header, True)
         self.assertEqual(grade_import.dialect.delimiter, ",")
 
-    def test_grades_for_section(self):
+    @patch("course_grader.dao.csv.default_storage.open")
+    def test_grades_for_section(self, mock_open):
         # Section/user do not matter here
         section = get_section_by_label("2013,spring,A B&C,101/A")
         user = PWS().get_person_by_regid("FBB38FE46A7C11D5A4AE0004AC494FFE")
@@ -74,6 +76,21 @@ class CVSDAOFunctionsTest(TestCase):
         r = GradeImportCSV().grades_for_section(section, user, fileobj=f)
         self.assertEqual(len(r.get("grades")), 6)
         f.close()
+
+    @patch("course_grader.dao.csv.default_storage.open")
+    def test_write_files(self, mock_open):
+        section = get_section_by_label("2013,spring,A B&C,101/A")
+        user = PWS().get_person_by_regid("FBB38FE46A7C11D5A4AE0004AC494FFE")
+
+        f = open(os.path.join(self.resource_path, "test1.csv"))
+        r = GradeImportCSV()._write_file(section, user, fileobj=f)
+        mock_open.assert_called_with(
+            "2013-spring/A B&C-101-A/bill/test1.csv", mode="w")
+
+        f = open(os.path.join(self.resource_path, "test2.csv"))
+        r = GradeImportCSV()._write_file(section, user, fileobj=f)
+        mock_open.assert_called_with(
+            "2013-spring/A B&C-101-A/bill/test2.csv", mode="w")
 
 
 class InsensitiveDictReaderTest(CVSDAOFunctionsTest):
