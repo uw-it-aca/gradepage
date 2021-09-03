@@ -1,11 +1,12 @@
 # Copyright 2021 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
-from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import never_cache
+from django.shortcuts import render
 from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django.views.generic import TemplateView
 from course_grader.dao.term import term_from_param, all_viewable_terms
 from course_grader.dao.message import get_messages_for_term
 from course_grader.exceptions import InvalidTerm
@@ -16,12 +17,28 @@ from logging import getLogger
 logger = getLogger(__name__)
 
 
-@login_required
-@never_cache
-def home(request):
-    params = {}
-    term_id = request.GET.get("term", "").strip()
-    try:
+@method_decorator(login_required, name="dispatch")
+class HomeView(TemplateView):
+    template_name = "home.html"
+
+    def get(self, request, *args, **kwargs):
+        try:
+            context = self.get_context_data(**kwargs)
+            return self.render_to_response(context)
+        except InvalidTerm:
+            return HttpResponseRedirect("/")
+        except DataFailureException as ex:
+            if ex.status == 404:
+                response = render(request, "404.html", {})
+                response.status_code = ex.status
+            else:
+                logger.error("GET term failed: {}, Param: {}".format(
+                    ex, request.GET.get("term")))
+                response = render(request, "503.html", {})
+            return response
+
+    def get_context_data(self, **kwargs):
+        term_id = self.request.GET.get("term", "").strip()
         all_terms = all_viewable_terms()
         now_term = all_terms[0]
 
@@ -32,42 +49,25 @@ def home(request):
         else:
             selected_term = all_terms[0]
 
-        params.update(get_messages_for_term(now_term))
+        opt_terms = []
+        for opt_term in all_terms:
+            opt_terms.append({
+                "quarter": opt_term.get_quarter_display(),
+                "year": opt_term.year,
+                "url": url_for_term(opt_term),
+                "is_selected": opt_term == selected_term,
+            })
 
-    except InvalidTerm:
-        return HttpResponseRedirect("/")
+        context = get_messages_for_term(now_term)
+        context["now_quarter"] = now_term.get_quarter_display()
+        context["now_year"] = now_term.year
+        context["selected_quarter"] = selected_term.get_quarter_display()
+        context["selected_year"] = selected_term.year
+        context["terms"] = opt_terms
+        context["sections_url"] = reverse(
+            "section-list", kwargs={"term_id": "{year}-{qtr}".format(
+                year=selected_term.year, qtr=selected_term.quarter)})
+        context["page_title"] = "{qtr} {year}".format(
+            qtr=selected_term.get_quarter_display(), year=selected_term.year)
 
-    except DataFailureException as ex:
-        if ex.status == 404:
-            response = render(request, "404.html", {})
-            response.status_code = ex.status
-        else:
-            logger.error(
-                "GET selected term failed: {}, Param: {}".format(ex, term_id))
-            response = render(request, "503.html", {})
-        return response
-
-    opt_terms = []
-    for opt_term in all_terms:
-        opt_terms.append({
-            "quarter": opt_term.get_quarter_display(),
-            "year": opt_term.year,
-            "url": url_for_term(opt_term),
-            "is_selected": opt_term == selected_term,
-        })
-
-    params.update({
-        "now_quarter": now_term.get_quarter_display(),
-        "now_year": now_term.year,
-        "selected_quarter": selected_term.get_quarter_display(),
-        "selected_year": selected_term.year,
-        "terms": opt_terms,
-        "sections_url": reverse(
-            "section-list", kwargs={"term_id": "{year}-{quarter}".format(
-                year=selected_term.year, quarter=selected_term.quarter)}),
-        "page_title": "{quarter} {year}".format(
-            quarter=selected_term.get_quarter_display(),
-            year=selected_term.year),
-    })
-
-    return render(request, "home.html", params)
+        return context
