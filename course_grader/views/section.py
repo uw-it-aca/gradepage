@@ -41,6 +41,7 @@ class SectionView(TemplateView):
 
             kwargs["section"] = section
             kwargs["instructor"] = instructor
+            kwargs["import_id"] = request.GET.get("cgb_source_id")
 
             context = self.get_context_data(**kwargs)
             return self.render_to_response(context)
@@ -63,6 +64,9 @@ class SectionView(TemplateView):
             return response
 
     def get_context_data(self, **kwargs):
+        section = kwargs.get("section")
+        instructor = kwargs.get("instructor")
+
         if section.is_independent_study:
             section_name = section_display_name(section, instructor)
         else:
@@ -85,7 +89,7 @@ class SectionView(TemplateView):
         context["upload_url"] = url_for_upload(url_token)
 
         if is_grading_period_open(section):
-            import_id = self.request.GET.get("cgb_source_id")
+            import_id = kwargs.get("import_id")
             if valid_gradebook_id(import_id):
                 context["auto_import_id"] = import_id
                 context["auto_import_src"] = GradeImport.CATALYST_SOURCE

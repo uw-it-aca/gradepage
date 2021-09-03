@@ -22,6 +22,7 @@ class HomeView(TemplateView):
     template_name = "home.html"
 
     def get(self, request, *args, **kwargs):
+        kwargs["term_id"] = request.GET.get("term", "").strip()
         try:
             context = self.get_context_data(**kwargs)
             return self.render_to_response(context)
@@ -33,12 +34,12 @@ class HomeView(TemplateView):
                 response.status_code = ex.status
             else:
                 logger.error("GET term failed: {}, Param: {}".format(
-                    ex, request.GET.get("term")))
+                    ex, kwargs["term_id"]))
                 response = render(request, "503.html", {})
             return response
 
     def get_context_data(self, **kwargs):
-        term_id = self.request.GET.get("term", "").strip()
+        term_id = kwargs.get("term_id")
         all_terms = all_viewable_terms()
         now_term = all_terms[0]
 
