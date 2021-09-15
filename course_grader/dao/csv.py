@@ -113,7 +113,7 @@ class GradeImportCSV(GradeImportSource):
         """
         fname = os.path.join(
             section.term.canvas_sis_id(),
-            '-'.join([section.curriculum_abbr.upper(),
+            '-'.join([section.curriculum_abbr.upper().replace(' ', '_'),
                       section.course_number,
                       section.section_id.upper()]),
             instructor.uwnetid,

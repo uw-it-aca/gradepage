@@ -85,12 +85,12 @@ class CVSDAOFunctionsTest(TestCase):
         f = open(os.path.join(self.resource_path, "test1.csv"))
         r = GradeImportCSV()._write_file(section, user, fileobj=f)
         mock_open.assert_called_with(
-            "2013-spring/A B&C-101-A/bill/test1.csv", mode="w")
+            "2013-spring/A_B&C-101-A/bill/test1.csv", mode="w")
 
         f = open(os.path.join(self.resource_path, "test2.csv"))
         r = GradeImportCSV()._write_file(section, user, fileobj=f)
         mock_open.assert_called_with(
-            "2013-spring/A B&C-101-A/bill/test2.csv", mode="w")
+            "2013-spring/A_B&C-101-A/bill/test2.csv", mode="w")
 
 
 class InsensitiveDictReaderTest(CVSDAOFunctionsTest):
