@@ -115,6 +115,8 @@ externalSecrets:
           property: registrar-support-phone
         - name: gradepage-support-email
           property: gradepage-support-email
+        - name: storage-project-id
+          property: storage-project-id
     - name: test.gradepage.uw.edu-sql-secrets
       externalKey: axdd/kv/data/gradepage/shared/sql-secrets
       data:
