@@ -25,6 +25,7 @@ setup(
         'django-compressor',
         'django-user-agents',
         'django-userservice~=3.1',
+        'django-storages[google]>=1.10',
         'uw-memcached-clients~=1.0',
         'UW-RestClients-Core~=1.3',
         'UW-RestClients-SWS~=2.3',

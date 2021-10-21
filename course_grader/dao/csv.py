@@ -1,12 +1,14 @@
 # Copyright 2021 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
+from django.core.files.storage import default_storage
 from course_grader.dao import GradeImportSource
 from course_grader.dao.person import person_from_netid
 from course_grader.exceptions import InvalidCSV
 from restclients_core.exceptions import InvalidNetID, DataFailureException
 from logging import getLogger
 import csv
+import os
 
 logger = getLogger(__name__)
 
@@ -98,4 +100,29 @@ class GradeImportCSV(GradeImportSource):
                     student_data["student_number"]):
                 grade_data.append(student_data)
 
+        self._write_file(section, instructor, fileobj)
+
         return {"grades": grade_data}
+
+    def _write_file(self, section, instructor, fileobj):
+        """
+        Writes a copy of the uploaded file to the default storage backend.
+        Path format is /[term_id]/[section_id]/[uwnetid]/[original_file_name]
+
+        Ex: /2013-spring/CHEM-101-A/javerage/grades.csv
+        """
+        fname = os.path.join(
+            section.term.canvas_sis_id(),
+            '-'.join([section.curriculum_abbr.upper().replace(' ', '_'),
+                      section.course_number,
+                      section.section_id.upper()]),
+            instructor.uwnetid,
+            os.path.basename(fileobj.name))
+
+        decoded_file = self.decode_file(fileobj.read()).splitlines()
+        try:
+            f = default_storage.open(fname, mode='w')
+            for line in decoded_file:
+                f.write(str(line))
+        finally:
+            f.close()
