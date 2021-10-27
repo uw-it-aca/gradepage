@@ -70,11 +70,15 @@ class CVSDAOFunctionsTest(TestCase):
             len([g for g in r["grades"] if g["is_incomplete"] is True]), 2)
         self.assertEqual(
             len([g for g in r["grades"] if g["is_writing"] is True]), 2)
+        self.assertEqual(r["grades"][0]["student_number"], "0800000")
+        self.assertEqual(r["grades"][1]["student_number"], "0040000")
+        self.assertEqual(r["grades"][2]["student_number"], "1000000")
         f.close()
 
         f = open(os.path.join(self.resource_path, "test2.csv"))
         r = GradeImportCSV().grades_for_section(section, user, fileobj=f)
         self.assertEqual(len(r.get("grades")), 6)
+        self.assertEqual(r["grades"][0]["student_number"], None)
         f.close()
 
     @mock.patch("course_grader.dao.csv.default_storage.open")
