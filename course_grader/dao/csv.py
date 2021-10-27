@@ -12,6 +12,8 @@ import os
 
 logger = getLogger(__name__)
 
+STUDENT_NUM_LEN = 7
+
 
 class InsensitiveDict(dict):
     """
@@ -88,9 +90,11 @@ class GradeImportCSV(GradeImportSource):
 
         grade_data = []
         for row in InsensitiveDictReader(decoded_file, dialect=self.dialect):
+            student_number = row.get("StudentNo")
             student_data = {
                 "student_reg_id": row.get("UWRegID", "SIS User ID"),
-                "student_number": row.get("StudentNo"),
+                "student_number": student_number.zfill(STUDENT_NUM_LEN) if (
+                    student_number is not None) else student_number,
                 "grade": row.get("Import Grade", "ImportGrade"),
                 "is_incomplete": self.is_true(row.get("Incomplete")),
                 "is_writing": self.is_true(
