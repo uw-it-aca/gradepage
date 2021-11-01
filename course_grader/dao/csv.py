@@ -117,16 +117,14 @@ class GradeImportCSV(GradeImportSource):
         """
         fname = os.path.join(
             section.term.canvas_sis_id(),
-            '-'.join([section.curriculum_abbr.upper().replace(' ', '_'),
+            "-".join([section.curriculum_abbr.upper().replace(" ", "_"),
                       section.course_number,
                       section.section_id.upper()]),
             instructor.uwnetid,
             os.path.basename(fileobj.name))
 
         decoded_file = self.decode_file(fileobj.read()).splitlines()
-        try:
-            f = default_storage.open(fname, mode='w')
+
+        with default_storage.open(fname, mode="w") as f:
             for line in decoded_file:
-                f.write(str(line))
-        finally:
-            f.close()
+                f.write(line)
