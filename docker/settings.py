@@ -71,7 +71,6 @@ else:
     GS_LOCATION = os.path.join(os.getenv('IMPORT_DATA_ROOT', ''))
     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
         '/gcs/credentials.json')
-    GS_FILE_OVERWRITE = False
 
 ALLOW_GRADE_SUBMISSION_OVERRIDE = (os.getenv('ENV', 'localdev') != 'prod')
 USERSERVICE_VALIDATION_MODULE = 'course_grader.dao.person.is_netid'

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from django.core.files.storage import default_storage
-from course_grader.dao import GradeImportSource
+from course_grader.dao import GradeImportSource, current_datetime
 from course_grader.dao.person import person_from_netid
 from course_grader.exceptions import InvalidCSV
 from restclients_core.exceptions import InvalidNetID, DataFailureException
@@ -121,7 +121,8 @@ class GradeImportCSV(GradeImportSource):
                       section.course_number,
                       section.section_id.upper()]),
             instructor.uwnetid,
-            os.path.basename(fileobj.name))
+            os.path.basename(fileobj.name),
+            current_datetime().isoformat())
 
         fileobj.seek(0, 0)
         decoded_file = self.decode_file(fileobj.read()).splitlines()

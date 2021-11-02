@@ -89,9 +89,6 @@ environmentVariables:
   - name: SP_USE_2FA
     value: "True"
 
-  - name: GS_FILE_OVERWRITE
-    value: "False"
-
 externalSecrets:
   enabled: true
   secrets:
