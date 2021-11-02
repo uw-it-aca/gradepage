@@ -18,6 +18,9 @@ lifecycle:
   enabled: true
   preStop:
     enabled: true
+autoscaling:
+  enabled: true
+replicaCount: 1
 affinity:
    podsSpanNodes: true
 readiness:
