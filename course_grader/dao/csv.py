@@ -115,14 +115,16 @@ class GradeImportCSV(GradeImportSource):
 
         Ex: /2013-spring/CHEM-101-A/javerage/grades.csv
         """
+        filename, ext = os.path.splitext(os.path.basename(fileobj.name))
+
         fname = os.path.join(
             section.term.canvas_sis_id(),
             "-".join([section.curriculum_abbr.upper().replace(" ", "_"),
                       section.course_number,
                       section.section_id.upper()]),
             instructor.uwnetid,
-            ".".join([os.path.basename(fileobj.name),
-                      current_datetime().isoformat()])
+            ".".join([os.path.basename(filename),
+                      current_datetime().isoformat() + ext])
         )
 
         fileobj.seek(0, 0)
