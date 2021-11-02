@@ -123,6 +123,7 @@ class GradeImportCSV(GradeImportSource):
             instructor.uwnetid,
             os.path.basename(fileobj.name))
 
+        fileobj.seek(0, 0)
         decoded_file = self.decode_file(fileobj.read()).splitlines()
 
         with default_storage.open(fname, mode="w") as f:
