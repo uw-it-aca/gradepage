@@ -126,6 +126,9 @@ class GradeImportCSV(GradeImportSource):
         fileobj.seek(0, 0)
         decoded_file = self.decode_file(fileobj.read()).splitlines()
 
-        with default_storage.open(fname, mode="w") as f:
-            for line in decoded_file:
-                f.write(line)
+        try:
+            with default_storage.open(fname, mode="w") as f:
+                for line in decoded_file:
+                    f.write(line)
+        except Exception as ex:
+            logger.error("WRITE upload file {} failed: {}".format(fname, ex))
