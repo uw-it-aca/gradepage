@@ -82,6 +82,7 @@ class CVSDAOFunctionsTest(TestCase):
         f.close()
 
     @mock.patch("course_grader.dao.csv.default_storage.open")
+    @override_settings(CURRENT_DATETIME_OVERRIDE='2013-05-18 08:10:00')
     def test_write_files(self, mock_open):
         section = get_section_by_label("2013,spring,A B&C,101/A")
         user = PWS().get_person_by_regid("FBB38FE46A7C11D5A4AE0004AC494FFE")
@@ -89,12 +90,14 @@ class CVSDAOFunctionsTest(TestCase):
         f = open(os.path.join(self.resource_path, "test1.csv"))
         r = GradeImportCSV()._write_file(section, user, fileobj=f)
         mock_open.assert_called_with(
-            "2013-spring/A_B&C-101-A/bill/test1.csv", mode="w")
+            "2013-spring/A_B&C-101-A/bill/test1.csv.2013-05-18T08:10:00",
+            mode="w")
 
         f = open(os.path.join(self.resource_path, "test2.csv"))
         r = GradeImportCSV()._write_file(section, user, fileobj=f)
         mock_open.assert_called_with(
-            "2013-spring/A_B&C-101-A/bill/test2.csv", mode="w")
+            "2013-spring/A_B&C-101-A/bill/test2.csv.2013-05-18T08:10:00",
+            mode="w")
 
 
 class InsensitiveDictReaderTest(CVSDAOFunctionsTest):
