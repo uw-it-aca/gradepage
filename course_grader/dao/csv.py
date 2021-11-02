@@ -104,16 +104,22 @@ class GradeImportCSV(GradeImportSource):
                     student_data["student_number"]):
                 grade_data.append(student_data)
 
-        self._write_file(section, instructor, fileobj)
+        try:
+            self._write_file(section, instructor, fileobj)
+        except Exception as ex:
+            logger.error("WRITE upload file {} for {} failed: {}".format(
+                fileobj.name, section.section_label(), ex))
 
         return {"grades": grade_data}
 
     def _write_file(self, section, instructor, fileobj):
         """
         Writes a copy of the uploaded file to the default storage backend.
-        Path format is /[term_id]/[section_id]/[uwnetid]/[original_file_name]
+        The path format is:
 
-        Ex: /2013-spring/CHEM-101-A/javerage/grades.csv
+        [term_id]/[section_id]/[uwnetid]/[original_file_name][timestamp][ext]
+
+        Ex: 2013-spring/CHEM-101-A/javerage/grades.20131018T083055.csv
         """
         filename, ext = os.path.splitext(os.path.basename(fileobj.name))
 
@@ -124,15 +130,12 @@ class GradeImportCSV(GradeImportSource):
                       section.section_id.upper()]),
             instructor.uwnetid,
             ".".join([os.path.basename(filename),
-                      current_datetime().isoformat() + ext])
+                      current_datetime().strftime("%Y%m%dT%H%M%S") + ext])
         )
 
         fileobj.seek(0, 0)
         decoded_file = self.decode_file(fileobj.read()).splitlines()
 
-        try:
-            with default_storage.open(fname, mode="w") as f:
-                for line in decoded_file:
-                    f.write(line)
-        except Exception as ex:
-            logger.error("WRITE upload file {} failed: {}".format(fname, ex))
+        with default_storage.open(fname, mode="w") as f:
+            for line in decoded_file:
+                f.write(line + "\n")
