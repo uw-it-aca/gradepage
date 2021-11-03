@@ -28,7 +28,7 @@ import re
 logger = getLogger(__name__)
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class ImportGrades(GradeFormHandler):
     def _authorize(self, request, *args, **kwargs):
         try:
@@ -218,7 +218,6 @@ class ImportGrades(GradeFormHandler):
 
 
 class UploadGrades(ImportGrades):
-    @method_decorator(login_required(), name='dispatch')
     def post(self, request, *args, **kwargs):
         error = self._authorize(request, *args, **kwargs)
         if error is not None:
