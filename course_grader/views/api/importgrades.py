@@ -258,12 +258,12 @@ class UploadGrades(ImportGrades):
         except GradeImport.DoesNotExist:
             return self.error_response(404, "Not found")
 
-        if not grade_import.filename:
+        if not grade_import.file_path:
             return self.error_response(400, "No data")
 
-        response = self.csv_response(filename=grade_import.filename)
+        response = self.csv_response(filename=grade_import.file_name)
 
-        with default_storage.open(grade_import.filename, mode="r") as f:
+        with default_storage.open(grade_import.file_path, mode="r") as f:
             response.content = f.read()
 
         return response

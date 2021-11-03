@@ -76,7 +76,7 @@ class CVSDAOFunctionsTest(TestCase):
         self.assertEqual(r["grades"][1]["student_number"], "0040000")
         self.assertEqual(r["grades"][2]["student_number"], "1000000")
         self.assertEqual(
-            importer.get_filename(),
+            importer.get_filepath(),
             "2013-spring/A_B&C-101-A/bill/20130518T081000/test1.csv")
         f.close()
 
@@ -86,7 +86,7 @@ class CVSDAOFunctionsTest(TestCase):
         self.assertEqual(len(r.get("grades")), 6)
         self.assertEqual(r["grades"][0]["student_number"], None)
         self.assertEqual(
-            importer.get_filename(),
+            importer.get_filepath(),
             "2013-spring/A_B&C-101-A/bill/20130518T081000/test2.csv")
         f.close()
 

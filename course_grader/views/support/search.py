@@ -104,7 +104,7 @@ def grade_imports(request):
         importer_name = person_display_name(people[grade_import.imported_by])
         instructor_name = person_display_name(people[instructor_reg_id])
 
-        if grade_import.file_name:
+        if grade_import.file_path:
             data["file_url"] = reverse("grade-import-file", kwargs={
                 "section_id": grade_import.section_id,
                 "import_id": grade_import.pk})

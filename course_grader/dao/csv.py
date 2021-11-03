@@ -121,7 +121,7 @@ class GradeImportCSV(GradeImportSource):
 
         Ex: 2013-spring/CHEM-101-A/javerage/20131018T083055/grades.csv
         """
-        self.filename = os.path.join(
+        self.filepath = os.path.join(
             section.term.canvas_sis_id(),
             "-".join([section.curriculum_abbr.upper().replace(" ", "_"),
                       section.course_number,
@@ -133,6 +133,6 @@ class GradeImportCSV(GradeImportSource):
         fileobj.seek(0, 0)
         decoded_file = self.decode_file(fileobj.read()).splitlines()
 
-        with default_storage.open(self.filename, mode="w") as f:
+        with default_storage.open(self.filepath, mode="w") as f:
             for line in decoded_file:
                 f.write(line + "\n")
