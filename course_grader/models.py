@@ -245,6 +245,10 @@ class GradeImportManager(models.Manager):
             section_id=grade_import.section_id
         ).exclude(pk=grade_import.pk).delete()
 
+    def get_all_terms(self):
+        return super(GradeImportManager, self).get_queryset(
+        ).values_list('term_id', flat=True).distinct()
+
 
 class GradeImport(models.Model):
     """ Represents a grade import.

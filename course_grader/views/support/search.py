@@ -23,7 +23,7 @@ logger = getLogger(__name__)
 @group_required(settings.GRADEPAGE_SUPPORT_GROUP)
 @never_cache
 def grade_imports(request):
-    all_terms = find_all_terms()
+    all_terms = find_all_terms(GradeImport.objects.get_all_terms())
     selected_term = term_from_param(request, all_terms)
 
     opt_terms = []
@@ -123,7 +123,7 @@ def grade_imports(request):
 @group_required(settings.GRADEPAGE_ADMIN_GROUP)
 @never_cache
 def graderosters(request):
-    all_terms = find_all_terms()
+    all_terms = find_all_terms(SubmittedGradeRoster.objects.get_all_terms())
     selected_term = term_from_param(request, all_terms)
 
     opt_terms = []
@@ -248,9 +248,9 @@ def graderosters(request):
     return render(request, template, params)
 
 
-def find_all_terms():
+def find_all_terms(terms):
     all_terms = []
-    for term in SubmittedGradeRoster.objects.get_all_terms():
+    for term in terms:
         (year, quarter) = term.split(",")
         all_terms.append(Term(year=int(year), quarter=quarter))
 
