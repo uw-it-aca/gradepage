@@ -68,7 +68,7 @@
                 <td>{{ grade_import.imported_date }}</td>
                 <td>{{ grade_import.source_name }}</td>
                 <td><span class="{% if grade_import.status_code == '200' %}text-success{% else %}text-danger{% endif %}">{{ grade_import.status_code }}</span></td>
-                <td></td>
+                <td>{% if grade_import.file_url %}<a class="gp-file-download" href="{{ grade_import.file_url }}">Download</a>{% endif %}</td>
                 <td>{% if grade_import.import_conversion.grade_scale|length %}
                     <a class="gp-conv-scale-open" href="#">View</a>
                     <table border="1" style="display: none;">

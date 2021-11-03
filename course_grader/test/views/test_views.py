@@ -172,6 +172,13 @@ class ViewFunctionsTest(TestCase):
                 '/api/v1/import_file/2013-spring-T%20RAIN-'
                 '101-A-9136CCB8F66711D5BE060004AC494FFE'))
 
+        self.assertEquals(
+            url_for_upload((
+                '2013-spring-T RAIN-101-A-'
+                '9136CCB8F66711D5BE060004AC494FFE'), '49'), (
+                '/api/v1/import_file/2013-spring-T%20RAIN-'
+                '101-A-9136CCB8F66711D5BE060004AC494FFE/49')),
+
     def test_url_for_export(self):
         self.assertEquals(
             url_for_export((
