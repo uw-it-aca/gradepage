@@ -253,7 +253,7 @@ class UploadGrades(ImportGrades):
 
         try:
             grade_import = GradeImport.objects.get(
-                section_id=section_id, import_id=import_id)
+                section_id=section_id, pk=import_id)
         except GradeImport.DoesNotExist:
             return self.error_response(404, "Not found")
 
