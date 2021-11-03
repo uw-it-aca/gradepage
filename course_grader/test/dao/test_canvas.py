@@ -41,4 +41,4 @@ class CanvasDAOFunctionsTest(TestCase):
         r = importer.grades_for_section(section, user)
         self.assertEqual(len(r['grades']), 1)
         self.assertEqual(len(r['course_grading_schemes']), 0)
-        self.assertIsNone(importer.get_filename())
+        self.assertIsNone(importer.get_filepath())

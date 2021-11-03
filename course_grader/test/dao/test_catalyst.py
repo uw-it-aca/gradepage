@@ -19,7 +19,7 @@ class CatalystDAOFunctionsTest(TestCase):
 
         r = importer.grades_for_section(section, user)
         self.assertEquals(len(r['grades']), 3)
-        self.assertIsNone(importer.get_filename())
+        self.assertIsNone(importer.get_filepath())
 
     def test_grades_for_book(self):
         section = get_section_by_label('2013,summer,CSS,161/A')
@@ -29,4 +29,4 @@ class CatalystDAOFunctionsTest(TestCase):
         r = importer.grades_for_section(
             section, user, source_id=12345)
         self.assertEquals(len(r['grades']), 3)
-        self.assertIsNone(importer.get_filename())
+        self.assertIsNone(importer.get_filepath())

@@ -1,9 +1,11 @@
 # Copyright 2021 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
+from django.core.files.storage import default_storage
 from course_grader.models import GradeImport, ImportConversion
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import all_viewable_terms
@@ -17,6 +19,7 @@ from course_grader.views import clean_section_id
 from course_grader.exceptions import *
 from restclients_core.exceptions import DataFailureException
 from userservice.user import UserService
+from uw_saml.decorators import group_required
 from logging import getLogger
 import json
 import csv
@@ -25,8 +28,7 @@ import re
 logger = getLogger(__name__)
 
 
-@method_decorator(login_required, name='dispatch')
-@method_decorator(never_cache, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class ImportGrades(GradeFormHandler):
     def _authorize(self, request, *args, **kwargs):
         try:
@@ -242,3 +244,25 @@ class UploadGrades(ImportGrades):
             return self.error_response(400, "{}".format(ex))
 
         return self.response_content(grade_import)
+
+    @method_decorator(group_required(settings.GRADEPAGE_SUPPORT_GROUP),
+                      name="dispatch")
+    def get(self, request, *args, **kwargs):
+        section_id = kwargs.get("section_id")
+        import_id = kwargs.get("import_id")
+
+        try:
+            grade_import = GradeImport.objects.get(
+                section_id=section_id, import_id=import_id)
+        except GradeImport.DoesNotExist:
+            return self.error_response(404, "Not found")
+
+        if not grade_import.file_path:
+            return self.error_response(400, "No data")
+
+        response = self.csv_response(filename=grade_import.file_name)
+
+        with default_storage.open(grade_import.file_path, mode="r") as f:
+            response.content = f.read()
+
+        return response

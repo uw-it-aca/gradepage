@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db.models import Q
 from django.views.decorators.cache import never_cache
 from django.shortcuts import render
+from django.urls import reverse
 from uw_saml.decorators import group_required
 from uw_sws import QUARTER_SEQ
 from uw_sws.term import get_term_by_year_and_quarter
@@ -57,7 +58,7 @@ def grade_imports(request):
         return render(request, template, params)
 
     args = ()
-    kwargs = {}
+    kwargs = {"term_id": selected_term.term_label()}
     if re.match(r"^[\w& ]+$", curr_abbr):
         s_filter = [str(selected_term.year), selected_term.quarter, curr_abbr]
         if re.match(r"^\d{3}$", course_num):
@@ -102,6 +103,11 @@ def grade_imports(request):
 
         importer_name = person_display_name(people[grade_import.imported_by])
         instructor_name = person_display_name(people[instructor_reg_id])
+
+        if grade_import.file_path:
+            data["file_url"] = reverse("grade-import-file", kwargs={
+                "section_id": grade_import.section_id,
+                "import_id": grade_import.pk})
 
         data["section_name"] = " ".join([curriculum_abbr, course_number,
                                          section_id])
