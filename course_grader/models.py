@@ -270,7 +270,7 @@ class GradeImport(models.Model):
     source = models.CharField(max_length=20, choices=SOURCE_CHOICES)
     source_id = models.CharField(max_length=10, null=True)
     status_code = models.CharField(max_length=3, null=True)
-    file_name = models.CharField(max_length=100, null=True)
+    file_name = models.CharField(max_length=200, null=True)
     document = models.TextField()
     imported_date = models.DateTimeField(auto_now=True)
     imported_by = models.CharField(max_length=32)
@@ -281,17 +281,18 @@ class GradeImport(models.Model):
     objects = GradeImportManager()
 
     def grades_for_section(self, section, instructor, fileobj=None):
-        try:
-            module = self._IMPORT_CLASSES[self.source]
-            module_name, class_name = module.rsplit(".", 1)
-            _class = getattr(import_module(module_name), class_name)
-            grade_source = _class()
+        module = self._IMPORT_CLASSES[self.source]
+        module_name, class_name = module.rsplit(".", 1)
+        _class = getattr(import_module(module_name), class_name)
+        grade_source = _class()
 
+        try:
             data = grade_source.grades_for_section(
                 section, instructor, source_id=self.source_id, fileobj=fileobj)
 
             self.document = json.dumps(data)
             self.status_code = 200
+            self.file_name = grade_source.get_filename()
         except DataFailureException as ex:
             self.status_code = ex.status
 

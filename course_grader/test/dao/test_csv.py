@@ -58,13 +58,15 @@ class CVSDAOFunctionsTest(TestCase):
         self.assertEqual(grade_import.dialect.delimiter, ",")
 
     @mock.patch("course_grader.dao.csv.default_storage.open")
+    @override_settings(CURRENT_DATETIME_OVERRIDE='2013-05-18 08:10:00')
     def test_grades_for_section(self, mock_open):
         # Section/user do not matter here
         section = get_section_by_label("2013,spring,A B&C,101/A")
         user = PWS().get_person_by_regid("FBB38FE46A7C11D5A4AE0004AC494FFE")
+        importer = GradeImportCSV()
 
         f = open(os.path.join(self.resource_path, "test1.csv"))
-        r = GradeImportCSV().grades_for_section(section, user, fileobj=f)
+        r = importer.grades_for_section(section, user, fileobj=f)
         self.assertEqual(len(r.get("grades")), 6)
         self.assertEqual(
             len([g for g in r["grades"] if g["is_incomplete"] is True]), 2)
@@ -73,12 +75,19 @@ class CVSDAOFunctionsTest(TestCase):
         self.assertEqual(r["grades"][0]["student_number"], "0800000")
         self.assertEqual(r["grades"][1]["student_number"], "0040000")
         self.assertEqual(r["grades"][2]["student_number"], "1000000")
+        self.assertEqual(
+            importer.get_filename(),
+            "2013-spring/A_B&C-101-A/bill/20130518T081000/test1.csv")
         f.close()
 
+        importer = GradeImportCSV()
         f = open(os.path.join(self.resource_path, "test2.csv"))
-        r = GradeImportCSV().grades_for_section(section, user, fileobj=f)
+        r = importer.grades_for_section(section, user, fileobj=f)
         self.assertEqual(len(r.get("grades")), 6)
         self.assertEqual(r["grades"][0]["student_number"], None)
+        self.assertEqual(
+            importer.get_filename(),
+            "2013-spring/A_B&C-101-A/bill/20130518T081000/test2.csv")
         f.close()
 
     @mock.patch("course_grader.dao.csv.default_storage.open")
@@ -90,13 +99,13 @@ class CVSDAOFunctionsTest(TestCase):
         f = open(os.path.join(self.resource_path, "test1.csv"))
         r = GradeImportCSV()._write_file(section, user, fileobj=f)
         mock_open.assert_called_with(
-            "2013-spring/A_B&C-101-A/bill/test1.20130518T081000.csv",
+            "2013-spring/A_B&C-101-A/bill/20130518T081000/test1.csv",
             mode="w")
 
         f = open(os.path.join(self.resource_path, "test2.csv"))
         r = GradeImportCSV()._write_file(section, user, fileobj=f)
         mock_open.assert_called_with(
-            "2013-spring/A_B&C-101-A/bill/test2.20130518T081000.csv",
+            "2013-spring/A_B&C-101-A/bill/20130518T081000/test2.csv",
             mode="w")
 
 

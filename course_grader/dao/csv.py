@@ -117,25 +117,22 @@ class GradeImportCSV(GradeImportSource):
         Writes a copy of the uploaded file to the default storage backend.
         The path format is:
 
-        [term_id]/[section_id]/[uwnetid]/[original_file_name][timestamp][ext]
+        [term_id]/[section_id]/[uwnetid]/[timestamp]/[original_file_name]
 
-        Ex: 2013-spring/CHEM-101-A/javerage/grades.20131018T083055.csv
+        Ex: 2013-spring/CHEM-101-A/javerage/20131018T083055/grades.csv
         """
-        filename, ext = os.path.splitext(os.path.basename(fileobj.name))
-
-        fname = os.path.join(
+        self.filename = os.path.join(
             section.term.canvas_sis_id(),
             "-".join([section.curriculum_abbr.upper().replace(" ", "_"),
                       section.course_number,
                       section.section_id.upper()]),
             instructor.uwnetid,
-            ".".join([os.path.basename(filename),
-                      current_datetime().strftime("%Y%m%dT%H%M%S") + ext])
-        )
+            current_datetime().strftime("%Y%m%dT%H%M%S"),
+            os.path.basename(fileobj.name))
 
         fileobj.seek(0, 0)
         decoded_file = self.decode_file(fileobj.read()).splitlines()
 
-        with default_storage.open(fname, mode="w") as f:
+        with default_storage.open(self.filename, mode="w") as f:
             for line in decoded_file:
                 f.write(line + "\n")
