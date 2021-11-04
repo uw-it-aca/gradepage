@@ -128,7 +128,7 @@ class GradeImportCSV(GradeImportSource):
                       section.section_id.upper()]),
             instructor.uwnetid,
             current_datetime().strftime("%Y%m%dT%H%M%S"),
-            os.path.basename(fileobj.name))
+            os.path.basename(fileobj.name).replace("/", "-"))
 
         fileobj.seek(0, 0)
         decoded_file = self.decode_file(fileobj.read()).splitlines()
