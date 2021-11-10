@@ -7,6 +7,7 @@ from course_grader.dao.person import person_from_netid
 from course_grader.exceptions import InvalidCSV
 from restclients_core.exceptions import InvalidNetID, DataFailureException
 from logging import getLogger
+import chardet
 import csv
 import os
 
@@ -44,18 +45,13 @@ class InsensitiveDictReader(csv.DictReader):
 
 class GradeImportCSV(GradeImportSource):
     def __init__(self):
-        self.encoding = "utf-8"
+        self.encoding = None
 
     def decode_file(self, csvfile):
-        try:
-            return csvfile.decode(self.encoding)
-        except UnicodeDecodeError as ex:
+        if not self.encoding:
             result = chardet.detect(csvfile)
             self.encoding = result["encoding"]
-            logger.info('ENCODING: {}'.format(result))
-            return csvfile.decode(self.encoding)
-        except AttributeError:
-            return csvfile
+        return csvfile.decode(self.encoding)
 
     def validate(self, fileobj):
         # Read the first line of the file to validate the header

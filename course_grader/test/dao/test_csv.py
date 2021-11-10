@@ -34,25 +34,29 @@ class CVSDAOFunctionsTest(TestCase):
     def test_validate(self):
         grade_import = GradeImportCSV()
 
-        fileobj = open(os.path.join(self.resource_path, "test1.csv"))
+        fileobj = open(os.path.join(self.resource_path, "test1.csv"), "rb")
         r = grade_import.validate(fileobj)
         self.assertEqual(grade_import.has_header, True)
         self.assertEqual(grade_import.dialect.delimiter, ",")
 
-        fileobj = open(os.path.join(self.resource_path, "missing_header.csv"))
+        fileobj = open(
+            os.path.join(self.resource_path, "missing_header.csv"), "rb")
         self.assertRaisesRegex(InvalidCSV, "Missing header: grade$",
                                grade_import.validate, fileobj)
 
-        fileobj = open(os.path.join(self.resource_path, "missing_grade.csv"))
+        fileobj = open(
+            os.path.join(self.resource_path, "missing_grade.csv"), "rb")
         self.assertRaisesRegex(InvalidCSV, "Missing header: grade$",
                                grade_import.validate, fileobj)
 
-        fileobj = open(os.path.join(self.resource_path, "large_header.csv"))
+        fileobj = open(
+            os.path.join(self.resource_path, "large_header.csv"), "rb")
         r = grade_import.validate(fileobj)
         self.assertEqual(grade_import.has_header, True)
         self.assertEqual(grade_import.dialect.delimiter, ",")
 
-        fileobj = open(os.path.join(self.resource_path, "unk_delimiter.csv"))
+        fileobj = open(
+            os.path.join(self.resource_path, "unk_delimiter.csv"), "rb")
         r = grade_import.validate(fileobj)
         self.assertEqual(grade_import.has_header, True)
         self.assertEqual(grade_import.dialect.delimiter, ",")
@@ -65,7 +69,7 @@ class CVSDAOFunctionsTest(TestCase):
         user = PWS().get_person_by_regid("FBB38FE46A7C11D5A4AE0004AC494FFE")
         importer = GradeImportCSV()
 
-        f = open(os.path.join(self.resource_path, "test1.csv"))
+        f = open(os.path.join(self.resource_path, "test1.csv"), "rb")
         r = importer.grades_for_section(section, user, fileobj=f)
         self.assertEqual(len(r.get("grades")), 6)
         self.assertEqual(
@@ -81,7 +85,7 @@ class CVSDAOFunctionsTest(TestCase):
         f.close()
 
         importer = GradeImportCSV()
-        f = open(os.path.join(self.resource_path, "test2.csv"))
+        f = open(os.path.join(self.resource_path, "test2.csv"), "rb")
         r = importer.grades_for_section(section, user, fileobj=f)
         self.assertEqual(len(r.get("grades")), 6)
         self.assertEqual(r["grades"][0]["student_number"], None)
@@ -96,13 +100,13 @@ class CVSDAOFunctionsTest(TestCase):
         section = get_section_by_label("2013,spring,A B&C,101/A")
         user = PWS().get_person_by_regid("FBB38FE46A7C11D5A4AE0004AC494FFE")
 
-        f = open(os.path.join(self.resource_path, "test1.csv"))
+        f = open(os.path.join(self.resource_path, "test1.csv"), "rb")
         r = GradeImportCSV()._write_file(section, user, fileobj=f)
         mock_open.assert_called_with(
             "2013-spring/A_B&C-101-A/bill/20130518T081000/test1.csv",
             mode="w")
 
-        f = open(os.path.join(self.resource_path, "test2.csv"))
+        f = open(os.path.join(self.resource_path, "test2.csv"), "rb")
         r = GradeImportCSV()._write_file(section, user, fileobj=f)
         mock_open.assert_called_with(
             "2013-spring/A_B&C-101-A/bill/20130518T081000/test2.csv",
