@@ -39,6 +39,7 @@ setup(
         'Django-SupportTools~=3.5',
         'Django-Persistent-Message',
         'UW-Django-SAML2~=1.5',
+        'chardet~=4.0',
     ],
     license='Apache License, Version 2.0',
     description='UW application that supports online grade submission',
