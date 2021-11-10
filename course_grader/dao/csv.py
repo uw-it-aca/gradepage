@@ -43,11 +43,17 @@ class InsensitiveDictReader(csv.DictReader):
 
 
 class GradeImportCSV(GradeImportSource):
+    def __init__(self):
+        self.encoding = "utf-8"
+
     def decode_file(self, csvfile):
         try:
-            return csvfile.decode("utf-8")
+            return csvfile.decode(self.encoding)
         except UnicodeDecodeError as ex:
-            return csvfile.decode("utf-16")
+            result = chardet.detect(csvfile)
+            self.encoding = result["encoding"]
+            logger.info('ENCODING: {}'.format(result))
+            return csvfile.decode(self.encoding)
         except AttributeError:
             return csvfile
 
