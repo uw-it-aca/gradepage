@@ -62,6 +62,9 @@ memcached:
     - "-v"
   updateStrategy:
     type: RollingUpdate
+gcsCredentials:
+  mounted: true
+  secretName: gradepage.uw.edu-gcs-credentials
 cronjob:
   enabled: true
   jobs:
@@ -118,12 +121,17 @@ externalSecrets:
     - name: gradepage.uw.edu-secrets
       externalKey: axdd/kv/data/gradepage/prod/secrets
       data:
+        - name: django-secret
+          property: django-secret
+        - name: storage-bucket-name
+          property: storage-bucket-name
+    - name: gradepage.uw.edu-shared-secrets
+      externalKey: axdd/kv/data/gradepage/shared/secrets
+      data:
         - name: canvas-account-id
           property: canvas-account-id
         - name: canvas-api-token
           property: canvas-api-token
-        - name: django-secret
-          property: django-secret
         - name: email-host
           property: email-host
         - name: email-noreply-address
@@ -134,13 +142,20 @@ externalSecrets:
           property: registrar-support-phone
         - name: gradepage-support-email
           property: gradepage-support-email
+        - name: storage-project-id
+          property: storage-project-id
     - name: gradepage.uw.edu-sql-secrets
-      externalKey: axdd/kv/data/gradepage/prod/sql-secrets
+      externalKey: axdd/kv/data/gradepage/shared/sql-secrets
       data:
         - name: username
           property: username
         - name: password
           property: password
+    - name: gradepage.uw.edu-gcs-credentials
+      externalKey: axdd/kv/data/gradepage/shared/gcs-credentials
+      data:
+        - name: credentials.json
+          property: credentials.json
     - name: gradepage.uw.edu-uwca-certs
       externalKey: axdd/kv/data/gradepage/prod/uwca-certs
       data:
@@ -166,32 +181,40 @@ environmentVariablesSecrets:
     secretKey: django-secret
   canvasAPIToken:
     name: CANVAS_OAUTH_BEARER
-    secretName: gradepage.uw.edu-secrets
+    secretName: gradepage.uw.edu-shared-secrets
     secretKey: canvas-api-token
   canvasAccountID:
     name: CANVAS_ACCOUNT_ID
-    secretName: gradepage.uw.edu-secrets
+    secretName: gradepage.uw.edu-shared-secrets
     secretKey: canvas-account-id
   registrarSupportEmail:
     name: REGISTRAR_SUPPORT_EMAIL
-    secretName: gradepage.uw.edu-secrets
+    secretName: gradepage.uw.edu-shared-secrets
     secretKey: registrar-support-email
   registrarSupportPhone:
     name: REGISTRAR_SUPPORT_PHONE
-    secretName: gradepage.uw.edu-secrets
+    secretName: gradepage.uw.edu-shared-secrets
     secretKey: registrar-support-phone
   gradepageSupportEmail:
     name: GRADEPAGE_SUPPORT_EMAIL
-    secretName: gradepage.uw.edu-secrets
+    secretName: gradepage.uw.edu-shared-secrets
     secretKey: gradepage-support-email
   emailHost:
     name: EMAIL_HOST
-    secretName: gradepage.uw.edu-secrets
+    secretName: gradepage.uw.edu-shared-secrets
     secretKey: email-host
   emailNoreplyAddress:
     name: EMAIL_NOREPLY_ADDRESS
-    secretName: gradepage.uw.edu-secrets
+    secretName: gradepage.uw.edu-shared-secrets
     secretKey: email-noreply-address
+  storageBucketName:
+    name: STORAGE_BUCKET_NAME
+    secretName: gradepage.uw.edu-secrets
+    secretKey: storage-bucket-name
+  storageProjectId:
+    name: STORAGE_PROJECT_ID
+    secretName: gradepage.uw.edu-shared-secrets
+    secretKey: storage-project-id
   samlSPCert:
     name: SP_CERT
     secretName: gradepage.uw.edu-ic-certs
