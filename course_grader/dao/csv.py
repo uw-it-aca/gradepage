@@ -1,14 +1,19 @@
 # Copyright 2021 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
-from course_grader.dao import GradeImportSource
+from django.core.files.storage import default_storage
+from course_grader.dao import GradeImportSource, current_datetime
 from course_grader.dao.person import person_from_netid
 from course_grader.exceptions import InvalidCSV
 from restclients_core.exceptions import InvalidNetID, DataFailureException
 from logging import getLogger
+import chardet
 import csv
+import os
 
 logger = getLogger(__name__)
+
+STUDENT_NUM_LEN = 7
 
 
 class InsensitiveDict(dict):
@@ -39,13 +44,14 @@ class InsensitiveDictReader(csv.DictReader):
 
 
 class GradeImportCSV(GradeImportSource):
+    def __init__(self):
+        self.encoding = None
+
     def decode_file(self, csvfile):
-        try:
-            return csvfile.decode("utf-8")
-        except UnicodeDecodeError as ex:
-            return csvfile.decode("utf-16")
-        except AttributeError:
-            return csvfile
+        if not self.encoding:
+            result = chardet.detect(csvfile)
+            self.encoding = result["encoding"]
+        return csvfile.decode(self.encoding)
 
     def validate(self, fileobj):
         # Read the first line of the file to validate the header
@@ -86,9 +92,11 @@ class GradeImportCSV(GradeImportSource):
 
         grade_data = []
         for row in InsensitiveDictReader(decoded_file, dialect=self.dialect):
+            student_number = row.get("StudentNo")
             student_data = {
                 "student_reg_id": row.get("UWRegID", "SIS User ID"),
-                "student_number": row.get("StudentNo"),
+                "student_number": student_number.zfill(STUDENT_NUM_LEN) if (
+                    student_number is not None) else student_number,
                 "grade": row.get("Import Grade", "ImportGrade"),
                 "is_incomplete": self.is_true(row.get("Incomplete")),
                 "is_writing": self.is_true(
@@ -98,4 +106,35 @@ class GradeImportCSV(GradeImportSource):
                     student_data["student_number"]):
                 grade_data.append(student_data)
 
+        try:
+            self._write_file(section, instructor, fileobj)
+        except Exception as ex:
+            logger.error("WRITE upload file {} for {} failed: {}".format(
+                fileobj.name, section.section_label(), ex))
+
         return {"grades": grade_data}
+
+    def _write_file(self, section, instructor, fileobj):
+        """
+        Writes a copy of the uploaded file to the default storage backend.
+        The path format is:
+
+        [term_id]/[section_id]/[uwnetid]/[timestamp]/[original_file_name]
+
+        Ex: 2013-spring/CHEM-101-A/javerage/20131018T083055/grades.csv
+        """
+        self.filepath = os.path.join(
+            section.term.canvas_sis_id(),
+            "-".join([section.curriculum_abbr.upper().replace(" ", "_"),
+                      section.course_number,
+                      section.section_id.upper()]),
+            instructor.uwnetid,
+            current_datetime().strftime("%Y%m%dT%H%M%S"),
+            os.path.basename(fileobj.name).replace("/", "-"))
+
+        fileobj.seek(0, 0)
+        decoded_file = self.decode_file(fileobj.read()).splitlines()
+
+        with default_storage.open(self.filepath, mode="w") as f:
+            for line in decoded_file:
+                f.write(line + "\n")

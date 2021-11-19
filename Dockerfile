@@ -1,8 +1,8 @@
-FROM gcr.io/uwit-mci-axdd/django-container:1.3.3 as app-container
+FROM gcr.io/uwit-mci-axdd/django-container:1.3.7 as app-container
 
 USER root
 
-RUN apt-get update && apt-get install mysql-client libmysqlclient-dev -y
+RUN apt-get update && apt-get install mysql-client libmysqlclient-dev vim -y
 
 USER acait
 
@@ -24,7 +24,7 @@ RUN . /app/bin/activate && pip install nodeenv && nodeenv -p &&\
 RUN . /app/bin/activate && python manage.py collectstatic --noinput &&\
     python manage.py compress -f
 
-FROM gcr.io/uwit-mci-axdd/django-test-container:1.3.3 as app-test-container
+FROM gcr.io/uwit-mci-axdd/django-test-container:1.3.7 as app-test-container
 
 COPY --from=app-container /app/ /app/
 COPY --from=app-container /static/ /static/

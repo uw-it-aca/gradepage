@@ -43,3 +43,6 @@ class GradeImportSource(ABC):
 
     def is_true(self, val):
         return (val is not None and val.lower() in self.true_values)
+
+    def get_filepath(self):
+        return getattr(self, "filepath", None)

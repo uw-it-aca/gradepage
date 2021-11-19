@@ -8,6 +8,7 @@ from course_grader.dao.person import PWS
 from course_grader.exceptions import InvalidCSV
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
+import mock
 import os
 
 
@@ -33,47 +34,83 @@ class CVSDAOFunctionsTest(TestCase):
     def test_validate(self):
         grade_import = GradeImportCSV()
 
-        fileobj = open(os.path.join(self.resource_path, "test1.csv"))
+        fileobj = open(os.path.join(self.resource_path, "test1.csv"), "rb")
         r = grade_import.validate(fileobj)
         self.assertEqual(grade_import.has_header, True)
         self.assertEqual(grade_import.dialect.delimiter, ",")
 
-        fileobj = open(os.path.join(self.resource_path, "missing_header.csv"))
+        fileobj = open(
+            os.path.join(self.resource_path, "missing_header.csv"), "rb")
         self.assertRaisesRegex(InvalidCSV, "Missing header: grade$",
                                grade_import.validate, fileobj)
 
-        fileobj = open(os.path.join(self.resource_path, "missing_grade.csv"))
+        fileobj = open(
+            os.path.join(self.resource_path, "missing_grade.csv"), "rb")
         self.assertRaisesRegex(InvalidCSV, "Missing header: grade$",
                                grade_import.validate, fileobj)
 
-        fileobj = open(os.path.join(self.resource_path, "large_header.csv"))
+        fileobj = open(
+            os.path.join(self.resource_path, "large_header.csv"), "rb")
         r = grade_import.validate(fileobj)
         self.assertEqual(grade_import.has_header, True)
         self.assertEqual(grade_import.dialect.delimiter, ",")
 
-        fileobj = open(os.path.join(self.resource_path, "unk_delimiter.csv"))
+        fileobj = open(
+            os.path.join(self.resource_path, "unk_delimiter.csv"), "rb")
         r = grade_import.validate(fileobj)
         self.assertEqual(grade_import.has_header, True)
         self.assertEqual(grade_import.dialect.delimiter, ",")
 
-    def test_grades_for_section(self):
+    @mock.patch("course_grader.dao.csv.default_storage.open")
+    @override_settings(CURRENT_DATETIME_OVERRIDE='2013-05-18 08:10:00')
+    def test_grades_for_section(self, mock_open):
         # Section/user do not matter here
         section = get_section_by_label("2013,spring,A B&C,101/A")
         user = PWS().get_person_by_regid("FBB38FE46A7C11D5A4AE0004AC494FFE")
+        importer = GradeImportCSV()
 
-        f = open(os.path.join(self.resource_path, "test1.csv"))
-        r = GradeImportCSV().grades_for_section(section, user, fileobj=f)
+        f = open(os.path.join(self.resource_path, "test1.csv"), "rb")
+        r = importer.grades_for_section(section, user, fileobj=f)
         self.assertEqual(len(r.get("grades")), 6)
         self.assertEqual(
             len([g for g in r["grades"] if g["is_incomplete"] is True]), 2)
         self.assertEqual(
             len([g for g in r["grades"] if g["is_writing"] is True]), 2)
+        self.assertEqual(r["grades"][0]["student_number"], "0800000")
+        self.assertEqual(r["grades"][1]["student_number"], "0040000")
+        self.assertEqual(r["grades"][2]["student_number"], "1000000")
+        self.assertEqual(
+            importer.get_filepath(),
+            "2013-spring/A_B&C-101-A/bill/20130518T081000/test1.csv")
         f.close()
 
-        f = open(os.path.join(self.resource_path, "test2.csv"))
-        r = GradeImportCSV().grades_for_section(section, user, fileobj=f)
+        importer = GradeImportCSV()
+        f = open(os.path.join(self.resource_path, "test2.csv"), "rb")
+        r = importer.grades_for_section(section, user, fileobj=f)
         self.assertEqual(len(r.get("grades")), 6)
+        self.assertEqual(r["grades"][0]["student_number"], None)
+        self.assertEqual(
+            importer.get_filepath(),
+            "2013-spring/A_B&C-101-A/bill/20130518T081000/test2.csv")
         f.close()
+
+    @mock.patch("course_grader.dao.csv.default_storage.open")
+    @override_settings(CURRENT_DATETIME_OVERRIDE='2013-05-18 08:10:00')
+    def test_write_files(self, mock_open):
+        section = get_section_by_label("2013,spring,A B&C,101/A")
+        user = PWS().get_person_by_regid("FBB38FE46A7C11D5A4AE0004AC494FFE")
+
+        f = open(os.path.join(self.resource_path, "test1.csv"), "rb")
+        r = GradeImportCSV()._write_file(section, user, fileobj=f)
+        mock_open.assert_called_with(
+            "2013-spring/A_B&C-101-A/bill/20130518T081000/test1.csv",
+            mode="w")
+
+        f = open(os.path.join(self.resource_path, "test2.csv"), "rb")
+        r = GradeImportCSV()._write_file(section, user, fileobj=f)
+        mock_open.assert_called_with(
+            "2013-spring/A_B&C-101-A/bill/20130518T081000/test2.csv",
+            mode="w")
 
 
 class InsensitiveDictReaderTest(CVSDAOFunctionsTest):

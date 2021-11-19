@@ -4,8 +4,8 @@
 from django.conf import settings
 from django.urls import re_path
 from django.views.generic import TemplateView
-from course_grader.views.chooser import home
-from course_grader.views.section import section
+from course_grader.views.chooser import HomeView
+from course_grader.views.section import SectionView
 from course_grader.views.support.status import status
 from course_grader.views.support.search import graderosters, grade_imports
 from course_grader.views.api.sections import Sections
@@ -18,8 +18,10 @@ from course_grader.views.api.submitted_graderoster import (
 
 
 urlpatterns = [
-    re_path(r'^$', home, name='home'),
-    re_path(r'^section/(?P<url_token>[^/]*)$', section, name='section'),
+    re_path(r'^$', HomeView.as_view(), name='home'),
+    re_path(
+        r'^section/(?P<url_token>[^/]*)$',
+        SectionView.as_view(), name='section'),
     re_path(
         r'^api/v1/sections/(?P<term_id>[^/]*)$',
         Sections.as_view(), name='section-list'),
@@ -38,6 +40,9 @@ urlpatterns = [
     re_path(
         r'^api/v1/import/(?P<section_id>[^/]*)/(?P<import_id>[\d]*)$',
         ImportGrades.as_view(), name='grade-import-id'),
+    re_path(
+        r'^api/v1/import_file/(?P<section_id>[^/]+)/(?P<import_id>\d+)$',
+        UploadGrades.as_view(), name='grade-import-file'),
     re_path(
         r'^api/v1/import_file/(?P<section_id>[^/]*)$',
         UploadGrades.as_view(), name='grade-import-file'),

@@ -245,6 +245,10 @@ class GradeImportManager(models.Manager):
             section_id=grade_import.section_id
         ).exclude(pk=grade_import.pk).delete()
 
+    def get_all_terms(self):
+        return super(GradeImportManager, self).get_queryset(
+        ).values_list('term_id', flat=True).distinct()
+
 
 class GradeImport(models.Model):
     """ Represents a grade import.
@@ -271,6 +275,7 @@ class GradeImport(models.Model):
     source_id = models.CharField(max_length=10, null=True)
     status_code = models.CharField(max_length=3, null=True)
     file_name = models.CharField(max_length=100, null=True)
+    file_path = models.CharField(max_length=200, null=True)
     document = models.TextField()
     imported_date = models.DateTimeField(auto_now=True)
     imported_by = models.CharField(max_length=32)
@@ -281,17 +286,18 @@ class GradeImport(models.Model):
     objects = GradeImportManager()
 
     def grades_for_section(self, section, instructor, fileobj=None):
-        try:
-            module = self._IMPORT_CLASSES[self.source]
-            module_name, class_name = module.rsplit(".", 1)
-            _class = getattr(import_module(module_name), class_name)
-            grade_source = _class()
+        module = self._IMPORT_CLASSES[self.source]
+        module_name, class_name = module.rsplit(".", 1)
+        _class = getattr(import_module(module_name), class_name)
+        grade_source = _class()
 
+        try:
             data = grade_source.grades_for_section(
                 section, instructor, source_id=self.source_id, fileobj=fileobj)
 
             self.document = json.dumps(data)
             self.status_code = 200
+            self.file_path = grade_source.get_filepath()
         except DataFailureException as ex:
             self.status_code = ex.status
 
@@ -369,6 +375,7 @@ class GradeImport(models.Model):
                 "source_name": dict(self.SOURCE_CHOICES)[self.source],
                 "status_code": self.status_code,
                 "file_name": self.file_name,
+                "file_path": self.file_path,
                 "accepted_date": self.accepted_date.isoformat() if (
                     self.accepted_date is not None) else None,
                 "imported_date": self.imported_date.isoformat(),
