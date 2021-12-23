@@ -1,17 +1,18 @@
 autoscaling:
   enabled: true
   minReplicas: 2
-  maxReplicas: 16
+  maxReplicas: 20
 targetAverageUtilization: 100
 resources:
   limits:
-    cpu: 1.0
-    memory: 1280Mi
+    cpu: 500m
+    memory: 1.0Gi
   requests:
-    cpu: 256m
-    memory: 1024Mi
+    cpu: 50m
+    memory: 256Mi
 affinity:
    podsSpanNodes: true
+
 ingress:
   enabled: true
   tls:
@@ -28,12 +29,14 @@ ingress:
     cert-manager.io/cluster-issuer: letsencrypt
     nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256"
     nginx.ingress.kubernetes.io/client-body-buffer-size: "16K"
+
 lifecycle:
   enabled: true
   preStop:
     enabled: true
 readiness:
   enabled: true
+
 externalService:
   enabled: true
   name: gradepage-db-service
@@ -45,26 +48,23 @@ database:
   name: gradepage_prod
   hostname: gradepage-db-service
   secretName: gradepage.uw.edu-sql-secrets
+
 repo: gradepage
 instance: prod
 image:
   repository: gcr.io/uwit-mci-axdd/gradepage
   tag: IMAGE_TAG
+
 memcached:
   enabled: true
-  replicaCount: 3
-  command:
-    - "memcached"
-    - "-m"
-    - "256"
-    - "-o"
-    - "modern"
-    - "-v"
+  replicaCount: 2
   updateStrategy:
     type: RollingUpdate
+
 gcsCredentials:
   mounted: true
   secretName: gradepage.uw.edu-gcs-credentials
+
 cronjob:
   enabled: true
   jobs:
@@ -76,11 +76,13 @@ cronjob:
       schedule: "10 2 * * 3"
       command: ["/scripts/management_command.sh"]
       args: ["delete_grades", "--commit"]
+
 certs:
   mounted: true
   certPath: /certs/client.gradepage.uw.edu-uwca.cert
   keyPath: /certs/client.gradepage.uw.edu-uwca.key
   secretName: gradepage.uw.edu-uwca-certs
+
 environmentVariables:
   - name: ENV
     value: prod
