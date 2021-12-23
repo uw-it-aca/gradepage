@@ -14,6 +14,7 @@ ingress:
     cert-manager.io/cluster-issuer: letsencrypt
     nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256"
     nginx.ingress.kubernetes.io/client-body-buffer-size: "16K"
+
 lifecycle:
   enabled: true
   preStop:
@@ -23,10 +24,12 @@ autoscaling:
 replicaCount: 1
 affinity:
    podsSpanNodes: true
+
 readiness:
   enabled: true
 securityPolicy:
   enabled: true
+
 externalService:
   enabled: true
   name: gradepage-db-service
@@ -38,26 +41,32 @@ database:
   name: gradepage_test
   hostname: gradepage-db-service
   secretName: test.gradepage.uw.edu-sql-secrets
+
 repo: gradepage
 instance: test
 image:
   repository: gcr.io/uwit-mci-axdd/gradepage
   tag: IMAGE_TAG
+
 memcached:
   enabled: true
   replicaCount: 1
   updateStrategy:
     type: RollingUpdate
+
 gcsCredentials:
   mounted: true
   secretName: test.gradepage.uw.edu-gcs-credentials
+
 cronjob:
   enabled: false
+
 certs:
   mounted: true
   certPath: /certs/test-client.gradepage.uw.edu-uwca.cert
   keyPath: /certs/test-client.gradepage.uw.edu-uwca.key
   secretName: test.gradepage.uw.edu-uwca-certs
+
 environmentVariables:
   - name: ENV
     value: test
