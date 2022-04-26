@@ -6,19 +6,16 @@ RUN apt-get update && apt-get install mysql-client libmysqlclient-dev -y
 
 USER acait
 
-ADD --chown=acait:acait course_grader/VERSION /app/course_grader/
-ADD --chown=acait:acait setup.py /app/
-ADD --chown=acait:acait requirements.txt /app/
-RUN . /app/bin/activate && pip install -r requirements.txt
-
-RUN . /app/bin/activate && pip install mysqlclient
-
 ADD --chown=acait:acait . /app/
-ADD --chown=acait:acait docker/ project/
+ADD --chown=acait:acait docker/ /app/project/
+
 ADD --chown=acait:acait docker/app_start.sh /scripts
 RUN chmod u+x /scripts/app_start.sh
 
-RUN . /app/bin/activate && pip install nodeenv && nodeenv -p &&\
+RUN /app/bin/pip install -r requirements.txt
+RUN /app/bin/pip install mysqlclient
+
+RUN . /app/bin/activate && pip install nodeenv && nodeenv --node=17.9.0 -p &&\
     npm install -g npm && ./bin/npm install less@3.13.1 -g
 
 RUN . /app/bin/activate && python manage.py collectstatic --noinput &&\
