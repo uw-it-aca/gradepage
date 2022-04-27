@@ -25,14 +25,14 @@
   <div class="alert alert-danger gp-upload-error" role="alert">
     {{#if file_limit_exceeded}}
     <i class="fas fa-exclamation-circle"></i> <strong>Allowable file size exceeded (1 Mb).</strong><br>
-    <small>on file <em>{{file_name}}</em></small>
+    <small>file: <em>{{file_name}}</em></small>
     <ul>
       <li>Select a different file for import or enter grades manually.</li>
     </ul>
     {{else}}
       {{#if missing_header_grade}}
       <i class="fas fa-exclamation-circle"></i> <strong>Missing column heading: "ImportGrade"</strong><br>
-      <small>on file <em>{{file_name}}</em></small>
+      <small>file: <em>{{file_name}}</em></small>
       <ul>
         <li>Confirm that the .csv file contains a column with the heading "ImportGrade" and that the column contains the grades you want to submit.</li>
         <li>Select a different file for import.</li>
@@ -41,14 +41,14 @@
       {{else}}
         {{#if missing_header_student}}
         <i class="fas fa-exclamation-circle"></i> <strong>Missing column heading: "SIS User ID" OR "StudentNo"</strong><br>
-        <small>on file <em>{{file_name}}</em></small>
+        <small>file: <em>{{file_name}}</em></small>
         <ul>
           <li>Confirm that the .csv file contains a column with the heading "SIS User ID" or "StudentNo".</li>
           <li>Select a different file for import.</li>
       </ul>
         {{else}}
           <i class="fas fa-exclamation-circle"></i> <strong>{{error}}</strong><br>
-          <small>on file <em>{{file_name}}</em></small>
+          <small>file: <em>{{file_name}}</em></small>
           <ul>
             <li>Select a different file for import.</li>
           </ul>
