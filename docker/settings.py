@@ -72,7 +72,7 @@ else:
     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
         '/gcs/credentials.json')
 
-ALLOW_GRADE_SUBMISSION_OVERRIDE = (os.getenv('ENV', 'localdev') != 'prod')
+ALLOW_GRADE_SUBMISSION_OVERRIDE = False  # (os.getenv('ENV', 'localdev') != 'prod')
 USERSERVICE_VALIDATION_MODULE = 'course_grader.dao.person.is_netid'
 USERSERVICE_OVERRIDE_AUTH_MODULE = 'course_grader.views.support.can_override_user'
 RESTCLIENTS_ADMIN_AUTH_MODULE = 'course_grader.views.support.can_proxy_restclient'
