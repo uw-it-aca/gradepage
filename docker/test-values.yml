@@ -60,9 +60,9 @@ cronjob:
 
 certs:
   mounted: true
-  certPath: /certs/test-client.gradepage.uw.edu-uwca.cert
-  keyPath: /certs/test-client.gradepage.uw.edu-uwca.key
-  secretName: test.gradepage.uw.edu-uwca-certs
+  certPath: /certs/test-client.gradepage.uw.edu-ic.cert
+  keyPath: /certs/test-client.gradepage.uw.edu-ic.key
+  secretName: test.gradepage.uw.edu-ic-certs
 
 environmentVariables:
   - name: ENV
@@ -138,18 +138,15 @@ externalSecrets:
       data:
         - name: credentials.json
           property: credentials.json
-    - name: test.gradepage.uw.edu-uwca-certs
-      externalKey: gradepage/test/uwca-certs
-      data:
-        - name: test-client.gradepage.uw.edu-uwca.cert
-          property: test-client.gradepage.uw.edu-uwca.cert
-        - name: test-client.gradepage.uw.edu-uwca.key
-          property: test-client.gradepage.uw.edu-uwca.key
     - name: test.gradepage.uw.edu-ic-certs
       externalKey: gradepage/test/ic-certs
       data:
         - name: test.gradepage.uw.edu-ic.cert
           property: test.gradepage.uw.edu-ic.cert
+        - name: test-client.gradepage.uw.edu-ic.cert
+          property: test-client.gradepage.uw.edu-ic.cert
+        - name: test-client.gradepage.uw.edu-ic.key
+          property: test-client.gradepage.uw.edu-ic.key
     - name: test.gradepage.uw.edu-uw-idp-cert
       externalKey: idp-cert
       data:
