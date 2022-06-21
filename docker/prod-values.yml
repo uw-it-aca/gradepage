@@ -51,9 +51,6 @@ database:
 
 repo: gradepage
 instance: prod
-image:
-  repository: gcr.io/uwit-mci-axdd/gradepage
-  tag: IMAGE_TAG
 
 memcached:
   enabled: true
@@ -121,14 +118,14 @@ externalSecrets:
   enabled: true
   secrets:
     - name: gradepage.uw.edu-secrets
-      externalKey: axdd/kv/data/gradepage/prod/secrets
+      externalKey: gradepage/prod/secrets
       data:
         - name: django-secret
           property: django-secret
         - name: storage-bucket-name
           property: storage-bucket-name
     - name: gradepage.uw.edu-shared-secrets
-      externalKey: axdd/kv/data/gradepage/shared/secrets
+      externalKey: gradepage/shared/secrets
       data:
         - name: canvas-account-id
           property: canvas-account-id
@@ -147,31 +144,31 @@ externalSecrets:
         - name: storage-project-id
           property: storage-project-id
     - name: gradepage.uw.edu-sql-secrets
-      externalKey: axdd/kv/data/gradepage/shared/sql-secrets
+      externalKey: gradepage/shared/sql-secrets
       data:
         - name: username
           property: username
         - name: password
           property: password
     - name: gradepage.uw.edu-gcs-credentials
-      externalKey: axdd/kv/data/gradepage/shared/gcs-credentials
+      externalKey: gradepage/shared/gcs-credentials
       data:
         - name: credentials.json
           property: credentials.json
     - name: gradepage.uw.edu-uwca-certs
-      externalKey: axdd/kv/data/gradepage/prod/uwca-certs
+      externalKey: gradepage/prod/uwca-certs
       data:
         - name: client.gradepage.uw.edu-uwca.cert
           property: client.gradepage.uw.edu-uwca.cert
         - name: client.gradepage.uw.edu-uwca.key
           property: client.gradepage.uw.edu-uwca.key
     - name: gradepage.uw.edu-ic-certs
-      externalKey: axdd/kv/data/gradepage/prod/ic-certs
+      externalKey: gradepage/prod/ic-certs
       data:
         - name: gradepage.uw.edu-ic.cert
           property: gradepage.uw.edu-ic.cert
     - name: gradepage.uw.edu-uw-idp-cert
-      externalKey: axdd/kv/data/idp-cert
+      externalKey: idp-cert
       data:
         - name: uw-idp-cert
           property: cert
