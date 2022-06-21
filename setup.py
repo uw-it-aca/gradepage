@@ -21,7 +21,7 @@ setup(
     packages=['course_grader'],
     include_package_data=True,
     install_requires = [
-        'Django~=2.2',
+        'Django~=3.2',
         'django-compressor',
         'django-user-agents',
         'django-userservice~=3.1',
@@ -37,7 +37,7 @@ setup(
         'UW-Grade-Conversion-Calculator~=1.2',
         'Django-Safe-EmailBackend~=1.0',
         'Django-SupportTools~=3.5',
-        'Django-Persistent-Message',
+        'Django-Persistent-Message~=1.0',
         'UW-Django-SAML2~=1.5',
         'chardet~=4.0',
     ],
@@ -54,6 +54,6 @@ setup(
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.8',
     ],
 )
