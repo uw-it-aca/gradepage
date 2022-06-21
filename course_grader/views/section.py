@@ -6,7 +6,6 @@ from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
-from course_grader.models import GradeImport
 from course_grader.dao.section import (
     section_from_param, section_display_name, section_url_token)
 from course_grader.dao.person import person_from_user
@@ -18,7 +17,6 @@ from course_grader.views import (
     url_for_upload)
 from course_grader.exceptions import InvalidSection, MissingInstructorParam
 from restclients_core.exceptions import DataFailureException
-from uw_catalyst.gradebook import valid_gradebook_id
 from logging import getLogger
 
 logger = getLogger(__name__)
@@ -87,11 +85,5 @@ class SectionView(TemplateView):
         context["import_url"] = url_for_import(url_token)
         context["export_url"] = url_for_export(url_token)
         context["upload_url"] = url_for_upload(url_token)
-
-        if is_grading_period_open(section):
-            import_id = kwargs.get("import_id")
-            if valid_gradebook_id(import_id):
-                context["auto_import_id"] = import_id
-                context["auto_import_src"] = GradeImport.CATALYST_SOURCE
 
         return context

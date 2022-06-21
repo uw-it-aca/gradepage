@@ -282,8 +282,9 @@ class GradeRoster(GradeFormHandler):
 
         if grading_period_open:
             for choice in GradeImport.SOURCE_CHOICES:
-                data["import_choices"].append({"value": choice[0],
-                                               "label": choice[1]})
+                if choice[0] != GradeImport.CATALYST_SOURCE:
+                    data["import_choices"].append({"value": choice[0],
+                                                   "label": choice[1]})
 
         grade_lookup = {}
         for item in sorted_students(self.graderoster.items):
