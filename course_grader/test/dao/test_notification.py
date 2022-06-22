@@ -13,7 +13,8 @@ from course_grader.dao.notification import *
 @fdao_sws_override
 @fdao_pws_override
 @override_settings(TIME_ZONE='UTC',
-                   CURRENT_DATETIME_OVERRIDE="2013-08-27 17:01:00")
+                   CURRENT_DATETIME_OVERRIDE="2013-08-27 17:01:00",
+                   COG_FORM_URL="https://test.edu/cog.php")
 class NotificationDAOFunctionsTest(TestCase):
     def setUp(self):
         pws = PWS()
@@ -51,8 +52,8 @@ class NotificationDAOFunctionsTest(TestCase):
             'submission for your records, go to: https://localhost/section/'
             '2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE\n\n'
             'No changes can be made through GradePage.  To change submitted '
-            'grades use the Change of Grade form: https://depts.washington.'
-            'edu/registra/staffFaculty/gradeChange/\n\n\n'))
+            'grades use the Change of Grade form: https://test.edu/cog.php'
+            '\n\n\n'))
         self.assertEquals(html, (
             '\n<p>Bill Teacher submitted grades for four students to the '
             'Registrar on August 27 at  5:01 PM UTC.  These grades have '
@@ -61,9 +62,8 @@ class NotificationDAOFunctionsTest(TestCase):
             '2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE">View '
             'or print a copy of this grade submission for your records.</a>'
             '\n\n<p>No changes can be made through GradePage.  To change '
-            'submitted grades, use the <a href="https://depts.washington.'
-            'edu/registra/staffFaculty/gradeChange/">Change of Grade form'
-            '</a>.</p>\n\n\n'))
+            'submitted grades, use the <a href="https://test.edu/cog.php">'
+            'Change of Grade form</a>.</p>\n\n\n'))
 
     def test_create_message_failure(self):
         for item in self.graderoster.items:
@@ -78,8 +78,8 @@ class NotificationDAOFunctionsTest(TestCase):
             'students to the Registrar on August 27 at  5:01 PM UTC.  There '
             'was a problem processing these grades and they have not been '
             'submitted.\n\nNo changes can be made through GradePage.  To '
-            'change submitted grades, use the Change of Grade form: https://'
-            'depts.washington.edu/registra/staffFaculty/gradeChange/\n\n\n'))
+            'change submitted grades, use the Change of Grade form: '
+            'https://test.edu/cog.php\n\n\n'))
         self.assertEquals(html, (
             '\n<p>Bill Teacher unsuccessfully submitted grades for four '
             'students to the Registrar on August 27 at  5:01 PM UTC.  There '
@@ -88,8 +88,8 @@ class NotificationDAOFunctionsTest(TestCase):
             'localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE000'
             '4AC494FFE">grade submission receipt</a>.</p>\n\n<p>No changes '
             'can be made through GradePage.  To change submitted grades, '
-            'use the <a href="https://depts.washington.edu/registra/staff'
-            'Faculty/gradeChange/">Change of Grade form</a>.</p>\n\n\n'))
+            'use the <a href="https://test.edu/cog.php">'
+            'Change of Grade form</a>.</p>\n\n\n'))
 
     def test_create_message_partial(self):
         for item in self.graderoster.items:
@@ -109,8 +109,7 @@ class NotificationDAOFunctionsTest(TestCase):
             'receipt: https://localhost/section/2013-summer-CSS-161-A-FBB38FE'
             '46A7C11D5A4AE0004AC494FFE\n\nNo changes can be made through '
             'GradePage.  To change submitted grades, use the Change of Grade '
-            'form: https://depts.washington.edu/registra/staffFaculty/grade'
-            'Change/\n\n\n'))
+            'form: https://test.edu/cog.php\n\n\n'))
         self.assertEquals(html, (
             '\n<p>Bill Teacher submitted grades for four students to the '
             'Registrar on August 27 at  5:01 PM UTC.  These grades have '
@@ -120,6 +119,5 @@ class NotificationDAOFunctionsTest(TestCase):
             'href="https://localhost/section/2013-summer-CSS-161-A-FBB38FE4'
             '6A7C11D5A4AE0004AC494FFE">grade submission receipt</a>.</p>\n\n'
             '<p>No changes can be made through GradePage.  To change '
-            'submitted grades, use the <a href="https://depts.washington.edu/'
-            'registra/staffFaculty/gradeChange/">Change of Grade form</a>.'
-            '</p>\n\n\n'))
+            'submitted grades, use the <a href="https://test.edu/cog.php">'
+            'Change of Grade form</a>.</p>\n\n\n'))
