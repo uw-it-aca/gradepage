@@ -99,9 +99,6 @@ environmentVariables:
   - name: CANVAS_TIMEOUT
     value: "10"
 
-  - name: CATALYST_ENV
-    value: PROD
-
   - name: AUTH
     value: SAML
   - name: SAML_ENTITY_ID
