@@ -1,6 +1,7 @@
 # Copyright 2022 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
+from django.conf import settings
 from django.template.context_processors import csrf
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
@@ -282,8 +283,9 @@ class GradeRoster(GradeFormHandler):
 
         if grading_period_open:
             for choice in GradeImport.SOURCE_CHOICES:
-                data["import_choices"].append({"value": choice[0],
-                                               "label": choice[1]})
+                if choice[0] != GradeImport.CATALYST_SOURCE:
+                    data["import_choices"].append({"value": choice[0],
+                                                   "label": choice[1]})
 
         grade_lookup = {}
         for item in sorted_students(self.graderoster.items):
@@ -432,6 +434,7 @@ class GradeRosterExport(GradeRoster):
             "curriculum_abbr": self.section.curriculum_abbr,
             "course_number": self.section.course_number,
             "section_id": self.section.section_id,
+            "cog_form_url": getattr(settings, "COG_FORM_URL", ""),
         })
         response = self.csv_response(
             content=csv_header, filename=self.section.section_label())

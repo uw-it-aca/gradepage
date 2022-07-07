@@ -5,7 +5,7 @@
 
 <p>However, {% if failure_count == 1 %}one grade{% else %}{{ failure_count|apnumber }} grades{% endif %} failed to be submitted successfully.  For more information, see the <a href="{{ section_url }}">grade submission receipt</a>.</p>
 
-<p>No changes can be made through GradePage.  To change submitted grades, use the <a href="https://depts.washington.edu/registra/staffFaculty/gradeChange/">Change of Grade form</a>.</p>
+<p>No changes can be made through GradePage.  To change submitted grades, use the <a href="{{ cog_form_url }}">Change of Grade form</a>.</p>
 
 {% if grading_window_open %}
 <p>To submit more grades for a different class, return to <a href="{{ gradepage_url }}">GradePage</a>.</p>

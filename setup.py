@@ -31,7 +31,6 @@ setup(
         'UW-RestClients-SWS~=2.3',
         'UW-RestClients-PWS~=2.1',
         'UW-RestClients-Canvas>=1.2.3',
-        'UW-RestClients-Catalyst~=1.0',
         'UW-RestClients-Graderoster~=1.1',
         'UW-RestClients-Django-Utils~=2.3',
         'UW-Grade-Conversion-Calculator~=1.2',

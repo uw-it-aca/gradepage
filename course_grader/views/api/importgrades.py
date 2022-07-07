@@ -13,7 +13,6 @@ from course_grader.dao.section import (
     section_from_param, is_grader_for_section, section_display_name,
     section_url_token)
 from course_grader.dao.graderoster import graderoster_for_section
-from course_grader.dao.catalyst import valid_gradebook_id
 from course_grader.views.api import GradeFormHandler, sorted_students
 from course_grader.views import clean_section_id
 from course_grader.exceptions import *
@@ -157,7 +156,6 @@ class ImportGrades(GradeFormHandler):
             data = json.loads(request.body)
             source = data.get("source", None)
             source_id = data.get("source_id", None)
-            source_id = source_id if valid_gradebook_id(source_id) else None
         except Exception as ex:
             logger.error("POST import failed for {}: {}".format(
                 self.section.section_label(), ex))

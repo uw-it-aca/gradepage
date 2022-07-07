@@ -2,7 +2,7 @@
 Student Grade Change List,,,
 INSTRUCTIONS:,,,
 Complete this spreadsheet and upload the file using the UW Registrar's Online Change of Grade Request Form.,,,
-https://apps.registrar.washington.edu/grade-change/pages/change.php,,,
+{{ cog_form_url }},,,
 DO NOT EMAIL this spreadsheet with student grade information.,,,
 ,,,
 INSTRUCTOR NAME AND EMAIL:,,,

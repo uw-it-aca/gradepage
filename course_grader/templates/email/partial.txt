@@ -4,7 +4,7 @@
 
 However, {% if failure_count == 1 %}one grade{% else %}{{ failure_count|apnumber }} grades{% endif %} failed to be submitted successfully.  For more information, see the grade submission receipt: {{ section_url }}
 
-No changes can be made through GradePage.  To change submitted grades, use the Change of Grade form: https://depts.washington.edu/registra/staffFaculty/gradeChange/
+No changes can be made through GradePage.  To change submitted grades, use the Change of Grade form: {{ cog_form_url }}
 
 {% if grading_window_open %}
 To submit more grades for a different class, return to GradePage: {{ gradepage_url }}
