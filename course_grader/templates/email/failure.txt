@@ -2,7 +2,7 @@
 {% if submitted_count == 1 %}
 {{ submitted_by }} unsuccessfully submitted a grade for one student to the Registrar on {{ submitted_date }}.  There was a problem processing this grade and it has not been submitted.{% else %}{{ submitted_by }} unsuccessfully submitted grades for {{ submitted_count|apnumber }} students to the Registrar on {{ submitted_date }}.  There was a problem processing these grades and they have not been submitted.{% endif %}
 
-No changes can be made through GradePage.  To change submitted grades, use the Change of Grade form: https://depts.washington.edu/registra/staffFaculty/gradeChange/
+No changes can be made through GradePage.  To change submitted grades, use the Change of Grade form: {{ cog_form_url }}
 
 {% if grading_window_open %}
 To submit more grades for a different class, return to GradePage: {{ gradepage_url }}

@@ -61,14 +61,6 @@ class GradeTest(TestCase):
 class GradeImportTest(TestCase):
     @mock.patch('course_grader.dao.canvas.grading_scheme_for_course')
     def test_grades_for_section(self, mock_grading_scheme):
-        section = get_section_by_label('2013,summer,CSS,161/A')
-        user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
-
-        gi = GradeImport(source=GradeImport.CATALYST_SOURCE)
-        gi.grades_for_section(section, user)
-        data = gi.json_data()
-        self.assertEqual(len(data['imported_grades']), 3)
-
         section = get_section_by_label('2013,spring,A B&C,101/A')
         user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
 

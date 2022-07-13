@@ -259,13 +259,12 @@ class GradeImport(models.Model):
 
     SOURCE_CHOICES = (
         (CANVAS_SOURCE, "Canvas Gradebook"),
-        (CATALYST_SOURCE, "Catalyst GradeBook"),
+        (CATALYST_SOURCE, "Catalyst Gradebook"),
         (CSV_SOURCE, "CSV File"),
     )
 
     _IMPORT_CLASSES = {
         CANVAS_SOURCE: "course_grader.dao.canvas.GradeImportCanvas",
-        CATALYST_SOURCE: "course_grader.dao.catalyst.GradeImportCatalyst",
         CSV_SOURCE: "course_grader.dao.csv.GradeImportCSV",
     }
 

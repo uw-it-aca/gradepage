@@ -100,6 +100,8 @@ GRADEPAGE_SUPPORT_EMAIL = os.getenv('GRADEPAGE_SUPPORT_EMAIL', '')
 REGISTRAR_SUPPORT_EMAIL = os.getenv('REGISTRAR_SUPPORT_EMAIL', '')
 REGISTRAR_SUPPORT_PHONE = os.getenv('REGISTRAR_SUPPORT_PHONE', '')
 
+COG_FORM_URL = 'https://apps.registrar.washington.edu/grade-change/pages/change.php'
+
 SUPPORTTOOLS_PARENT_APP = 'GradePage'
 SUPPORTTOOLS_PARENT_APP_URL = '/'
 
