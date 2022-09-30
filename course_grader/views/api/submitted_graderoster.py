@@ -8,11 +8,11 @@ from django.utils.decorators import method_decorator
 from uw_saml.decorators import group_required
 from course_grader.views.rest_dispatch import RESTDispatch
 from course_grader.models import (
-    SubmittedGradeRoster as SubmittedGradeRosterModel)
+    GradeImport, SubmittedGradeRoster as SubmittedGradeRosterModel)
 from course_grader.dao.person import person_from_regid, person_display_name
 from course_grader.dao.section import section_from_label
 from course_grader.dao.term import term_from_param
-from uw_sws_graderoster.models import GradeRoster, GradeImport
+from uw_sws_graderoster.models import GradeRoster
 from lxml import etree
 from logging import getLogger
 import csv
