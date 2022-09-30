@@ -237,8 +237,11 @@ class GradeImportManager(models.Manager):
 
     def get_import_sources_by_term(self, term):
         return super(GradeImportManager, self).get_queryset().filter(
-            term_id=term.term_label()
-        ).order_by('imported_date').values('imported_date', 'source')
+            term_id=term.term_label(),
+            accepted_date__isnull=False,
+            status_code='200'
+        ).order_by('imported_date').values(
+            'section_id', 'imported_date', 'source')
 
     def clear_prior_imports_for_section(self, grade_import):
         super(GradeImportManager, self).get_queryset().filter(
