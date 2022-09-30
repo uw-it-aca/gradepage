@@ -12,7 +12,7 @@ from course_grader.models import (
 from course_grader.dao.person import person_from_regid, person_display_name
 from course_grader.dao.section import section_from_label
 from course_grader.dao.term import term_from_param
-from uw_sws_graderoster.models import GradeRoster
+from uw_sws_graderoster.models import GradeRoster, GradeImport
 from lxml import etree
 from logging import getLogger
 import csv
@@ -34,16 +34,23 @@ class SubmissionsByTerm(RESTDispatch):
 
         graderosters = SubmittedGradeRosterModel.objects.get_status_by_term(
             selected_term)
+        grade_imports = GradeImport.objects.get_import_sources_by_term(
+            selected_term)
+
+        section_import = {}
+        for grade_import in grade_imports:
+            section_import[grade_import["section_id"]] = grade_import["source"]
 
         response = self.csv_response(filename=term_id)
 
         csv.register_dialect("unix_newline", lineterminator="\n")
         writer = csv.writer(response, dialect="unix_newline")
         writer.writerow([
-            "Section",
-            "Secondary section",
-            "Submitter",
-            "Submission datetime"
+            "section_id",
+            "secondary_section_id",
+            "submitted_by",
+            "submitted_date",
+            "grade_source",
         ])
 
         for graderoster in graderosters:
@@ -52,6 +59,7 @@ class SubmissionsByTerm(RESTDispatch):
                 graderoster["secondary_section_id"],
                 graderoster["submitted_by"],
                 graderoster["submitted_date"],
+                section_import.get(graderoster["section_id"]),
             ])
 
         return response
