@@ -16,6 +16,7 @@ from uw_sws_graderoster.models import GradeRoster
 from lxml import etree
 from logging import getLogger
 import csv
+import re
 
 logger = getLogger(__name__)
 
@@ -54,12 +55,16 @@ class SubmissionsByTerm(RESTDispatch):
         ])
 
         for graderoster in graderosters:
+            import_section_id = "-".join([
+                re.sub(r"[,/]", "-", graderoster["section_id"]),
+                graderoster["submitted_by"]])
+
             writer.writerow([
                 graderoster["section_id"],
                 graderoster["secondary_section_id"],
                 graderoster["submitted_by"],
                 graderoster["submitted_date"],
-                section_import.get(graderoster["section_id"]),
+                section_import.get(import_section_id),
             ])
 
         return response
