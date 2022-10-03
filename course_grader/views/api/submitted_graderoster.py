@@ -38,9 +38,12 @@ class SubmissionsByTerm(RESTDispatch):
         grade_imports = GradeImport.objects.get_import_sources_by_term(
             selected_term)
 
-        section_import = {}
+        import_sources = {}
+        import_counts = {}
         for grade_import in grade_imports:
-            section_import[grade_import["section_id"]] = grade_import["source"]
+            count = import_counts.get(grade_import["section_id"], 0)
+            import_counts[grade_import["section_id"]] = count + 1
+            import_sources[grade_import["section_id"]] = grade_import["source"]
 
         response = self.csv_response(filename=term_id)
 
@@ -51,7 +54,8 @@ class SubmissionsByTerm(RESTDispatch):
             "secondary_section_id",
             "submitted_by",
             "submitted_date",
-            "grade_source",
+            "total_imports",
+            "import_source",
         ])
 
         for graderoster in graderosters:
@@ -64,7 +68,8 @@ class SubmissionsByTerm(RESTDispatch):
                 graderoster["secondary_section_id"],
                 graderoster["submitted_by"],
                 graderoster["submitted_date"],
-                section_import.get(import_section_id),
+                import_counts.get(import_section_id, 0),
+                import_sources.get(import_section_id),
             ])
 
         return response
