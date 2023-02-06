@@ -37,7 +37,7 @@ setup(
         'Django-Safe-EmailBackend~=1.0',
         'Django-SupportTools~=3.5',
         'Django-Persistent-Message~=1.1',
-        'UW-Django-SAML2~=1.5',
+        'UW-Django-SAML2~=1.7',
         'chardet~=4.0',
     ],
     license='Apache License, Version 2.0',
