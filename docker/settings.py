@@ -118,9 +118,6 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'filters': {
-        'info_only': {
-            '()': 'course_grader.log.InfoFilter'
-        },
         'add_user': {
             '()': 'course_grader.log.UserFilter'
         },
@@ -156,19 +153,6 @@ LOGGING = {
             'filters': ['add_user', 'stderr_stream'],
             'formatter': 'course_grader',
         },
-        'course_grader': {
-            'filters': ['info_only', 'add_user', 'stdout_stream'],
-            'formatter': 'course_grader',
-            'class': 'logging.StreamHandler',
-            'stream': sys.stdout,
-        },
-        'course_grader_errors': {
-            'level': 'ERROR',
-            'filters': ['add_user', 'stderr_stream'],
-            'formatter': 'course_grader',
-            'class': 'logging.StreamHandler',
-            'stream': sys.stderr,
-        },
         'restclients_timing': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
@@ -186,14 +170,14 @@ LOGGING = {
             'propagate': False,
         },
         'django.request': {
-            'handlers': ['stderr'],
+            'handlers': ['stdout', 'stderr'],
             'level': 'ERROR',
             'propagate': True,
         },
         'course_grader': {
-            'handlers': ['course_grader', 'course_grader_errors'],
+            'handlers': ['stdout', 'stderr'],
             'level': 'INFO',
-            'propagate': True,
+            'propagate': False,
         },
         'restclients_core': {
             'handlers': ['restclients_timing'],
