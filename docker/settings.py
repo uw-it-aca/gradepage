@@ -154,7 +154,6 @@ LOGGING = {
             'formatter': 'course_grader',
         },
         'restclients_timing': {
-            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'stream': sys.stdout,
             'filters': ['stdout_stream'],
@@ -170,7 +169,7 @@ LOGGING = {
             'propagate': False,
         },
         'django.request': {
-            'handlers': ['stdout', 'stderr'],
+            'handlers': ['stderr'],
             'level': 'ERROR',
             'propagate': True,
         },

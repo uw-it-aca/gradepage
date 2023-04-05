@@ -19,10 +19,3 @@ class UserFilter(Filter):
             record.actas = "-"
 
         return True
-
-
-class InfoFilter(Filter):
-    """ Limits log level to INFO only. """
-
-    def filter(self, record):
-        return record.levelname == "INFO"
