@@ -173,11 +173,6 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
-        'django': {
-            'handlers': ['stdout', 'stderr'],
-            'level': 'INFO',
-            'propagate': True,
-        },
         'course_grader': {
             'handlers': ['stdout', 'stderr'],
             'level': 'INFO',
