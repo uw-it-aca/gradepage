@@ -15,7 +15,7 @@ class UserFilter(Filter):
             record.user = user_service.get_original_user() or "-"
             record.actas = (user_service.get_user() or "-").lower()
         except Exception as ex:
-            record.user = "-"
+            record.user = str(ex)
             record.actas = "-"
 
         return True
