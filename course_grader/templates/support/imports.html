@@ -97,7 +97,7 @@
         chart_data: [{% for data in chart_data %}[Date.parse('{{ data.0 }}'), {{ data.1 }}]{% if not forloop.last %},{% endif %}{% endfor %}]
     };
 </script>
-<script src="//code.highcharts.com/highcharts.js"></script>
+<script src="//code.highcharts.com/10.3/highcharts.js"></script>
 <script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
 <script src="{% static "course_grader/js/search.js" %}"></script>
 {% endblock extra_js %}
