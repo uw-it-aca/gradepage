@@ -12,6 +12,18 @@ from logging import getLogger
 logger = getLogger(__name__)
 
 
+def format_logged_grade(item):
+    logged_grade = None
+    if not (item.is_auditor or item.date_withdrawn):
+        logged_grade = "X" if item.no_grade_now else str(item.grade)
+        if item.has_incomplete:
+            logged_grade = "I," + logged_grade
+        if item.has_writing_credit:
+            logged_grade += ",W"
+
+    return logged_grade
+
+
 def submit_grades(model):
     graderoster = GradeRoster.from_xhtml(
         etree.fromstring(model.document.strip()),
@@ -45,7 +57,7 @@ def submit_grades(model):
             graderoster.items[idx].grade_submitter_source = (
                 item.grade_submitter_source)
 
-            logged_grade = logged_grade(graderoster.items[idx])
+            logged_grade = format_logged_grade(graderoster.items[idx])
             if logged_grade is not None:
                 logger.info((
                     "Grade submitted, Student: {student}, Section: "
@@ -62,15 +74,3 @@ def submit_grades(model):
             logger.error("Error logging grade: {}".format(ex))
 
     return graderoster
-
-
-def logged_grade(item):
-    logged_grade = None
-    if not (item.is_auditor or item.date_withdrawn):
-        logged_grade = "X" if item.no_grade_now else str(item.grade)
-        if item.has_incomplete:
-            logged_grade = "I," + logged_grade
-        if item.has_writing_credit:
-            logged_grade += ",W"
-
-    return logged_grade
