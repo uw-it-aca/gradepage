@@ -43,10 +43,10 @@ externalService:
   enabled: true
   name: gradepage-db-service
   type: ClusterIP
-  serviceAddress: 172.18.0.16
-  servicePort: 3306
+  serviceAddress: 172.18.1.70
+  servicePort: 5432
 database:
-  engine: mysql
+  engine: postgres
   name: gradepage_prod
   hostname: gradepage-db-service
   secretName: gradepage.uw.edu-sql-secrets
