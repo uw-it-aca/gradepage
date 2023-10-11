@@ -71,6 +71,14 @@ class SubmittedGradeRoster(models.Model):
 
     objects = SubmittedGradeRosterManager()
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["secondary_section_id"]),
+            models.Index(fields=["section_id"]),
+            models.Index(fields=["term_id"]),
+            models.Index(fields=["accepted_date"]),
+        ]
+
     def submission_id(self):
         if self.secondary_section_id is not None:
             return self.secondary_section_id.split("/")[-1]
@@ -151,6 +159,9 @@ class Grade(models.Model):
     class Meta:
         unique_together = ("section_id", "student_reg_id", "duplicate_code",
                            "modified_by")
+        indexes = [
+            models.Index(fields=["section_id", "modified_by"]),
+        ]
 
 
 class ImportConversion(models.Model):
@@ -287,6 +298,11 @@ class GradeImport(models.Model):
     accepted_date = models.DateTimeField(null=True)
 
     objects = GradeImportManager()
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["term_id"]),
+        ]
 
     def grades_for_section(self, section, instructor, fileobj=None):
         module = self._IMPORT_CLASSES[self.source]
