@@ -87,20 +87,7 @@ USERSERVICE_OVERRIDE_AUTH_MODULE = 'course_grader.views.support.can_override_use
 RESTCLIENTS_ADMIN_AUTH_MODULE = 'course_grader.views.support.can_proxy_restclient'
 PERSISTENT_MESSAGE_AUTH_MODULE = 'course_grader.views.support.can_manage_persistent_messages'
 
-EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_PORT = 587
-EMAIL_TIMEOUT = 15
-EMAIL_USE_TLS = True
-EMAIL_SSL_CERTFILE = os.getenv('CERT_PATH', '')
-EMAIL_SSL_KEYFILE = os.getenv('KEY_PATH', '')
-
 EMAIL_NOREPLY_ADDRESS = os.getenv('EMAIL_NOREPLY_ADDRESS')
-if os.getenv('ENV', 'localdev') == 'prod':
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-else:
-    EMAIL_BACKEND = 'saferecipient.EmailBackend'
-    SAFE_EMAIL_RECIPIENT = os.getenv('SAFE_EMAIL_RECIPIENT')
-
 GRADEPAGE_HOST = 'https://' + os.getenv('CLUSTER_CNAME', 'localhost')
 SUBMISSION_DEADLINE_WARNING_HOURS = 41
 GRADE_RETENTION_YEARS = 5
