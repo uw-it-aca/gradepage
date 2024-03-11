@@ -15,20 +15,20 @@ class TermDAOFunctionsTest(TestCase):
         term = term_from_param('2013-autumn')
         with self.settings(SUBMISSION_DEADLINE_WARNING_HOURS=41,
                            CURRENT_DATETIME_OVERRIDE='2013-10-15 00:00:00'):
-            self.assertEquals(submission_deadline_warning(term), False)
+            self.assertEqual(submission_deadline_warning(term), False)
 
         with self.settings(SUBMISSION_DEADLINE_WARNING_HOURS=41,
                            CURRENT_DATETIME_OVERRIDE='2013-12-16 00:00:00'):
-            self.assertEquals(submission_deadline_warning(term), True)
+            self.assertEqual(submission_deadline_warning(term), True)
 
     def test_term_from_param(self):
         term = term_from_param('2013-autumn')
-        self.assertEquals(term.year, 2013)
-        self.assertEquals(term.quarter, 'autumn')
+        self.assertEqual(term.year, 2013)
+        self.assertEqual(term.quarter, 'autumn')
 
         term = term_from_param('2013-AUTUMN')
-        self.assertEquals(term.year, 2013)
-        self.assertEquals(term.quarter, 'autumn')
+        self.assertEqual(term.year, 2013)
+        self.assertEqual(term.quarter, 'autumn')
 
         self.assertRaises(InvalidTerm, term_from_param, '')
         self.assertRaises(InvalidTerm, term_from_param, '2013')
@@ -39,39 +39,39 @@ class TermDAOFunctionsTest(TestCase):
     def test_current_term(self):
         with self.settings(CURRENT_DATETIME_OVERRIDE='2013-10-15 00:00:00'):
             term = current_term()
-            self.assertEquals(term.year, 2013)
-            self.assertEquals(term.quarter, 'autumn')
+            self.assertEqual(term.year, 2013)
+            self.assertEqual(term.quarter, 'autumn')
 
     def test_next_gradable_term(self):
         with self.settings(CURRENT_DATETIME_OVERRIDE='2013-10-15 00:00:00'):
             term = next_gradable_term()
-            self.assertEquals(term.year, 2013)
-            self.assertEquals(term.quarter, 'autumn')
+            self.assertEqual(term.year, 2013)
+            self.assertEqual(term.quarter, 'autumn')
 
         with self.settings(CURRENT_DATETIME_OVERRIDE='2013-12-20 00:00:00'):
             term = next_gradable_term()
-            self.assertEquals(term.year, 2014)
-            self.assertEquals(term.quarter, 'winter')
+            self.assertEqual(term.year, 2014)
+            self.assertEqual(term.quarter, 'winter')
 
     def test_previous_gradable_term(self):
         with self.settings(CURRENT_DATETIME_OVERRIDE='2013-10-15 00:00:00'):
             term = previous_gradable_term()
-            self.assertEquals(term.year, 2013)
-            self.assertEquals(term.quarter, 'summer')
+            self.assertEqual(term.year, 2013)
+            self.assertEqual(term.quarter, 'summer')
 
         with self.settings(CURRENT_DATETIME_OVERRIDE='2013-12-20 00:00:00'):
             term = previous_gradable_term()
-            self.assertEquals(term.year, 2013)
-            self.assertEquals(term.quarter, 'autumn')
+            self.assertEqual(term.year, 2013)
+            self.assertEqual(term.quarter, 'autumn')
 
     def test_all_viewable_terms(self):
         with self.settings(PAST_TERMS_VIEWABLE=2,
                            CURRENT_DATETIME_OVERRIDE='2013-10-15 00:00:00'):
             terms = all_viewable_terms()
-            self.assertEquals(len(terms), 3)
-            self.assertEquals(terms[0].quarter, 'autumn')
-            self.assertEquals(terms[1].quarter, 'summer')
-            self.assertEquals(terms[2].quarter, 'spring')
+            self.assertEqual(len(terms), 3)
+            self.assertEqual(terms[0].quarter, 'autumn')
+            self.assertEqual(terms[1].quarter, 'summer')
+            self.assertEqual(terms[2].quarter, 'spring')
 
     def test_is_grading_period_open(self):
         section = get_section_by_label('2013,winter,COM,201/A')

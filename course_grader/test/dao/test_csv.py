@@ -35,32 +35,32 @@ class CVSDAOFunctionsTest(TestCase):
     def test_validate(self):
         grade_import = GradeImportCSV()
 
-        fileobj = open(os.path.join(self.resource_path, "test1.csv"), "rb")
-        r = grade_import.validate(fileobj)
-        self.assertEqual(grade_import.has_header, True)
-        self.assertEqual(grade_import.dialect.delimiter, ",")
+        with open(os.path.join(self.resource_path, "test1.csv"), "rb") as fh:
+            r = grade_import.validate(fh)
+            self.assertEqual(grade_import.has_header, True)
+            self.assertEqual(grade_import.dialect.delimiter, ",")
 
-        fileobj = open(
-            os.path.join(self.resource_path, "missing_header.csv"), "rb")
-        self.assertRaisesRegex(InvalidCSV, "Missing header: grade$",
-                               grade_import.validate, fileobj)
+        with open(os.path.join(
+                self.resource_path, "missing_header.csv"), "rb") as fh:
+            self.assertRaisesRegex(InvalidCSV, "Missing header: grade$",
+                                   grade_import.validate, fh)
 
-        fileobj = open(
-            os.path.join(self.resource_path, "missing_grade.csv"), "rb")
-        self.assertRaisesRegex(InvalidCSV, "Missing header: grade$",
-                               grade_import.validate, fileobj)
+        with open(os.path.join(
+                self.resource_path, "missing_grade.csv"), "rb") as fh:
+            self.assertRaisesRegex(InvalidCSV, "Missing header: grade$",
+                                   grade_import.validate, fh)
 
-        fileobj = open(
-            os.path.join(self.resource_path, "large_header.csv"), "rb")
-        r = grade_import.validate(fileobj)
-        self.assertEqual(grade_import.has_header, True)
-        self.assertEqual(grade_import.dialect.delimiter, ",")
+        with open(os.path.join(
+                self.resource_path, "large_header.csv"), "rb") as fh:
+            r = grade_import.validate(fh)
+            self.assertEqual(grade_import.has_header, True)
+            self.assertEqual(grade_import.dialect.delimiter, ",")
 
-        fileobj = open(
-            os.path.join(self.resource_path, "unk_delimiter.csv"), "rb")
-        r = grade_import.validate(fileobj)
-        self.assertEqual(grade_import.has_header, True)
-        self.assertEqual(grade_import.dialect.delimiter, ",")
+        with open(os.path.join(
+                self.resource_path, "unk_delimiter.csv"), "rb") as fh:
+            r = grade_import.validate(fh)
+            self.assertEqual(grade_import.has_header, True)
+            self.assertEqual(grade_import.dialect.delimiter, ",")
 
     @mock.patch("course_grader.dao.csv.default_storage.open")
     @override_settings(CURRENT_DATETIME_OVERRIDE='2013-05-18 08:10:00')
@@ -70,30 +70,28 @@ class CVSDAOFunctionsTest(TestCase):
         user = PWS().get_person_by_regid("FBB38FE46A7C11D5A4AE0004AC494FFE")
         importer = GradeImportCSV()
 
-        f = open(os.path.join(self.resource_path, "test1.csv"), "rb")
-        r = importer.grades_for_section(section, user, fileobj=f)
-        self.assertEqual(len(r.get("grades")), 6)
-        self.assertEqual(
-            len([g for g in r["grades"] if g["is_incomplete"] is True]), 2)
-        self.assertEqual(
-            len([g for g in r["grades"] if g["is_writing"] is True]), 2)
-        self.assertEqual(r["grades"][0]["student_number"], "0800000")
-        self.assertEqual(r["grades"][1]["student_number"], "0040000")
-        self.assertEqual(r["grades"][2]["student_number"], "1000000")
-        self.assertEqual(
-            importer.get_filepath(),
-            "2013-spring/A_B&C-101-A/bill/20130518T081000/test1.csv")
-        f.close()
+        with open(os.path.join(self.resource_path, "test1.csv"), "rb") as fh:
+            r = importer.grades_for_section(section, user, fileobj=fh)
+            self.assertEqual(len(r.get("grades")), 6)
+            self.assertEqual(
+                len([g for g in r["grades"] if g["is_incomplete"] is True]), 2)
+            self.assertEqual(
+                len([g for g in r["grades"] if g["is_writing"] is True]), 2)
+            self.assertEqual(r["grades"][0]["student_number"], "0800000")
+            self.assertEqual(r["grades"][1]["student_number"], "0040000")
+            self.assertEqual(r["grades"][2]["student_number"], "1000000")
+            self.assertEqual(
+                importer.get_filepath(),
+                "2013-spring/A_B&C-101-A/bill/20130518T081000/test1.csv")
 
         importer = GradeImportCSV()
-        f = open(os.path.join(self.resource_path, "test2.csv"), "rb")
-        r = importer.grades_for_section(section, user, fileobj=f)
-        self.assertEqual(len(r.get("grades")), 6)
-        self.assertEqual(r["grades"][0]["student_number"], None)
-        self.assertEqual(
-            importer.get_filepath(),
-            "2013-spring/A_B&C-101-A/bill/20130518T081000/test2.csv")
-        f.close()
+        with open(os.path.join(self.resource_path, "test2.csv"), "rb") as fh:
+            r = importer.grades_for_section(section, user, fileobj=fh)
+            self.assertEqual(len(r.get("grades")), 6)
+            self.assertEqual(r["grades"][0]["student_number"], None)
+            self.assertEqual(
+                importer.get_filepath(),
+                "2013-spring/A_B&C-101-A/bill/20130518T081000/test2.csv")
 
     @mock.patch("course_grader.dao.csv.default_storage.open")
     @override_settings(CURRENT_DATETIME_OVERRIDE='2013-05-18 08:10:00')
@@ -101,31 +99,30 @@ class CVSDAOFunctionsTest(TestCase):
         section = get_section_by_label("2013,spring,A B&C,101/A")
         user = PWS().get_person_by_regid("FBB38FE46A7C11D5A4AE0004AC494FFE")
 
-        f = open(os.path.join(self.resource_path, "test1.csv"), "rb")
-        r = GradeImportCSV()._write_file(section, user, fileobj=f)
-        mock_open.assert_called_with(
-            "2013-spring/A_B&C-101-A/bill/20130518T081000/test1.csv",
-            mode="w")
+        with open(os.path.join(self.resource_path, "test1.csv"), "rb") as fh:
+            r = GradeImportCSV()._write_file(section, user, fileobj=fh)
+            mock_open.assert_called_with(
+                "2013-spring/A_B&C-101-A/bill/20130518T081000/test1.csv",
+                mode="w")
 
-        f = open(os.path.join(self.resource_path, "test2.csv"), "rb")
-        r = GradeImportCSV()._write_file(section, user, fileobj=f)
-        mock_open.assert_called_with(
-            "2013-spring/A_B&C-101-A/bill/20130518T081000/test2.csv",
-            mode="w")
+        with open(os.path.join(self.resource_path, "test2.csv"), "rb") as fh:
+            r = GradeImportCSV()._write_file(section, user, fileobj=fh)
+            mock_open.assert_called_with(
+                "2013-spring/A_B&C-101-A/bill/20130518T081000/test2.csv",
+                mode="w")
 
 
 class InsensitiveDictReaderTest(CVSDAOFunctionsTest):
     def test_insensitive_dict_reader(self):
-        f = open(os.path.join(self.resource_path, "test3.csv"))
-        reader = InsensitiveDictReader(f)
+        with open(os.path.join(self.resource_path, "test3.csv")) as fh:
+            reader = InsensitiveDictReader(fh)
 
-        row = next(reader)
-        self.assertEqual(row.get("Field1"), "ök1")
-        self.assertEqual(row.get("Field2"), "øk2")
-        self.assertEqual(row.get("Field3"), "ok3")
-        self.assertEqual(row.get("Field4"), "ok4")
-        self.assertEqual(row.get("Field 5", "Field5"), "ok5")
-        self.assertEqual(row.get("Field6", "field 6"), "")
-        self.assertEqual(row.get("Field7"), "")
-        self.assertEqual(row.get("Field8"), None)
-        f.close()
+            row = next(reader)
+            self.assertEqual(row.get("Field1"), "ök1")
+            self.assertEqual(row.get("Field2"), "øk2")
+            self.assertEqual(row.get("Field3"), "ok3")
+            self.assertEqual(row.get("Field4"), "ok4")
+            self.assertEqual(row.get("Field 5", "Field5"), "ok5")
+            self.assertEqual(row.get("Field6", "field 6"), "")
+            self.assertEqual(row.get("Field7"), "")
+            self.assertEqual(row.get("Field8"), None)
