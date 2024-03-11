@@ -67,6 +67,10 @@ gcsCredentials:
 cronjob:
   enabled: true
   jobs:
+    - name: clear-sessions
+      schedule: "20 9 * * 0"
+      command: ["/scripts/management_command.sh"]
+      args: ["clearsessions"]
     - name: submit-graderosters
       schedule: "*/20 * * * 1-5"
       command: ["/scripts/management_command.sh"]
