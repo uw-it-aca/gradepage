@@ -46,6 +46,10 @@ class ConversionScales(GradeFormHandler):
                     # Wrong term
                     continue
 
+                if grade_import.import_conversion is None:
+                    # Missing conversion data
+                    continue
+
                 conversion_data = grade_import.import_conversion.json_data()
 
                 if (self.scale is not None and
