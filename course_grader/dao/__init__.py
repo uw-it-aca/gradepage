@@ -36,7 +36,7 @@ def display_datetime(dt):
 
 
 class GradeImportSource(ABC):
-    true_values = ["1", "y", "yes", "true"]
+    true_values = ["1", "y", "yes", "t", "true"]
 
     @abstractmethod
     def grades_for_section(self, section, instructor, **kwargs):

@@ -25,12 +25,16 @@ class CVSDAOFunctionsTest(TestCase):
         self.assertTrue(grade_import.is_true("1"))
         self.assertTrue(grade_import.is_true("Y"))
         self.assertTrue(grade_import.is_true("Yes"))
+        self.assertTrue(grade_import.is_true("T"))
         self.assertTrue(grade_import.is_true("TRUE"))
         self.assertFalse(grade_import.is_true("0"))
+        self.assertFalse(grade_import.is_true("2"))
         self.assertFalse(grade_import.is_true("N"))
         self.assertFalse(grade_import.is_true("NO"))
         self.assertFalse(grade_import.is_true("F"))
+        self.assertFalse(grade_import.is_true("Z"))
         self.assertFalse(grade_import.is_true(""))
+        self.assertFalse(grade_import.is_true(None))
 
     def test_validate(self):
         grade_import = GradeImportCSV()
