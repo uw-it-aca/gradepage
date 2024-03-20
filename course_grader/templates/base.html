@@ -91,12 +91,7 @@
         <div role="contentinfo" id="footer" aria-label="UW conditions of use">
             <div class="container">
             	<div class="clearfix gp-footer">
-                <!-- example of is_desktop usage in templates -->
-                {% if request.user_agent.is_mobile %}
-                <p class="pull-left credit"><a href="http://www.washington.edu/online/privacy" title="UW Privacy Policy" target="_blank">Privacy</a> | <a href="http://www.washington.edu/online/terms" target="_blank" title="UW Terms of Service">Terms</a><br />&copy; 2012-{% now "Y" %}, UW-IT, T&amp;LS</p>
-                {% else %}
-                <p class="pull-left credit"><a href="http://www.washington.edu/online/privacy" title="UW Privacy Policy" target="_blank">Privacy</a> | <a href="http://www.washington.edu/online/terms" target="_blank" title="UW Terms of Service">Terms</a><br />&copy; 2012-{% now "Y" %}, UW-IT, Teaching &amp; Learning Systems</p>
-                {% endif %}
+                <p class="pull-left credit"><a href="http://www.washington.edu/online/privacy" title="UW Privacy Policy" target="_blank">Privacy</a> | <a href="http://www.washington.edu/online/terms" target="_blank" title="UW Terms of Service">Terms</a><br />Copyright &copy; {% now "Y" %} University of Washington</p>
                 <p class="pull-right gp-help"><a href="https://itconnect.uw.edu/learn/tools/gradepage/" target="_blank" title="Go to GradePage documentation"><i class="fas fa-info-circle"></i> {% if request.user_agent.is_mobile %}Help{% else %}GradePage Help{% endif %}</a> | <a href="{% url 'saml_logout' %}" title="Logout">Logout</a></p>
             	</div>
             </div>
