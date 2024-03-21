@@ -1,17 +1,16 @@
-# Copyright 2023 UW-IT, University of Washington
+# Copyright 2024 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
 from django.db import models
 from django.db.models import Q
-from django.utils import timezone
 from restclients_core.exceptions import DataFailureException
 from uw_sws_graderoster.models import GradingScale
 from course_grader.dao.gradesubmission import submit_grades
 from course_grader.dao.notification import notify_grade_submitters
 from course_grader.exceptions import InvalidGradingScale
 from importlib import import_module
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from logging import getLogger
 from decimal import Decimal
 import json
@@ -98,7 +97,7 @@ class SubmittedGradeRoster(models.Model):
             return
 
         self.status_code = 200
-        self.accepted_date = timezone.now()
+        self.accepted_date = datetime.now(timezone.utc)
         self.document = graderoster.xhtml()
         self.save()
 

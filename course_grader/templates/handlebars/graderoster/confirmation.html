@@ -29,9 +29,6 @@
             </div>
             {{/if}}
         {{/if}}
-        {{#if has_csv_import}}
-        <div class="alert gp-alert-feedback gp-confirmation-alert gp-csv-feedback-alert" role="alert"><i class="fas fa-comment"></i> <strong>The CSV Import Feature is New!</strong> <a href="https://forms.gle/GsiLWYHBijq9Hf7f7" target="_blank">Let us know how it worked for you.</a></div>
-        {{/if}}
         <div class="gp-receipt-message" role="status">
             {{#each submissions}}
             <p><i class="fas fa-check-circle" style="color:#63AD45;"></i> {{#if section_id}} {{ trans "section" }} {{section_id}}: {{/if}}<strong>{{submitted_count}}</strong> {{ trans "grades_submitted_to_registrar_by" }} <strong>{{submitted_by}}</strong> on {{format_long_datetime submitted_date}}. <a title="Change submitted grades" target="_blank" href="https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/">Change submitted grades?</a></p>

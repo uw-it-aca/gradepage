@@ -1,4 +1,4 @@
-# Copyright 2023 UW-IT, University of Washington
+# Copyright 2024 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -26,16 +26,16 @@ class NotificationDAOFunctionsTest(TestCase):
 
     def test_graderoster_people(self):
         p = graderoster_people(self.graderoster)
-        self.assertEquals(len(p), 3)
+        self.assertEqual(len(p), 3)
 
     def test_create_recipient_list(self):
         people = graderoster_people(self.graderoster)
         r = create_recipient_list(people)
-        self.assertEquals(len(r), 3)
+        self.assertEqual(len(r), 3)
         r.sort()
-        self.assertEquals(r[0], 'bill@uw.edu')
-        self.assertEquals(r[1], 'fred@uw.edu')
-        self.assertEquals(r[2], 'james@uw.edu')
+        self.assertEqual(r[0], 'bill@uw.edu')
+        self.assertEqual(r[1], 'fred@uw.edu')
+        self.assertEqual(r[2], 'james@uw.edu')
 
     def test_create_message_success(self):
         for item in self.graderoster.items:
@@ -43,9 +43,9 @@ class NotificationDAOFunctionsTest(TestCase):
 
         (subject, text, html) = create_message(self.graderoster, self.user)
 
-        self.assertEquals(
+        self.assertEqual(
             subject, 'Bill Teacher submitted four grades for CSS 161 A')
-        self.assertEquals(text, (
+        self.assertEqual(text, (
             '\nBill Teacher submitted grades for four students to the '
             'Registrar on August 27 at  5:01 PM UTC.  These grades have '
             'been successfully processed and will be available to the '
@@ -55,7 +55,7 @@ class NotificationDAOFunctionsTest(TestCase):
             'No changes can be made through GradePage.  To change submitted '
             'grades use the Change of Grade form: https://test.edu/cog.php'
             '\n\n\n'))
-        self.assertEquals(html, (
+        self.assertEqual(html, (
             '\n<p>Bill Teacher submitted grades for four students to the '
             'Registrar on August 27 at  5:01 PM UTC.  These grades have '
             'been successfully processed and will be available to the '
@@ -72,16 +72,16 @@ class NotificationDAOFunctionsTest(TestCase):
 
         (subject, text, html) = create_message(self.graderoster, self.user)
 
-        self.assertEquals(
+        self.assertEqual(
             subject, 'Failed grade submission attempt for CSS 161 A')
-        self.assertEquals(text, (
+        self.assertEqual(text, (
             '\nBill Teacher unsuccessfully submitted grades for four '
             'students to the Registrar on August 27 at  5:01 PM UTC.  There '
             'was a problem processing these grades and they have not been '
             'submitted.\n\nNo changes can be made through GradePage.  To '
             'change submitted grades, use the Change of Grade form: '
             'https://test.edu/cog.php\n\n\n'))
-        self.assertEquals(html, (
+        self.assertEqual(html, (
             '\n<p>Bill Teacher unsuccessfully submitted grades for four '
             'students to the Registrar on August 27 at  5:01 PM UTC.  There '
             'was a problem processing these grades and they have not been '
@@ -99,9 +99,9 @@ class NotificationDAOFunctionsTest(TestCase):
 
         (subject, text, html) = create_message(self.graderoster, self.user)
 
-        self.assertEquals(
+        self.assertEqual(
             subject, 'Failed grade submission attempt for CSS 161 A')
-        self.assertEquals(text, (
+        self.assertEqual(text, (
             '\nBill Teacher submitted grades for four students to the '
             'Registrar on August 27 at  5:01 PM UTC.  These grades have '
             'been successfully processed and will be available to the '
@@ -111,7 +111,7 @@ class NotificationDAOFunctionsTest(TestCase):
             '46A7C11D5A4AE0004AC494FFE\n\nNo changes can be made through '
             'GradePage.  To change submitted grades, use the Change of Grade '
             'form: https://test.edu/cog.php\n\n\n'))
-        self.assertEquals(html, (
+        self.assertEqual(html, (
             '\n<p>Bill Teacher submitted grades for four students to the '
             'Registrar on August 27 at  5:01 PM UTC.  These grades have '
             'been successfully processed and will be available to the '

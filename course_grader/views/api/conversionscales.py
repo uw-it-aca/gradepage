@@ -1,4 +1,4 @@
-# Copyright 2023 UW-IT, University of Washington
+# Copyright 2024 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -44,6 +44,10 @@ class ConversionScales(GradeFormHandler):
             for grade_import in imports:
                 if grade_import.term_id != term.term_label():
                     # Wrong term
+                    continue
+
+                if grade_import.import_conversion is None:
+                    # Missing conversion data
                     continue
 
                 conversion_data = grade_import.import_conversion.json_data()
