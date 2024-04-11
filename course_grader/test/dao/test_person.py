@@ -1,4 +1,4 @@
-# Copyright 2023 UW-IT, University of Washington
+# Copyright 2024 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -15,38 +15,38 @@ class PersonDAOFunctionsTest(TestCase):
         self.assertRaises(InvalidUser, person_from_netid, None)
         self.assertRaises(InvalidUser, person_from_netid, '123456')
         self.assertRaises(InvalidUser, person_from_netid, 'nobody')
-        self.assertEquals(person_from_netid('javerage').uwregid,
-                          '9136CCB8F66711D5BE060004AC494FFE')
+        self.assertEqual(person_from_netid('javerage').uwregid,
+                         '9136CCB8F66711D5BE060004AC494FFE')
 
     def test_person_from_regid(self):
         self.assertRaises(InvalidUser, person_from_regid, None)
         self.assertRaises(InvalidUser, person_from_regid, '123456')
         self.assertRaises(InvalidUser, person_from_regid,
                           'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF')
-        self.assertEquals(
+        self.assertEqual(
             person_from_regid('9136CCB8F66711D5BE060004AC494FFE').uwnetid,
             'javerage')
 
     def test_is_netid(self):
-        self.assertEquals(is_netid('javerage'), None)
-        self.assertEquals(is_netid('Javerage'), None)
-        self.assertEquals(
+        self.assertEqual(is_netid('javerage'), None)
+        self.assertEqual(is_netid('Javerage'), None)
+        self.assertEqual(
             is_netid(None),
             'No override user supplied, please enter a UWNetID')
-        self.assertEquals(
+        self.assertEqual(
             is_netid(''), 'No override user supplied, please enter a UWNetID')
-        self.assertEquals(is_netid('12345'), 'Not a valid UWNetID: ')
-        self.assertEquals(is_netid('nobody'), 'Not a valid UWNetID: ')
+        self.assertEqual(is_netid('12345'), 'Not a valid UWNetID: ')
+        self.assertEqual(is_netid('nobody'), 'Not a valid UWNetID: ')
 
     def test_person_display_name(self):
         user = PWS().get_person_by_netid('javerage')
         user.display_name = 'Joe Student'
-        self.assertEquals(person_display_name(user), 'Joe Student')
+        self.assertEqual(person_display_name(user), 'Joe Student')
 
         user = PWS().get_person_by_netid('javerage')
         user.display_name = None
-        self.assertEquals(person_display_name(user), 'James Student')
+        self.assertEqual(person_display_name(user), 'James Student')
 
         user = PWS().get_person_by_netid('javerage')
         user.display_name = 'Jôe Stüdent'
-        self.assertEquals(person_display_name(user), 'Jôe Stüdent')
+        self.assertEqual(person_display_name(user), 'Jôe Stüdent')

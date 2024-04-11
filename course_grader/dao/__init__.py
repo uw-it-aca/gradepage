@@ -1,4 +1,4 @@
-# Copyright 2023 UW-IT, University of Washington
+# Copyright 2024 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -36,7 +36,7 @@ def display_datetime(dt):
 
 
 class GradeImportSource(ABC):
-    true_values = ["1", "y", "yes", "true"]
+    true_values = ["1", "y", "yes", "t", "true"]
 
     @abstractmethod
     def grades_for_section(self, section, instructor, **kwargs):
