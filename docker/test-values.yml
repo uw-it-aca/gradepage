@@ -74,7 +74,7 @@ environmentVariables:
     value: EVAL
 
   - name: SWS_ENV
-    value: DEV
+    value: EVAL
   - name: SWS_TIMEOUT
     value: "10"
 
