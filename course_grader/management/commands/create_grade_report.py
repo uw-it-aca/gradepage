@@ -59,8 +59,8 @@ class Command(BaseCommand):
             except DataFailureException as ex:
                 continue
 
-            graderoster = GradeRoster.from_xhtml(root, section=Section(),
-                instructor=submitter)
+            graderoster = GradeRoster.from_xhtml(
+                root, section=Section(), instructor=submitter)
 
             for item in graderoster.items:
                 writer.writerow([
