@@ -23,35 +23,35 @@ class SubmittedGradeRosterManager(models.Manager):
         kwargs = {'section_id': section.section_label()}
         if secondary_section is not None:
             args = (Q(secondary_section_id=secondary_section.section_label()) |
-                    Q(secondary_section_id__isnull=True),)
+                    Q(secondary_section_id__isnull=True))
         else:
             args = ()
             if section.is_independent_study:
                 kwargs['instructor_id'] = instructor.uwregid
 
-        return super(SubmittedGradeRosterManager, self).get_queryset().filter(
-            *args, **kwargs).order_by('secondary_section_id')
+        return super().get_queryset().filter(*args, **kwargs).order_by(
+            'secondary_section_id')
 
     def resubmit_failed(self):
         compare_dt = datetime.now(timezone.utc) - timedelta(minutes=10)
-        fails = super(SubmittedGradeRosterManager, self).get_queryset().filter(
+        fails = super().get_queryset().filter(
             Q(status_code__isnull=False) | Q(submitted_date__lt=compare_dt),
-            accepted_date__isnull=True,
+            accepted_date__isnull=True
         ).order_by('submitted_date')
 
         for roster in fails:
             roster.submit()
 
     def get_status_by_term(self, term):
-        return super(SubmittedGradeRosterManager, self).get_queryset().filter(
+        return super().get_queryset().filter(
             term_id=term.term_label()
         ).order_by('submitted_date').values(
             'section_id', 'secondary_section_id', 'submitted_date',
             'submitted_by', 'status_code')
 
     def get_all_terms(self):
-        return super(SubmittedGradeRosterManager, self).get_queryset(
-        ).values_list('term_id', flat=True).distinct()
+        return super().get_queryset().values_list(
+            'term_id', flat=True).distinct()
 
 
 class SubmittedGradeRoster(models.Model):
@@ -106,7 +106,7 @@ class SubmittedGradeRoster(models.Model):
 
 class GradeManager(models.Manager):
     def get_by_section_id_and_person(self, section_id, person_id):
-        return super(GradeManager, self).get_queryset().filter(
+        return super().get_queryset().filter(
             section_id=section_id, modified_by=person_id)
 
 
@@ -233,21 +233,21 @@ class ImportConversion(models.Model):
 
 class GradeImportManager(models.Manager):
     def get_last_import_by_section_id(self, section_id):
-        return super(GradeImportManager, self).get_queryset().filter(
+        return super().get_queryset().filter(
             section_id=section_id,
             accepted_date__isnull=False,
             status_code='200'
         ).order_by('-imported_date')[0:1].get()
 
     def get_imports_by_person(self, person):
-        return super(GradeImportManager, self).get_queryset().filter(
+        return super().get_queryset().filter(
             imported_by=person.uwregid,
             accepted_date__isnull=False,
             status_code='200'
         ).order_by('section_id', '-imported_date')
 
     def get_import_sources_by_term(self, term):
-        return super(GradeImportManager, self).get_queryset().filter(
+        return super().get_queryset().filter(
             term_id=term.term_label(),
             accepted_date__isnull=False,
             status_code='200'
@@ -255,13 +255,13 @@ class GradeImportManager(models.Manager):
             'section_id', 'imported_date', 'source')
 
     def clear_prior_imports_for_section(self, grade_import):
-        super(GradeImportManager, self).get_queryset().filter(
+        super().get_queryset().filter(
             section_id=grade_import.section_id
         ).exclude(pk=grade_import.pk).delete()
 
     def get_all_terms(self):
-        return super(GradeImportManager, self).get_queryset(
-        ).values_list('term_id', flat=True).distinct()
+        return super().get_queryset().values_list(
+            'term_id', flat=True).distinct()
 
 
 class GradeImport(models.Model):
