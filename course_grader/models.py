@@ -23,7 +23,7 @@ class SubmittedGradeRosterManager(models.Manager):
         kwargs = {'section_id': section.section_label()}
         if secondary_section is not None:
             args = (Q(secondary_section_id=secondary_section.section_label()) |
-                    Q(secondary_section_id__isnull=True))
+                    Q(secondary_section_id__isnull=True),)
         else:
             args = ()
             if section.is_independent_study:
@@ -36,7 +36,7 @@ class SubmittedGradeRosterManager(models.Manager):
         compare_dt = datetime.now(timezone.utc) - timedelta(minutes=10)
         fails = super().get_queryset().filter(
             Q(status_code__isnull=False) | Q(submitted_date__lt=compare_dt),
-            accepted_date__isnull=True
+            accepted_date__isnull=True,
         ).order_by('submitted_date')
 
         for roster in fails:
