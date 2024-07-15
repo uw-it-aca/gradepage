@@ -38,9 +38,7 @@ setup(
         'django-supporttools~=3.6',
         'django-persistent-message~=1.3',
         'uw-django-saml2~=1.8',
-        'chardet~=4.0',
-        'lxml==4.9.4',
-        'xmlsec==1.3.13'
+        'chardet~=5.0'
     ],
     license='Apache License, Version 2.0',
     description='UW application that supports online grade submission',
