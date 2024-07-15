@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./course_grader_vue/*"]
+    }
+  },
+  "exclude": ["node_modules", "course_grader"]
+}

@@ -1,7 +1,6 @@
 # Copyright 2024 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
-
 from django.conf import settings
 from django.urls import re_path
 from django.views.generic import TemplateView
@@ -19,10 +18,6 @@ from course_grader.views.api.submitted_graderoster import (
 
 
 urlpatterns = [
-    re_path(r'^$', HomeView.as_view(), name='home'),
-    re_path(
-        r'^section/(?P<url_token>[^/]*)$',
-        SectionView.as_view(), name='section'),
     re_path(
         r'^api/v1/sections/(?P<term_id>[^/]*)$',
         Sections.as_view(), name='section-list'),
@@ -61,6 +56,10 @@ urlpatterns = [
     re_path(
         r'^api/v1/submitted_graderoster/(?P<graderoster_id>[\d]*)$',
         SubmittedGradeRoster.as_view(), name='graderoster-download'),
+    re_path(
+        r'^section/(?P<url_token>[^/]*)$',
+        SectionView.as_view(), name='section'),
+    re_path(r'^$', HomeView.as_view(), name='home'),
 ]
 
 # debug routes for developing error pages

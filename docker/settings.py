@@ -10,8 +10,7 @@ INSTALLED_APPS += [
     'rc_django',
     'grade_conversion_calculator',
     'django.contrib.humanize',
-    'django_user_agents',
-    'compressor',
+    'django_user_agents'
 ]
 
 MIDDLEWARE += [
@@ -25,32 +24,6 @@ TEMPLATES[0]['OPTIONS']['context_processors'] += [
     'course_grader.context_processors.has_less_compiled',
     'course_grader.context_processors.debug_mode',
 ]
-
-COMPRESS_ROOT = '/static/'
-
-STATICFILES_FINDERS += (
-    'compressor.finders.CompressorFinder',
-)
-
-COMPRESS_PRECOMPILERS = (
-    ('text/less', 'lessc {infile} {outfile}'),
-    ('text/x-sass', 'pyscss {infile} > {outfile}'),
-    ('text/x-scss', 'pyscss {infile} > {outfile}'),
-)
-
-COMPRESS_CSS_FILTERS = [
-    'compressor.filters.css_default.CssAbsoluteFilter',
-    'compressor.filters.cssmin.CSSMinFilter'
-]
-
-COMPRESS_JS_FILTERS = [
-    'compressor.filters.jsmin.JSMinFilter',
-]
-
-COMPRESS_OFFLINE = True
-COMPRESS_OFFLINE_CONTEXT = {
-    'wrapper_template': 'persistent_message/manage_wrapper.html',
-}
 
 if os.getenv('ENV', 'localdev') == 'localdev':
     DEBUG = True

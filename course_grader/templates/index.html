@@ -1,0 +1,43 @@
+{% load static %}
+{% load vite %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="{% static 'course_grader/ico/favicon.ico' %}">
+
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Encode+Sans+Condensed:wght@400;500;700&family=Open+Sans:ital,wght@0,400;0,700;1,400&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+      window.sections_url = "{{ sections_url }}";
+      window.persistent_msgs = {{ messages|safe }};
+      window.msg_level = "{{ message_level }}";
+      window.is_mobile = {% if request.user_agent.is_mobile %}true{% else %}false{% endif %};
+      window.is_tablet = {% if request.user_agent.is_tablet %}true{% else %}false{% endif %};
+      window.is_desktop = {% if not request.user_agent.is_mobile and not request.user_agent.is_tablet %}true{% else %}false{% endif %};
+    </script>
+</head>
+
+<body
+  data-user-netid="{{ user_netid }}"
+  data-django-debug="{{ django_debug|lower}}"
+  class="bg-white"
+>
+
+    {% csrf_token %}
+
+    <!-- vue app will be injected here -->
+    <div id="app"></div>
+
+    <!-- vite js bundle -->
+    {% vite_scripts 'course_grader_vue/main.js' %}
+
+</body>
+
+</html>
