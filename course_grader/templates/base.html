@@ -40,9 +40,6 @@
         {% endcompress %}
         {% endif %}
 
-        {% if not has_less_compiled %}
-        <script src="{% static "course_grader/js/vendor/less-2.0.0.min.js" %}"></script>
-        {% endif %}
         <script type="text/javascript" src="{% url "javascript-catalog" %}"></script>
     </head>
     <body>
