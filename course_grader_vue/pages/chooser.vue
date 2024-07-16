@@ -1,23 +1,7 @@
 // home.vue
 
 <template>
-  <DefaultLayout :page-title="pageTitle">
-    <!-- page content -->
-    <template #title>
-      {{ pageTitle }}
-    </template>
-
-    <template #description>
-      <div class="p-0 col-md-8 lead">
-        <p>
-          <a href="https://github.com/uw-it-aca/axdd-django-vue">django-vue</a>
-          is a highly-opinionated template repository created and used by
-          Service Coordination and T&amp;LS to make our build processes
-          consistent and repeatable through established patterns across a
-          containerized CICD architecture.
-        </p>
-      </div>
-    </template>
+  <Layout :page-title="pageTitle">
 
     <template #content>
       <div class="row">
@@ -154,20 +138,20 @@
         </div>
       </div>
     </template>
-  </DefaultLayout>
+  </Layout>
 </template>
 
 <script>
-import DefaultLayout from "@/layouts/default.vue";
+import Layout from "@/layouts/default.vue";
 
 export default {
   name: "PagesHome",
   components: {
-    DefaultLayout,
+    Layout,
   },
   data() {
     return {
-      pageTitle: "Getting started",
+      pageTitle: "Gesadfasdtting started",
     };
   },
   methods: {},

@@ -70,6 +70,9 @@ async function uploadGrades(url, data) {
 async function getConversionScales(url) {
   return axios.get(url).catch(_handleError);
 }
+async function clearOverride() {
+  return axios.post("/api/internal/support/", { clear_override: true });
+}
 
 export {
   getSections,
@@ -82,4 +85,5 @@ export {
   saveImportedGrades,
   uploadGrades,
   getConversionScales,
+  clearOverride
 };

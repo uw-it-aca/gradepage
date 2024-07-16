@@ -31,6 +31,10 @@
         django_debug: {{ django_debug|lower}},
       };
     </script>
+
+    <!-- vite css bundle -->
+    {% vite_styles 'course_grader_vue/main.js' %}
+
   </head>
 
   <body class="bg-white">
