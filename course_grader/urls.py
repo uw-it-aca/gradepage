@@ -4,7 +4,7 @@
 from django.conf import settings
 from django.urls import re_path
 from django.views.generic import TemplateView
-from course_grader.views.chooser import HomeView
+from course_grader.views.pages import HomeView
 from course_grader.views.section import SectionView
 from course_grader.views.support.status import status
 from course_grader.views.support.search import graderosters, grade_imports
