@@ -50,6 +50,7 @@ def vite_manifest(entries_names):
 
     return _process_entries(entries_names)
 
+
 @register.simple_tag(name="vite_styles")
 def vite_styles(*entries_names):
     """
