@@ -16,7 +16,10 @@
 
     <script>
       window.gradepage = {
-        user_netid: "{{ user_netid }}",
+        user_login: "{{ user_login }}",
+        user_fullname: "{{ user_fullname }}",
+        override_user: "{{ override_user }}",
+        signout_url: "{{ signout_url }}",
         sections_url: "{{ sections_url }}",
         persistent_msgs: {{ messages|safe }},
         msg_level: "{{ message_level }}",
@@ -28,7 +31,7 @@
         is_mobile: {% if request.user_agent.is_mobile %}true{% else %}false{% endif %},
         is_tablet: {% if request.user_agent.is_tablet %}true{% else %}false{% endif %},
         is_desktop: {% if not request.user_agent.is_mobile and not request.user_agent.is_tablet %}true{% else %}false{% endif %},
-        django_debug: {{ django_debug|lower}},
+        debug_mode: {{ debug_mode|lower}},
       };
     </script>
 

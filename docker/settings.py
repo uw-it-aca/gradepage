@@ -21,7 +21,6 @@ MIDDLEWARE += [
 TEMPLATES[0]['OPTIONS']['context_processors'] += [
     'supporttools.context_processors.supportools_globals',
     'course_grader.context_processors.user',
-    'course_grader.context_processors.has_less_compiled',
     'course_grader.context_processors.debug_mode',
 ]
 
