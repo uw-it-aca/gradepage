@@ -45,7 +45,7 @@ database:
   secretName: vue.gradepage.uw.edu-sql-secrets
 
 repo: gradepage
-instance: eval
+instance: vue
 
 memcached:
   enabled: true

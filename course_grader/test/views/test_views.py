@@ -8,7 +8,7 @@ from uw_sws.util import fdao_sws_override
 from course_grader.dao.person import PWS
 from course_grader.dao.section import get_section_by_label
 from course_grader.dao.term import get_term_by_year_and_quarter
-from course_grader.views.chooser import HomeView
+from course_grader.views.pages import HomeView
 from course_grader.views.section import SectionView
 from course_grader.views import *
 

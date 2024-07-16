@@ -32,6 +32,9 @@ if os.getenv('ENV', 'localdev') == 'localdev':
     CURRENT_DATETIME_OVERRIDE = '2013-06-17 10:00:00'
     PAST_TERMS_VIEWABLE = 1
     MEDIA_ROOT = os.getenv('IMPORT_DATA_ROOT', '/app/csv')
+    VITE_MANIFEST_PATH = os.path.join(
+        BASE_DIR, "course_grader", "static", "manifest.json")
+
 else:
     GRADEPAGE_SUPPORT_GROUP = os.getenv('SUPPORT_GROUP', 'u_acadev_gradepage_support')
     GRADEPAGE_ADMIN_GROUP = os.getenv('ADMIN_GROUP', 'u_acadev_gradepage_admins')
@@ -53,6 +56,7 @@ else:
         },
     }
     CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('CLUSTER_CNAME')]
+    VITE_MANIFEST_PATH = os.path.join(os.sep, "static", "manifest.json")
 
 ALLOW_GRADE_SUBMISSION_OVERRIDE = (os.getenv('ENV', 'localdev') != 'prod')
 USERSERVICE_VALIDATION_MODULE = 'course_grader.dao.person.is_netid'
