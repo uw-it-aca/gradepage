@@ -34,7 +34,7 @@ securityPolicy:
 
 externalService:
   enabled: true
-  name: gradepage-db-service
+  name: vue-gradepage-db-service
   type: ClusterIP
   serviceAddress: 172.18.1.70
   servicePort: 5432
@@ -42,7 +42,7 @@ database:
   engine: postgres
   name: gradepage_test
   hostname: gradepage-db-service
-  secretName: test.gradepage.uw.edu-sql-secrets
+  secretName: vue.gradepage.uw.edu-sql-secrets
 
 repo: gradepage
 instance: eval
@@ -55,7 +55,7 @@ memcached:
 
 gcsCredentials:
   mounted: true
-  secretName: test.gradepage.uw.edu-gcs-credentials
+  secretName: vue.gradepage.uw.edu-gcs-credentials
 
 cronjob:
   enabled: false
@@ -64,7 +64,7 @@ certs:
   mounted: true
   certPath: /certs/test-client.gradepage.uw.edu-ic.cert
   keyPath: /certs/test-client.gradepage.uw.edu-ic.key
-  secretName: test.gradepage.uw.edu-ic-certs
+  secretName: vue.gradepage.uw.edu-ic-certs
 
 environmentVariables:
   - name: ENV
@@ -97,7 +97,7 @@ environmentVariables:
 externalSecrets:
   enabled: true
   secrets:
-    - name: test.gradepage.uw.edu-secrets
+    - name: vue.gradepage.uw.edu-secrets
       externalKey: gradepage/test/secrets
       data:
         - name: django-secret
@@ -106,7 +106,7 @@ externalSecrets:
           property: storage-bucket-name
         - name: safe-email-recipient
           property: safe-email-recipient
-    - name: test.gradepage.uw.edu-shared-secrets
+    - name: vue.gradepage.uw.edu-shared-secrets
       externalKey: gradepage/shared/secrets
       data:
         - name: canvas-account-id
@@ -125,19 +125,19 @@ externalSecrets:
           property: gradepage-support-email
         - name: storage-project-id
           property: storage-project-id
-    - name: test.gradepage.uw.edu-sql-secrets
+    - name: vue.gradepage.uw.edu-sql-secrets
       externalKey: gradepage/shared/sql-secrets
       data:
         - name: username
           property: username
         - name: password
           property: password
-    - name: test.gradepage.uw.edu-gcs-credentials
+    - name: vue.gradepage.uw.edu-gcs-credentials
       externalKey: gradepage/shared/gcs-credentials
       data:
         - name: credentials.json
           property: credentials.json
-    - name: test.gradepage.uw.edu-ic-certs
+    - name: vue.gradepage.uw.edu-ic-certs
       externalKey: gradepage/test/ic-certs
       data:
         - name: vue.gradepage.uw.edu-ic.cert
@@ -146,7 +146,7 @@ externalSecrets:
           property: test-client.gradepage.uw.edu-ic.cert
         - name: test-client.gradepage.uw.edu-ic.key
           property: test-client.gradepage.uw.edu-ic.key
-    - name: test.gradepage.uw.edu-uw-idp-cert
+    - name: vue.gradepage.uw.edu-uw-idp-cert
       externalKey: idp-cert
       data:
         - name: uw-idp-cert
@@ -155,47 +155,47 @@ externalSecrets:
 environmentVariablesSecrets:
   djangoSecret:
     name: DJANGO_SECRET
-    secretName: test.gradepage.uw.edu-secrets
+    secretName: vue.gradepage.uw.edu-secrets
     secretKey: django-secret
   canvasAPIToken:
     name: CANVAS_OAUTH_BEARER
-    secretName: test.gradepage.uw.edu-shared-secrets
+    secretName: vue.gradepage.uw.edu-shared-secrets
     secretKey: canvas-api-token
   canvasAccountID:
     name: CANVAS_ACCOUNT_ID
-    secretName: test.gradepage.uw.edu-shared-secrets
+    secretName: vue.gradepage.uw.edu-shared-secrets
     secretKey: canvas-account-id
   registrarSupportEmail:
     name: REGISTRAR_SUPPORT_EMAIL
-    secretName: test.gradepage.uw.edu-shared-secrets
+    secretName: vue.gradepage.uw.edu-shared-secrets
     secretKey: registrar-support-email
   registrarSupportPhone:
     name: REGISTRAR_SUPPORT_PHONE
-    secretName: test.gradepage.uw.edu-shared-secrets
+    secretName: vue.gradepage.uw.edu-shared-secrets
     secretKey: registrar-support-phone
   gradepageSupportEmail:
     name: GRADEPAGE_SUPPORT_EMAIL
-    secretName: test.gradepage.uw.edu-shared-secrets
+    secretName: vue.gradepage.uw.edu-shared-secrets
     secretKey: gradepage-support-email
   emailHost:
     name: EMAIL_HOST
-    secretName: test.gradepage.uw.edu-shared-secrets
+    secretName: vue.gradepage.uw.edu-shared-secrets
     secretKey: email-host
   emailNoreplyAddress:
     name: EMAIL_NOREPLY_ADDRESS
-    secretName: test.gradepage.uw.edu-shared-secrets
+    secretName: vue.gradepage.uw.edu-shared-secrets
     secretKey: email-noreply-address
   safeEmailRecipient:
     name: SAFE_EMAIL_RECIPIENT
-    secretName: test.gradepage.uw.edu-secrets
+    secretName: vue.gradepage.uw.edu-secrets
     secretKey: safe-email-recipient
   storageBucketName:
     name: STORAGE_BUCKET_NAME
-    secretName: test.gradepage.uw.edu-secrets
+    secretName: vue.gradepage.uw.edu-secrets
     secretKey: storage-bucket-name
   storageProjectId:
     name: STORAGE_PROJECT_ID
-    secretName: test.gradepage.uw.edu-shared-secrets
+    secretName: vue.gradepage.uw.edu-shared-secrets
     secretKey: storage-project-id
   samlSPCert:
     name: SP_CERT
@@ -203,5 +203,5 @@ environmentVariablesSecrets:
     secretKey: vue.gradepage.uw.edu-ic.cert
   samlIDPCert:
     name: IDP_CERT
-    secretName: test.gradepage.uw.edu-uw-idp-cert
+    secretName: vue.gradepage.uw.edu-uw-idp-cert
     secretKey: uw-idp-cert
