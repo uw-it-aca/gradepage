@@ -167,7 +167,7 @@ export default {
   },
   data() {
     return {
-      pageTitle: "Getting started",
+      pageTitle: "Getting starteeeed",
     };
   },
   methods: {},
