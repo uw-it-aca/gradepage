@@ -14,25 +14,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Encode+Sans+Condensed:wght@400;500;700&family=Open+Sans:ital,wght@0,400;0,700;1,400&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
-    <script>
-      window.gradepage = {
-        user_login: "{{ user_login }}",
-        user_fullname: "{{ user_fullname }}",
-        override_user: "{{ override_user }}",
-        signout_url: "{{ signout_url }}",
-        sections_url: "{{ sections_url }}",
-        persistent_msgs: {{ messages|safe }},
-        msg_level: "{{ message_level }}",
-        now_quarter: "{{ now_quarter }}",
-        now_year: "{{ now_year }}",
-        selected_quarter: "{{ selected_quarter }}",
-        selected_year: "{{ selected_year }}",
-        terms: {{ terms|safe }},
-        is_mobile: {% if request.user_agent.is_mobile %}true{% else %}false{% endif %},
-        is_tablet: {% if request.user_agent.is_tablet %}true{% else %}false{% endif %},
-        is_desktop: {% if not request.user_agent.is_mobile and not request.user_agent.is_tablet %}true{% else %}false{% endif %},
-        debug_mode: {{ debug_mode|lower}},
-      };
+    {{ context_data|json_script:"django-context-data" }}
+    <script id="persistent-message-data" type="application/json">
+        {{ message_data|safe }}
     </script>
 
     <!-- vite css bundle -->

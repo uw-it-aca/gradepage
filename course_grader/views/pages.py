@@ -1,17 +1,19 @@
 # Copyright 2024 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
-
+from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
+from course_grader.dao.person import person_from_user, person_display_name
 from course_grader.dao.term import term_from_param, all_viewable_terms
 from course_grader.dao.message import get_messages_for_term
 from course_grader.exceptions import InvalidTerm
 from course_grader.views import url_for_term
+from userservice.user import UserService
 from restclients_core.exceptions import DataFailureException
 from logging import getLogger
 
@@ -34,12 +36,13 @@ class HomeView(TemplateView):
                 response = render(request, "404.html", {})
                 response.status_code = ex.status
             else:
-                logger.error("GET term failed: {}, Param: {}".format(
-                    ex, kwargs["term_id"]))
+                logger.error(f"{ex}")
                 response = render(request, "503.html", {})
             return response
 
     def get_context_data(self, **kwargs):
+        context = {}
+        person = person_from_user()
         term_id = kwargs.get("term_id")
         all_terms = all_viewable_terms()
         now_term = all_terms[0]
@@ -60,7 +63,7 @@ class HomeView(TemplateView):
                 "is_selected": opt_term == selected_term,
             })
 
-        context = get_messages_for_term(now_term)
+        # Term context
         context["now_quarter"] = now_term.get_quarter_display()
         context["now_year"] = now_term.year
         context["selected_quarter"] = selected_term.get_quarter_display()
@@ -72,4 +75,21 @@ class HomeView(TemplateView):
         context["page_title"] = "{qtr} {year}".format(
             qtr=selected_term.get_quarter_display(), year=selected_term.year)
 
-        return context
+        # User context
+        user_service = UserService()
+        context["user_login"] = user_service.get_user()
+        context["user_fullname"] = person_display_name(person)
+        context["override_user"] = user_service.get_override_user()
+        context["signout_url"] = reverse("saml_logout")
+        context["debug_mode"] = settings.DEBUG
+
+        # Client context
+        context["is_mobile"] = self.request.user_agent.is_mobile
+        context["is_tablet"] = self.request.user_agent.is_tablet
+        context["is_desktop"] = (not self.request.user_agent.is_mobile and
+                                 not self.request.user_agent.is_tablet)
+
+        return ({
+            "context_data": context,
+            "message_data": get_messages_for_term(now_term)
+        })
