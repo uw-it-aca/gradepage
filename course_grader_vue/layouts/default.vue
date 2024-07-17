@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { useContextStore } from "@/stores/context";
 import { clearOverride } from "@/utils/data";
 
 export default {
@@ -55,26 +56,34 @@ export default {
     },
   },
   setup() {
+    const contextStore = useContextStore();
     return {
+      contextStore,
       clearOverride,
     };
   },
   data() {
+    let context = this.contextStore.context,
+        appName = "Gradepage";
     return {
-      // minimum application setup overrides
-      appName: "Gradepage",
+      appName: appName,
       appRootUrl: "/",
-      userName: "asdf",
-      userOverride: "asdfaasdasdf",
-      signOutUrl: "/sadfasdfasd",
-      userRoles: "asdfafsd",
-      // automatically set year
-      currentYear: new Date().getFullYear(),
+      userName: context.user_login,
+      userFullName: context.user_fullname,
+      userOverride: context.override_user,
+      signOutUrl: context.signout_url,
+      pageTitle: context.page_title + " - " + appName,
     };
   },
   created: function () {
-    // constructs page title in the following format "Page Title - AppName"
-    document.title = this.pageTitle + " - " + this.appName;
+    document.title = this.pageTitle;
+  },
+  methods: {
+   clearUserOverride: function () {
+      this.clearOverride().then(() => {
+        window.location.href = "/support";
+      });
+    },
   },
 };
 </script>
