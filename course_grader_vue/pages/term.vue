@@ -39,7 +39,7 @@ export default {
   },
   data() {
     return {
-      pageTitle: "Spring 2024",
+      pageTitle: "Summer 2024",
     };
   },
   methods: {},
