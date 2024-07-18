@@ -4,6 +4,12 @@
   <Layout :page-title="pageTitle">
     <template #content>
       <h2>Section Info</h2>
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Neque libero
+        laborum ratione et, blanditiis voluptas, odit exercitationem similique
+        repellat quisquam non reprehenderit. Sequi, reprehenderit!
+        Necessitatibus quod at illo nihil ipsam?
+      </p>
 
       <h3>Grade Roster</h3>
       <ul>
