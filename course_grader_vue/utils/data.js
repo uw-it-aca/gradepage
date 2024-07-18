@@ -72,7 +72,7 @@ async function getConversionScales(url) {
 }
 
 async function clearOverride() {
-  return axios.post("/api/internal/support/", { clear_override: true });
+  return axios.post("/api/v1/support/", { clear_override: true }).catch(_handleError);
 }
 
 export {
