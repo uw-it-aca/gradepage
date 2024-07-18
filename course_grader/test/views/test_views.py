@@ -34,8 +34,7 @@ class HomeViewTest(TestCase):
         view.request = request
 
         kwargs = {"term_id": "2013-spring"}
-        data = view.get_context_data(**kwargs)
-        context = data["context_data"]
+        context = view.get_context_data(**kwargs)
         self.assertEqual(context["now_quarter"], "Spring")
         self.assertEqual(context["now_year"], 2013)
         self.assertEqual(context["page_title"], "Spring 2013")
@@ -45,9 +44,6 @@ class HomeViewTest(TestCase):
         self.assertEqual(context["user_login"], "javerage")
         self.assertEqual(context["user_fullname"], "Jamesy McJamesy")
         self.assertIsNone(context["override_user"])
-
-        messages = data["message_data"]
-        self.assertEqual(len(messages["messages"]), 0)
 
 
 @fdao_sws_override

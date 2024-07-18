@@ -10,7 +10,6 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from course_grader.dao.person import person_from_user, person_display_name
 from course_grader.dao.term import term_from_param, all_viewable_terms
-from course_grader.dao.message import get_messages_for_term
 from course_grader.exceptions import InvalidTerm
 from course_grader.views import url_for_term
 from userservice.user import UserService
@@ -28,7 +27,7 @@ class HomeView(TemplateView):
         kwargs["term_id"] = request.GET.get("term", "").strip()
         try:
             context = self.get_context_data(**kwargs)
-            return self.render_to_response(context)
+            return self.render_to_response({"context_data": context})
         except InvalidTerm:
             return HttpResponseRedirect("/")
         except DataFailureException as ex:
@@ -89,7 +88,4 @@ class HomeView(TemplateView):
         context["is_desktop"] = (not self.request.user_agent.is_mobile and
                                  not self.request.user_agent.is_tablet)
 
-        return ({
-            "context_data": context,
-            "message_data": get_messages_for_term(now_term)
-        })
+        return context
