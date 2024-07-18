@@ -4,18 +4,23 @@ import { createWebHistory, createRouter } from "vue-router";
 // import { trackRouter } from "vue-gtag-next";
 
 // page components
-import Chooser from "@/pages/chooser.vue";
+import Term from "@/pages/term.vue";
 import Section from "@/pages/section.vue";
 
 const routes = [
   {
     path: "/",
-    name: "Chooser",
-    component: Chooser,
+    redirect: "/term/2024-spring",
   },
   {
-    path: "/section",
-    name: "Section",
+    path: "/term/:id?",
+    component: Term,
+    pathToRegexpOptions: { strict: true },
+    props: true,
+  },
+  {
+    path: "/section/:id?",
+    name: Section,
     component: Section,
     pathToRegexpOptions: { strict: true },
   },

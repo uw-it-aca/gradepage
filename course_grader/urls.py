@@ -60,10 +60,17 @@ urlpatterns = [
     re_path(
         r'^api/v1/support/?$', UserOverride.as_view(), name='user-override'),
 
-    # page urls
+    # vue-router paths
+    # re_path(
+    #    r'^section/(?P<url_token>[^/]*)$',
+    #    SectionView.as_view(), name='section'),
+
     re_path(
-        r'^section/(?P<url_token>[^/]*)$',
-        SectionView.as_view(), name='section'),
+        r"^(term|section).*$",
+        HomeView.as_view()
+    ),
+
+    # default landing
     re_path(r'^$', HomeView.as_view(), name='home'),
 ]
 
