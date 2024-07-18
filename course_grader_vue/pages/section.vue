@@ -22,13 +22,13 @@
 import Layout from "@/layouts/default.vue";
 
 export default {
-  name: "PagesHome",
+  name: "PagesSection",
   components: {
     Layout,
   },
   data() {
     return {
-      pageTitle: "Gesadfasdtting started",
+      pageTitle: "ESS 101 A",
     };
   },
   methods: {},

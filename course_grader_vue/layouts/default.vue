@@ -78,11 +78,14 @@ export default {
       userFullName: context.user_fullname,
       userOverride: context.override_user,
       signOutUrl: context.signout_url,
-      pageTitle: context.page_title + " - " + appName,
+      // pageTitle: context.page_title + " - " + appName,
     };
   },
   created: function () {
-    document.title = this.pageTitle;
+    // document.title = this.pageTitle;
+
+    // constructs page title in the following format "Page Title - AppName"
+    document.title = this.pageTitle + " - " + this.appName;
   },
   methods: {
    clearUserOverride: function () {

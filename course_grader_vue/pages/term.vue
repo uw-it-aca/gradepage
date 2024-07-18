@@ -33,13 +33,13 @@
 import Layout from "@/layouts/default.vue";
 
 export default {
-  name: "PagesHome",
+  name: "PagesTerm",
   components: {
     Layout,
   },
   data() {
     return {
-      pageTitle: "Gesadfasdtting started",
+      pageTitle: "Spring 2024",
     };
   },
   methods: {},
