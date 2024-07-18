@@ -15,8 +15,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Encode+Sans+Condensed:wght@400;500;700&family=Open+Sans:ital,wght@0,400;0,700;1,400&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
     {{ context_data|json_script:"django-context-data" }}
-    <script id="persistent-message-data" type="application/json">
-        {{ message_data|safe }}
+    <script>
+      window.gradepage = {};
+      window.gradepage.messages = {{ messages|safe }};
+      window.gradepage.message_level = "{{ message_level }}";
     </script>
 
     <!-- vite css bundle -->

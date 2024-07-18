@@ -20,6 +20,7 @@ MIDDLEWARE += [
 
 TEMPLATES[0]['OPTIONS']['context_processors'] += [
     'supporttools.context_processors.supportools_globals',
+    'course_grader.context_processors.persistent_messages',
 ]
 
 if os.getenv('ENV', 'localdev') == 'localdev':
