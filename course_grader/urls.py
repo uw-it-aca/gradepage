@@ -14,7 +14,6 @@ from course_grader.views.api.importgrades import ImportGrades, UploadGrades
 from course_grader.views.api.conversionscales import ConversionScales
 from course_grader.views.api.submitted_graderoster import (
     SubmissionsByTerm, SubmittedGradeRoster)
-from course_grader.views.api.support import UserOverride
 
 
 urlpatterns = [
@@ -59,8 +58,6 @@ urlpatterns = [
     re_path(
         r'^api/v1/submitted_graderoster/(?P<graderoster_id>[\d]*)$',
         SubmittedGradeRoster.as_view(), name='graderoster-download'),
-    re_path(
-        r'^api/v1/support/?$', UserOverride.as_view(), name='user-override'),
 
     # vue-router paths
     re_path(r"^(term|section).*$", HomeView.as_view()),
