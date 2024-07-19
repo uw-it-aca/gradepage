@@ -71,8 +71,8 @@ async function getConversionScales(url) {
   return axios.get(url).catch(_handleError);
 }
 
-async function clearOverride() {
-  return axios.post("/api/v1/support/", { clear_override: true }).catch(_handleError);
+async function clearOverride(url) {
+  return axios.post(url, { clear_override: true });
 }
 
 export {

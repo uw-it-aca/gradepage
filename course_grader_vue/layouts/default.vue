@@ -77,6 +77,7 @@ export default {
       userName: context.login_user,
       userFullName: context.user_fullname,
       userOverride: context.override_user,
+      clearOverrideUrl: context.clear_override_url,
       signOutUrl: context.signout_url,
       // pageTitle: context.page_title + " - " + appName,
     };
@@ -88,9 +89,9 @@ export default {
     document.title = this.pageTitle + " - " + this.appName;
   },
   methods: {
-   clearUserOverride: function () {
-      this.clearOverride().then(() => {
-        window.location.href = "/support";
+    clearUserOverride: function () {
+      this.clearOverride(this.clearOverrideUrl).then(() => {
+        window.location.href = this.clearOverrideUrl;
       });
     },
   },
