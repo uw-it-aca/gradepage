@@ -77,9 +77,9 @@ class HomeView(TemplateView):
 
         # User context
         user_service = UserService()
-        context["user_login"] = user_service.get_user()
-        context["user_fullname"] = person_display_name(person)
+        context["login_user"] = user_service.get_original_user()
         context["override_user"] = user_service.get_override_user()
+        context["user_fullname"] = person_display_name(person)
         context["signout_url"] = reverse("saml_logout")
         context["debug_mode"] = settings.DEBUG
 
