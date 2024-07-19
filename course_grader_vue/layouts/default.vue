@@ -74,7 +74,7 @@ export default {
     return {
       appName: appName,
       appRootUrl: "/",
-      userName: context.user_login,
+      userName: context.login_user,
       userFullName: context.user_fullname,
       userOverride: context.override_user,
       signOutUrl: context.signout_url,
