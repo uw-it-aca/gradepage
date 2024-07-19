@@ -5,10 +5,9 @@ from django.conf import settings
 from django.urls import re_path
 from django.views.generic import TemplateView
 from course_grader.views.pages import HomeView
-from course_grader.views.section import SectionView
 from course_grader.views.support.status import status
 from course_grader.views.support.search import graderosters, grade_imports
-from course_grader.views.api.sections import Sections
+from course_grader.views.api.sections import Sections, Section
 from course_grader.views.api.graderoster import (
     GradeRoster, GradeRosterStatus, GradeRosterExport)
 from course_grader.views.api.importgrades import ImportGrades, UploadGrades
@@ -22,6 +21,9 @@ urlpatterns = [
     re_path(
         r'^api/v1/sections/(?P<term_id>[^/]*)$',
         Sections.as_view(), name='section-list'),
+    re_path(
+        r'^api/v1/section/(?P<section_id>[^/]*)$',
+        Section.as_view(), name='section'),
     re_path(
         r'^api/v1/graderoster/(?P<section_id>[^/]*)$',
         GradeRoster.as_view(), name='graderoster-edit'),
@@ -60,10 +62,10 @@ urlpatterns = [
     re_path(
         r'^api/v1/support/?$', UserOverride.as_view(), name='user-override'),
 
-    # page urls
-    re_path(
-        r'^section/(?P<url_token>[^/]*)$',
-        SectionView.as_view(), name='section'),
+    # vue-router paths
+    re_path(r"^(term|section).*$", HomeView.as_view()),
+
+    # default landing
     re_path(r'^$', HomeView.as_view(), name='home'),
 ]
 

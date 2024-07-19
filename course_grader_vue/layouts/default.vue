@@ -26,14 +26,20 @@
       </axdd-profile>
     </template>
     <template #navigation>
-      nav
+      <ul class="text-white">
+        <li>Summer 2024</li>
+        <li>Spring 2024</li>
+        <li>Winter 2024</li>
+        <li>Autumn 2023</li>
+        <li>Summer 2023</li>
+      </ul>
     </template>
     <template #aside>
      asfdasfdasfd
     </template>
     <template #main>
       <slot name="title">
-        <h1 class="visually-hidden">{{ pageTitle }}</h1>
+        <h1 class="">{{ pageTitle }}</h1>
       </slot>
       <slot name="content"></slot>
     </template>
@@ -72,11 +78,14 @@ export default {
       userFullName: context.user_fullname,
       userOverride: context.override_user,
       signOutUrl: context.signout_url,
-      pageTitle: context.page_title + " - " + appName,
+      // pageTitle: context.page_title + " - " + appName,
     };
   },
   created: function () {
-    document.title = this.pageTitle;
+    // document.title = this.pageTitle;
+
+    // constructs page title in the following format "Page Title - AppName"
+    document.title = this.pageTitle + " - " + this.appName;
   },
   methods: {
    clearUserOverride: function () {
