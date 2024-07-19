@@ -42,7 +42,7 @@ class HomeViewTest(TestCase):
         self.assertEqual(context["sections_url"],
                          "/api/v1/sections/2013-spring")
         self.assertEqual(len(context["terms"]), 2)
-        self.assertEqual(context["user_login"], "javerage")
+        self.assertEqual(context["login_user"], "javerage")
         self.assertEqual(context["user_fullname"], "Jamesy McJamesy")
         self.assertIsNone(context["override_user"])
 
