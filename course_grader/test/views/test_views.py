@@ -13,7 +13,6 @@ from course_grader.dao.person import PWS
 from course_grader.dao.section import get_section_by_label
 from course_grader.dao.term import get_term_by_year_and_quarter
 from course_grader.views.pages import HomeView
-from course_grader.views.section import SectionView
 from course_grader.views import *
 
 
@@ -48,22 +47,6 @@ class HomeViewTest(TestCase):
 
 @fdao_sws_override
 @fdao_pws_override
-class SectionViewTest(TestCase):
-    def test_get_context_data(self):
-        section = get_section_by_label('2013,spring,TRAIN,101/A')
-        user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
-
-        kwargs = {"section": section, "instructor": user}
-        context = SectionView().get_context_data(**kwargs)
-        self.assertEqual(context["page_title"], "TRAIN 101 A")
-        self.assertEqual(context["section_quarter"], "Spring")
-        self.assertEqual(context["section_year"], 2013)
-        self.assertEqual(context["term_url"], "/?term=2013-spring")
-        self.assertEqual(context["is_independent_study"], False)
-
-
-@fdao_sws_override
-@fdao_pws_override
 class ViewFunctionsTest(TestCase):
     def test_clean_section_id(self):
         self.assertEqual(
@@ -91,14 +74,14 @@ class ViewFunctionsTest(TestCase):
                 url_for_section((
                     '2013-spring-TRAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE')), (
-                    '/section/2013-spring-TRAIN-101-A-'
+                    '/api/v1/section/2013-spring-TRAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE'))
 
             self.assertEqual(
                 url_for_section((
                     '2013-spring-T RAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE')), (
-                    '/section/2013-spring-T%20RAIN-101-A-'
+                    '/api/v1/section/2013-spring-T%20RAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE'))
 
         with self.settings(GRADEPAGE_HOST='https://abc.edu'):
@@ -106,14 +89,14 @@ class ViewFunctionsTest(TestCase):
                 url_for_section((
                     '2013-spring-TRAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE')), (
-                    '/section/2013-spring-TRAIN-101-'
+                    '/api/v1/section/2013-spring-TRAIN-101-'
                     'A-9136CCB8F66711D5BE060004AC494FFE'))
 
             self.assertEqual(
                 url_for_section((
                     '2013-spring-T RAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE')), (
-                    '/section/2013-spring-T%20RAIN-101-'
+                    '/api/v1/section/2013-spring-T%20RAIN-101-'
                     'A-9136CCB8F66711D5BE060004AC494FFE'))
 
     def test_url_for_grading_status(self):
