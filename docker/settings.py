@@ -10,12 +10,10 @@ INSTALLED_APPS += [
     'rc_django',
     'grade_conversion_calculator',
     'django.contrib.humanize',
-    'django_user_agents'
 ]
 
 MIDDLEWARE += [
     'userservice.user.UserServiceMiddleware',
-    'django_user_agents.middleware.UserAgentMiddleware',
 ]
 
 TEMPLATES[0]['OPTIONS']['context_processors'] += [

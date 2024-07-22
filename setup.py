@@ -22,7 +22,6 @@ setup(
     include_package_data=True,
     install_requires = [
         'django~=4.2',
-        'django-user-agents',
         'django-userservice~=3.2',
         'django-storages[google]',
         'django-safe-emailbackend~=1.2',

@@ -5,7 +5,6 @@
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.contrib.auth.models import User
-from django_user_agents.middleware import UserAgentMiddleware
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
 from userservice.user import UserServiceMiddleware
@@ -27,7 +26,6 @@ class HomeViewTest(TestCase):
         request.session = {}
         request.user = self.user
         UserServiceMiddleware().process_request(request)
-        UserAgentMiddleware().process_request(request)
 
         view = HomeView()
         view.request = request
@@ -66,7 +64,7 @@ class ViewFunctionsTest(TestCase):
 
     def test_url_for_term(self):
         term = get_term_by_year_and_quarter(2013, 'spring')
-        self.assertEqual(url_for_term(term), '/?term=2013-spring')
+        self.assertEqual(url_for_term(term), '/term/2013-spring')
 
     def test_url_for_section(self):
         with self.settings(GRADEPAGE_HOST=''):

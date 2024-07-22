@@ -18,8 +18,7 @@ def clean_section_id(section_id):
 
 
 def url_for_term(term):
-    return "{path}?term={year}-{quarter}".format(
-        path=reverse("home"), year=term.year, quarter=term.quarter)
+    return f"/term/{term.year}-{term.quarter}"
 
 
 def url_for_section(section_id):
