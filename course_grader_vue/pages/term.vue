@@ -1,47 +1,52 @@
-// home.vue
-
 <template>
-  <Layout :page-title="pageTitle">
+  <layout :page-title="pageTitle">
     <template #content>
-
-      <h2>Section List</h2>
-      <ul>
-        <li>
-          <a href="/section/2024-spring-ESS-101-A-51CAAF8E6A7D11D5A4AE0004AC494FFE">ESS 101 A</a>
-          <ul>
-            <li>ESS 101 AA</li>
-            <li>ESS 101 AB</li>
-          </ul>
-        </li>
-        <li>ESS 101 B
-          <ul>
-            <li>ESS 101 BA</li>
-            <li>ESS 101 BB</li>
-            <li>ESS 101 BC</li>
-          </ul>
-        </li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-      </ul>
+      <div v-if="sections.length > 0">
+        <section-list :sections="sections"></section-list>
+      </div>
+      <div v-else>
+        You do not have any classes to grade for <strong>{{ pageTitle }}</strong>. If you believe this to be incorrect, please contact your department's Time Schedule Coordinator.
+      </div>
     </template>
-  </Layout>
+  </layout>
 </template>
 
 <script>
 import Layout from "@/layouts/default.vue";
+import SectionList from "@/components/section/list.vue";
+import { useContextStore } from "@/stores/context";
+import { getSections } from "@/utils/data";
 
 export default {
-  name: "PagesTerm",
   components: {
-    Layout,
+    layout: Layout,
+    "section-list": SectionList,
+  },
+  setup() {
+    const contextStore = useContextStore();
+    return {
+      contextStore,
+      getSections,
+    };
   },
   data() {
     return {
-      pageTitle: "Summer 2024",
+      pageTitle: this.contextStore.context.page_title,
+      sections: [],
     };
   },
-  methods: {},
+  methods: {
+    loadSectionsForTerm: function () {
+      let url = this.contextStore.context.sections_url;
+      this.getSections(url).then(response => {
+        return response.data;
+      }).then(data => {
+        this.sections = data.sections;
+      })
+    },
+  },
+  mounted() {
+    this.loadSectionsForTerm();
+  },
 };
 </script>

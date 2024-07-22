@@ -22,5 +22,5 @@ class SectionViewTest(TestCase):
         self.assertEqual(context["page_title"], "TRAIN 101 A")
         self.assertEqual(context["section_quarter"], "Spring")
         self.assertEqual(context["section_year"], 2013)
-        self.assertEqual(context["term_url"], "/?term=2013-spring")
+        self.assertEqual(context["term_url"], "/term/2013-spring")
         self.assertEqual(context["is_independent_study"], False)

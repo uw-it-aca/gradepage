@@ -83,10 +83,4 @@ class HomeView(TemplateView):
         context["signout_url"] = reverse("saml_logout")
         context["debug_mode"] = settings.DEBUG
 
-        # Client context
-        context["is_mobile"] = self.request.user_agent.is_mobile
-        context["is_tablet"] = self.request.user_agent.is_tablet
-        context["is_desktop"] = (not self.request.user_agent.is_mobile and
-                                 not self.request.user_agent.is_tablet)
-
         return context
