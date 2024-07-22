@@ -32,20 +32,35 @@ export default {
   data() {
     return {
       pageTitle: this.contextStore.context.page_title,
+      sectionsURL: this.contextStore.context.sections_url,
       sections: [],
     };
   },
   methods: {
+    updateTerm: function () {
+      let term;
+      if (this.$route.params.id) {
+        term = this.contextStore.context.terms.find(
+            t => t.sections_url.endsWith(this.$route.params.id));
+        if (term) {
+          this.pageTitle = term.quarter + " " + term.year;
+          this.sectionsURL = term.sections_url;
+        }
+      } else {
+        this.pageTitle = this.contextStore.context.page_title;
+        this.sectionsURL = this.contextStore.context.sections_url;
+      }
+    },
     loadSectionsForTerm: function () {
-      let url = this.contextStore.context.sections_url;
-      this.getSections(url).then(response => {
+      this.getSections(this.sectionsURL).then(response => {
         return response.data;
       }).then(data => {
         this.sections = data.sections;
       })
     },
   },
-  mounted() {
+  created() {
+    this.updateTerm();
     this.loadSectionsForTerm();
   },
 };
