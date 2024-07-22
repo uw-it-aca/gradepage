@@ -59,6 +59,8 @@ class HomeView(TemplateView):
                 "quarter": opt_term.get_quarter_display(),
                 "year": opt_term.year,
                 "url": url_for_term(opt_term),
+                "sections_url": reverse("section-list", kwargs={
+                    "term_id": f"{opt_term.year}-{opt_term.quarter}"}),
                 "is_selected": opt_term == selected_term,
             })
 
