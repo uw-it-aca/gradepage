@@ -3,7 +3,7 @@
     <ul>
       <li v-for="section in sections" :key="section.section_id" id="section-{{section.section_id}}">
         <section-list-item :section="section"></section-list-item>
-        <div v-if="section.secondary_sections.length > 0">
+        <div v-if="section.secondary_sections && section.secondary_sections.length">
           <ul>
             <li v-for="secondary in section.secondary_sections" :key="secondary.section_id" id="section-{{secondary.section_id}}">
               <section-list-item :section="secondary"></section-list-item>
