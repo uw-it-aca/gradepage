@@ -9,7 +9,7 @@
   >
     <template #profile>
       <axdd-profile
-        v-if="userName != userOverride"
+        v-if="userOverride != null"
         :user-netid="userName"
         :user-override="userOverride"
       >
