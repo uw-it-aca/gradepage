@@ -25,18 +25,6 @@
         <a :href="signOutUrl" class="text-white">Sign out</a>
       </axdd-profile>
     </template>
-    <template #navigation>
-      <ul>
-        <li>Summer 2024</li>
-        <li>Spring 2024</li>
-        <li>Winter 2024</li>
-        <li>Autumn 2023</li>
-        <li>Summer 2023</li>
-      </ul>
-    </template>
-    <template #aside>
-     asfdasfdasfd
-    </template>
     <template #main>
       <slot name="title">
         <h1 class="">{{ pageTitle }}</h1>
