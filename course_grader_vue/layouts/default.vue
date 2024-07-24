@@ -1,6 +1,6 @@
 <template>
  <!-- layout.vue: this is where you override the layout -->
- <axdd-sidebar
+ <axdd-topbar
     :app-name="appName"
     :app-root-url="appRootUrl"
     :page-title="pageTitle"
@@ -26,7 +26,7 @@
       </axdd-profile>
     </template>
     <template #navigation>
-      <ul class="text-white">
+      <ul>
         <li>Summer 2024</li>
         <li>Spring 2024</li>
         <li>Winter 2024</li>
@@ -44,7 +44,7 @@
       <slot name="content"></slot>
     </template>
     <template #footer></template>
-  </axdd-sidebar>
+  </axdd-topbar>
 
 </template>
 
