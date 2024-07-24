@@ -1,6 +1,6 @@
 <template>
- <!-- layout.vue: this is where you override the layout -->
- <axdd-topbar
+  <!-- layout.vue: this is where you override the layout -->
+  <axdd-topbar
     :app-name="appName"
     :app-root-url="appRootUrl"
     :page-title="pageTitle"
@@ -26,14 +26,17 @@
       </axdd-profile>
     </template>
     <template #main>
-      <slot name="title">
-        <h1 class="">{{ pageTitle }}</h1>
-      </slot>
-      <slot name="content"></slot>
+      <div class="row justify-content-center">
+        <div class="col-9 border my-5">
+          <slot name="title">
+            <h1 class="">{{ pageTitle }}</h1>
+          </slot>
+          <slot name="content"></slot>
+        </div>
+      </div>
     </template>
     <template #footer></template>
   </axdd-topbar>
-
 </template>
 
 <script>
@@ -58,7 +61,7 @@ export default {
   },
   data() {
     let context = this.contextStore.context,
-        appName = "Gradepage";
+      appName = "Gradepage";
     return {
       appName: appName,
       appRootUrl: "/",
