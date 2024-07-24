@@ -27,7 +27,7 @@
     </template>
     <template #main>
       <div class="row justify-content-center">
-        <div class="col-9 border my-5">
+        <div class="col-9 my-5">
           <slot name="title">
             <h1 class="">{{ pageTitle }}</h1>
           </slot>

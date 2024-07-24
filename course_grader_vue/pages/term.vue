@@ -1,6 +1,7 @@
 <template>
   <layout :page-title="pageTitle">
     <template #content>
+      <div class="border">
       <div v-if="sections.length > 0">
         <section-list :sections="sections"></section-list>
       </div>
@@ -9,6 +10,7 @@
         >. If you believe this to be incorrect, please contact your department's
         Time Schedule Coordinator.
       </div>
+    </div>
     </template>
   </layout>
 </template>
