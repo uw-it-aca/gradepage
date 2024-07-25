@@ -1,12 +1,16 @@
 <template>
   <layout :page-title="pageTitle">
     <template #content>
+      <div class="border">
       <div v-if="sections.length > 0">
         <section-list :sections="sections"></section-list>
       </div>
       <div v-else>
-        You do not have any classes to grade for <strong>{{ pageTitle }}</strong>. If you believe this to be incorrect, please contact your department's Time Schedule Coordinator.
+        You do not have any classes to grade for <strong>{{ pageTitle }}</strong
+        >. If you believe this to be incorrect, please contact your department's
+        Time Schedule Coordinator.
       </div>
+    </div>
     </template>
   </layout>
 </template>
@@ -40,8 +44,9 @@ export default {
     updateTerm: function () {
       let term;
       if (this.$route.params.id) {
-        term = this.contextStore.context.terms.find(
-            t => t.sections_url.endsWith(this.$route.params.id));
+        term = this.contextStore.context.terms.find((t) =>
+          t.sections_url.endsWith(this.$route.params.id)
+        );
         if (term) {
           this.pageTitle = term.quarter + " " + term.year;
           this.sectionsURL = term.sections_url;
@@ -52,11 +57,13 @@ export default {
       }
     },
     loadSectionsForTerm: function () {
-      this.getSections(this.sectionsURL).then(response => {
-        return response.data;
-      }).then(data => {
-        this.sections = data.sections;
-      })
+      this.getSections(this.sectionsURL)
+        .then((response) => {
+          return response.data;
+        })
+        .then((data) => {
+          this.sections = data.sections;
+        });
     },
   },
   created() {

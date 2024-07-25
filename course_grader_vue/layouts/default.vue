@@ -1,6 +1,6 @@
 <template>
- <!-- layout.vue: this is where you override the layout -->
- <axdd-sidebar
+  <!-- layout.vue: this is where you override the layout -->
+  <axdd-topbar
     :app-name="appName"
     :app-root-url="appRootUrl"
     :page-title="pageTitle"
@@ -25,27 +25,18 @@
         <a :href="signOutUrl" class="text-white">Sign out</a>
       </axdd-profile>
     </template>
-    <template #navigation>
-      <ul class="text-white">
-        <li>Summer 2024</li>
-        <li>Spring 2024</li>
-        <li>Winter 2024</li>
-        <li>Autumn 2023</li>
-        <li>Summer 2023</li>
-      </ul>
-    </template>
-    <template #aside>
-     asfdasfdasfd
-    </template>
     <template #main>
-      <slot name="title">
-        <h1 class="">{{ pageTitle }}</h1>
-      </slot>
-      <slot name="content"></slot>
+      <div class="row justify-content-center">
+        <div class="col-9 my-5">
+          <slot name="title">
+            <h1 class="">{{ pageTitle }}</h1>
+          </slot>
+          <slot name="content"></slot>
+        </div>
+      </div>
     </template>
     <template #footer></template>
-  </axdd-sidebar>
-
+  </axdd-topbar>
 </template>
 
 <script>
@@ -70,7 +61,7 @@ export default {
   },
   data() {
     let context = this.contextStore.context,
-        appName = "Gradepage";
+      appName = "Gradepage";
     return {
       appName: appName,
       appRootUrl: "/",
