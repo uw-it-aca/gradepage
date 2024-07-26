@@ -41,7 +41,6 @@ export default {
       sectionNameId: "section-name-" + this.section.section_id,
       gradingStatusText: "",
       routerLinkTitle: "",
-      section_id: this.section.section_id,
     };
   },
   methods: {
@@ -56,8 +55,13 @@ export default {
           console.log(error.message);
         });
       } else {
-        if (this.gradingStatus.hasOwnProperty(this.section_id)) {
-          this.updateGradingStatusUI(this.gradingStatus[this.section_id]);
+        grading_status = this.gradingStatus.find((gs) =>
+          gs.section_id === this.section.section_id
+        );
+
+        if (grading_status) {
+          this.gradingStatusText = this.formatGradingStatus(grading_status);
+          this.routerLinkTitle = this.formatLinkTitle(grading_status);
         }
       }
     },

@@ -46,22 +46,13 @@ export default {
   },
   data() {
     return {
-      gradingStatus: {},
+      gradingStatus: [],
       sectionNameId: "section-name-" + this.section.section_id,
       gradingStatusText: "",
       routerLinkTitle: "",
     };
   },
   methods: {
-    loadSecondarySectionStatus: function(gs) {
-      var secondary, l, i;
-      if (gs.hasOwnProperty("secondary_sections")) {
-        for (i = 0, l = gs.secondary_sections.length; i < l; i++) {
-          secondary = gs.secondary_sections[i];
-          this.gradingStatus[secondary.section_id] = secondary.grading_status;
-        }
-      }
-    },
     loadSectionStatus: function () {
       if (this.section.status_url) {
         this.getSectionStatus(this.section.status_url).then(response => {
@@ -69,7 +60,11 @@ export default {
         }).then(data => {
           this.gradingStatusText = this.formatGradingStatus(data.grading_status);
           this.routerLinkTitle = this.formatLinkTitle(data.grading_status);
-          this.loadSecondarySectionStatus(data.grading_status);
+
+          // Load secondary statusus
+          if (data.grading_status.hasOwnProperty("secondary_sections")) {
+            this.gradingStatus = data.grading_status.secondary_sections;
+          }
         }).catch(error => {
           console.log(error.message);
         });
