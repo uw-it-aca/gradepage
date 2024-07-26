@@ -55,12 +55,14 @@ class HomeView(TemplateView):
 
         opt_terms = []
         for opt_term in all_terms:
+            opt_term_id = f"{opt_term.year}-{opt_term.quarter}"
             opt_terms.append({
+                "id": opt_term_id,
                 "quarter": opt_term.get_quarter_display(),
                 "year": opt_term.year,
                 "url": url_for_term(opt_term),
                 "sections_url": reverse("section-list", kwargs={
-                    "term_id": f"{opt_term.year}-{opt_term.quarter}"}),
+                    "term_id": opt_term_id}),
                 "is_selected": opt_term == selected_term,
             })
 
