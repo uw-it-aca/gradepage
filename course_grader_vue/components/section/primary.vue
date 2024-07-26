@@ -53,18 +53,21 @@ export default {
     };
   },
   methods: {
+    applyGradingStatus: function (grading_status) {
+      this.gradingStatusText = this.formatGradingStatus(grading_status);
+      this.routerLinkTitle = this.formatLinkTitle(grading_status);
+
+      // Add secondary statusus to prop
+      if (grading_status.hasOwnProperty("secondary_sections")) {
+        this.gradingStatus = grading_status.secondary_sections;
+      }
+    },
     loadSectionStatus: function () {
       if (this.section.status_url) {
         this.getSectionStatus(this.section.status_url).then(response => {
           return response.data;
         }).then(data => {
-          this.gradingStatusText = this.formatGradingStatus(data.grading_status);
-          this.routerLinkTitle = this.formatLinkTitle(data.grading_status);
-
-          // Load secondary statusus
-          if (data.grading_status.hasOwnProperty("secondary_sections")) {
-            this.gradingStatus = data.grading_status.secondary_sections;
-          }
+          this.applyGradingStatus(data.grading_status);
         }).catch(error => {
           console.log(error.message);
         });
