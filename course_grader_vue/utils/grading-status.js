@@ -20,7 +20,7 @@ function formatGradingStatus(data) {
     if (data.submitted_count) {
       if (data.submitted_date) {
         if (data.accepted_date) {
-          submitted_date = this.formatLongDateTime(data.submitted_date);
+          submitted_date = formatLongDateTime(data.submitted_date);
           return (data.submitted_count > 1)
             ? data.submitted_count + " grades submitted on " + submitted_date
             : "One grade submitted on " + submitted_date;
