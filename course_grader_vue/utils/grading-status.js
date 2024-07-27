@@ -40,7 +40,7 @@ function formatGradingStatus(data) {
       }
     }
   }
-  return "No submission information";
+  return "";
 }
 
 export {

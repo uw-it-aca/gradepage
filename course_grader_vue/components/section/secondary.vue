@@ -8,10 +8,7 @@
     <template v-else>
       <h3 :id="sectionNameId">{{ section.display_name }}</h3>
     </template>
-    <div v-if="section.grading_status">
-      {{ section.grading_status }}
-    </div>
-    <div v-else>{{ gradingStatusText }}</div>
+    <div>{{ gradingStatusText }}</div>
   </div>
 </template>
 
@@ -27,6 +24,7 @@ export default {
     },
     gradingStatus: {
       type: Object,
+      default: {},
     },
   },
   setup() {
@@ -36,42 +34,50 @@ export default {
       formatLinkTitle,
     };
   },
+  computed: {
+    gradingStatusText() {
+      if (this.section.grading_status) {
+        return this.section.grading_status;
+      } else if (this.errorStatus) {
+        return this.errorStatus;
+      } else if (this.section.status_url) {
+        return this.formatGradingStatus(this.secondaryStatus);
+      } else {
+        return this.formatGradingStatus(this.gradingStatus);
+      }
+    },
+    routerLinkTitle() {
+      if (this.section.status_url) {
+        return this.formatLinkTitle(this.secondaryStatus);
+      } else {
+        return this.formatLinkTitle(this.gradingStatus);
+      }
+    },
+  },
   data() {
     return {
+      secondaryStatus: {},
+      errorStatus: "",
       sectionNameId: "section-name-" + this.section.section_id,
-      gradingStatusText: "",
-      routerLinkTitle: "",
     };
   },
   methods: {
-    applyGradingStatus: function (grading_status) {
-      this.gradingStatusText = this.formatGradingStatus(grading_status);
-      this.routerLinkTitle = this.formatLinkTitle(grading_status);
-    },
     loadSectionStatus: function () {
       if (this.section.status_url) {
         this.getSectionStatus(this.section.status_url).then(response => {
           return response.data;
         }).then(data => {
-          this.applyGradingStatus(data.grading_status);
+          this.secondaryStatus = data.grading_status;
         }).catch(error => {
-          console.log(error.message);
+          this.errorStatus = error.message;
         });
       } else {
-        // Check for a grading status in the prop
-        let grading_status = this.gradingStatus.find((gs) =>
-          gs.section_id === this.section.section_id
-        );
-        if (grading_status) {
-          this.applyGradingStatus(grading_status);
-        }
+          return this.gradingStatus;
       }
     },
   },
   created() {
-    if (!this.section.grading_status) {
-      this.loadSectionStatus();
-    }
+    this.loadSectionStatus();
   },
 };
 </script>

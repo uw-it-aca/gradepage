@@ -8,15 +8,12 @@
     <template v-else>
       <h3 :id="sectionNameId">{{ section.display_name }}</h3>
     </template>
-    <div v-if="section.grading_status">
-      {{ section.grading_status }}
-    </div>
-    <div v-else>{{ gradingStatusText }}</div>
+    <div>{{ gradingStatusText }}</div>
   </div>
   <div v-if="section.secondary_sections && section.secondary_sections.length">
     <ul>
-      <li v-for="secondary in section.secondary_sections" :key="secondary.section_id">
-        <secondary-section :section="secondary" :gradingStatus="gradingStatus"></secondary-section>
+      <li v-for="(secondary, index) in section.secondary_sections" :key="secondary.section_id">
+        <secondary-section :section="secondary" :grading-status="secondaryStatus[index]"></secondary-section>
       </li>
     </ul>
   </div>
@@ -44,40 +41,44 @@ export default {
       formatLinkTitle,
     };
   },
+  computed: {
+    gradingStatusText() {
+      if (this.section.grading_status)  {
+        return this.section.grading_status;
+      } else if (this.errorStatus) {
+        return this.errorStatus;
+      } else {
+        return this.formatGradingStatus(this.gradingStatus);
+      }
+    },
+    routerLinkTitle() {
+      return this.formatLinkTitle(this.gradingStatus);
+    },
+  },
   data() {
     return {
-      gradingStatus: [],
+      gradingStatus: {},
+      secondaryStatus: [],
+      errorStatus: "",
       sectionNameId: "section-name-" + this.section.section_id,
-      gradingStatusText: "",
-      routerLinkTitle: "",
     };
   },
   methods: {
-    applyGradingStatus: function (grading_status) {
-      this.gradingStatusText = this.formatGradingStatus(grading_status);
-      this.routerLinkTitle = this.formatLinkTitle(grading_status);
-
-      // Add secondary statusus to prop
-      if (grading_status.hasOwnProperty("secondary_sections")) {
-        this.gradingStatus = grading_status.secondary_sections;
-      }
-    },
     loadSectionStatus: function () {
       if (this.section.status_url) {
         this.getSectionStatus(this.section.status_url).then(response => {
           return response.data;
         }).then(data => {
-          this.applyGradingStatus(data.grading_status);
+          this.gradingStatus = data.grading_status;
+          this.secondaryStatus = data.grading_status.secondary_sections;
         }).catch(error => {
-          console.log(error.message);
+          this.errorStatus = error.message;
         });
       }
     },
   },
   created() {
-    if (!this.section.grading_status) {
-      this.loadSectionStatus();
-    }
+    this.loadSectionStatus();
   },
 };
 </script>
