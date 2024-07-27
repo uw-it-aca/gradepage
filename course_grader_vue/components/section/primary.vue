@@ -49,12 +49,14 @@ export default {
         return this.section.grading_status;
       } else if (this.errorStatus) {
         return this.errorStatus;
-      } else {
+      } else if (this.gradingStatus) {
         return this.formatGradingStatus(this.gradingStatus);
       }
     },
     routerLinkTitle() {
-      return this.formatLinkTitle(this.gradingStatus);
+      if (this.gradingStatus) {
+        return this.formatLinkTitle(this.gradingStatus);
+      }
     },
   },
   data() {

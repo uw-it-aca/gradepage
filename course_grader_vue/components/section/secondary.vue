@@ -42,14 +42,14 @@ export default {
         return this.errorStatus;
       } else if (this.secondaryStatus) {
         return this.formatGradingStatus(this.secondaryStatus);
-      } else {
+      } else if (this.gradingStatus) {
         return this.formatGradingStatus(this.gradingStatus);
       }
     },
     routerLinkTitle() {
       if (this.secondaryStatus) {
         return this.formatLinkTitle(this.secondaryStatus);
-      } else {
+      } else if (this.gradingStatus) {
         return this.formatLinkTitle(this.gradingStatus);
       }
     },
