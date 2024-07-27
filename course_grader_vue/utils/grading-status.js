@@ -12,18 +12,21 @@ function formatLinkTitle(data) {
 }
 
 function formatGradingStatus(data) {
-  if (data.unsubmitted_count && data.grading_period_open) {
-    return (data.unsubmitted_count > 1)
-      ? data.unsubmitted_count + " grades to submit"
-      : "One grade to submit";
+  if (data.grading_status) {
+    return data.grading_status;
+  } else if {
+    if (data.unsubmitted_count && data.grading_period_open) {
+      return (data.unsubmitted_count > 1)
+        ? data.unsubmitted_count + " grades to submit"
+        : "One grade to submit";
   } else {
     if (data.submitted_count) {
       if (data.submitted_date) {
         if (data.accepted_date) {
-          submitted_date = formatLongDateTime(data.submitted_date);
+          let submitted_date_str = formatLongDateTime(data.submitted_date);
           return (data.submitted_count > 1)
-            ? data.submitted_count + " grades submitted on " + submitted_date
-            : "One grade submitted on " + submitted_date;
+            ? data.submitted_count + " grades submitted on " + submitted_dates_str
+            : "One grade submitted on " + submitted_date_str;
         } else {
           return (data.submitted_count > 1)
             ? data.submitted_count + " grade submissions in progress"

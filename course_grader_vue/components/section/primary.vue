@@ -13,7 +13,9 @@
   <div v-if="section.secondary_sections && section.secondary_sections.length">
     <ul>
       <li v-for="(secondary, index) in section.secondary_sections" :key="secondary.section_id">
-        <secondary-section :section="secondary" :grading-status="secondaryStatus[index]"></secondary-section>
+        <secondary-section
+          :section="secondary"
+          :grading-status="secondaryStatus[index]"></secondary-section>
       </li>
     </ul>
   </div>
@@ -57,14 +59,14 @@ export default {
   },
   data() {
     return {
-      gradingStatus: {},
+      gradingStatus: null,
       secondaryStatus: [],
-      errorStatus: "",
+      errorStatus: null,
       sectionNameId: "section-name-" + this.section.section_id,
     };
   },
   methods: {
-    loadSectionStatus: function () {
+    loadGradingStatus: function () {
       if (this.section.status_url) {
         this.getSectionStatus(this.section.status_url).then(response => {
           return response.data;
@@ -78,7 +80,7 @@ export default {
     },
   },
   created() {
-    this.loadSectionStatus();
+    this.loadGradingStatus();
   },
 };
 </script>
