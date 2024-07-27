@@ -24,7 +24,7 @@ export default {
     },
     gradingStatus: {
       type: Object,
-      default: null,
+      default: undefined,
     },
   },
   setup() {
