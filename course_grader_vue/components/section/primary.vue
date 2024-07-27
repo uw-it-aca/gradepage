@@ -13,7 +13,9 @@
   <div v-if="section.secondary_sections && section.secondary_sections.length">
     <ul>
       <li v-for="(secondary, index) in section.secondary_sections" :key="secondary.section_id">
-        <secondary-section :section="secondary" :grading-status="secondaryStatus[index]"></secondary-section>
+        <secondary-section
+          :section="secondary"
+          :grading-status="secondaryStatus[index]"></secondary-section>
       </li>
     </ul>
   </div>
@@ -47,24 +49,26 @@ export default {
         return this.section.grading_status;
       } else if (this.errorStatus) {
         return this.errorStatus;
-      } else {
+      } else if (this.gradingStatus) {
         return this.formatGradingStatus(this.gradingStatus);
       }
     },
     routerLinkTitle() {
-      return this.formatLinkTitle(this.gradingStatus);
+      if (this.gradingStatus) {
+        return this.formatLinkTitle(this.gradingStatus);
+      }
     },
   },
   data() {
     return {
-      gradingStatus: {},
+      gradingStatus: null,
       secondaryStatus: [],
-      errorStatus: "",
+      errorStatus: null,
       sectionNameId: "section-name-" + this.section.section_id,
     };
   },
   methods: {
-    loadSectionStatus: function () {
+    loadGradingStatus: function () {
       if (this.section.status_url) {
         this.getSectionStatus(this.section.status_url).then(response => {
           return response.data;
@@ -78,7 +82,7 @@ export default {
     },
   },
   created() {
-    this.loadSectionStatus();
+    this.loadGradingStatus();
   },
 };
 </script>

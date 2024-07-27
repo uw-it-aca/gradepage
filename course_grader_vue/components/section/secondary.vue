@@ -24,7 +24,7 @@ export default {
     },
     gradingStatus: {
       type: Object,
-      default: {},
+      default: null,
     },
   },
   setup() {
@@ -40,44 +40,43 @@ export default {
         return this.section.grading_status;
       } else if (this.errorStatus) {
         return this.errorStatus;
-      } else if (this.section.status_url) {
+      } else if (this.secondaryStatus) {
         return this.formatGradingStatus(this.secondaryStatus);
-      } else {
+      } else if (this.gradingStatus) {
         return this.formatGradingStatus(this.gradingStatus);
       }
     },
     routerLinkTitle() {
-      if (this.section.status_url) {
+      if (this.secondaryStatus) {
         return this.formatLinkTitle(this.secondaryStatus);
-      } else {
+      } else if (this.gradingStatus) {
         return this.formatLinkTitle(this.gradingStatus);
       }
     },
   },
   data() {
     return {
-      secondaryStatus: {},
-      errorStatus: "",
+      secondaryStatus: null,
+      errorStatus: null,
       sectionNameId: "section-name-" + this.section.section_id,
     };
   },
   methods: {
-    loadSectionStatus: function () {
+    loadGradingStatus: function () {
       if (this.section.status_url) {
         this.getSectionStatus(this.section.status_url).then(response => {
           return response.data;
         }).then(data => {
+          // Secondary status overrules the prop
           this.secondaryStatus = data.grading_status;
         }).catch(error => {
           this.errorStatus = error.message;
         });
-      } else {
-          return this.gradingStatus;
       }
     },
   },
   created() {
-    this.loadSectionStatus();
+    this.loadGradingStatus();
   },
 };
 </script>
