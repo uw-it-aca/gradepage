@@ -74,7 +74,9 @@ export default {
           return response.data;
         }).then(data => {
           this.gradingStatus = data.grading_status;
-          this.secondaryStatus = data.grading_status.secondary_sections;
+          if (data.grading_status.hasOwnProperty("secondary_sections")) {
+            this.secondaryStatus = data.grading_status.secondary_sections;
+          }
         }).catch(error => {
           this.errorStatus = error.message;
         });
