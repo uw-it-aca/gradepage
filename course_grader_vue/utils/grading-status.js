@@ -16,7 +16,7 @@ function formatGradingStatus(data) {
   } else if (data.unsubmitted_count && data.grading_period_open) {
     return (data.unsubmitted_count > 1)
       ? data.unsubmitted_count + " grades to submit"
-      : "One grade to submit";
+      : "1 grade to submit";
   } else {
     if (data.submitted_count) {
       if (data.submitted_date) {
@@ -24,16 +24,16 @@ function formatGradingStatus(data) {
           let submitted_date_str = formatLongDateTime(data.submitted_date);
           return (data.submitted_count > 1)
             ? data.submitted_count + " grades submitted on " + submitted_date_str
-            : "One grade submitted on " + submitted_date_str;
+            : "1 grade submitted on " + submitted_date_str;
         } else {
           return (data.submitted_count > 1)
             ? data.submitted_count + " grade submissions in progress"
-            : "One grade submission in progress";
+            : "1 grade submission in progress";
         }
       } else {
         return (data.submitted_count > 1)
           ? data.submitted_count + " grades submitted"
-          : "One grade submitted";
+          : "1 grade submitted";
       }
     } else {
       if (!data.grading_period_open) {

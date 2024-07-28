@@ -19,6 +19,7 @@ import "solstice-vue/dist/style.css";
 
 const app = createApp(App);
 app.config.productionTip = false;
+app.config.globalProperties.window = window
 
 // vue-gtag-next
 const gaCode = document.body.getAttribute("data-google-analytics");
