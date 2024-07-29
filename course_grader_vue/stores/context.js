@@ -8,8 +8,6 @@ export const useContextStore = defineStore({
       context: JSON.parse(
         document.getElementById("django-context-data").textContent
       ),
-      messages: window.gradepage.messages,
-      message_level: window.gradepage.message_level,
     };
   },
   getters: {},
