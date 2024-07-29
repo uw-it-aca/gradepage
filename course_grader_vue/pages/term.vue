@@ -1,12 +1,9 @@
 <template>
-  <layout :page-title="selectedTermName">
+  <layout
+    :page-title="selectedTermName"
+    :term-url="isCurrentTermDisplay ? null : currentTerm.url">
     <template #content>
       <div>
-        <div v-if="!isCurrentTermDisplay">
-          <a :href="currentTerm.url" title="Back to current quarter">
-            Back to current quarter
-          </a>
-        </div>
         <select
           aria-label="Select term"
           @change="selectTerm"

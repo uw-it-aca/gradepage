@@ -29,6 +29,11 @@
       <div>
         <div v-for="message in messages" v-html="message" />
       </div>
+      <div v-if="termUrl">
+        <a :href="termUrl" title="Back to current quarter">
+          Back to current quarter
+        </a>
+      </div>
       <div class="row justify-content-center">
         <div class="col-9 my-5">
           <slot name="title">
@@ -53,6 +58,10 @@ export default {
     pageTitle: {
       type: String,
       required: true,
+    },
+    termUrl: {
+      type: String,
+      default: null,
     },
   },
   setup() {
