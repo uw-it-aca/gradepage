@@ -1,11 +1,16 @@
 <template>
-  <layout :page-title="selectedTermText">
+  <layout :page-title="selectedTermName">
     <template #content>
       <div>
+        <div v-if="!isCurrentTermDisplay">
+          <a :href="currentTerm.url" title="Back to current quarter">
+            Back to current quarter
+          </a>
+        </div>
         <select
           aria-label="Select term"
           @change="selectTerm"
-          v-model="selectedTermUrl"
+          v-model="selectedTerm.url"
         >
           <template v-for="term in this.contextStore.context.terms" :key="term.id">
             <option
@@ -21,10 +26,10 @@
           <section-list :sections="sections"></section-list>
         </div>
         <div v-else>
-          You do not have any classes to grade for <strong>{{ selectedTermText }}</strong
+          You do not have any classes to grade for <strong>{{ selectedTermName }}</strong
           >. If you believe this to be incorrect, please contact your department's
           Time Schedule Coordinator.
-        </div>
+          </div>
       </div>
     </template>
   </layout>
@@ -50,11 +55,19 @@ export default {
   },
   data() {
     return {
-      selectedTermUrl: "",
-      selectedTermText: this.contextStore.context.page_title,
-      sectionsURL: this.contextStore.context.sections_url,
+      currentTerm: this.contextStore.context.terms[0],
+      selectedTerm: null,
       sections: [],
     };
+  },
+  computed: {
+    selectedTermName() {
+      return this.selectedTerm.quarter + " " + this.selectedTerm.year;
+    },
+    isCurrentTermDisplay() {
+      return (this.currentTerm.quarter === this.selectedTerm.quarter) &&
+        (this.currentTerm.year === this.selectedTerm.year);
+    },
   },
   methods: {
     selectTerm: function (e) {
@@ -72,12 +85,10 @@ export default {
       if (!term) {
         term = this.contextStore.context.terms[0];
       }
-      this.selectedTermUrl = term.url;
-      this.selectedTermText = term.quarter + " " + term.year;
-      this.sectionsURL = term.sections_url;
+      this.selectedTerm = term;
     },
     loadSectionsForTerm: function () {
-      this.getSections(this.sectionsURL)
+      this.getSections(this.selectedTerm.sections_url)
         .then((response) => {
           return response.data;
         })
