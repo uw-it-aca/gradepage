@@ -8,28 +8,31 @@
     <template v-else>
       <div class="fs-4" :id="sectionNameId">{{ section.display_name }}</div>
     </template>
-    <div>
-      <BPlaceholder
-        v-if="isLoading"
-        class="bg-light-gray"
-        style="max-width: 200px;"
-        animation="glow"
-      /><template v-else>{{ gradingStatusText }}</template>
-    </div>
+
+    <BPlaceholder
+      v-if="isLoading"
+      class="bg-light-gray"
+      style="max-width: 200px"
+      animation="glow"
+    />
+    <div v-else>{{ gradingStatusText }}</div>
   </div>
-  <div v-if="section.secondary_sections && section.secondary_sections.length">
-    <ul class="list-unstyled">
-      <li class="mb-3"
-        v-for="(secondary, index) in section.secondary_sections"
-        :key="secondary.section_id"
-      >
-        <SecondarySection
-          :section="secondary"
-          :grading-status="secondaryStatus[index]"
-        ></SecondarySection>
-      </li>
-    </ul>
-  </div>
+
+  <ul
+    v-if="section.secondary_sections && section.secondary_sections.length"
+    class="list-unstyled ms-4"
+  >
+    <li
+      class="mb-3"
+      v-for="(secondary, index) in section.secondary_sections"
+      :key="secondary.section_id"
+    >
+      <SecondarySection
+        :section="secondary"
+        :grading-status="secondaryStatus[index]"
+      ></SecondarySection>
+    </li>
+  </ul>
 </template>
 
 <script>
@@ -82,18 +85,21 @@ export default {
   methods: {
     loadGradingStatus: function () {
       if (this.section.status_url) {
-        this.getSectionStatus(this.section.status_url).then(response => {
-          return response.data;
-        }).then(data => {
-          this.isLoading = false;
-          this.gradingStatus = data.grading_status;
-          if (data.grading_status.hasOwnProperty("secondary_sections")) {
-            this.secondaryStatus = data.grading_status.secondary_sections;
-          }
-        }).catch(error => {
-          this.isLoading = false;
-          this.errorStatus = error.message;
-        });
+        this.getSectionStatus(this.section.status_url)
+          .then((response) => {
+            return response.data;
+          })
+          .then((data) => {
+            this.isLoading = false;
+            this.gradingStatus = data.grading_status;
+            if (data.grading_status.hasOwnProperty("secondary_sections")) {
+              this.secondaryStatus = data.grading_status.secondary_sections;
+            }
+          })
+          .catch((error) => {
+            this.isLoading = false;
+            this.errorStatus = error.message;
+          });
       }
     },
   },
