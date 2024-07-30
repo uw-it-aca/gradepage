@@ -1,19 +1,32 @@
 <template>
   <div :aria-labelledby="sectionNameId">
     <template v-if="section.section_url">
-      <router-link :to="{ path: section.section_url }" :title="routerLinkTitle">
-        <h3 :id="sectionNameId">{{ section.display_name }}</h3>
-      </router-link>
+      <RouterLink :to="{ path: section.section_url }" :title="routerLinkTitle">
+        <div class="fs-4" :id="sectionNameId">{{ section.display_name }}</div>
+      </RouterLink>
     </template>
     <template v-else>
-      <h3 :id="sectionNameId">{{ section.display_name }}</h3>
+      <div class="fs-4" :id="sectionNameId">{{ section.display_name }}</div>
     </template>
-    <div>{{ gradingStatusText }}</div>
+    <div>
+      <BPlaceholder
+        v-if="isLoading"
+        class="bg-light-gray"
+        style="max-width: 200px;"
+        animation="glow"
+      /><template v-else>{{ gradingStatusText }}</template>
+    </div>
   </div>
   <div v-if="section.secondary_sections && section.secondary_sections.length">
-    <ul>
-      <li v-for="(secondary, index) in section.secondary_sections" :key="secondary.section_id">
-        <secondary-section :section="secondary" :grading-status="secondaryStatus[index]"></secondary-section>
+    <ul class="list-unstyled">
+      <li class="mb-3"
+        v-for="(secondary, index) in section.secondary_sections"
+        :key="secondary.section_id"
+      >
+        <SecondarySection
+          :section="secondary"
+          :grading-status="secondaryStatus[index]"
+        ></SecondarySection>
       </li>
     </ul>
   </div>
@@ -26,7 +39,7 @@ import { formatGradingStatus, formatLinkTitle } from "@/utils/grading-status";
 
 export default {
   components: {
-    "secondary-section": SecondarySection,
+    SecondarySection,
   },
   props: {
     section: {
@@ -43,7 +56,7 @@ export default {
   },
   computed: {
     gradingStatusText() {
-      if (this.section.grading_status)  {
+      if (this.section.grading_status) {
         return this.section.grading_status;
       } else if (this.errorStatus) {
         return this.errorStatus;
@@ -57,6 +70,7 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
       gradingStatus: {},
       secondaryStatus: [],
       errorStatus: "",
@@ -66,19 +80,26 @@ export default {
   methods: {
     loadSectionStatus: function () {
       if (this.section.status_url) {
-        this.getSectionStatus(this.section.status_url).then(response => {
-          return response.data;
-        }).then(data => {
-          this.gradingStatus = data.grading_status;
-          this.secondaryStatus = data.grading_status.secondary_sections;
-        }).catch(error => {
-          this.errorStatus = error.message;
-        });
+        this.getSectionStatus(this.section.status_url)
+          .then((response) => {
+            return response.data;
+          })
+          .then((data) => {
+            this.isLoading = false;
+            this.gradingStatus = data.grading_status;
+            this.secondaryStatus = data.grading_status.secondary_sections;
+          })
+          .catch((error) => {
+            this.isLoading = false;
+            this.errorStatus = error.message;
+          });
       }
     },
   },
   created() {
-    this.loadSectionStatus();
+    setTimeout(() => {
+      this.loadSectionStatus();
+    }, 1000);
   },
 };
 </script>

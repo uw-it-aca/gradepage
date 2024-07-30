@@ -1,8 +1,8 @@
 <template>
   <div>
-    <ul>
-      <li v-for="section in sections" :key="section.section_id">
-        <primary-section :section="section"></primary-section>
+    <ul class="list-unstyled">
+      <li v-for="section in sections" :key="section.section_id" class="mb-3">
+        <PrimarySection :section="section" />
       </li>
     </ul>
   </div>
@@ -13,7 +13,7 @@ import PrimarySection from "@/components/section/primary.vue";
 
 export default {
   components: {
-    "primary-section": PrimarySection,
+    PrimarySection,
   },
   props: {
     sections: {

@@ -2,6 +2,8 @@ import { fileURLToPath, URL } from "url";
 
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import Components from 'unplugin-vue-components/vite'
+import { BootstrapVueNextResolver } from "bootstrap-vue-next";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -26,7 +28,12 @@ export default defineConfig({
   base: "/static/", // allows for proper css url path creation during the build process
 
   // MARK: standard vite/vue plugin and resolver config
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    Components({
+      resolvers: [BootstrapVueNextResolver()],
+    }),
+  ],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./course_grader_vue", import.meta.url)),
