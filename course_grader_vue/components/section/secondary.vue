@@ -1,14 +1,21 @@
 <template>
   <div :aria-labelledby="sectionNameId">
     <template v-if="section.section_url">
-      <router-link :to="{ path: section.section_url }" :title="routerLinkTitle">
-        <h3 :id="sectionNameId">{{ section.display_name }}</h3>
-      </router-link>
+      <RouterLink :to="{ path: section.section_url }" :title="routerLinkTitle">
+        <div class="fs-4":id="sectionNameId">{{ section.display_name }}</div>
+      </RouterLink>
     </template>
     <template v-else>
-      <h3 :id="sectionNameId">{{ section.display_name }}</h3>
+      <div class="fs-4" :id="sectionNameId">{{ section.display_name }}</div>
     </template>
-    <div>{{ gradingStatusText }}</div>
+    <div>
+      <BPlaceholder
+        v-if="isLoading"
+        class="bg-light-gray"
+        style="max-width: 9rem"
+        animation="glow"
+      /><template v-else>{{ gradingStatusText }}</template>
+    </div>
   </div>
 </template>
 
@@ -56,6 +63,7 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
       secondaryStatus: null,
       errorStatus: null,
       sectionNameId: "section-name-" + this.section.section_id,
@@ -67,16 +75,20 @@ export default {
         this.getSectionStatus(this.section.status_url).then(response => {
           return response.data;
         }).then(data => {
+          this.isLoading = false;
           // Secondary status overrules the prop
           this.secondaryStatus = data.grading_status;
         }).catch(error => {
+          this.isLoading = false;
           this.errorStatus = error.message;
         });
       }
     },
   },
   created() {
-    this.loadGradingStatus();
+    setTimeout(() => {
+      this.loadGradingStatus();
+    }, 1000);
   },
 };
 </script>

@@ -6,7 +6,17 @@
     :page-title="pageTitle"
     :user-name="userName"
     :sign-out-url="signOutUrl"
+    :background-class="'bg-body-secondary'"
   >
+    <template #navigation>
+      <ul class="nav flex-column my-3">
+        <li class="nav-item mb-1 bg-black bg-opacity-10 rounded-3">
+          <a href="#" class="nav-link text-purple d-block px-3 py-2"
+            ><i class="bi bi-house-door-fill me-3"></i>Home</a
+          >
+        </li>
+      </ul>
+    </template>
     <template #profile>
       <axdd-profile
         v-if="userOverride != null"
@@ -25,17 +35,22 @@
         <a :href="signOutUrl" class="text-white">Sign out</a>
       </axdd-profile>
     </template>
-    <template #main>
-      <div>
+    <template #aside>
+      <div class="border border-danger">aside slot area</div>
+    </template>
+    <template #bar>
+      <div class="border border-danger">
         <div v-for="message in messages" v-html="message" />
       </div>
+    </template>
+    <template #main>
       <div v-if="termUrl">
         <a :href="termUrl" title="Back to current quarter">
           Back to current quarter
         </a>
       </div>
       <div class="row justify-content-center">
-        <div class="col-9 my-5">
+        <div class="col">
           <slot name="title">
             <h1 class="">{{ pageTitle }}</h1>
           </slot>

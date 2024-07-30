@@ -1,7 +1,8 @@
 <template>
-  <layout
+  <Layout
     :page-title="selectedTermName"
-    :term-url="isCurrentTermDisplay ? null : currentTerm.url">
+    :term-url="isCurrentTermDisplay ? null : currentTerm.url"
+  >
     <template #content>
       <div>
         <select
@@ -9,27 +10,56 @@
           @change="selectTerm"
           v-model="selectedTerm.url"
         >
-          <template v-for="term in this.contextStore.context.terms" :key="term.id">
+          <template
+            v-for="term in this.contextStore.context.terms"
+            :key="term.id"
+          >
             <option
               :value="term.url"
               :title="`Select ${term.quarter} ${term.year}`"
               :selected="term.is_selected"
-            >{{ term.quarter }} {{ term.year }}</option>
+            >
+              {{ term.quarter }} {{ term.year }}
+            </option>
           </template>
         </select>
       </div>
-      <div class="border">
-        <div v-if="sections.length > 0">
-          <section-list :sections="sections"></section-list>
+
+      <BCard
+        class="shadow-sm rounded-3 my-4"
+        header-class="p-3"
+        header-bg-variant="transparent"
+      >
+        <template #header>
+          <h2 class="h6 m-0 fw-bold">Course Sections</h2>
+        </template>
+        <div v-if="isLoading">
+          <ul class="list-unstyled">
+            <li v-for="index in 10" class="mb-3">
+              <div>
+                <BPlaceholder
+                  class="d-block bg-light-gray"
+                  style="height: 60px"
+                  animation="glow"
+                />
+              </div>
+            </li>
+          </ul>
         </div>
         <div v-else>
-          You do not have any classes to grade for <strong>{{ selectedTermName }}</strong
-          >. If you believe this to be incorrect, please contact your department's
-          Time Schedule Coordinator.
+          <div v-if="sections.length > 0">
+            <SectionList :sections="sections"></SectionList>
           </div>
-      </div>
+          <div v-else>
+            You do not have any classes to grade for
+            <strong>{{ selectedTermName }}</strong
+            >. If you believe this to be incorrect, please contact your
+            department's Time Schedule Coordinator.
+          </div>
+        </div>
+      </BCard>
     </template>
-  </layout>
+  </Layout>
 </template>
 
 <script>
@@ -40,8 +70,8 @@ import { getSections } from "@/utils/data";
 
 export default {
   components: {
-    layout: Layout,
-    "section-list": SectionList,
+    Layout,
+    SectionList,
   },
   setup() {
     const contextStore = useContextStore();
@@ -52,6 +82,10 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
+      selectedTermUrl: "",
+      selectedTermText: this.contextStore.context.page_title,
+      sectionsURL: this.contextStore.context.sections_url,
       currentTerm: this.contextStore.context.terms[0],
       selectedTerm: null,
       sections: [],
@@ -62,15 +96,18 @@ export default {
       return this.selectedTerm.quarter + " " + this.selectedTerm.year;
     },
     isCurrentTermDisplay() {
-      return (this.currentTerm.quarter === this.selectedTerm.quarter) &&
-        (this.currentTerm.year === this.selectedTerm.year);
+      return (
+        this.currentTerm.quarter === this.selectedTerm.quarter &&
+        this.currentTerm.year === this.selectedTerm.year
+      );
     },
   },
   methods: {
     selectTerm: function (e) {
       this.contextStore.selectTerm(e.target.value);
-      window.location.href = this.contextStore.context.terms.find((t) =>
-        t.is_selected).url;
+      window.location.href = this.contextStore.context.terms.find(
+        (t) => t.is_selected
+      ).url;
     },
     updateTerm: function () {
       let term;
@@ -90,13 +127,17 @@ export default {
           return response.data;
         })
         .then((data) => {
+          this.isLoading = false;
           this.sections = data.sections;
         });
     },
   },
   created() {
     this.updateTerm();
-    this.loadSectionsForTerm();
+
+    setTimeout(() => {
+      this.loadSectionsForTerm();
+    }, 2000);
   },
 };
 </script>
