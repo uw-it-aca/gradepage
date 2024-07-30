@@ -39,12 +39,11 @@
       <div class="border border-danger">aside slot area</div>
     </template>
     <template #bar>
-      <div class="border border-danger">bar slot area</div>
-    </template>
-    <template #main>
-      <div>
+      <div class="border border-danger">
         <div v-for="message in messages" v-html="message" />
       </div>
+    </template>
+    <template #main>
       <div v-if="termUrl">
         <a :href="termUrl" title="Back to current quarter">
           Back to current quarter
