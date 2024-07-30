@@ -2,20 +2,20 @@
   <div :aria-labelledby="sectionNameId">
     <template v-if="section.section_url">
       <RouterLink :to="{ path: section.section_url }" :title="routerLinkTitle">
-        <div class="fs-4":id="sectionNameId">{{ section.display_name }}</div>
+        <div class="fs-4" :id="sectionNameId">{{ section.display_name }}</div>
       </RouterLink>
     </template>
     <template v-else>
       <div class="fs-4" :id="sectionNameId">{{ section.display_name }}</div>
     </template>
-    <div>
-      <BPlaceholder
-        v-if="isLoading"
-        class="bg-light-gray"
-        style="max-width: 9rem"
-        animation="glow"
-      /><template v-else>{{ gradingStatusText }}</template>
-    </div>
+
+    <BPlaceholder
+      v-if="isLoading"
+      class="bg-light-gray"
+      style="max-width: 9rem"
+      animation="glow"
+    />
+    <div v-else>{{ gradingStatusText }}</div>
   </div>
 </template>
 
@@ -72,16 +72,19 @@ export default {
   methods: {
     loadGradingStatus: function () {
       if (this.section.status_url) {
-        this.getSectionStatus(this.section.status_url).then(response => {
-          return response.data;
-        }).then(data => {
-          this.isLoading = false;
-          // Secondary status overrules the prop
-          this.secondaryStatus = data.grading_status;
-        }).catch(error => {
-          this.isLoading = false;
-          this.errorStatus = error.message;
-        });
+        this.getSectionStatus(this.section.status_url)
+          .then((response) => {
+            return response.data;
+          })
+          .then((data) => {
+            this.isLoading = false;
+            // Secondary status overrules the prop
+            this.secondaryStatus = data.grading_status;
+          })
+          .catch((error) => {
+            this.isLoading = false;
+            this.errorStatus = error.message;
+          });
       }
     },
   },

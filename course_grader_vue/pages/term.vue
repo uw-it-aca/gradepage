@@ -33,30 +33,28 @@
         <template #header>
           <h2 class="h6 m-0 fw-bold">Course Sections</h2>
         </template>
-        <div v-if="isLoading">
+        <template v-if="isLoading">
           <ul class="list-unstyled">
             <li v-for="index in 10" class="mb-3">
-              <div>
-                <BPlaceholder
-                  class="d-block bg-light-gray"
-                  style="height: 60px"
-                  animation="glow"
-                />
-              </div>
+              <BPlaceholder
+                class="d-block bg-light-gray"
+                style="height: 60px"
+                animation="glow"
+              />
             </li>
           </ul>
-        </div>
-        <div v-else>
-          <div v-if="sections.length > 0">
+        </template>
+        <template v-else>
+          <template v-if="sections.length > 0">
             <SectionList :sections="sections"></SectionList>
-          </div>
+          </template>
           <div v-else>
             You do not have any classes to grade for
             <strong>{{ selectedTermName }}</strong
             >. If you believe this to be incorrect, please contact your
             department's Time Schedule Coordinator.
           </div>
-        </div>
+        </template>
       </BCard>
     </template>
   </Layout>
