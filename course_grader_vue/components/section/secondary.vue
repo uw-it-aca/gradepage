@@ -87,7 +87,7 @@ export default {
   },
   created() {
     setTimeout(() => {
-      this.loadSectionStatus();
+      this.loadGradingStatus();
     }, 1000);
   },
 };
