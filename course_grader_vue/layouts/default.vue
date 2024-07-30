@@ -42,6 +42,14 @@
       <div class="border border-danger">bar slot area</div>
     </template>
     <template #main>
+      <div>
+        <div v-for="message in messages" v-html="message" />
+      </div>
+      <div v-if="termUrl">
+        <a :href="termUrl" title="Back to current quarter">
+          Back to current quarter
+        </a>
+      </div>
       <div class="row justify-content-center">
         <div class="col">
           <slot name="title">
@@ -67,6 +75,10 @@ export default {
       type: String,
       required: true,
     },
+    termUrl: {
+      type: String,
+      default: null,
+    },
   },
   setup() {
     const contextStore = useContextStore();
@@ -86,12 +98,11 @@ export default {
       userOverride: context.override_user,
       clearOverrideUrl: context.clear_override_url,
       signOutUrl: context.signout_url,
-      // pageTitle: context.page_title + " - " + appName,
+      messages: window.gradepage.messages,
+      messageLevel: window.gradepage.message_level,
     };
   },
   created: function () {
-    // document.title = this.pageTitle;
-
     // constructs page title in the following format "Page Title - AppName"
     document.title = this.pageTitle + " - " + this.appName;
   },

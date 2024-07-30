@@ -60,39 +60,40 @@ export default {
         return this.section.grading_status;
       } else if (this.errorStatus) {
         return this.errorStatus;
-      } else {
+      } else if (this.gradingStatus) {
         return this.formatGradingStatus(this.gradingStatus);
       }
     },
     routerLinkTitle() {
-      return this.formatLinkTitle(this.gradingStatus);
+      if (this.gradingStatus) {
+        return this.formatLinkTitle(this.gradingStatus);
+      }
     },
   },
   data() {
     return {
       isLoading: true,
-      gradingStatus: {},
+      gradingStatus: null,
       secondaryStatus: [],
-      errorStatus: "",
+      errorStatus: null,
       sectionNameId: "section-name-" + this.section.section_id,
     };
   },
   methods: {
-    loadSectionStatus: function () {
+    loadGradingStatus: function () {
       if (this.section.status_url) {
-        this.getSectionStatus(this.section.status_url)
-          .then((response) => {
-            return response.data;
-          })
-          .then((data) => {
-            this.isLoading = false;
-            this.gradingStatus = data.grading_status;
+        this.getSectionStatus(this.section.status_url).then(response => {
+          return response.data;
+        }).then(data => {
+          this.isLoading = false;
+          this.gradingStatus = data.grading_status;
+          if (data.grading_status.hasOwnProperty("secondary_sections")) {
             this.secondaryStatus = data.grading_status.secondary_sections;
-          })
-          .catch((error) => {
-            this.isLoading = false;
-            this.errorStatus = error.message;
-          });
+          }
+        }).catch(error => {
+          this.isLoading = false;
+          this.errorStatus = error.message;
+        });
       }
     },
   },

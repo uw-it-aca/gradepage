@@ -1,11 +1,14 @@
 <template>
-  <Layout :page-title="selectedTermText">
+  <Layout
+    :page-title="selectedTermName"
+    :term-url="isCurrentTermDisplay ? null : currentTerm.url"
+  >
     <template #content>
       <div>
         <select
           aria-label="Select term"
           @change="selectTerm"
-          v-model="selectedTermUrl"
+          v-model="selectedTerm.url"
         >
           <template
             v-for="term in this.contextStore.context.terms"
@@ -22,7 +25,11 @@
         </select>
       </div>
 
-      <BCard class="shadow-sm rounded-3 my-4" header-class="p-3" header-bg-variant="transparent">
+      <BCard
+        class="shadow-sm rounded-3 my-4"
+        header-class="p-3"
+        header-bg-variant="transparent"
+      >
         <template #header>
           <h2 class="h6 m-0 fw-bold">Course Sections</h2>
         </template>
@@ -32,7 +39,7 @@
               <div>
                 <BPlaceholder
                   class="d-block bg-light-gray"
-                  style="height: 60px;"
+                  style="height: 60px"
                   animation="glow"
                 />
               </div>
@@ -45,7 +52,7 @@
           </div>
           <div v-else>
             You do not have any classes to grade for
-            <strong>{{ selectedTermText }}</strong
+            <strong>{{ selectedTermName }}</strong
             >. If you believe this to be incorrect, please contact your
             department's Time Schedule Coordinator.
           </div>
@@ -79,8 +86,21 @@ export default {
       selectedTermUrl: "",
       selectedTermText: this.contextStore.context.page_title,
       sectionsURL: this.contextStore.context.sections_url,
+      currentTerm: this.contextStore.context.terms[0],
+      selectedTerm: null,
       sections: [],
     };
+  },
+  computed: {
+    selectedTermName() {
+      return this.selectedTerm.quarter + " " + this.selectedTerm.year;
+    },
+    isCurrentTermDisplay() {
+      return (
+        this.currentTerm.quarter === this.selectedTerm.quarter &&
+        this.currentTerm.year === this.selectedTerm.year
+      );
+    },
   },
   methods: {
     selectTerm: function (e) {
@@ -99,12 +119,10 @@ export default {
       if (!term) {
         term = this.contextStore.context.terms[0];
       }
-      this.selectedTermUrl = term.url;
-      this.selectedTermText = term.quarter + " " + term.year;
-      this.sectionsURL = term.sections_url;
+      this.selectedTerm = term;
     },
     loadSectionsForTerm: function () {
-      this.getSections(this.sectionsURL)
+      this.getSections(this.selectedTerm.sections_url)
         .then((response) => {
           return response.data;
         })
