@@ -2,7 +2,7 @@
   <div>
     <ul class="list-unstyled">
       <li v-for="section in sections" :key="section.section_id" class="mb-3">
-        <PrimarySection :section="section" />
+        <PrimarySection :section="section"></PrimarySection>
       </li>
     </ul>
   </div>
