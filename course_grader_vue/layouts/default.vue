@@ -39,9 +39,15 @@
       <div class="border border-danger">aside slot area</div>
     </template>
     <template #bar>
-      <div class="border border-danger">
-        <div v-for="message in messages" v-html="message" />
-      </div>
+      <BAlert
+        v-for="message in messages"
+        :variant="messageLevel"
+        :model-value="true"
+        class="small"
+      >
+        <i class="bi-exclamation-octagon-fill me-1"></i>
+        <span v-html="message"></span>
+      </BAlert>
     </template>
     <template #main>
       <div v-if="termUrl">
