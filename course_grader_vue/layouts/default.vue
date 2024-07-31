@@ -94,7 +94,7 @@ export default {
   },
   data() {
     let context = this.contextStore.context,
-      appName = "Gradepage";
+      appName = "GradePage";
     return {
       appName: appName,
       appRootUrl: "/",

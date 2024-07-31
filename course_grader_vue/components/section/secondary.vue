@@ -9,13 +9,13 @@
       <div class="fs-4" :id="sectionNameId">{{ section.display_name }}</div>
     </template>
 
+    <div v-if="gradingStatusText">{{ gradingStatusText }}</div>
     <BPlaceholder
-      v-if="isLoading"
+      v-else
       class="bg-light-gray"
       style="max-width: 9rem"
       animation="glow"
     />
-    <div v-else>{{ gradingStatusText }}</div>
   </div>
 </template>
 
@@ -63,7 +63,6 @@ export default {
   },
   data() {
     return {
-      isLoading: true,
       secondaryStatus: null,
       errorStatus: null,
       sectionNameId: "section-name-" + this.section.section_id,
@@ -77,12 +76,10 @@ export default {
             return response.data;
           })
           .then((data) => {
-            this.isLoading = false;
             // Secondary status overrules the prop
             this.secondaryStatus = data.grading_status;
           })
           .catch((error) => {
-            this.isLoading = false;
             this.errorStatus = error.message;
           });
       }
