@@ -9,13 +9,13 @@
       <div class="fs-4" :id="sectionNameId">{{ section.display_name }}</div>
     </template>
 
+    <div v-if="gradingStatusText">{{ gradingStatusText }}</div>
     <BPlaceholder
-      v-if="isLoading"
+      v-else
       class="bg-light-gray"
       style="max-width: 200px"
       animation="glow"
     />
-    <div v-else>{{ gradingStatusText }}</div>
   </div>
 
   <ul
@@ -75,7 +75,6 @@ export default {
   },
   data() {
     return {
-      isLoading: true,
       gradingStatus: null,
       secondaryStatus: [],
       errorStatus: null,
@@ -90,14 +89,12 @@ export default {
             return response.data;
           })
           .then((data) => {
-            this.isLoading = false;
             this.gradingStatus = data.grading_status;
             if (data.grading_status.hasOwnProperty("secondary_sections")) {
               this.secondaryStatus = data.grading_status.secondary_sections;
             }
           })
           .catch((error) => {
-            this.isLoading = false;
             this.errorStatus = error.message;
           });
       }
