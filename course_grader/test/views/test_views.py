@@ -72,14 +72,14 @@ class ViewFunctionsTest(TestCase):
                 url_for_section((
                     '2013-spring-TRAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE')), (
-                    '/api/v1/section/2013-spring-TRAIN-101-A-'
+                    '/section/2013-spring-TRAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE'))
 
             self.assertEqual(
                 url_for_section((
                     '2013-spring-T RAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE')), (
-                    '/api/v1/section/2013-spring-T%20RAIN-101-A-'
+                    '/section/2013-spring-T%20RAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE'))
 
         with self.settings(GRADEPAGE_HOST='https://abc.edu'):
@@ -87,14 +87,14 @@ class ViewFunctionsTest(TestCase):
                 url_for_section((
                     '2013-spring-TRAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE')), (
-                    '/api/v1/section/2013-spring-TRAIN-101-'
+                    '/section/2013-spring-TRAIN-101-'
                     'A-9136CCB8F66711D5BE060004AC494FFE'))
 
             self.assertEqual(
                 url_for_section((
                     '2013-spring-T RAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE')), (
-                    '/api/v1/section/2013-spring-T%20RAIN-101-'
+                    '/section/2013-spring-T%20RAIN-101-'
                     'A-9136CCB8F66711D5BE060004AC494FFE'))
 
     def test_url_for_grading_status(self):

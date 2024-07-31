@@ -22,7 +22,7 @@ def url_for_term(term):
 
 
 def url_for_section(section_id):
-    return reverse("section", kwargs={"section_id": section_id})
+    return f"/section/{section_id}"
 
 
 def url_for_graderoster(section_id):

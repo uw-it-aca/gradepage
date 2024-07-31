@@ -7,14 +7,17 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
 from course_grader.dao.person import person_from_user
-from course_grader.dao.term import term_from_param, all_viewable_terms
+from course_grader.dao.term import (
+    term_from_param, all_viewable_terms, is_grading_period_open)
 from course_grader.dao.section import (
-    all_gradable_sections, section_display_name, section_url_token)
+    all_gradable_sections, section_from_param, section_display_name,
+    section_url_token)
 from course_grader.views import (
     section_status_params, url_for_term, url_for_graderoster, url_for_import,
     url_for_export, url_for_upload)
 from course_grader.views.rest_dispatch import RESTDispatch
-from course_grader.exceptions import InvalidUser, InvalidTerm
+from course_grader.exceptions import (
+    InvalidUser, InvalidSection, InvalidTerm, MissingInstructorParam)
 from restclients_core.exceptions import DataFailureException
 from logging import getLogger
 import re

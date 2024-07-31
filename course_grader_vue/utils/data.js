@@ -35,6 +35,10 @@ async function getSections(url) {
   return axios.get(url).catch(_handleError);
 }
 
+function getSection(url) {
+  return axios.get(url).catch(_handleError);
+}
+
 async function getSectionStatus(url) {
   return axios.get(url);
 }
@@ -77,6 +81,7 @@ async function clearOverride(url) {
 
 export {
   getSections,
+  getSection,
   getSectionStatus,
   getGraderoster,
   updateGraderoster,
