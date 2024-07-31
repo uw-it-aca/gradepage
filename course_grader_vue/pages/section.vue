@@ -2,6 +2,8 @@
   <Layout :page-title="section.section_name">
     <template #content>
 
+      <BLink href="/">Back To Current Term </BLink>
+
       <BCard
         class="shadow-sm rounded-3 my-4"
         header-class="p-3"
@@ -57,35 +59,46 @@ export default {
   },
   methods: {
     loadGraderoster: function (url) {
-      this.getGraderoster(url).then((response) => {
-        return response.data;
-      }).then((data) => {
-        this.isLoading = false;
-        this.graderoster = data;
-      }).catch(error => {
-        this.isLoading = false;
-        console.log(error.message);
-      });
+      this.getGraderoster(url)
+        .then((response) => {
+          return response.data;
+        })
+        .then((data) => {
+          this.isLoading = false;
+          this.graderoster = data;
+        })
+        .catch((error) => {
+          this.isLoading = false;
+          console.log(error.message);
+        });
     },
     loadSection: function () {
       let section_id = this.$route.params.id;
-      this.getSection("/api/v1/section/" + section_id).then((response) => {
-        return response.data;
-      }).then((data) => {
-        this.section = data;
-        if (this.section.graderoster_url) {
-          this.loadGraderoster(this.section.graderoster_url);
-        }
-      }).catch(error => {
-        this.isLoading = false;
-        console.log(error.message);
-      });
+      this.getSection("/api/v1/section/" + section_id)
+        .then((response) => {
+          return response.data;
+        })
+        .then((data) => {
+          this.section = data;
+          if (this.section.graderoster_url) {
+            this.loadGraderoster(this.section.graderoster_url);
+          }
+
+          // programatically update page title with section name
+          document.title = this.section.section_name + " - GradePage";
+
+        })
+        .catch((error) => {
+          this.isLoading = false;
+          console.log(error.message);
+        });
     },
   },
+  computed: {
+
+  },
   created() {
-    setTimeout(() => {
-      this.loadSection();
-    }, 2000);
+    this.loadSection();
   },
 };
 </script>
