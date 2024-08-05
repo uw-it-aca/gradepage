@@ -8,7 +8,8 @@ from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import (
-    term_from_param, all_viewable_terms, is_grading_period_open)
+    term_from_param, all_viewable_terms, is_grading_period_open,
+    is_grading_period_past)
 from course_grader.dao.section import (
     all_gradable_sections, section_from_param, section_display_name,
     section_url_token)
