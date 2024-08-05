@@ -11,7 +11,7 @@
     <template #navigation>
       <ul class="nav flex-column my-3">
         <li class="nav-item mb-1 bg-black bg-opacity-10 rounded-3">
-          <a href="#" class="nav-link text-purple d-block px-3 py-2"
+          <a href="/" class="nav-link text-purple d-block px-3 py-2"
             ><i class="bi bi-house-door-fill me-3"></i>Home</a
           >
         </li>
@@ -51,14 +51,12 @@
     </template>
     <template #main>
       <div v-if="termUrl">
-        <a :href="termUrl" title="Back to current quarter">
-          Back to current quarter
-        </a>
+        <BLink :href="termUrl" title="Back to current quarter">Back To Current Term </BLink>
       </div>
       <div class="row justify-content-center">
         <div class="col">
           <slot name="title">
-            <h1 class="">{{ pageTitle }}</h1>
+            <h1 class="visually-hidden">{{ pageTitle }}</h1>
           </slot>
           <slot name="content"></slot>
         </div>

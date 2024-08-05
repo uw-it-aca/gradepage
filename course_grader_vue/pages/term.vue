@@ -31,7 +31,7 @@
         header-bg-variant="transparent"
       >
         <template #header>
-          <h2 class="h6 m-0 fw-bold">Course Sections</h2>
+          <h2 class="h6 m-0 fw-bold">{{ selectedTermName }}</h2>
         </template>
         <template v-if="isLoading">
           <ul class="list-unstyled">
@@ -125,17 +125,19 @@ export default {
           return response.data;
         })
         .then((data) => {
-          this.isLoading = false;
           this.sections = data.sections;
+        })
+        .catch((error) => {
+          console.log(error.message);
+        })
+        .finally(() => {
+          this.isLoading = false;
         });
     },
   },
   created() {
     this.updateTerm();
-
-    setTimeout(() => {
-      this.loadSectionsForTerm();
-    }, 2000);
+    this.loadSectionsForTerm();
   },
 };
 </script>
