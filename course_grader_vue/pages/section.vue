@@ -1,5 +1,5 @@
 <template>
-  <Layout :page-title="section.section_name">
+  <Layout :page-title="pageTitle">
     <template #content>
 
       <BLink href="/">Back To Current Term </BLink>
@@ -25,9 +25,8 @@
           </ul>
         </template>
         <template v-else>
-          <template v-if="graderoster.students.length > 0">
-            <GradeRosterList :graderoster="graderoster"></GradeRosterList>
-          </template>
+          <GradeRoster v-if="graderoster" :graderoster="graderoster"></GradeRoster>
+          <div v-else>Graderoster not available</div>
         </template>
       </BCard>
     </template>
@@ -36,13 +35,13 @@
 
 <script>
 import Layout from "@/layouts/default.vue";
-import GradeRosterList from "@/components/graderoster/list.vue";
+import GradeRoster from "@/components/graderoster/list.vue";
 import { getSection, getGraderoster } from "@/utils/data";
 
 export default {
   components: {
     Layout,
-    GradeRosterList,
+    GradeRoster,
   },
   setup() {
     return {
@@ -61,15 +60,16 @@ export default {
     loadGraderoster: function (url) {
       this.getGraderoster(url)
         .then((response) => {
-          return response.data;
-        })
+            return response.data;
+          })
         .then((data) => {
-          this.isLoading = false;
-          this.graderoster = data;
-        })
+            this.graderoster = data.graderoster;
+          })
         .catch((error) => {
-          this.isLoading = false;
           console.log(error.message);
+        })
+        .finally(() => {
+          this.isLoading = false;
         });
     },
     loadSection: function () {
@@ -80,22 +80,24 @@ export default {
         })
         .then((data) => {
           this.section = data;
+          document.title = this.pageTitle;
+
           if (this.section.graderoster_url) {
             this.loadGraderoster(this.section.graderoster_url);
+          } else {
+            console.log("No graderoster URL");
+            this.isLoading = false;
           }
-
-          // programatically update page title with section name
-          document.title = this.section.section_name + " - GradePage";
-
         })
         .catch((error) => {
-          this.isLoading = false;
           console.log(error.message);
         });
     },
   },
   computed: {
-
+    pageTitle() {
+      return this.section.section_name + " - GradePage";
+    },
   },
   created() {
     this.loadSection();

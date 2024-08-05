@@ -1,11 +1,12 @@
 <template>
   <div>
-    {{ graderoster.failed_submission_count }}
-    <ul>
-      <li v-for="student in graderoster.students" :key="student.item_id">
-        <Student :student="student"></Student>
-      </li>
-    </ul>
+    <template v-else>
+      <ul>
+        <li v-for="student in graderoster.students" :key="student.item_id">
+          <Student :student="student"></Student>
+        </li>
+      </ul>
+    </template>
   </div>
 </template>
 
@@ -21,6 +22,14 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  setup() {
+    return {
+    };
+  },
+  data() {
+    return {
+    };
   },
   methods: {
   },

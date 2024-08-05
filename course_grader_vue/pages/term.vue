@@ -125,8 +125,13 @@ export default {
           return response.data;
         })
         .then((data) => {
-          this.isLoading = false;
           this.sections = data.sections;
+        })
+        .catch((error) => {
+          console.log(error.message);
+        })
+        .finally(() => {
+          this.isLoading = false;
         });
     },
   },
