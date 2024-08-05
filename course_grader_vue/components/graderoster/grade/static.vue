@@ -8,16 +8,16 @@
   </template>
   <template v-else>
     <span v-if="student.has_writing_credit" class="me-2"><abbr title="Writing credit">W</abbr></span>
-    <span v-if="student.has_incomplete">
+    <template v-if="student.has_incomplete">
       <span class="visually-hidden">Submitted grade:</span>
-      <strong><abbr title="Incomplete">I</abbr></strong>
-      <span>Default: {{ student.grade }}</span>
-    </span>
+      <span class="fs-2 fw-bold">I</span>
+      <div class="small text-muted">(Incomplete) Default: {{ student.grade }}</div>
+    </template>
     <template v-else>
       <template v-if="student.no_grade_now">
         <span class="visually-hidden">Submitted grade:</span>
         <span class="fs-2 fw-bold">X</span>
-        <div>(No grade now)</div>
+        <div class="small text-muted">(No grade now)</div>
       </template>
       <template v-else>
         <span class="visually-hidden">Submitted grade:</span>
