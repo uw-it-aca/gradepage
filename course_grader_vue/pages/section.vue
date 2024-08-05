@@ -1,7 +1,6 @@
 <template>
   <Layout :page-title="pageTitle">
     <template #content>
-
       <BLink href="/">Back To Current Term </BLink>
 
       <BCard
@@ -10,7 +9,7 @@
         header-bg-variant="transparent"
       >
         <template #header>
-          <h2 class="h6 m-0 fw-bold">{{ section.section_name }}</h2>
+          <div class="fs-6 m-0 fw-bold">{{ section.section_name }}</div>
           <span> SLN {{ section.section_sln }}</span>
         </template>
         <template v-if="isLoading">
@@ -25,7 +24,10 @@
           </ul>
         </template>
         <template v-else>
-          <GradeRoster v-if="graderoster" :graderoster="graderoster"></GradeRoster>
+          <GradeRoster
+            v-if="graderoster"
+            :graderoster="graderoster"
+          ></GradeRoster>
           <div v-else>Graderoster not available</div>
         </template>
       </BCard>
@@ -54,17 +56,18 @@ export default {
       isLoading: true,
       section: {},
       graderoster: {},
+      pageTitle: "Course Section",
     };
   },
   methods: {
     loadGraderoster: function (url) {
       this.getGraderoster(url)
         .then((response) => {
-            return response.data;
-          })
+          return response.data;
+        })
         .then((data) => {
-            this.graderoster = data.graderoster;
-          })
+          this.graderoster = data.graderoster;
+        })
         .catch((error) => {
           console.log(error.message);
         });
@@ -77,7 +80,6 @@ export default {
         })
         .then((data) => {
           this.section = data.section;
-          document.title = this.pageTitle;
           if (this.section.graderoster_url) {
             this.loadGraderoster(this.section.graderoster_url);
           }
@@ -87,16 +89,20 @@ export default {
         })
         .finally(() => {
           this.isLoading = false;
+          this.pageTitle = this.section.section_name;
+          document.title = this.pageTitle + " - GradePage";
         });
     },
   },
   computed: {
-    pageTitle() {
-      return this.section.section_name + " - GradePage";
-    },
+
   },
   created() {
-    this.loadSection();
+    setTimeout(() => {
+      this.loadSection();
+    }, "1000");
+
+
   },
 };
 </script>

@@ -31,7 +31,7 @@
         header-bg-variant="transparent"
       >
         <template #header>
-          <h2 class="h6 m-0 fw-bold">{{ selectedTermName }}</h2>
+          <div class="fs-6 m-0 fw-bold">{{ selectedTermName }}</div>
         </template>
         <template v-if="isLoading">
           <ul class="list-unstyled">

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <ul>
-      <li v-for="student in graderoster.students" :key="student.item_id">
+    <ul class="list-unstyled">
+      <li v-for="student in graderoster.students" :key="student.item_id" class="mb-3">
         <Student :student="student"></Student>
       </li>
     </ul>

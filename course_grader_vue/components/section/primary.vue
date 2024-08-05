@@ -1,5 +1,5 @@
 <template>
-  <div :aria-labelledby="sectionNameId">
+  <div class="mb-3" :aria-labelledby="sectionNameId">
     <template v-if="section.section_url">
       <RouterLink :to="{ path: section.section_url }" :title="routerLinkTitle">
         <div class="fs-4" :id="sectionNameId">{{ section.display_name }}</div>
