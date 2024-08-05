@@ -8,17 +8,17 @@
   <div v-else>
     <span v-if="student.has_writing_credit"><abbr title="Writing credit">W</abbr></span>
     <div v-if="student.has_incomplete">
-      <span class="sr-only">Submitted grade:</span>
+      <span>Submitted grade:</span>
       <strong><abbr title="Incomplete">I</abbr></strong>
       <div>Default: {{ student.grade }}"</div>
     </div>
     <div v-else>
       <div v-if="student.no_grade_now">
-        <span class="sr-only">Submitted grade:</span><strong>X</strong>
+        <span>Submitted grade:</span><strong>X</strong>
         <div>(No grade now)</div>
       </div>
       <div v-else>
-        <span class="sr-only">Submitted grade:</span>
+        <span>Submitted grade:</span>
         <strong>{{ student.grade }}</strong>
       </div>
     </div>
