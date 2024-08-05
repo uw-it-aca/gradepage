@@ -6,15 +6,33 @@
       <BCard
         class="shadow-sm rounded-3 my-4"
         header-class="p-3"
-        header-bg-variant="transparent"
+        header="Default"
       >
         <template #header>
-          <div class="fs-6 m-0 fw-bold">{{ section.section_name }}</div>
-          <span> SLN {{ section.section_sln }}</span>
+          <div class="">
+            <div class="fs-5 text-muted fw-light">Grade Receipt for</div>
+            <span class="fs-2 m-0 me-3">
+              <BPlaceholder
+                v-if="!section.section_name"
+                class="bg-light-gray"
+                width="15"
+                animation="glow"
+              />{{ section.section_name }}
+            </span>
+            <span class="small"
+              >SLN
+              <BPlaceholder
+                v-if="!section.section_sln"
+                class="bg-light-gray"
+                width="5"
+                animation="glow"
+              />{{ section.section_sln }}</span
+            >
+          </div>
         </template>
         <template v-if="isLoading">
           <ul class="list-unstyled">
-            <li v-for="index in 10" class="mb-3">
+            <li v-for="index in 10" class="border-bottom pb-3 mb-3">
               <BPlaceholder
                 class="d-block bg-light-gray"
                 style="height: 60px"
@@ -94,15 +112,11 @@ export default {
         });
     },
   },
-  computed: {
-
-  },
+  computed: {},
   created() {
     setTimeout(() => {
       this.loadSection();
     }, "1000");
-
-
   },
 };
 </script>

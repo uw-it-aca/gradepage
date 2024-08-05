@@ -2,24 +2,25 @@
   <div class="d-flex justify-content-between">
     <div>
       <div class="fs-4 text-uppercase">{{ student.student_lastname }}, {{ student.student_firstname }}</div>
-      <div>
-        <span class="offcanvas">Section:</span> {{ student.section_id }},
+      <div class="small text-muted">
+        <span class="visually-hidden">Section:</span> {{ student.section_id }},
         <span v-if="student.student_credits">
-          <span class="offcanvas">Student credits:</span>
+          <span class="visually-hidden">Student credits:</span>
           {{ student.student_credits }} CR,
         </span>
-        <span class="offcanvas">Student number:</span>
+        <span class="visually-hidden">Student number:</span>
         {{ student.student_number }}
-        <span v-if="student.duplicate_code">
-          <span class="offcanvas">Duplicate code:</span>
-          {{ student.duplicate_code }}
-        </span>
+        <template v-if="student.duplicate_code">
+          <span class="visually-hidden">Duplicate code:</span>
+          <abbr title="Duplicate Code" class="badge rounded-pill text-bg-secondary">
+          {{ student.duplicate_code }}</abbr>
+        </template>
       </div>
     </div>
-    <div v-if="student.grade_url">
+    <div v-if="student.grade_url" class="text-end">
       <GradeInput :student="student"></GradeInput>
     </div>
-    <div v-else>
+    <div v-else class="text-end">
       <GradeStatic :student="student"></GradeStatic>
     </div>
   </div>

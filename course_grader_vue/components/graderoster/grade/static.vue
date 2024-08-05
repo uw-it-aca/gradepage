@@ -1,34 +1,36 @@
 <template>
-  <div v-if="student.is_auditor">
-    <span>Auditor</span>
-  </div>
-  <div v-else-if="student.is_withdrawn">
-    Withdrawn<span v-if="student.withdrawn_week"> {{ student.withdrawn_week }}</span>
-  </div>
-  <div v-else>
-    <span v-if="student.has_writing_credit"><abbr title="Writing credit">W</abbr></span>
-    <div v-if="student.has_incomplete">
-      <span>Submitted grade:</span>
+  <template v-if="student.is_auditor">
+    <span class="text-uppercase fs-5 fw-bold">Auditor</span>
+  </template>
+  <template v-else-if="student.is_withdrawn">
+    <div class="text-uppercase fs-5 fw-bold">Withdrawn</div>
+    <div v-if="student.withdrawn_week"> Week {{ student.withdrawn_week }}</div>
+  </template>
+  <template v-else>
+    <span v-if="!student.has_writing_credit" class="me-2"><abbr title="Writing credit">W</abbr></span>
+    <span v-if="student.has_incomplete">
+      <span class="visually-hidden">Submitted grade:</span>
       <strong><abbr title="Incomplete">I</abbr></strong>
-      <div>Default: {{ student.grade }}"</div>
-    </div>
-    <div v-else>
-      <div v-if="student.no_grade_now">
-        <span>Submitted grade:</span><strong>X</strong>
+      <span>Default: {{ student.grade }}</span>
+    </span>
+    <template v-else>
+      <template v-if="student.no_grade_now">
+        <span class="visually-hidden">Submitted grade:</span>
+        <span class="fs-2 fw-bold">X</span>
         <div>(No grade now)</div>
-      </div>
-      <div v-else>
-        <span>Submitted grade:</span>
-        <strong>{{ student.grade }}</strong>
-      </div>
-    </div>
-    <div v-if="student.date_graded">
+      </template>
+      <template v-else>
+        <span class="visually-hidden">Submitted grade:</span>
+        <span class="fs-2 fw-bold">{{ student.grade }}</span>
+      </template>
+    </template>
+    <div v-if="student.date_graded" class="small text-muted">
       Submitted {{ student.date_graded }}
     </div>
-    <div v-if="student.grade_status">
+    <div v-if="student.grade_status" class="small text-muted">
       Submitted with error: {{ student.grade_status }}
     </div>
-  </div>
+  </template>
 </template>
 
 <script>
