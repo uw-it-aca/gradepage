@@ -28,7 +28,7 @@
           value="Clear override"
           @click="clearUserOverride()"
         >
-          Clear
+          Clear override
         </button>
       </axdd-profile>
       <axdd-profile v-else :user-netid="userName">
