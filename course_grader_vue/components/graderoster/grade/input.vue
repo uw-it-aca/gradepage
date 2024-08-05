@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="small text-danger">
     Not implemented
   </div>
 </template>
