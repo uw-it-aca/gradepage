@@ -60,7 +60,10 @@ urlpatterns = [
         SubmittedGradeRoster.as_view(), name='graderoster-download'),
 
     # vue-router paths
-    re_path(r"^(term|section).*$", HomeView.as_view()),
+    re_path(r"^term/(?P<term_id>[^/]*)$",
+        HomeView.as_view(), name="term-page"),
+    re_path(r"^section/(?P<section_id>[^/]*)$",
+        HomeView.as_view(), name="section-page"),
 
     # default landing
     re_path(r'^$', HomeView.as_view(), name='home'),

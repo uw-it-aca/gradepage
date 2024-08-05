@@ -18,7 +18,7 @@ class SectionViewTest(TestCase):
         user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
 
         kwargs = {"section": section, "instructor": user}
-        context = Section().response_content(section, user)
+        context = Section().response_content(section, user).get("section");
         self.assertEqual(context["page_title"], "TRAIN 101 A")
         self.assertEqual(context["section_quarter"], "Spring")
         self.assertEqual(context["section_year"], 2013)
