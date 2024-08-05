@@ -67,9 +67,6 @@ export default {
           })
         .catch((error) => {
           console.log(error.message);
-        })
-        .finally(() => {
-          this.isLoading = false;
         });
     },
     loadSection: function () {
@@ -79,18 +76,17 @@ export default {
           return response.data;
         })
         .then((data) => {
-          this.section = data;
+          this.section = data.section;
           document.title = this.pageTitle;
-
           if (this.section.graderoster_url) {
             this.loadGraderoster(this.section.graderoster_url);
-          } else {
-            console.log("No graderoster URL");
-            this.isLoading = false;
           }
         })
         .catch((error) => {
           console.log(error.message);
+        })
+        .finally(() => {
+          this.isLoading = false;
         });
     },
   },

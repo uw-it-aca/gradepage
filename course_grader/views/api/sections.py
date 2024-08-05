@@ -145,4 +145,4 @@ class Section(RESTDispatch):
         content["import_url"] = url_for_import(url_token)
         content["export_url"] = url_for_export(url_token)
         content["upload_url"] = url_for_upload(url_token)
-        return content
+        return {"section": content}

@@ -1,12 +1,10 @@
 <template>
   <div>
-    <template v-else>
-      <ul>
-        <li v-for="student in graderoster.students" :key="student.item_id">
-          <Student :student="student"></Student>
-        </li>
-      </ul>
-    </template>
+    <ul>
+      <li v-for="student in graderoster.students" :key="student.item_id">
+        <Student :student="student"></Student>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -22,16 +20,6 @@ export default {
       type: Object,
       required: true,
     },
-  },
-  setup() {
-    return {
-    };
-  },
-  data() {
-    return {
-    };
-  },
-  methods: {
   },
 };
 </script>
