@@ -7,7 +7,7 @@
     <div v-if="student.withdrawn_week"> Week {{ student.withdrawn_week }}</div>
   </template>
   <template v-else>
-    <span v-if="!student.has_writing_credit" class="me-2"><abbr title="Writing credit">W</abbr></span>
+    <span v-if="student.has_writing_credit" class="me-2"><abbr title="Writing credit">W</abbr></span>
     <template v-if="student.has_incomplete">
       <span class="visually-hidden">Submitted grade:</span>
       <span class="fs-2 fw-bold">I</span>
