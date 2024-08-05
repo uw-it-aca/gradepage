@@ -16,17 +16,24 @@
         </span>
       </div>
     </div>
-    <div>
-      <template v-if="student.grade">{{ student.grade }}</template>
-      <template v-if="student.is_writing_section"><abbr title="Writing Credit">W</abbr></template>
-      <template v-if="student.is_auditor">AUDITOR</template>
-      <template v-if="student.is_withdrawn">WITHDRAWN</template>
+    <div v-if="student.grade_url">
+      <GradeInput :student="student"></GradeInput>
+    </div>
+    <div v-else>
+      <GradeStatic :student="student"></GradeStatic>
     </div>
   </div>
 </template>
 
 <script>
+import GradeStatic from "@/components/graderoster/grade/static.vue";
+import GradeInput from "@/components/graderoster/grade/input.vue";
+
 export default {
+  components: {
+    GradeStatic,
+    GradeInput,
+  },
   props: {
     student: {
       type: Object,
