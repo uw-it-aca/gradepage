@@ -1,5 +1,7 @@
 <template>
-  <div class="input-group mb-3">
+
+  <!-- MARK: bootstrap form inputs -->
+  <div class="input-group mb-3 d-none">
     <div class="input-group-text">
       <input
         id="inputIncomplete"
@@ -67,8 +69,9 @@
       <label>Writing</label>
     </div>
   </div>
+  <!-- END: bootstrap inputs -->
 
-  <div class="d-none">
+  <div>
   <div class="form-check form-check-inline">
     <label :for="`incomplete-${student.item_id}`" :title="incompleteTitle">
       <input
