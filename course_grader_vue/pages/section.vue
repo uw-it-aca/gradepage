@@ -30,24 +30,16 @@
             >
           </div>
         </template>
-        <template v-if="isLoading">
-          <ul class="list-unstyled">
-            <li v-for="index in 10" class="border-bottom pb-3 mb-3">
-              <BPlaceholder
-                class="d-block bg-light-gray"
-                style="height: 60px"
-                animation="glow"
-              />
-            </li>
-          </ul>
-        </template>
-        <template v-else>
-          <GradeRoster
-            v-if="graderoster"
-            :graderoster="graderoster"
-          ></GradeRoster>
-          <div v-else>Graderoster not available</div>
-        </template>
+
+        <div class="mb-2 small text-muted">
+          Duplicate Code <i class="bi bi-circle-fill text-secondary"></i>
+        </div>
+        <GradeRoster
+          v-if="graderoster"
+          :graderoster="graderoster"
+        ></GradeRoster>
+        <div v-else>Graderoster not available</div>
+
       </BCard>
     </template>
   </Layout>
@@ -114,9 +106,7 @@ export default {
   },
   computed: {},
   created() {
-    setTimeout(() => {
-      this.loadSection();
-    }, "1000");
+    this.loadSection();
   },
 };
 </script>
