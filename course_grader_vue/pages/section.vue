@@ -1,7 +1,9 @@
 <template>
   <Layout :page-title="pageTitle">
     <template #content>
-      <BLink href="/">Back To Current Term </BLink>
+      <BLink :href="section.term_url">
+        Back To {{ section.section_year }} {{ section.section_quarter }}
+      </BLink>
 
       <BCard
         class="shadow-sm rounded-3 my-4"
@@ -10,7 +12,7 @@
       >
         <template #header>
           <div class="">
-            <div class="fs-5 text-muted fw-light">Grade Receipt for</div>
+            <div class="fs-5 text-muted fw-light">{{ graderosterTitle }}</div>
             <span class="fs-2 m-0 me-3">
               <BPlaceholder
                 v-if="!section.section_name"
@@ -65,21 +67,37 @@ export default {
       isLoading: true,
       section: {},
       graderoster: {},
+      unsubmitted: 0,
       pageTitle: "Course Section",
     };
   },
+  computed: {
+    graderosterTitle() {
+      return (this.isLoading) ? "" : (this.unsubmitted)
+        ? "Enter grades for" : "Grade Receipt for";
+    },
+  },
   methods: {
-    loadGraderoster: function (url) {
-      this.getGraderoster(url)
-        .then((response) => {
-          return response.data;
-        })
-        .then((data) => {
-          this.graderoster = data.graderoster;
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
+    loadGraderoster: function () {
+      if (this.section.graderoster_url) {
+        this.getGraderoster(this.section.graderoster_url)
+          .then((response) => {
+            return response.data;
+          })
+          .then((data) => {
+            this.graderoster = data.graderoster;
+            this.unsubmitted = this.graderoster.students.filter(
+              s => s.grade_url !== null).length;
+          })
+          .catch((error) => {
+            console.log(error.message);
+          })
+          .finally(() => {
+            this.isLoading = false;
+          });
+      } else {
+        this.isLoading = false;
+      }
     },
     loadSection: function () {
       let section_id = this.$route.params.id;
@@ -89,25 +107,20 @@ export default {
         })
         .then((data) => {
           this.section = data.section;
-          if (this.section.graderoster_url) {
-            this.loadGraderoster(this.section.graderoster_url);
-          }
+          this.loadGraderoster();
         })
         .catch((error) => {
           console.log(error.message);
+          this.isLoading = false;
         })
         .finally(() => {
-          this.isLoading = false;
           this.pageTitle = this.section.section_name;
           document.title = this.pageTitle + " - GradePage";
         });
     },
   },
-  computed: {},
   created() {
-    setTimeout(() => {
-      this.loadSection();
-    }, "1000");
+    this.loadSection();
   },
 };
 </script>
