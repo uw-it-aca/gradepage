@@ -39,7 +39,6 @@
           :graderoster="graderoster"
         ></GradeRoster>
         <div v-else>Graderoster not available</div>
-
       </BCard>
     </template>
   </Layout>
@@ -106,7 +105,9 @@ export default {
   },
   computed: {},
   created() {
-    this.loadSection();
+    setTimeout(() => {
+      this.loadSection();
+    }, "1000");
   },
 };
 </script>
