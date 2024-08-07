@@ -11,35 +11,40 @@ function formatLinkTitle(data) {
 }
 
 function formatGradingStatus(data) {
+  var base;
   if (data.grading_status) {
     return data.grading_status;
   } else if (data.unsubmitted_count && data.grading_period_open) {
-    return (data.unsubmitted_count > 1)
-      ? data.unsubmitted_count + " grades to submit"
-      : "1 grade to submit";
+      base = ngettext("%(unsubmitted_count)s grade to submit",
+                      "%(unsubmitted_count)s grades to submit",
+                      data.unsubmitted_count);
   } else {
     if (data.submitted_count) {
       if (data.submitted_date) {
         if (data.accepted_date) {
           let submitted_date_str = formatLongDateTime(data.submitted_date);
-          return (data.submitted_count > 1)
-            ? data.submitted_count + " grades submitted on " + submitted_date_str
-            : "1 grade submitted on " + submitted_date_str;
+          base = ngettext("%(submitted_count)s grade submitted on ",
+                          "%(submitted_count)s grades submitted on ",
+                          data.submitted_count) + submitted_date_str;
         } else {
-          return (data.submitted_count > 1)
-            ? data.submitted_count + " grade submissions in progress"
-            : "1 grade submission in progress";
+          base = ngettext("%(submitted_count)s grade submission in progress",
+                          "%(submitted_count)s grade submissions in progress",
+                          data.submitted_count);
         }
       } else {
-        return (data.submitted_count > 1)
-          ? data.submitted_count + " grades submitted"
-          : "1 grade submitted";
+        base = ngettext("%(submitted_count)s grade submitted",
+                        "%(submitted_count)s grades submitted",
+                        data.submitted_count);
       }
     } else {
       if (!data.grading_period_open) {
-        return "No submission information";
+        return gettext("no_submission_information");
       }
     }
+  }
+
+  if (base !== undefined) {
+    return interpolate(base, data, true);
   }
 }
 

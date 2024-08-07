@@ -29,18 +29,19 @@
     </template>
 
     <div v-if="reviewing">
-      Please review grades and submit below.
+      {{ gettext("please_review_grades") }}
     </div>
-    <div v-if="graderoster.is_writing_section">
-      <span v-if="editing">
-        <strong>Note:</strong> Writing credit automatically given to all students with a passing grade in this course.
-      </span>
-      <span v-else>
-        Writing credit automatically given to all students with a passing grade in this course.
+    <div v-else-if="editing">
+      <span v-if="graderoster.is_writing_section">
+        {{ gettext("writing_course_note") }}
       </span>
     </div>
+    <div v-else>
+      <Confirmation :graderoster="graderoster"></Confirmation>
+    </div>
+
     <div v-if="graderoster.has_duplicate_codes" class="mb-2 small text-muted">
-      Duplicate Code <i class="bi bi-circle-fill text-secondary"></i>
+      {{ gettext("duplicate_code") }} <i class="bi bi-circle-fill text-secondary"></i>
     </div>
 
     <ul v-if="!graderoster.students" class="list-unstyled m-0">
@@ -63,15 +64,15 @@
     </ul>
 
     <template v-if="reviewing">
-      <div>
-        All grades will be submitted to the Registrar as displayed above.
-        No further online changes will be possible after submission.
-      </div>
+      <div>{{ gettext("review_warning") }}</div>
       <button>Back</button> <button>Review</button>
     </template>
     <template v-else-if="editing">
       <div class="border-top pt-2 mt-2">
-        <span>{{ gradesRemaining }} grades remaining</span>
+        <span v-if="gradesRemainingText">{{ gradesRemainingText }}</span>
+        <span v-else class="visually-hidden">
+          All grades entered. Click Review button to continue.
+        </span>
         <button disabled="disabled">Submit grades</button>
       </div>
     </template>
@@ -80,12 +81,14 @@
 </template>
 
 <script>
+import Confirmation from "@/components/graderoster/confirmation.vue";
 import Student from "@/components/graderoster/student.vue";
 import { BPlaceholder } from "bootstrap-vue-next";
 import { updateGraderoster, submitGraderoster } from "@/utils/data";
 
 export default {
   components: {
+    Confirmation,
     Student,
   },
   setup() {
@@ -111,6 +114,9 @@ export default {
   },
   data() {
     return {
+      incomplete_blocklist: [gettext("x_no_grade_now"), "N", "CR"],
+      missing_grades: 0,
+      invalid_grades: 0,
       reviewing: false,
     };
   },
@@ -119,10 +125,22 @@ export default {
       return this.unsubmitted > 0;
     },
     graderosterTitle() {
-      return (this.unsubmitted) ? "Enter grades for" : "Grade Receipt for";
+      return (this.unsubmitted)
+        ? gettext("enter_grades") : gettext("submitted_grades_for");
     },
-    gradesRemaining() {
-      return this.unsubmitted;  // TODO: calculate empty inputs
+    gradesRemainingText() {
+      var s = [];
+      if (this.missing_grades) {
+        s.push(ngettext("%(missing_grades)s grade missing",
+                        "%(missing_grades)s grades missing",
+                        missing_grades));
+      }
+      if (this.invalid_grades) {
+        s.push(ngettext("%(invalid_grades)s grade invalid",
+                        "%(invalid_grades)s grades invalid",
+                        invalid_grades));
+      }
+      return s.join(", ");
     },
   },
   methods: {
