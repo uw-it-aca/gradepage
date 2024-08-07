@@ -5,50 +5,20 @@
         Back To {{ section.section_year }} {{ section.section_quarter }}
       </BLink>
 
-      <BCard
-        class="shadow-sm rounded-3 my-4"
-        header-class="p-3"
-        header="Default"
-      >
-        <template #header>
-          <div class="">
-            <div class="fs-5 text-muted fw-light">{{ graderosterTitle }}</div>
-            <span class="fs-2 m-0 me-3">
-              <BPlaceholder
-                v-if="!section.section_name"
-                class="bg-light-gray"
-                width="15"
-                animation="glow"
-              />{{ section.section_name }}
-            </span>
-            <span class="small"
-              >SLN
-              <BPlaceholder
-                v-if="!section.section_sln"
-                class="bg-light-gray"
-                width="5"
-                animation="glow"
-              />{{ section.section_sln }}</span
-            >
-          </div>
-        </template>
-
-        <div class="mb-2 small text-muted">
-          Duplicate Code <i class="bi bi-circle-fill text-secondary"></i>
-        </div>
-        <GradeRoster
-          v-if="graderoster"
-          :graderoster="graderoster"
-        ></GradeRoster>
-        <div v-else>Graderoster not available</div>
-      </BCard>
+      <GradeRoster
+        v-if="graderoster"
+        :section="section"
+        :graderoster="graderoster"
+        :unsubmitted="unsubmitted"
+      ></GradeRoster>
+      <div v-else>Graderoster errors go here</div>
     </template>
   </Layout>
 </template>
 
 <script>
 import Layout from "@/layouts/default.vue";
-import GradeRoster from "@/components/graderoster/list.vue";
+import GradeRoster from "@/components/graderoster.vue";
 import { getSection, getGraderoster } from "@/utils/data";
 
 export default {
@@ -70,12 +40,6 @@ export default {
       unsubmitted: 0,
       pageTitle: "Course Section",
     };
-  },
-  computed: {
-    graderosterTitle() {
-      return (this.isLoading) ? "" : (this.unsubmitted)
-        ? "Enter grades for" : "Grade Receipt for";
-    },
   },
   methods: {
     loadGraderoster: function () {
