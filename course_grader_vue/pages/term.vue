@@ -136,8 +136,11 @@ export default {
     },
   },
   created() {
+    setTimeout(() => {
+      this.loadSectionsForTerm();
+    }, "1000");
+
     this.updateTerm();
-    this.loadSectionsForTerm();
   },
 };
 </script>
