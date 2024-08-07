@@ -17,7 +17,7 @@
         </template>
       </div>
     </div>
-    <div v-if="student.grade_url" class="text-end">
+    <div v-if="student.grade_url && !reviewing" class="text-end">
       <GradeInput :student="student"></GradeInput>
     </div>
     <div v-else class="text-end">
@@ -39,6 +39,11 @@ export default {
     student: {
       type: Object,
       required: true,
+    },
+    reviewing: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
   },
 };

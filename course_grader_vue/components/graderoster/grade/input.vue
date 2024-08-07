@@ -113,16 +113,31 @@
       <strong><span aria-hidden="true">W</span></strong>
     </label>
   </div>
+
+  <div :id="`status-${student.item_id}`">
+    <span v-if="import_source" class="imported-grade">{{ student.import_source }} grade: {{ student.import_grade }}
+      <span v-if="is_override_grade" class="override-icon" title="Override grade imported from Canvas Gradebook"><i class="fas fa-circle fa-stack-2x" title="Override grade imported from Canvas Gradebook" aria-hidden="true"></i>
+      </span>
+    </span>
+    <span role="alert" class="text-danger invalid-grade">Invalid grade text here</span>
+  </div>
 </div>
 </template>
 
 <script>
+import { updateGrade } from "@/utils/data";
+
 export default {
   props: {
     student: {
       type: Object,
       required: true,
     },
+  },
+  setup() {
+    return {
+      updateGrade,
+    };
   },
   computed: {
     incompleteTitle() {
@@ -140,6 +155,10 @@ export default {
             this.student.student_firstname +
             " " +
             this.student.student_lastname;
+    },
+  },
+  methods: {
+    saveGrade: function () {
     },
   },
 };
