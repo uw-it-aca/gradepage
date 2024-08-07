@@ -20,6 +20,7 @@
       window.gradepage.messages = {{ messages|safe }};
       window.gradepage.message_level = "{{ message_level }}";
     </script>
+    <script type="text/javascript" src="{% url "javascript-catalog" %}"></script>
 
     <!-- vite css bundle -->
     {% vite_styles 'course_grader_vue/main.js' %}

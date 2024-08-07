@@ -115,7 +115,7 @@
   </div>
 
   <div :id="`status-${student.item_id}`">
-    <span v-if="import_source" class="imported-grade">{{ student.import_source }} grade: {{ student.import_grade }}
+    <span v-if="student.import_source" class="imported-grade">{{ student.import_source }} grade: {{ student.import_grade }}
       <span v-if="is_override_grade" class="override-icon" title="Override grade imported from Canvas Gradebook"><i class="fas fa-circle fa-stack-2x" title="Override grade imported from Canvas Gradebook" aria-hidden="true"></i>
       </span>
     </span>
