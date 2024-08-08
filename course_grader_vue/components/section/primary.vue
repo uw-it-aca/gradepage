@@ -39,10 +39,12 @@
 import SecondarySection from "@/components/section/secondary.vue";
 import { getSectionStatus } from "@/utils/data";
 import { formatGradingStatus, formatLinkTitle } from "@/utils/grading-status";
+import { BPlaceholder } from "bootstrap-vue-next";
 
 export default {
   components: {
     SecondarySection,
+    BPlaceholder
   },
   props: {
     section: {

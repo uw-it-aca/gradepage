@@ -20,11 +20,13 @@
 import Layout from "@/layouts/default.vue";
 import GradeRoster from "@/components/graderoster.vue";
 import { getSection, getGraderoster } from "@/utils/data";
+import { BLink } from "bootstrap-vue-next";
 
 export default {
   components: {
     Layout,
     GradeRoster,
+    BLink
   },
   setup() {
     return {

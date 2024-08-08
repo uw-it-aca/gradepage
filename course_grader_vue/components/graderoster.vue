@@ -85,11 +85,14 @@ import Confirmation from "@/components/graderoster/confirmation.vue";
 import Student from "@/components/graderoster/student.vue";
 import { BPlaceholder } from "bootstrap-vue-next";
 import { updateGraderoster, submitGraderoster } from "@/utils/data";
+import { BCard, BPlaceholder } from "bootstrap-vue-next";
 
 export default {
   components: {
     Confirmation,
     Student,
+    BCard,
+    BPlaceholder
   },
   setup() {
     return {
