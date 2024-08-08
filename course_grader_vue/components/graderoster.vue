@@ -26,6 +26,14 @@
             animation="glow"
           />{{ section.section_sln }}</span
         >
+        <div style="float: right;">
+          <BLink
+            href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
+            target="_blank"
+            title="Information on assigning and submitting grades">
+            <span>Info</span>
+          </BLink>
+        </div>
       </div>
     </template>
 
@@ -33,9 +41,9 @@
       {{ gettext("please_review_grades") }}
     </div>
     <div v-else-if="editing">
-      <span v-if="graderoster.is_writing_section">
-        {{ gettext("writing_course_note") }}
-      </span>
+      <span
+        v-if="graderoster.is_writing_section"
+        v-html="gettext('writing_course_note')" />
     </div>
     <div v-else>
       <ConfirmationHeader :section="section" :graderoster="graderoster"></ConfirmationHeader>
