@@ -158,6 +158,24 @@ export default {
     },
   },
   methods: {
+    normalizeGrade: function (grade) {
+      grade = grade.trim();
+      if (grade.match(/^(?:n|nc|p|h|hw|f|hp|i|cr)$/i)) {
+        grade = grade.toUpperCase();
+      } else if (grade.match(/^x/i)) {
+        grade = gettext("x_no_grade_now");
+      } else {
+        grade = grade.replace(/^([0-4])?\.([0-9])0+$/, "$1.$2");
+        grade = grade.replace(/^\.([0-9])$/, "0.$1");
+        grade = grade.replace(/^([0-4])\.?$/, "$1.0");
+      }
+      return grade;
+    },
+    validateGrade: function () {
+      var is_incomplete, is_valid, is_hypenated, is_cnc, is_hhppf,
+            is_undergrad_numeric, is_grad_numeric, text;
+
+    },
     saveGrade: function () {
     },
   },
