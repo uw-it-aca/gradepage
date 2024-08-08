@@ -69,10 +69,11 @@
 <script>
 import { useContextStore } from "@/stores/context";
 import { clearOverride } from "@/utils/data";
+import { BAlert, BLink } from "bootstrap-vue-next";
 
 export default {
   name: "GradepageApp",
-  components: {},
+  components: { BAlert, BLink },
   props: {
     pageTitle: {
       type: String,

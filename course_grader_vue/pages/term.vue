@@ -65,11 +65,13 @@ import Layout from "@/layouts/default.vue";
 import SectionList from "@/components/section/list.vue";
 import { useContextStore } from "@/stores/context";
 import { getSections } from "@/utils/data";
+import { BCard, BPlaceholder } from "bootstrap-vue-next";
 
 export default {
   components: {
     Layout,
     SectionList,
+    BCard
   },
   setup() {
     const contextStore = useContextStore();
