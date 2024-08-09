@@ -18,7 +18,7 @@
       </ul>
     </template>
     <template #profile>
-      <axdd-profile
+      <SProfile
         v-if="userOverride != null"
         :user-netid="userName"
         :user-override="userOverride"
@@ -30,10 +30,10 @@
         >
           Clear override
         </button>
-      </axdd-profile>
-      <axdd-profile v-else :user-netid="userName">
+      </SProfile>
+      <SProfile v-else :user-netid="userName">
         <a :href="signOutUrl" class="text-white">Sign out</a>
-      </axdd-profile>
+      </SProfile>
     </template>
     <template #aside>
       <div class="border border-danger">aside slot area</div>
@@ -70,10 +70,11 @@
 import { useContextStore } from "@/stores/context";
 import { clearOverride } from "@/utils/data";
 import { BAlert, BLink } from "bootstrap-vue-next";
+import { STopbar, SProfile } from "solstice-vue";
 
 export default {
   name: "GradepageApp",
-  components: { BAlert, BLink },
+  components: { BAlert, BLink, STopbar, SProfile },
   props: {
     pageTitle: {
       type: String,
