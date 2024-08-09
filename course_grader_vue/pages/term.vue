@@ -48,12 +48,7 @@
           <template v-if="sections.length > 0">
             <SectionList :sections="sections"></SectionList>
           </template>
-          <div v-else>
-            You do not have any classes to grade for
-            <strong>{{ selectedTermName }}</strong
-            >. If you believe this to be incorrect, please contact your
-            department's Time Schedule Coordinator.
-          </div>
+          <div v-else v-html="noClassesWarning"></div>
         </template>
       </BCard>
     </template>
@@ -100,6 +95,9 @@ export default {
         this.currentTerm.quarter === this.selectedTerm.quarter &&
         this.currentTerm.year === this.selectedTerm.year
       );
+    },
+    noClassesWarning() {
+      return interpolate(gettext("no_classes_to_grade"), this.selectedTerm, true);
     },
   },
   methods: {
