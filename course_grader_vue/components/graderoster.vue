@@ -19,7 +19,7 @@
           />{{ section.section_name }}
         </span>
         <span class="small"
-          >SLN
+          >{{ gettext("sln") }}
           <BPlaceholder
             v-if="!section.section_sln"
             class="bg-light-gray"
@@ -83,14 +83,15 @@
     <template #footer>
       <div v-if="reviewing">
         <span>{{ gettext("review_warning") }}</span>
-        <button>Back</button> <button>Review</button>
+        <button>{{ gettext("btn_review_back") }}</button>
+        <button>{{ gettext("btn_submit_grades") }}</button>
       </div>
       <div v-else-if="editing">
         <span v-if="gradesRemainingText">{{ gradesRemainingText }}</span>
         <span v-else class="visually-hidden">
           All grades entered. Click Review button to continue.
         </span>
-        <button disabled="disabled">Submit grades</button>
+        <button disabled="disabled">{{ gettext("btn_review_submit") }}</button>
       </div>
     </template>
 
