@@ -28,11 +28,12 @@
     <span><i class="fas fa-refresh"></i>
       {{ gettext("grade_submission_inprogress") }}</span>
       <p>{{ gettext("in_progress_submission_email") }}</p>
+      <p>{{ gettext("more_grades_to_submit") }}
+        <BLink :href="section.term_url">
+          {{ gettext("return_classes_to_grade") }}
+        </BLink>
+      </p>
   </div>
-
-  <p>{{ gettext("more_grades_to_submit") }}
-    <a href="/">{{ gettext("return_classes_to_grade") }}</a>
-  </p>
 
   <div v-for="submission in graderoster.submissions" role="status">
     <span>
@@ -45,7 +46,12 @@
       <strong>{{ submission.submitted_by}}</strong>
       on {{ formatLongDateTime(submission.submitted_date) }}.
     </span>
-    <a title="Change submitted grades" target="_blank" href="https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/">Change submitted grades?</a>
+
+    <BLink
+      href="https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/"
+      target="_blank"
+      title="Change submitted grades">Change submitted grades?
+    </BLink>
   </div>
 
   <div v-if="graderoster.is_writing_section">
@@ -57,7 +63,11 @@
   <div v-if="!graderoster.is_submission_confirmation">
     <i class="fas fa-exclamation-circle" style="color:#EBDD5A;"></i>
     {{ gettext("confirmation_alert_warning") }}
-    <a href="https://registrar.washington.edu/staffandfaculty/grading-resources/#faqs" target="_blank" class="hidden-print">More info.</a>
+    <BLink
+      href="https://registrar.washington.edu/staffandfaculty/grading-resources/#faqs"
+      target="_blank"
+      class="hidden-print">More info.
+    </BLink>
   </div>
 </template>
 
@@ -66,6 +76,10 @@ import { formatLongDateTime } from "@/utils/dates";
 
 export default {
   props: {
+    section: {
+      type: Object,
+      required: true,
+    },
     graderoster: {
       type: Object,
       required: true,

@@ -45,6 +45,21 @@ export default {
       required: true,
       default: false,
     },
+    last: {
+      type: Boolean,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      studentsLoaded: false,
+    };
+  },
+  mounted() {
+    if (this.last) {
+      // Let the parent know we are loaded
+      this.$emit('update:studentsLoaded', true);
+    }
   },
 };
 </script>
