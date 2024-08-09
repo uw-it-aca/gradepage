@@ -1,6 +1,6 @@
 <template>
   <!-- layout.vue: this is where you override the layout -->
-  <axdd-topbar
+  <STopbar
     :app-name="appName"
     :app-root-url="appRootUrl"
     :page-title="pageTitle"
@@ -63,7 +63,7 @@
       </div>
     </template>
     <template #footer></template>
-  </axdd-topbar>
+  </STopbar>
 </template>
 
 <script>
