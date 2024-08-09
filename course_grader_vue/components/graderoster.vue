@@ -5,6 +5,7 @@
     header-class="p-3"
     header="Default"
   >
+
     <template #header>
       <div class="">
         <div v-if="studentsLoaded" class="fs-5 text-muted fw-light">{{ graderosterTitle }}</div>
@@ -37,6 +38,7 @@
       </div>
     </template>
 
+    <!-- Row zero contains information -->
     <div v-if="reviewing">
       {{ gettext("please_review_grades") }}
     </div>
@@ -45,14 +47,16 @@
         v-if="graderoster.is_writing_section"
         v-html="gettext('writing_course_note')" />
     </div>
-    <div v-else>
-      <ConfirmationHeader :section="section" :graderoster="graderoster"></ConfirmationHeader>
+    <div v-else-if="studentsLoaded">
+      <ConfirmationHeader
+        :section="section"
+        :graderoster="graderoster"></ConfirmationHeader>
     </div>
-
     <div v-if="graderoster.has_duplicate_codes" class="mb-2 small text-muted">
       {{ gettext("duplicate_code") }} <i class="bi bi-circle-fill text-secondary"></i>
     </div>
 
+    <!-- Student roster -->
     <ul v-if="!graderoster.students" class="list-unstyled m-0">
       <li v-for="index in 10" class="border-top pt-2 mt-2">
         <BPlaceholder
@@ -76,12 +80,12 @@
       </li>
     </ul>
 
-    <template v-if="reviewing">
-      <div>{{ gettext("review_warning") }}</div>
-      <button>Back</button> <button>Review</button>
-    </template>
-    <template v-else-if="editing">
-      <div class="border-top pt-2 mt-2">
+    <template #footer>
+      <div v-if="reviewing">
+        <span>{{ gettext("review_warning") }}</span>
+        <button>Back</button> <button>Review</button>
+      </div>
+      <div v-else-if="editing">
         <span v-if="gradesRemainingText">{{ gradesRemainingText }}</span>
         <span v-else class="visually-hidden">
           All grades entered. Click Review button to continue.
