@@ -74,6 +74,7 @@
       >
         <Student
           :student="student"
+          :gradeChoices="graderoster.grade_choices[student.grade_choices_index]"
           :reviewing="reviewing"
           :last="index === graderoster.students.length - 1"
           v-model:studentsLoaded="studentsLoaded"></Student>
@@ -134,7 +135,6 @@ export default {
   },
   data() {
     return {
-      incompleteBlocklist: [gettext("x_no_grade_now"), "N", "CR"],
       missingGrades: 0,
       invalidGrades: 0,
       reviewing: false,

@@ -1,93 +1,25 @@
 <template>
-
-  <!-- MARK: bootstrap form inputs -->
-  <div class="input-group mb-3 d-none">
+  <div class="input-group mb-3">
     <div class="input-group-text">
-      <input
-        id="inputIncomplete"
-        class="form-check-input mt-0 me-1"
-        type="checkbox"
-        value=""
-        aria-label="Checkbox for following text input"
-      />
-      <label>Incomplete</label>
+      <label
+        :for="`incomplete-${student.item_id}`"
+        :title="inputIncompleteTitle"
+      >
+        <input
+          class="form-check-input mt-0 me-1"
+          type="checkbox"
+          value="1"
+          :id="`incomplete-${student.item_id}`"
+          :disabled="!student.allows_incomplete || student.is_submitted"
+          :checked="incomplete"
+          @change="incompleteChanged($event)"
+        />
+        <strong><span aria-hidden="true">I</span></strong>
+      </label>
     </div>
 
     <input
-      type="text"
       class="form-control"
-      list="datalistOptions"
-      id="exampleDataList"
-      placeholder=""
-    />
-    <datalist id="datalistOptions">
-      <option value="X (No grade now)"></option>
-      <option value="4.0"></option>
-      <option value="3.9"></option>
-      <option value="3.8"></option>
-      <option value="3.7"></option>
-      <option value="3.6"></option>
-      <option value="3.5"></option>
-      <option value="3.4"></option>
-      <option value="3.3"></option>
-      <option value="3.2"></option>
-      <option value="3.1"></option>
-      <option value="3.0"></option>
-      <option value="2.9"></option>
-      <option value="2.8"></option>
-      <option value="2.7"></option>
-      <option value="2.6"></option>
-      <option value="2.5"></option>
-      <option value="2.4"></option>
-      <option value="2.3"></option>
-      <option value="2.2"></option>
-      <option value="2.1"></option>
-      <option value="2.0"></option>
-      <option value="1.9"></option>
-      <option value="1.8"></option>
-      <option value="1.7"></option>
-      <option value="1.6"></option>
-      <option value="1.5"></option>
-      <option value="1.4"></option>
-      <option value="1.3"></option>
-      <option value="1.2"></option>
-      <option value="1.1"></option>
-      <option value="1.0"></option>
-      <option value="0.9"></option>
-      <option value="0.8"></option>
-      <option value="0.7"></option>
-      <option value="0.0"></option>
-    </datalist>
-
-    <div class="input-group-text">
-      <input
-        class="form-check-input mt-0 me-1"
-        type="checkbox"
-        value=""
-        aria-label="Checkbox for following text input"
-      />
-      <label>Writing</label>
-    </div>
-  </div>
-  <!-- END: bootstrap inputs -->
-
-  <div>
-  <div class="form-check form-check-inline">
-    <label :for="`incomplete-${student.item_id}`" :title="incompleteTitle">
-      <input
-        type="checkbox"
-        name="incomplete"
-        value="1"
-        :id="`incomplete-${student.item_id}`"
-        :disabled="!student.allows_incomplete"
-        :checked="student.has_incomplete"
-      />
-      <strong><span aria-hidden="true">I</span></strong>
-    </label>
-  </div>
-  <div>
-    <span v-if="student.has_incomplete">Default</span>
-    <input
       type="text"
       aria-label=""
       aria-expanded="true"
@@ -96,32 +28,50 @@
       aria-activedescendant="selected_option"
       aria-required="true"
       :id="`grade-${student.item_id}`"
-      :value="student.no_grade_now ? `X (No grade now)` : student.grade"
+      :list="`datalistOptions-${student.item_id}`"
+      :value="grade"
       :disabled="student.is_submitted"
+      :placeholder="[incomplete ? 'Default' : '']"
     />
-  </div>
-  <div v-if="!student.is_writing_section">
-    <label :for="`writing-${student.item_id}`" :title="writingTitle">
-      <input
-        type="checkbox"
-        name="writing_credit"
-        value="1"
-        :id="`writing-${student.item_id}`"
-        :disabled="!student.allows_writing_credit"
-        :checked="student.has_writing_credit"
-      />
-      <strong><span aria-hidden="true">W</span></strong>
-    </label>
+    <datalist :id="`datalistOptions-${student.item_id}`">
+      <option v-for="g in choices" :value="g"></option>
+    </datalist>
+
+    <div v-if="!student.is_writing_section" class="input-group-text">
+      <label :for="`writing-${student.item_id}`" :title="inputWritingTitle">
+        <input
+          class="form-check-input mt-0 me-1"
+          type="checkbox"
+          value="1"
+          :id="`writing-${student.item_id}`"
+          :disabled="!student.allows_writing_credit || student.is_submitted"
+          :checked="writing"
+        />
+        <strong><span aria-hidden="true">W</span></strong>
+      </label>
+    </div>
   </div>
 
   <div :id="`status-${student.item_id}`">
-    <span v-if="student.import_source" class="imported-grade">{{ student.import_source }} grade: {{ student.import_grade }}
-      <span v-if="is_override_grade" class="override-icon" title="Override grade imported from Canvas Gradebook"><i class="fas fa-circle fa-stack-2x" title="Override grade imported from Canvas Gradebook" aria-hidden="true"></i>
+    <span v-if="student.import_source" class="imported-grade">
+      {{ student.import_source }} grade: {{ student.import_grade }}
+      <span
+        v-if="is_override_grade"
+        class="override-icon"
+        title="Override grade imported from Canvas Gradebook"
+      >
+        <i
+          class="fas fa-circle fa-stack-2x"
+          title="Override grade imported from Canvas Gradebook"
+          aria-hidden="true"
+        >
+        </i>
       </span>
     </span>
-    <span role="alert" class="text-danger invalid-grade">Invalid grade text here</span>
+    <span role="alert" class="text-danger invalid-grade">
+      Invalid grade text here
+    </span>
   </div>
-</div>
 </template>
 
 <script>
@@ -133,14 +83,27 @@ export default {
       type: Object,
       required: true,
     },
+    gradeChoices: {
+      type: Array,
+      required: true,
+    },
   },
   setup() {
     return {
       updateGrade,
     };
   },
+  data() {
+    return {
+      incompleteBlocklist: [gettext("x_no_grade_now"), "N", "CR"],
+      choices: [],
+      grade: null,
+      incomplete: false,
+      writing: false,
+    };
+  },
   computed: {
-    incompleteTitle() {
+    inputIncompleteTitle() {
       return this.student.allows_incomplete
         ? ""
         : "Incomplete not allowed for " +
@@ -148,7 +111,7 @@ export default {
             " " +
             this.student.student_lastname;
     },
-    writingTitle() {
+    inputWritingTitle() {
       return this.student.allows_writing_credit
         ? ""
         : "Writing Credit not allowed for " +
@@ -158,6 +121,50 @@ export default {
     },
   },
   methods: {
+    updateGradeChoices: function () {
+      var i,
+        len,
+        grade,
+        valid = [];
+      for (i = 0, len = this.gradeChoices.length; i < len; i++) {
+        grade =
+          i === 0 && this.gradeChoices[i] === ""
+            ? gettext("x_no_grade_now")
+            : this.gradeChoices[i];
+
+        if (this.incomplete && this.incompleteBlocklist.includes(grade)) {
+          continue;
+        }
+        valid.push(grade);
+      }
+      this.choices = valid;
+    },
+    incompleteChanged: function (e) {
+      this.$nextTick(() => {
+        this.incomplete = e.target.checked;
+        this.updateGradeChoices();
+      });
+    },
+    initializeGrade: function () {
+      this.updateGradeChoices();
+      if (this.student.allows_incomplete) {
+        this.incomplete = this.student.has_incomplete;
+      }
+      if (this.student.allows_writing_credit) {
+        this.writing = this.student.has_writing_credit;
+      }
+      if (this.student.no_grade_now) {
+        this.grade = gettext("x_no_grade_now");
+      } else if (
+        this.student.grade === null &&
+        !this.student.has_incomplete &&
+        this.gradeChoices.includes("N")
+      ) {
+        this.grade = "N";
+      } else {
+        this.grade = this.student.grade;
+      }
+    },
     normalizeGrade: function (grade) {
       grade = grade.trim();
       if (grade.match(/^(?:n|nc|p|h|hw|f|hp|i|cr)$/i)) {
@@ -172,12 +179,19 @@ export default {
       return grade;
     },
     validateGrade: function () {
-      var is_incomplete, is_valid, is_hypenated, is_cnc, is_hhppf,
-            is_undergrad_numeric, is_grad_numeric, text;
-
+      var is_incomplete,
+        is_valid,
+        is_hypenated,
+        is_cnc,
+        is_hhppf,
+        is_undergrad_numeric,
+        is_grad_numeric,
+        text;
     },
-    saveGrade: function () {
-    },
+    saveGrade: function () {},
+  },
+  created() {
+    this.initializeGrade();
   },
 };
 </script>
