@@ -18,7 +18,7 @@
       </div>
     </div>
     <div v-if="student.grade_url && !reviewing" class="text-end">
-      <GradeInput :student="student"></GradeInput>
+      <GradeInput :student="student" :gradeChoices="gradeChoices"></GradeInput>
     </div>
     <div v-else class="text-end">
       <GradeStatic :student="student"></GradeStatic>
@@ -38,6 +38,10 @@ export default {
   props: {
     student: {
       type: Object,
+      required: true,
+    },
+    gradeChoices: {
+      type: Array,
       required: true,
     },
     reviewing: {
