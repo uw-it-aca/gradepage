@@ -1,25 +1,28 @@
 <template>
-  <div class="input-group mb-3">
-    <div class="input-group-text">
-      <label
-        :for="`incomplete-${student.item_id}`"
-        :title="inputIncompleteTitle"
-      >
-        <input
-          class="form-check-input mt-0 me-1"
-          type="checkbox"
-          value="1"
-          :id="`incomplete-${student.item_id}`"
+  <div class="input-group">
+
+    <!-- incomplete checkbox button -->
+    <div
+      class="btn-group d-inline-block"
+      role="group"
+      aria-label="Basic checkbox toggle button group"
+    >
+      <input
+        type="checkbox"
+        class="btn-check"
+        autocomplete="off"
+        :id="`incomplete-${student.item_id}`"
           :disabled="!student.allows_incomplete || student.is_submitted"
           :checked="incomplete"
           @change="incompleteChanged($event)"
-        />
-        <strong><span aria-hidden="true">I</span></strong>
-      </label>
+      />
+      <label  :for="`incomplete-${student.item_id}`"
+      :title="inputIncompleteTitle" class="btn btn-outline-secondary" for="btncheck1" style="width:38px;">I</label>
     </div>
 
+    <!-- grade text input -->
     <input
-      class="form-control"
+      class="form-control rounded-end border-secondary"
       type="text"
       aria-label=""
       aria-expanded="true"
@@ -31,26 +34,35 @@
       :list="`datalistOptions-${student.item_id}`"
       :value="grade"
       :disabled="student.is_submitted"
-      :placeholder="[incomplete ? 'Default' : '']"
+      :placeholder="[incomplete ? 'Enter default grade...' : 'Enter grade...']"
     />
     <datalist :id="`datalistOptions-${student.item_id}`">
       <option v-for="g in choices" :value="g"></option>
     </datalist>
 
-    <div v-if="!student.is_writing_section" class="input-group-text">
-      <label :for="`writing-${student.item_id}`" :title="inputWritingTitle">
-        <input
-          class="form-check-input mt-0 me-1"
-          type="checkbox"
-          value="1"
+
+    <!-- writing checkbox button -->
+    <div
+     v-if="!student.is_writing_section"
+      class="btn-group ms-2"
+      role="group"
+      aria-label="Basic checkbox toggle button group"
+    >
+      <input
+        type="checkbox"
+        class="btn-check"
+        autocomplete="off"
+        value="1"
           :id="`writing-${student.item_id}`"
           :disabled="!student.allows_writing_credit || student.is_submitted"
           :checked="writing"
-        />
-        <strong><span aria-hidden="true">W</span></strong>
-      </label>
+      />
+      <label :for="`writing-${student.item_id}`" :title="inputWritingTitle" class="btn btn-outline-secondary">W</label>
     </div>
+
   </div>
+  <div v-if="incomplete" class="text-start small mb-3">
+    Student will receive default grade</div>
 
   <div :id="`status-${student.item_id}`">
     <span v-if="student.import_source" class="imported-grade">
