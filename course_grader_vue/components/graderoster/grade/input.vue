@@ -1,10 +1,10 @@
 <template>
-
   <div class="input-group mb-3">
     <div class="input-group-text">
       <label
         :for="`incomplete-${student.item_id}`"
-        :title="inputIncompleteTitle">
+        :title="inputIncompleteTitle"
+      >
         <input
           class="form-check-input mt-0 me-1"
           type="checkbox"
@@ -18,7 +18,6 @@
       </label>
     </div>
 
-    <span v-if="incomplete">Default</span>
     <input
       class="form-control"
       type="text"
@@ -32,6 +31,7 @@
       :list="`datalistOptions-${student.item_id}`"
       :value="grade"
       :disabled="student.is_submitted"
+      :placeholder="[incomplete ? 'Default' : '']"
     />
     <datalist :id="`datalistOptions-${student.item_id}`">
       <option v-for="g in choices" :value="g"></option>
@@ -55,12 +55,16 @@
   <div :id="`status-${student.item_id}`">
     <span v-if="student.import_source" class="imported-grade">
       {{ student.import_source }} grade: {{ student.import_grade }}
-      <span v-if="is_override_grade"
+      <span
+        v-if="is_override_grade"
         class="override-icon"
-        title="Override grade imported from Canvas Gradebook">
-        <i class="fas fa-circle fa-stack-2x"
+        title="Override grade imported from Canvas Gradebook"
+      >
+        <i
+          class="fas fa-circle fa-stack-2x"
           title="Override grade imported from Canvas Gradebook"
-          aria-hidden="true">
+          aria-hidden="true"
+        >
         </i>
       </span>
     </span>
@@ -117,11 +121,16 @@ export default {
     },
   },
   methods: {
-    updateGradeChoices: function() {
-      var i, len, grade, valid = [];
+    updateGradeChoices: function () {
+      var i,
+        len,
+        grade,
+        valid = [];
       for (i = 0, len = this.gradeChoices.length; i < len; i++) {
-        grade = (i === 0 && this.gradeChoices[i] === "")
-          ? gettext("x_no_grade_now") : this.gradeChoices[i];
+        grade =
+          i === 0 && this.gradeChoices[i] === ""
+            ? gettext("x_no_grade_now")
+            : this.gradeChoices[i];
 
         if (this.incomplete && this.incompleteBlocklist.includes(grade)) {
           continue;
@@ -130,13 +139,13 @@ export default {
       }
       this.choices = valid;
     },
-    incompleteChanged: function(e) {
+    incompleteChanged: function (e) {
       this.$nextTick(() => {
         this.incomplete = e.target.checked;
         this.updateGradeChoices();
       });
     },
-    initializeGrade: function() {
+    initializeGrade: function () {
       this.updateGradeChoices();
       if (this.student.allows_incomplete) {
         this.incomplete = this.student.has_incomplete;
@@ -146,8 +155,11 @@ export default {
       }
       if (this.student.no_grade_now) {
         this.grade = gettext("x_no_grade_now");
-      } else if (this.student.grade === null && !this.student.has_incomplete &&
-                 this.gradeChoices.includes("N")) {
+      } else if (
+        this.student.grade === null &&
+        !this.student.has_incomplete &&
+        this.gradeChoices.includes("N")
+      ) {
         this.grade = "N";
       } else {
         this.grade = this.student.grade;
@@ -167,11 +179,16 @@ export default {
       return grade;
     },
     validateGrade: function () {
-      var is_incomplete, is_valid, is_hypenated, is_cnc, is_hhppf,
-            is_undergrad_numeric, is_grad_numeric, text;
+      var is_incomplete,
+        is_valid,
+        is_hypenated,
+        is_cnc,
+        is_hhppf,
+        is_undergrad_numeric,
+        is_grad_numeric,
+        text;
     },
-    saveGrade: function () {
-    },
+    saveGrade: function () {},
   },
   created() {
     this.initializeGrade();
