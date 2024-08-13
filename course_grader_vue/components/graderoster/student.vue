@@ -43,6 +43,7 @@ export default {
     gradeChoices: {
       type: Array,
       required: true,
+      default: [],
     },
     reviewing: {
       type: Boolean,
