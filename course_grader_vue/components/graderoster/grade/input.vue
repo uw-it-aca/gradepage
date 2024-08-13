@@ -1,68 +1,80 @@
 <template>
-  <div class="input-group">
+  <div class="d-flex">
+    <div class="input-group input-group-sm me-2">
 
-    <!-- incomplete checkbox button -->
-    <div
-      class="btn-group d-inline-block"
-      role="group"
-      aria-label="Basic checkbox toggle button group"
-    >
-      <input
-        type="checkbox"
-        class="btn-check"
-        autocomplete="off"
-        :id="`incomplete-${student.item_id}`"
+      <!-- incomplete checkbox button -->
+      <div
+        class="btn-group btn-group-sm"
+      >
+        <input
+          type="checkbox"
+          class="btn-check"
+          autocomplete="off"
+          :id="`incomplete-${student.item_id}`"
           :disabled="!student.allows_incomplete || student.is_submitted"
           :checked="incomplete"
           @change="incompleteChanged($event)"
+          value="1"
+        />
+        <label
+          :for="`incomplete-${student.item_id}`"
+          :title="inputIncompleteTitle"
+          class="btn btn-outline-secondary fw-bold rounded-start-2"
+          for="btncheck1"
+          style="width: 31px"
+          ><abbr title="Incomplete" class="text-decoration-none pe-none">I</abbr></label
+        >
+      </div>
+
+      <!-- grade text input -->
+      <input
+        class="form-control rounded-end border-secondary"
+        type="text"
+        aria-label=""
+        aria-expanded="true"
+        aria-autocomplete="list"
+        aria-owns="owned_listbox"
+        aria-activedescendant="selected_option"
+        aria-required="true"
+        :id="`grade-${student.item_id}`"
+        :list="`datalistOptions-${student.item_id}`"
+        :value="grade"
+        :disabled="student.is_submitted"
+        :placeholder="[
+          incomplete ? 'Enter default grade...' : 'Enter grade...',
+        ]"
       />
-      <label  :for="`incomplete-${student.item_id}`"
-      :title="inputIncompleteTitle" class="btn btn-outline-secondary" for="btncheck1" style="width:38px;">I</label>
+      <datalist :id="`datalistOptions-${student.item_id}`">
+        <option v-for="g in choices" :value="g"></option>
+      </datalist>
     </div>
-
-    <!-- grade text input -->
-    <input
-      class="form-control rounded-end border-secondary"
-      type="text"
-      aria-label=""
-      aria-expanded="true"
-      aria-autocomplete="list"
-      aria-owns="owned_listbox"
-      aria-activedescendant="selected_option"
-      aria-required="true"
-      :id="`grade-${student.item_id}`"
-      :list="`datalistOptions-${student.item_id}`"
-      :value="grade"
-      :disabled="student.is_submitted"
-      :placeholder="[incomplete ? 'Enter default grade...' : 'Enter grade...']"
-    />
-    <datalist :id="`datalistOptions-${student.item_id}`">
-      <option v-for="g in choices" :value="g"></option>
-    </datalist>
-
 
     <!-- writing checkbox button -->
     <div
-     v-if="!student.is_writing_section"
-      class="btn-group ms-2"
-      role="group"
-      aria-label="Basic checkbox toggle button group"
+      v-if="!student.is_writing_section"
+      class="btn-group btn-group-sm"
     >
       <input
         type="checkbox"
         class="btn-check"
         autocomplete="off"
         value="1"
-          :id="`writing-${student.item_id}`"
-          :disabled="!student.allows_writing_credit || student.is_submitted"
-          :checked="writing"
+        :id="`writing-${student.item_id}`"
+        :disabled="!student.allows_writing_credit || student.is_submitted"
+        :checked="writing"
       />
-      <label :for="`writing-${student.item_id}`" :title="inputWritingTitle" class="btn btn-outline-secondary">W</label>
+      <label
+        :for="`writing-${student.item_id}`"
+        :title="inputWritingTitle"
+        class="btn btn-outline-secondary fw-bold rounded-2"
+        ><abbr title="Writing" class="text-decoration-none pe-none">W</abbr></label
+      >
     </div>
-
   </div>
-  <div v-if="incomplete" class="text-start small mb-3">
-    Student will receive default grade</div>
+
+  <div v-if="incomplete" class="text-start small mb-3 text-muted">
+    Student will receive default grade
+  </div>
 
   <div :id="`status-${student.item_id}`">
     <span v-if="student.import_source" class="imported-grade">
@@ -80,7 +92,7 @@
         </i>
       </span>
     </span>
-    <span role="alert" class="text-danger invalid-grade">
+    <span role="alert" class="text-danger invalid-grade small">
       Invalid grade text here
     </span>
   </div>
