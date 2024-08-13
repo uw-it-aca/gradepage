@@ -1,11 +1,8 @@
 <template>
   <div class="d-flex">
     <div class="input-group input-group-sm me-2">
-
       <!-- incomplete checkbox button -->
-      <div
-        class="btn-group btn-group-sm"
-      >
+      <div class="btn-group btn-group-sm">
         <input
           type="checkbox"
           class="btn-check"
@@ -20,43 +17,43 @@
           :title="inputIncompleteTitle"
           class="btn btn-outline-secondary fw-bold rounded-start-2"
           style="width: 31px"
-          ><abbr title="Incomplete" class="text-decoration-none pe-none">I</abbr></label
+          ><abbr title="Incomplete" class="text-decoration-none pe-none"
+            >I</abbr
+          ></label
         >
       </div>
 
-      <!-- grade text input -->
-      <input
-        class="form-control rounded-end border-secondary"
-        type="text"
-        aria-label=""
-        aria-expanded="true"
-        aria-autocomplete="list"
-        aria-owns="owned_listbox"
-        aria-activedescendant="selected_option"
-        aria-required="true"
-        :id="`grade-${student.item_id}`"
-        :list="`datalistOptions-${student.item_id}`"
-        :value="grade"
-        :disabled="student.is_submitted"
-        :placeholder="[
-          incomplete ? 'Enter default grade...' : 'Enter grade...',
-        ]"
-        @input="gradeChanged($event.target.value)"
-      />
-      <datalist :id="`datalistOptions-${student.item_id}`">
-        <option v-for="g in choices" :value="g"></option>
-      </datalist>
+      <div class="dropdown">
+        <!-- grade text input - custom bootstrap -->
+        <input
+          class="form-control form-control-sm rounded-start-0 rounded-end border-secondary"
+          type="text"
+          aria-label=""
+          aria-expanded="true"
+          aria-autocomplete="list"
+          aria-owns="owned_listbox"
+          aria-activedescendant="selected_option"
+          aria-required="true"
+          :id="`grade-${student.item_id}`"
+          :value="grade"
+          :disabled="student.is_submitted"
+          :placeholder="[
+            incomplete ? 'Enter default grade...' : 'Enter grade...',
+          ]"
+          data-bs-toggle="dropdown"
+          @input="gradeChanged($event.target.value)"
+        />
+        <ul class="dropdown-menu m-0 small overflow-y-auto" style="max-height: 400px;">
+          <li v-for="g in choices"><a class="dropdown-item small" type="button">{{ g }}</a></li>
+        </ul>
+      </div>
     </div>
 
     <!-- writing checkbox button -->
-    <div
-      v-if="!student.is_writing_section"
-      class="btn-group btn-group-sm"
-    >
+    <div v-if="!student.is_writing_section" class="btn-group btn-group-sm">
       <input
         type="checkbox"
         class="btn-check"
-        autocomplete="off"
         :id="`writing-${student.item_id}`"
         :disabled="!student.allows_writing_credit || student.is_submitted"
         :checked="writing"
@@ -66,7 +63,9 @@
         :for="`writing-${student.item_id}`"
         :title="inputWritingTitle"
         class="btn btn-outline-secondary fw-bold rounded-2"
-        ><abbr title="Writing" class="text-decoration-none pe-none">W</abbr></label
+        ><abbr title="Writing" class="text-decoration-none pe-none"
+          >W</abbr
+        ></label
       >
     </div>
   </div>
