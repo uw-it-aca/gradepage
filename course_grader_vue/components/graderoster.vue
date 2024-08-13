@@ -46,10 +46,7 @@
       />
     </div>
     <div v-else-if="studentsLoaded">
-      <ConfirmationHeader
-        :section="section"
-        :graderoster="graderoster"
-      ></ConfirmationHeader>
+      <ConfirmationHeader :section="section" :graderoster="graderoster" />
     </div>
 
     <div class="d-flex justify-content-between">
@@ -63,33 +60,7 @@
         </template>
       </div>
       <div>
-
-        <BDropdown v-model="showImportOptions" size="sm"  variant="outline-primary" no-caret>
-          <template #button-content> <i class="bi bi-arrow-return-right me-1"></i>Import from...</template>
-          <BDropdownItemButton v-b-modal.modalImportCanvasGrades>Canvas Gradebook</BDropdownItemButton>
-          <BDropdownItemButton v-b-modal.modalImportCsvGrades>CSV File</BDropdownItemButton>
-        </BDropdown>
-
-        <BModal id="modalImportCanvasGrades" title="Import Canvas Gradebook">
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere
-            asperiores nesciunt repellat placeat? Fugit sed sit eaque nisi
-            commodi vel ad minima! Dignissimos, maiores amet debitis quis
-            voluptas animi ad.
-          </p>
-          <template #footer>ACTION</template>
-        </BModal>
-
-        <BModal id="modalImportCsvGrades" title="Import CSV File">
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere
-            asperiores nesciunt repellat placeat? Fugit sed sit eaque nisi
-            commodi vel ad minima! Dignissimos, maiores amet debitis quis
-            voluptas animi ad.
-          </p>
-          <template #footer>ACTION</template>
-        </BModal>
-
+        <GradeImport />
       </div>
     </div>
 
@@ -115,7 +86,7 @@
           :reviewing="reviewing"
           :last="index === graderoster.students.length - 1"
           v-model:studentsLoaded="studentsLoaded"
-        ></Student>
+        />
       </li>
     </ul>
 
@@ -139,32 +110,22 @@
 <script>
 import ConfirmationHeader from "@/components/graderoster/header/confirmation.vue";
 import Student from "@/components/graderoster/student.vue";
+import GradeImport from "@/components/gradeimport/import.vue";
+
 import { updateGraderoster, submitGraderoster } from "@/utils/data";
-import { ref } from 'vue';
-import {
-  BButton,
-  BCard,
-  BDropdown,
-  BDropdownItemButton,
-  BModal,
-  BPlaceholder,
-} from "bootstrap-vue-next";
+import { BButton, BCard, BPlaceholder } from "bootstrap-vue-next";
 
 export default {
   components: {
     ConfirmationHeader,
     Student,
+    GradeImport,
     BButton,
     BCard,
-    BDropdown,
-    BDropdownItemButton,
-    BModal,
     BPlaceholder,
   },
   setup() {
-    const showImportOptions = ref(false)
     return {
-      showImportOptions,
       updateGraderoster,
       submitGraderoster,
     };
