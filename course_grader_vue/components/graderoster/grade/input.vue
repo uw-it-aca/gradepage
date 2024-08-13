@@ -6,17 +6,16 @@
         <input
           type="checkbox"
           class="btn-check"
+          autocomplete="off"
           :id="`incomplete-${student.item_id}`"
           :disabled="!student.allows_incomplete || student.is_submitted"
           :checked="incomplete"
-          @change="incompleteChanged($event)"
-          value="1"
+          @change="incompleteChanged($event.target.checked)"
         />
         <label
           :for="`incomplete-${student.item_id}`"
           :title="inputIncompleteTitle"
           class="btn btn-outline-secondary fw-bold rounded-start-2"
-          for="btncheck1"
           style="width: 31px"
           ><abbr title="Incomplete" class="text-decoration-none pe-none"
             >I</abbr
@@ -42,6 +41,7 @@
             incomplete ? 'Enter default grade...' : 'Enter grade...',
           ]"
           data-bs-toggle="dropdown"
+          @input="gradeChanged($event.target.value)"
         />
         <ul class="dropdown-menu m-0 small overflow-y-auto" style="max-height: 400px;">
           <li v-for="g in choices"><a class="dropdown-item small" type="button">{{ g }}</a></li>
@@ -54,10 +54,10 @@
       <input
         type="checkbox"
         class="btn-check"
-        value="1"
         :id="`writing-${student.item_id}`"
         :disabled="!student.allows_writing_credit || student.is_submitted"
         :checked="writing"
+        @change="writingChanged($event.target.checked)"
       />
       <label
         :for="`writing-${student.item_id}`"
@@ -91,14 +91,14 @@
       </span>
     </span>
     <span role="alert" class="text-danger invalid-grade small">
-      Invalid grade text here
+      {{ errorText }}
     </span>
   </div>
 </template>
 
 <script>
 import { updateGrade } from "@/utils/data";
-import { ref } from "vue";
+import { normalizeGrade, validateGrade } from "@/utils/grade";
 
 export default {
   props: {
@@ -112,11 +112,8 @@ export default {
     },
   },
   setup() {
-    const show = ref(false);
-
     return {
       updateGrade,
-      show,
     };
   },
   data() {
@@ -126,6 +123,7 @@ export default {
       grade: null,
       incomplete: false,
       writing: false,
+      errorText: null,
     };
   },
   computed: {
@@ -165,11 +163,19 @@ export default {
       }
       this.choices = valid;
     },
-    incompleteChanged: function (e) {
-      this.$nextTick(() => {
-        this.incomplete = e.target.checked;
-        this.updateGradeChoices();
-      });
+    incompleteChanged: function (checked) {
+      this.incomplete = checked;
+      this.updateGradeChoices();
+      this.errorText = validateGrade(
+        this.grade, this.incomplete, this.choices, this.incompleteBlocklist);
+    },
+    writingChanged: function (checked) {
+      this.writing = checked;
+    },
+    gradeChanged: function (value) {
+      this.grade = normalizeGrade(value);
+      this.errorText = validateGrade(
+        this.grade, this.incomplete, this.choices, this.incompleteBlocklist);
     },
     initializeGrade: function () {
       this.updateGradeChoices();
@@ -190,29 +196,6 @@ export default {
       } else {
         this.grade = this.student.grade;
       }
-    },
-    normalizeGrade: function (grade) {
-      grade = grade.trim();
-      if (grade.match(/^(?:n|nc|p|h|hw|f|hp|i|cr)$/i)) {
-        grade = grade.toUpperCase();
-      } else if (grade.match(/^x/i)) {
-        grade = gettext("x_no_grade_now");
-      } else {
-        grade = grade.replace(/^([0-4])?\.([0-9])0+$/, "$1.$2");
-        grade = grade.replace(/^\.([0-9])$/, "0.$1");
-        grade = grade.replace(/^([0-4])\.?$/, "$1.0");
-      }
-      return grade;
-    },
-    validateGrade: function () {
-      var is_incomplete,
-        is_valid,
-        is_hypenated,
-        is_cnc,
-        is_hhppf,
-        is_undergrad_numeric,
-        is_grad_numeric,
-        text;
     },
     saveGrade: function () {},
   },
