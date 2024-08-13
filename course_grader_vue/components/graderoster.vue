@@ -66,11 +66,11 @@
 
         <BDropdown v-model="showImportOptions" size="sm"  variant="outline-primary" no-caret>
           <template #button-content> <i class="bi bi-arrow-return-right me-1"></i>Import from...</template>
-          <BDropdownItemButton v-b-modal.modalImportCanvaseGrades>Canvas Gradebook</BDropdownItemButton>
+          <BDropdownItemButton v-b-modal.modalImportCanvasGrades>Canvas Gradebook</BDropdownItemButton>
           <BDropdownItemButton v-b-modal.modalImportCsvGrades>CSV File</BDropdownItemButton>
         </BDropdown>
 
-        <BModal id="modalImportCanvaseGrades" title="Import Canvas Gradebook">
+        <BModal id="modalImportCanvasGrades" title="Import Canvas Gradebook">
           <p>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere
             asperiores nesciunt repellat placeat? Fugit sed sit eaque nisi
