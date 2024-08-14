@@ -1,14 +1,10 @@
 <template>
-
-  <BCard
-    class="shadow-sm rounded-3 my-4"
-    header-class="p-3"
-    header="Default"
-  >
-
+  <BCard class="shadow-sm rounded-3 my-4" header-class="p-3" header="Default">
     <template #header>
       <div class="">
-        <div v-if="studentsLoaded" class="fs-5 text-muted fw-light">{{ graderosterTitle }}</div>
+        <div v-if="studentsLoaded" class="fs-5 text-muted fw-light">
+          {{ graderosterTitle }}
+        </div>
         <div v-else class="fs-5 text-muted fw-light">Loading...</div>
         <span class="fs-2 m-0 me-3">
           <BPlaceholder
@@ -27,11 +23,12 @@
             animation="glow"
           />{{ section.section_sln }}</span
         >
-        <div style="float: right;">
+        <div style="float: right">
           <BLink
             href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
             target="_blank"
-            title="Information on assigning and submitting grades">
+            title="Information on assigning and submitting grades"
+          >
             <span>Info</span>
           </BLink>
         </div>
@@ -45,15 +42,26 @@
     <div v-else-if="editing">
       <span
         v-if="graderoster.is_writing_section"
-        v-html="gettext('writing_course_note')" />
+        v-html="gettext('writing_course_note')"
+      />
     </div>
     <div v-else-if="studentsLoaded">
-      <ConfirmationHeader
-        :section="section"
-        :graderoster="graderoster"></ConfirmationHeader>
+      <ConfirmationHeader :section="section" :graderoster="graderoster" />
     </div>
-    <div v-if="graderoster.has_duplicate_codes" class="mb-2 small text-muted">
-      {{ gettext("duplicate_code") }} <i class="bi bi-circle-fill text-secondary"></i>
+
+    <div class="d-flex justify-content-between">
+      <div>
+        <template
+          v-if="graderoster.has_duplicate_codes"
+          class="mb-2 small text-muted"
+        >
+          {{ gettext("duplicate_code") }}
+          <i class="bi bi-circle-fill text-secondary"></i>
+        </template>
+      </div>
+      <div>
+        <GradeImport />
+      </div>
     </div>
 
     <!-- Student roster -->
@@ -77,7 +85,8 @@
           :gradeChoices="graderoster.grade_choices[student.grade_choices_index]"
           :reviewing="reviewing"
           :last="index === graderoster.students.length - 1"
-          v-model:studentsLoaded="studentsLoaded"></Student>
+          v-model:studentsLoaded="studentsLoaded"
+        />
       </li>
     </ul>
 
@@ -95,22 +104,25 @@
         <button disabled="disabled">{{ gettext("btn_review_submit") }}</button>
       </div>
     </template>
-
   </BCard>
 </template>
 
 <script>
 import ConfirmationHeader from "@/components/graderoster/header/confirmation.vue";
 import Student from "@/components/graderoster/student.vue";
+import GradeImport from "@/components/gradeimport/import.vue";
+
 import { updateGraderoster, submitGraderoster } from "@/utils/data";
-import { BCard, BPlaceholder } from "bootstrap-vue-next";
+import { BButton, BCard, BPlaceholder } from "bootstrap-vue-next";
 
 export default {
   components: {
     ConfirmationHeader,
     Student,
+    GradeImport,
+    BButton,
     BCard,
-    BPlaceholder
+    BPlaceholder,
   },
   setup() {
     return {
@@ -146,29 +158,38 @@ export default {
       return this.unsubmitted > 0;
     },
     graderosterTitle() {
-      return (this.reviewing) ? gettext("review_submit_grades") : (this.unsubmitted)
-        ? gettext("enter_grades") : gettext("submitted_grades_for");
+      return this.reviewing
+        ? gettext("review_submit_grades")
+        : this.unsubmitted
+        ? gettext("enter_grades")
+        : gettext("submitted_grades_for");
     },
     gradesRemainingText() {
       var s = [];
       if (this.missingGrades) {
-        s.push(ngettext("%(missing_grades)s grade missing",
-                        "%(missing_grades)s grades missing",
-                        {missing_grades: this.missingGrades}));
+        s.push(
+          ngettext(
+            "%(missing_grades)s grade missing",
+            "%(missing_grades)s grades missing",
+            { missing_grades: this.missingGrades }
+          )
+        );
       }
       if (this.invalidGrades) {
-        s.push(ngettext("%(invalid_grades)s grade invalid",
-                        "%(invalid_grades)s grades invalid",
-                        {invalid_grades: this.invalidGrades}));
+        s.push(
+          ngettext(
+            "%(invalid_grades)s grade invalid",
+            "%(invalid_grades)s grades invalid",
+            { invalid_grades: this.invalidGrades }
+          )
+        );
       }
       return s.join(", ");
     },
   },
   methods: {
-    reviewGrades: function() {
-    },
-    submitGrades: function() {
-    },
+    reviewGrades: function () {},
+    submitGrades: function () {},
   },
 };
 </script>
