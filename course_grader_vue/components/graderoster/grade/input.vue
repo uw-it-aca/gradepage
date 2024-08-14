@@ -24,7 +24,9 @@
 
     <!-- grade text input - custom bootstrap -->
     <div class="dropdown mx-1">
-      <label :for="`grade-${student.item_id}`" class="visually-hidden">Enter grade</label>
+      <label :for="`grade-${student.item_id}`" class="visually-hidden"
+        >Enter grade</label
+      >
       <input
         class="form-control form-control-sm rounded-2"
         type="text"
@@ -35,13 +37,18 @@
         :placeholder="gradePlaceholder"
         data-bs-toggle="dropdown"
         @change="gradeChanged($event.target.value)"
+        :aria-controls="`grade-${student.item_id}-menu`"
       />
       <ul
+        :id="`grade-${student.item_id}-menu`"
+        role="menu"
+        :aria-labelledby="`grade-${student.item_id}`"
         class="dropdown-menu m-0 small overflow-y-auto"
         style="max-height: 400px"
       >
-        <li v-for="opt in actualChoices">
+        <li v-for="opt in actualChoices" role="presentation">
           <button
+            role="menuitem"
             class="dropdown-item small"
             type="button"
             :value="opt"
