@@ -24,15 +24,11 @@
 
     <!-- grade text input - custom bootstrap -->
     <div class="dropdown mx-1">
+      <label :for="`grade-${student.item_id}`" class="visually-hidden">Enter grade</label>
       <input
         class="form-control form-control-sm rounded-2"
         type="text"
-        aria-label=""
-        aria-expanded="true"
-        aria-autocomplete="list"
-        aria-owns="owned_listbox"
-        aria-activedescendant="selected_option"
-        aria-required="true"
+        autocomplete="off"
         :id="`grade-${student.item_id}`"
         :value="grade"
         :disabled="student.is_submitted"
