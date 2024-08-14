@@ -44,7 +44,9 @@
           @input="gradeChanged($event.target.value)"
         />
         <ul class="dropdown-menu m-0 small overflow-y-auto" style="max-height: 400px;">
-          <li v-for="g in choices"><a class="dropdown-item small" type="button">{{ g }}</a></li>
+          <li v-for="g in choices">
+            <button class="dropdown-item small" :value="g" type="button" @click="insertGradeChoice(`grade-${student.item_id}`, g)">{{ g }}</button>
+          </li>
         </ul>
       </div>
     </div>
@@ -124,6 +126,7 @@ export default {
       incomplete: false,
       writing: false,
       errorText: null,
+      blah: null,
     };
   },
   computed: {
@@ -145,6 +148,13 @@ export default {
     },
   },
   methods: {
+    insertGradeChoice: function (a, b) {
+      // get the correct text input by id
+      let input = document.getElementById(a);
+      // set the input value to whatever choice was clicked
+      let choice = b
+      input.value = choice;
+    },
     updateGradeChoices: function () {
       var i,
         len,
