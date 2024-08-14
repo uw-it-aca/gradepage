@@ -45,7 +45,11 @@
         />
         <ul class="dropdown-menu m-0 small overflow-y-auto" style="max-height: 400px;">
           <li v-for="g in choices">
-            <button class="dropdown-item small" :value="g" type="button" @click="insertGradeChoice(`grade-${student.item_id}`, g)">{{ g }}</button>
+            <button
+              class="dropdown-item small"
+              type="button"
+              :value="g"
+              @click="gradeChanged(g)">{{ g }}</button>
           </li>
         </ul>
       </div>
@@ -148,13 +152,6 @@ export default {
     },
   },
   methods: {
-    insertGradeChoice: function (a, b) {
-      // get the correct text input by id
-      let input = document.getElementById(a);
-      // set the input value to whatever choice was clicked
-      let choice = b
-      input.value = choice;
-    },
     updateGradeChoices: function () {
       var i,
         len,
@@ -183,9 +180,13 @@ export default {
       this.writing = checked;
     },
     gradeChanged: function (value) {
-      this.grade = normalizeGrade(value);
-      this.errorText = validateGrade(
-        this.grade, this.incomplete, this.choices, this.incompleteBlocklist);
+      if (value === "" || this.choices.includes(value)) {
+        this.grade = value;
+      } else {
+        this.grade = normalizeGrade(value);
+        this.errorText = validateGrade(
+          this.grade, this.incomplete, this.choices, this.incompleteBlocklist);
+      }
     },
     initializeGrade: function () {
       this.updateGradeChoices();
