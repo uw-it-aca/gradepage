@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex">
+  <div class="d-flex mt-2">
     <!-- incomplete checkbox button -->
     <div class="btn-group btn-group-sm">
       <input
