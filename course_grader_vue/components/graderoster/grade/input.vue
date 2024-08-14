@@ -37,19 +37,17 @@
           :id="`grade-${student.item_id}`"
           :value="grade"
           :disabled="student.is_submitted"
-          :placeholder="[
-            incomplete ? 'Enter default grade...' : 'Enter grade...',
-          ]"
+          :placeholder="gradePlaceholder"
           data-bs-toggle="dropdown"
-          @input="gradeChanged($event.target.value)"
+          @change="gradeChanged($event.target.value)"
         />
         <ul class="dropdown-menu m-0 small overflow-y-auto" style="max-height: 400px;">
-          <li v-for="g in choices">
+          <li v-for="opt in actualChoices">
             <button
               class="dropdown-item small"
               type="button"
-              :value="g"
-              @click="gradeChanged(g)">{{ g }}</button>
+              :value="opt"
+              @click="gradeChanged(opt)">{{ opt }}</button>
           </li>
         </ul>
       </div>
@@ -97,14 +95,18 @@
       </span>
     </span>
     <span role="alert" class="text-danger invalid-grade small">
-      {{ errorText }}
+      {{ gradeError }}
     </span>
   </div>
 </template>
 
 <script>
 import { updateGrade } from "@/utils/data";
-import { normalizeGrade, validateGrade } from "@/utils/grade";
+import {
+  incompleteBlocklist,
+  normalizeGrade,
+  validateGrade,
+} from "@/utils/grade";
 
 export default {
   props: {
@@ -124,16 +126,17 @@ export default {
   },
   data() {
     return {
-      incompleteBlocklist: [gettext("x_no_grade_now"), "N", "CR"],
-      choices: [],
-      grade: null,
+      actualChoices: [],
+      grade: "",
       incomplete: false,
       writing: false,
-      errorText: null,
-      blah: null,
+      gradeError: "",
     };
   },
   computed: {
+    gradePlaceholder() {
+      return this.incomplete ? 'Enter default grade...' : 'Enter grade...';
+    },
     inputIncompleteTitle() {
       return this.student.allows_incomplete
         ? ""
@@ -163,30 +166,27 @@ export default {
             ? gettext("x_no_grade_now")
             : this.gradeChoices[i];
 
-        if (this.incomplete && this.incompleteBlocklist.includes(grade)) {
+        if (this.incomplete && incompleteBlocklist.includes(grade)) {
           continue;
         }
         valid.push(grade);
       }
-      this.choices = valid;
+      this.actualChoices = valid;
     },
     incompleteChanged: function (checked) {
       this.incomplete = checked;
       this.updateGradeChoices();
-      this.errorText = validateGrade(
-        this.grade, this.incomplete, this.choices, this.incompleteBlocklist);
+      this.gradeError = validateGrade(this.grade, this.incomplete, this.actualChoices);
+      this.saveGrade();
     },
     writingChanged: function (checked) {
       this.writing = checked;
+      this.saveGrade();
     },
     gradeChanged: function (value) {
-      if (value === "" || this.choices.includes(value)) {
-        this.grade = value;
-      } else {
-        this.grade = normalizeGrade(value);
-        this.errorText = validateGrade(
-          this.grade, this.incomplete, this.choices, this.incompleteBlocklist);
-      }
+      this.grade = normalizeGrade(value);
+      this.gradeError = validateGrade(this.grade, this.incomplete, this.actualChoices);
+      this.saveGrade();
     },
     initializeGrade: function () {
       this.updateGradeChoices();
@@ -204,9 +204,10 @@ export default {
         this.gradeChoices.includes("N")
       ) {
         this.grade = "N";
-      } else {
+      } else if (this.student.grade !== null) {
         this.grade = this.student.grade;
       }
+      this.gradeError = validateGrade(this.grade, this.incomplete, this.actualChoices);
     },
     saveGrade: function () {},
   },

@@ -1,3 +1,5 @@
+const incompleteBlocklist = [gettext("x_no_grade_now"), "N", "CR"];
+
 function normalizeGrade(grade) {
   grade = grade.trim();
   if (grade.match(/^(?:n|nc|p|h|hw|f|hp|i|cr)$/i)) {
@@ -12,7 +14,7 @@ function normalizeGrade(grade) {
   return grade;
 }
 
-function validateGrade(grade, incomplete, choices, incompleteBlocklist) {
+function validateGrade(grade, incomplete, choices) {
   var is_hypenated,
       is_cnc,
       is_hhppf,
@@ -86,10 +88,13 @@ function validateGrade(grade, incomplete, choices, incompleteBlocklist) {
   } else if (is_hhppf) {
     // H/HP/P/F
     return gettext("grade_invalid_H_HP_P_F");
+  } else {
+    return "Enter a valid grade";
   }
 }
 
 export {
+  incompleteBlocklist,
   normalizeGrade,
   validateGrade,
 };
