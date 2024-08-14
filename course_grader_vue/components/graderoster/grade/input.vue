@@ -1,56 +1,60 @@
 <template>
   <div class="d-flex">
-    <div class="input-group input-group-sm me-2">
-      <!-- incomplete checkbox button -->
-      <div class="btn-group btn-group-sm">
-        <input
-          type="checkbox"
-          class="btn-check"
-          autocomplete="off"
-          :id="`incomplete-${student.item_id}`"
-          :disabled="!student.allows_incomplete || student.is_submitted"
-          :checked="incomplete"
-          @change="incompleteChanged($event.target.checked)"
-        />
-        <label
-          :for="`incomplete-${student.item_id}`"
-          :title="inputIncompleteTitle"
-          class="btn btn-outline-secondary fw-bold rounded-start-2"
-          style="width: 31px"
-          ><abbr title="Incomplete" class="text-decoration-none pe-none"
-            >I</abbr
-          ></label
-        >
-      </div>
+    <!-- incomplete checkbox button -->
+    <div class="btn-group btn-group-sm">
+      <input
+        type="checkbox"
+        class="btn-check"
+        autocomplete="off"
+        :id="`incomplete-${student.item_id}`"
+        :disabled="!student.allows_incomplete || student.is_submitted"
+        :checked="incomplete"
+        @change="incompleteChanged($event.target.checked)"
+      />
+      <label
+        :for="`incomplete-${student.item_id}`"
+        :title="inputIncompleteTitle"
+        class="btn btn-light border fw-bold rounded-2"
+        style="width: 32px"
+        ><abbr title="Incomplete" class="text-decoration-none pe-none"
+          >I</abbr
+        ></label
+      >
+    </div>
 
-      <div class="dropdown">
-        <!-- grade text input - custom bootstrap -->
-        <input
-          class="form-control form-control-sm rounded-start-0 rounded-end border-secondary"
-          type="text"
-          aria-label=""
-          aria-expanded="true"
-          aria-autocomplete="list"
-          aria-owns="owned_listbox"
-          aria-activedescendant="selected_option"
-          aria-required="true"
-          :id="`grade-${student.item_id}`"
-          :value="grade"
-          :disabled="student.is_submitted"
-          :placeholder="gradePlaceholder"
-          data-bs-toggle="dropdown"
-          @change="gradeChanged($event.target.value)"
-        />
-        <ul class="dropdown-menu m-0 small overflow-y-auto" style="max-height: 400px;">
-          <li v-for="opt in actualChoices">
-            <button
-              class="dropdown-item small"
-              type="button"
-              :value="opt"
-              @click="gradeChanged(opt)">{{ opt }}</button>
-          </li>
-        </ul>
-      </div>
+    <!-- grade text input - custom bootstrap -->
+    <div class="dropdown mx-1">
+      <input
+        class="form-control form-control-sm rounded-2"
+        type="text"
+        aria-label=""
+        aria-expanded="true"
+        aria-autocomplete="list"
+        aria-owns="owned_listbox"
+        aria-activedescendant="selected_option"
+        aria-required="true"
+        :id="`grade-${student.item_id}`"
+        :value="grade"
+        :disabled="student.is_submitted"
+        :placeholder="gradePlaceholder"
+        data-bs-toggle="dropdown"
+        @change="gradeChanged($event.target.value)"
+      />
+      <ul
+        class="dropdown-menu m-0 small overflow-y-auto"
+        style="max-height: 400px"
+      >
+        <li v-for="opt in actualChoices">
+          <button
+            class="dropdown-item small"
+            type="button"
+            :value="opt"
+            @click="gradeChanged(opt)"
+          >
+            {{ opt }}
+          </button>
+        </li>
+      </ul>
     </div>
 
     <!-- writing checkbox button -->
@@ -66,7 +70,8 @@
       <label
         :for="`writing-${student.item_id}`"
         :title="inputWritingTitle"
-        class="btn btn-outline-secondary fw-bold rounded-2"
+        class="btn btn-light border fw-bold rounded-2"
+        style="width: 32px"
         ><abbr title="Writing" class="text-decoration-none pe-none"
           >W</abbr
         ></label
@@ -135,7 +140,7 @@ export default {
   },
   computed: {
     gradePlaceholder() {
-      return this.incomplete ? 'Enter default grade...' : 'Enter grade...';
+      return this.incomplete ? "Enter default grade..." : "Enter grade...";
     },
     inputIncompleteTitle() {
       return this.student.allows_incomplete
@@ -176,7 +181,11 @@ export default {
     incompleteChanged: function (checked) {
       this.incomplete = checked;
       this.updateGradeChoices();
-      this.gradeError = validateGrade(this.grade, this.incomplete, this.actualChoices);
+      this.gradeError = validateGrade(
+        this.grade,
+        this.incomplete,
+        this.actualChoices
+      );
       this.saveGrade();
     },
     writingChanged: function (checked) {
@@ -185,7 +194,11 @@ export default {
     },
     gradeChanged: function (value) {
       this.grade = normalizeGrade(value);
-      this.gradeError = validateGrade(this.grade, this.incomplete, this.actualChoices);
+      this.gradeError = validateGrade(
+        this.grade,
+        this.incomplete,
+        this.actualChoices
+      );
       this.saveGrade();
     },
     initializeGrade: function () {
@@ -207,7 +220,11 @@ export default {
       } else if (this.student.grade !== null) {
         this.grade = this.student.grade;
       }
-      this.gradeError = validateGrade(this.grade, this.incomplete, this.actualChoices);
+      this.gradeError = validateGrade(
+        this.grade,
+        this.incomplete,
+        this.actualChoices
+      );
     },
     saveGrade: function () {},
   },
