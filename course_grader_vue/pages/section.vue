@@ -1,7 +1,8 @@
 <template>
   <Layout :page-title="pageTitle">
     <template #content>
-      <BLink :href="section.term_url">
+
+      <BLink :href="section.term_url" :variant="'dark'" class="link-dark link-opacity-75 link-opacity-75-hover link-underline-opacity-50 link-underline-opacity-75-hover">
         Back To {{ section.section_year }} {{ section.section_quarter }}
       </BLink>
 

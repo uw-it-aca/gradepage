@@ -2,6 +2,8 @@ import { fileURLToPath, URL } from "url";
 
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+
+// TODO: remove automatic bs-vue-next comp registering later
 import Components from 'unplugin-vue-components/vite'
 import { BootstrapVueNextResolver } from "bootstrap-vue-next";
 

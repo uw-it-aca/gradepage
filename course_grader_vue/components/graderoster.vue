@@ -28,8 +28,7 @@
             href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
             target="_blank"
             title="Information on assigning and submitting grades"
-          >
-            <span>Info</span>
+            >Info
           </BLink>
         </div>
       </div>
@@ -113,7 +112,7 @@ import Student from "@/components/graderoster/student.vue";
 import GradeImport from "@/components/gradeimport/import.vue";
 
 import { updateGraderoster, submitGraderoster } from "@/utils/data";
-import { BButton, BCard, BPlaceholder } from "bootstrap-vue-next";
+import { BButton, BCard, BLink, BPlaceholder } from "bootstrap-vue-next";
 
 export default {
   components: {
@@ -122,6 +121,7 @@ export default {
     GradeImport,
     BButton,
     BCard,
+    BLink,
     BPlaceholder,
   },
   setup() {
