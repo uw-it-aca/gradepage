@@ -28,16 +28,18 @@
         >Enter grade</label
       >
       <input
-        class="form-control form-control-sm rounded-2"
+        class="form-control form-control-sm rounded-2 dropdown-toggle"
         type="text"
         autocomplete="off"
         :id="`grade-${student.item_id}`"
         :value="grade"
         :disabled="student.is_submitted"
         :placeholder="gradePlaceholder"
-        data-bs-toggle="dropdown"
         @change="gradeChanged($event.target.value)"
         :aria-controls="`grade-${student.item_id}-menu`"
+        data-bs-toggle="dropdown"
+        @keydown.tab.exact="false"
+        @keydown.down.exact="handleKeyboard"
       />
       <ul
         :id="`grade-${student.item_id}-menu`"
@@ -45,6 +47,7 @@
         :aria-labelledby="`grade-${student.item_id}`"
         class="dropdown-menu m-0 small overflow-y-auto"
         style="max-height: 400px"
+        :class="[showDropdown ? 'show' : '']"
       >
         <li v-for="opt in actualChoices" role="presentation">
           <button
@@ -139,6 +142,7 @@ export default {
       incomplete: false,
       writing: false,
       gradeError: "",
+      showDropdown: false,
     };
   },
   computed: {
@@ -163,6 +167,9 @@ export default {
     },
   },
   methods: {
+    handleKeyboard(e) {
+      this.showDropdown = true;
+    },
     updateGradeChoices: function () {
       var i,
         len,
@@ -203,6 +210,8 @@ export default {
         this.actualChoices
       );
       this.saveGrade();
+      // manually close the dropdown
+      this.showDropdown = false;
     },
     initializeGrade: function () {
       this.updateGradeChoices();
