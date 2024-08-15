@@ -40,6 +40,7 @@
         data-bs-toggle="dropdown"
         @keydown.tab.exact="false"
         @keydown.down.exact="handleKeyboard"
+        @focus="handleKeyboard"
       />
       <ul
         :id="`grade-${student.item_id}-menu`"
