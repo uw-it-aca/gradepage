@@ -39,8 +39,7 @@
         :aria-controls="`grade-${student.item_id}-menu`"
         data-bs-toggle="dropdown"
         @keydown.tab.exact="false"
-        @keydown.down.exact="handleKeyboard"
-        @focus="handleKeyboard"
+        @keydown.down.exact="openMenu"
       />
       <ul
         :id="`grade-${student.item_id}-menu`"
@@ -48,7 +47,7 @@
         :aria-labelledby="`grade-${student.item_id}`"
         class="dropdown-menu m-0 small overflow-y-auto"
         style="max-height: 400px"
-        :class="[showDropdown ? 'show' : '']"
+        :class="[menuOpen ? 'show' : '']"
       >
         <li v-for="opt in actualChoices" role="presentation">
           <button
@@ -143,7 +142,7 @@ export default {
       incomplete: false,
       writing: false,
       gradeError: "",
-      showDropdown: false,
+      menuOpen: false,
     };
   },
   computed: {
@@ -168,8 +167,8 @@ export default {
     },
   },
   methods: {
-    handleKeyboard(e) {
-      this.showDropdown = true;
+    openMenu(e) {
+      this.menuOpen = true;
     },
     updateGradeChoices: function () {
       var i,
@@ -211,8 +210,7 @@ export default {
         this.actualChoices
       );
       this.saveGrade();
-      // manually close the dropdown
-      this.showDropdown = false;
+      this.menuOpen = false;
     },
     initializeGrade: function () {
       this.updateGradeChoices();
