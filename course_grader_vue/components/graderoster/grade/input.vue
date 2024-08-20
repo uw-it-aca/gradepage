@@ -143,6 +143,7 @@ export default {
       writing: false,
       gradeError: "",
       menuOpen: false,
+      inprogress_save: false,
     };
   },
   computed: {
@@ -213,7 +214,6 @@ export default {
       this.menuOpen = false;
     },
     initializeGrade: function () {
-      this.updateGradeChoices();
       if (this.student.allows_incomplete) {
         this.incomplete = this.student.has_incomplete;
       }
@@ -224,20 +224,56 @@ export default {
         this.grade = gettext("x_no_grade_now");
       } else if (
         this.student.grade === null &&
-        !this.student.has_incomplete &&
+        !this.has_incomplete &&
         this.gradeChoices.includes("N")
       ) {
         this.grade = "N";
       } else if (this.student.grade !== null) {
         this.grade = this.student.grade;
       }
+      this.updateGradeChoices();
       this.gradeError = validateGrade(
         this.grade,
         this.incomplete,
         this.actualChoices
       );
     },
-    saveGrade: function () {},
+    saveGrade: function () {
+      var put_data = {
+        student_id: this.student.student_id,
+        is_incomplete: this.incomplete,
+        is_writing: this.writing,
+        grade: this.grade,
+        no_grade_now: this.grade === gettext("x_no_grade_now"),
+      };
+
+      // Prevent duplicate PATCH requests
+      if (!this.inprogress_save) {
+        this.inprogress_save = true;
+
+        this.updateGrade(this.student.grade_url, put_data)
+          .then((response) => {
+            return response.data;
+          })
+          .then((data) => {
+            this.grade = data.grade;
+            this.incomplete = data.is_incomplete;
+            this.is_writing = data.is_writing;
+            this.gradeError = validateGrade(
+              this.grade,
+              this.incomplete,
+              this.actualChoices
+            );
+          })
+          .catch((error) => {
+            console.log(error.message);
+            this.gradeError = error.message;
+          })
+          .finally(() => {
+            this.inprogress_save = false;
+          });
+      }
+    },
   },
   created() {
     this.initializeGrade();
