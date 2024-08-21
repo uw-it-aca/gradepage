@@ -112,12 +112,9 @@
 </template>
 
 <script>
+import { useGradeStatusStore } from "@/stores/grade";
 import { updateGrade } from "@/utils/data";
-import {
-  incompleteBlocklist,
-  normalizeGrade,
-  validateGrade,
-} from "@/utils/grade";
+import { incompleteBlocklist, normalizeGrade } from "@/utils/grade";
 
 export default {
   props: {
@@ -131,7 +128,9 @@ export default {
     },
   },
   setup() {
+    const gradeStatusStore = useGradeStatusStore();
     return {
+      gradeStatusStore,
       updateGrade,
     };
   },
@@ -192,11 +191,7 @@ export default {
     incompleteChanged: function (checked) {
       this.incomplete = checked;
       this.updateGradeChoices();
-      this.gradeError = validateGrade(
-        this.grade,
-        this.incomplete,
-        this.actualChoices
-      );
+      this.updateGradeStatus();
       this.saveGrade();
     },
     writingChanged: function (checked) {
@@ -205,11 +200,7 @@ export default {
     },
     gradeChanged: function (value) {
       this.grade = normalizeGrade(value);
-      this.gradeError = validateGrade(
-        this.grade,
-        this.incomplete,
-        this.actualChoices
-      );
+      this.updateGradeStatus();
       this.saveGrade();
       this.menuOpen = false;
     },
@@ -232,11 +223,7 @@ export default {
         this.grade = this.student.grade;
       }
       this.updateGradeChoices();
-      this.gradeError = validateGrade(
-        this.grade,
-        this.incomplete,
-        this.actualChoices
-      );
+      this.updateGradeStatus();
     },
     saveGrade: function () {
       var put_data = {
@@ -259,11 +246,7 @@ export default {
             this.grade = data.grade;
             this.incomplete = data.is_incomplete;
             this.is_writing = data.is_writing;
-            this.gradeError = validateGrade(
-              this.grade,
-              this.incomplete,
-              this.actualChoices
-            );
+            this.updateGradeStatus();
           })
           .catch((error) => {
             console.log(error.message);
@@ -273,6 +256,14 @@ export default {
             this.inprogress_save = false;
           });
       }
+    },
+    updateGradeStatus: function () {
+      this.gradeError = this.gradeStatusStore.validate(
+        this.student.student_id,
+        this.grade,
+        this.incomplete,
+        this.actualChoices
+      );
     },
   },
   created() {

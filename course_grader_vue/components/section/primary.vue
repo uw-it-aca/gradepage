@@ -38,7 +38,7 @@
 <script>
 import SecondarySection from "@/components/section/secondary.vue";
 import { getSectionStatus } from "@/utils/data";
-import { formatGradingStatus, formatLinkTitle } from "@/utils/grading-status";
+import { formatGradingStatus, formatLinkTitle } from "@/utils/section";
 import { BPlaceholder } from "bootstrap-vue-next";
 
 export default {
