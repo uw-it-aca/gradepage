@@ -110,7 +110,7 @@
 import ConfirmationHeader from "@/components/graderoster/header/confirmation.vue";
 import Student from "@/components/graderoster/student.vue";
 import GradeImport from "@/components/gradeimport/import.vue";
-
+import { useGradeStatusStore } from "@/stores/grade";
 import { updateGraderoster, submitGraderoster } from "@/utils/data";
 import { BButton, BCard, BLink, BPlaceholder } from "bootstrap-vue-next";
 
@@ -125,7 +125,9 @@ export default {
     BPlaceholder,
   },
   setup() {
+    const gradeStatusStore = useGradeStatusStore();
     return {
+      gradeStatusStore,
       updateGraderoster,
       submitGraderoster,
     };
@@ -147,8 +149,6 @@ export default {
   },
   data() {
     return {
-      missingGrades: 0,
-      invalidGrades: 0,
       reviewing: false,
       studentsLoaded: false,
     };
@@ -165,24 +165,15 @@ export default {
         : gettext("submitted_grades_for");
     },
     gradesRemainingText() {
-      var s = [];
-      if (this.missingGrades) {
-        s.push(
-          ngettext(
-            "%(missing_grades)s grade missing",
-            "%(missing_grades)s grades missing",
-            { missing_grades: this.missingGrades }
-          )
-        );
+      var s = [],
+        missing = this.gradeStatusStore.missing,
+        invalid = this.gradeStatusStore.invalid;
+
+      if (missing) {
+        s.push((missing > 1) ? `${missing} grades missing` : "1 grade missing");
       }
-      if (this.invalidGrades) {
-        s.push(
-          ngettext(
-            "%(invalid_grades)s grade invalid",
-            "%(invalid_grades)s grades invalid",
-            { invalid_grades: this.invalidGrades }
-          )
-        );
+      if (invalid) {
+        s.push((invalid > 1) ? `${invalid} grades invalid` : "1 grade invalid");
       }
       return s.join(", ");
     },
@@ -190,6 +181,9 @@ export default {
   methods: {
     reviewGrades: function () {},
     submitGrades: function () {},
+  },
+  created() {
+    this.gradeStatusStore.$reset();
   },
 };
 </script>
