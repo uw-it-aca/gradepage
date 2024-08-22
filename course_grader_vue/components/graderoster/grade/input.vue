@@ -112,7 +112,7 @@
 </template>
 
 <script>
-import { useGradeStatusStore } from "@/stores/grade";
+import { useGradeStore } from "@/stores/grade";
 import { updateGrade } from "@/utils/data";
 import { incompleteBlocklist, normalizeGrade } from "@/utils/grade";
 
@@ -128,9 +128,9 @@ export default {
     },
   },
   setup() {
-    const gradeStatusStore = useGradeStatusStore();
+    const gradeStore = useGradeStore();
     return {
-      gradeStatusStore,
+      gradeStore,
       updateGrade,
     };
   },
@@ -191,7 +191,6 @@ export default {
     incompleteChanged: function (checked) {
       this.incomplete = checked;
       this.updateGradeChoices();
-      this.updateGradeStatus();
       this.saveGrade();
     },
     writingChanged: function (checked) {
@@ -200,7 +199,6 @@ export default {
     },
     gradeChanged: function (value) {
       this.grade = normalizeGrade(value);
-      this.updateGradeStatus();
       this.saveGrade();
       this.menuOpen = false;
     },
@@ -226,19 +224,14 @@ export default {
       this.updateGradeStatus();
     },
     saveGrade: function () {
-      var put_data = {
-        student_id: this.student.student_id,
-        is_incomplete: this.incomplete,
-        is_writing: this.writing,
-        grade: this.grade,
-        no_grade_now: this.grade === gettext("x_no_grade_now"),
-      };
+      this.updateGradeStatus();
 
       // Prevent duplicate PATCH requests
       if (!this.inprogress_save) {
         this.inprogress_save = true;
 
-        this.updateGrade(this.student.grade_url, put_data)
+        this.updateGrade(this.student.grade_url,
+                         this.gradeStore.gradeData[this.student.student_id])
           .then((response) => {
             return response.data;
           })
@@ -258,10 +251,11 @@ export default {
       }
     },
     updateGradeStatus: function () {
-      this.gradeError = this.gradeStatusStore.validate(
+      this.gradeError = this.gradeStore.validate(
         this.student.student_id,
         this.grade,
         this.incomplete,
+        this.writing,
         this.actualChoices
       );
     },
