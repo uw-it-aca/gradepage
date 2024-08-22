@@ -85,5 +85,10 @@ export default {
       required: true,
     },
   },
+  setup() {
+    return {
+      formatLongDateTime,
+    };
+  },
 };
 </script>
