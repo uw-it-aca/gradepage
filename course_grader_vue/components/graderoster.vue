@@ -100,7 +100,10 @@
         <span v-else class="visually-hidden">
           All grades entered. Click Review button to continue.
         </span>
-        <button disabled="disabled">{{ gettext("btn_review_submit") }}</button>
+        <button
+          :disabled="reviewDisabled"
+          @click="reviewGrades"
+        >{{ gettext("btn_review_submit") }}</button>
       </div>
     </template>
   </BCard>
@@ -110,7 +113,7 @@
 import ConfirmationHeader from "@/components/graderoster/header/confirmation.vue";
 import Student from "@/components/graderoster/student.vue";
 import GradeImport from "@/components/gradeimport/import.vue";
-import { useGradeStatusStore } from "@/stores/grade";
+import { useGradeStore } from "@/stores/grade";
 import { updateGraderoster, submitGraderoster } from "@/utils/data";
 import { BButton, BCard, BLink, BPlaceholder } from "bootstrap-vue-next";
 
@@ -125,9 +128,9 @@ export default {
     BPlaceholder,
   },
   setup() {
-    const gradeStatusStore = useGradeStatusStore();
+    const gradeStore = useGradeStore();
     return {
-      gradeStatusStore,
+      gradeStore,
       updateGraderoster,
       submitGraderoster,
     };
@@ -166,8 +169,8 @@ export default {
     },
     gradesRemainingText() {
       var s = [],
-        missing = this.gradeStatusStore.missing,
-        invalid = this.gradeStatusStore.invalid;
+        missing = this.gradeStore.missing,
+        invalid = this.gradeStore.invalid;
 
       if (missing) {
         s.push((missing > 1) ? `${missing} grades missing` : "1 grade missing");
@@ -177,13 +180,34 @@ export default {
       }
       return s.join(", ");
     },
+    reviewDisabled() {
+      return this.gradeStore.missing || this.gradeStore.invalid;
+    },
   },
   methods: {
-    reviewGrades: function () {},
+    reviewGrades: function () {
+      if (this.reviewDisabled) {
+        return;
+      }
+
+      this.updateGraderoster(this.section.graderoster_url,
+                             this.gradeStore.grades)
+        .then((response) => {
+          return response.data;
+        })
+        .then((data) => {
+          this.reviewing = true;
+          this.graderoster = data;
+        })
+        .catch((error) => {
+          console.log(error.message);
+          this.gradeError = error.message;
+        });
+    },
     submitGrades: function () {},
   },
   created() {
-    this.gradeStatusStore.$reset();
+    this.gradeStore.$reset();
   },
 };
 </script>
