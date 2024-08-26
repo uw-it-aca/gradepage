@@ -3,8 +3,6 @@
 
 
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import (
@@ -16,6 +14,7 @@ from course_grader.dao.section import (
 from course_grader.views import (
     section_status_params, url_for_term, url_for_graderoster, url_for_import,
     url_for_export, url_for_upload)
+from course_grader.views.decorators import xhr_login_required
 from course_grader.views.rest_dispatch import RESTDispatch
 from course_grader.exceptions import (
     InvalidUser, InvalidSection, InvalidTerm, MissingInstructorParam)
@@ -26,8 +25,7 @@ import re
 logger = getLogger(__name__)
 
 
-@method_decorator(login_required, name='dispatch')
-@method_decorator(never_cache, name='dispatch')
+@method_decorator(xhr_login_required, name='dispatch')
 class Sections(RESTDispatch):
     def get(self, request, *args, **kwargs):
         try:
@@ -97,8 +95,7 @@ class Sections(RESTDispatch):
                 "quarter": self.term.get_quarter_display()}
 
 
-@method_decorator(login_required, name='dispatch')
-@method_decorator(never_cache, name='dispatch')
+@method_decorator(xhr_login_required, name='dispatch')
 class Section(RESTDispatch):
     def get(self, request, *args, **kwargs):
         url_token = kwargs.get("section_id")

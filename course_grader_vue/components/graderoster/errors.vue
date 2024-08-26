@@ -10,9 +10,9 @@
       </p>
     </div>
   </template>
-  <template v-else-if="errorResponse.status === 403" id="403-error">
+  <template v-else-if="errorResponse.status === 401" id="403-error">
     <div class="alert" role="main">
-        <h3>403 {{ errorText }}</h3>
+        <h3>{{ errorText }}</h3>
         <p>Some things you may want to try:
         <ul>
           <li>Make sure you are logged into this service with the appropriate UW NetID.</li>
