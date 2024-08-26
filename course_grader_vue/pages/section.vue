@@ -6,30 +6,43 @@
         Back To {{ section.section_year }} {{ section.section_quarter }}
       </BLink>
 
+      <!-- Grade receipt actions -->
+      <div v-if="studentsLoaded && !reviewing && !editing">
+        <a href="javascript:window.print()">
+          <i class="fas fa-print"></i> Print this page
+        </a>
+        <a
+          :href="section.export_url"
+        ><i class="fas fa-file-download"></i> Change of grade template</a>
+      </div>
+
+      <!-- Graderoster header -->
       <BCard class="shadow-sm rounded-3 my-4" header-class="p-3" header="Default">
         <template #header>
           <div class="">
-            <div v-if="studentsLoaded" class="fs-5 text-muted fw-light">
-              {{ graderosterTitle }}
+            <div class="fs-5 text-muted fw-light">
+              <span v-if="studentsLoaded">{{ graderosterTitle }}</span>
+              <span v-else-if="!errorResponse">Loading...</span>
             </div>
-            <div v-else class="fs-5 text-muted fw-light">Loading...</div>
-            <span class="fs-2 m-0 me-3">
-              <BPlaceholder
-                v-if="!section.section_name"
-                class="bg-light-gray"
-                width="15"
-                animation="glow"
-              />{{ section.section_name }}
-            </span>
-            <span class="small"
-              >{{ gettext("sln") }}
-              <BPlaceholder
-                v-if="!section.section_sln"
-                class="bg-light-gray"
-                width="5"
-                animation="glow"
-              />{{ section.section_sln }}</span
-            >
+            <div v-if="section.section_name">
+              <span class="fs-2 m-0 me-3">
+                <BPlaceholder
+                  v-if="!section.section_name"
+                  class="bg-light-gray"
+                  width="15"
+                  animation="glow"
+                />{{ section.section_name }}
+              </span>
+              <span class="small">
+                {{ gettext("sln") }}
+                <BPlaceholder
+                  v-if="!section.section_sln"
+                  class="bg-light-gray"
+                  width="5"
+                  animation="glow"
+                />{{ section.section_sln }}</span
+              >
+            </div>
             <div style="float: right">
               <BLink
                 href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
@@ -41,8 +54,11 @@
           </div>
         </template>
 
-        <!-- Row zero contains information -->
-        <div v-if="reviewing">
+        <!-- Row zero contains errors, information and import action -->
+        <div v-if="errorResponse">
+          <Errors :error-response="errorResponse" />
+        </div>
+        <div v-else-if="reviewing">
           {{ gettext("please_review_grades") }}
         </div>
         <div v-else-if="studentsLoaded && editing">
@@ -55,30 +71,20 @@
           </div>
         </div>
         <div v-else>
-          <ConfirmationHeader :section="section" :graderoster="graderoster" />
+          <Receipt :section="section" :graderoster="graderoster" />
         </div>
 
-        <div>
-          <template
-            v-if="graderoster.has_duplicate_codes"
-            class="mb-2 small text-muted"
-          >
-            {{ gettext("duplicate_code") }}
-            <i class="bi bi-circle-fill text-secondary"></i>
-          </template>
-        </div>
+        <!-- Duplicate code legend -->
+        <template
+          v-if="graderoster && graderoster.has_duplicate_codes"
+          class="mb-2 small text-muted"
+        >
+          {{ gettext("duplicate_code") }}
+          <i class="bi bi-circle-fill text-secondary"></i>
+        </template>
 
         <!-- Student roster -->
-        <ul v-if="!graderoster.students" class="list-unstyled m-0">
-          <li v-for="index in 10" class="border-top pt-2 mt-2">
-            <BPlaceholder
-              class="d-block bg-light-gray"
-              style="height: 60px"
-              animation="glow"
-            />
-          </li>
-        </ul>
-        <ul v-else class="list-unstyled m-0">
+        <ul v-if="graderoster.students" class="list-unstyled m-0">
           <li
             v-for="(student, index) in graderoster.students"
             :key="student.item_id"
@@ -93,7 +99,17 @@
             />
           </li>
         </ul>
+        <ul v-else-if="!errorResponse" class="list-unstyled m-0">
+          <li v-for="index in 10" class="border-top pt-2 mt-2">
+            <BPlaceholder
+              class="d-block bg-light-gray"
+              style="height: 60px"
+              animation="glow"
+            />
+          </li>
+        </ul>
 
+        <!-- Grade edit/review actions -->
         <template #footer>
           <div v-if="reviewing">
             <div>{{ gettext("review_warning") }}</div>
@@ -122,9 +138,15 @@
 import Layout from "@/layouts/default.vue";
 import Student from "@/components/graderoster/student.vue";
 import GradeImport from "@/components/gradeimport/import.vue";
-import ConfirmationHeader from "@/components/graderoster/header/confirmation.vue";
+import Receipt from "@/components/graderoster/receipt.vue";
+import Errors from "@/components/graderoster/errors.vue";
 import { useGradeStore } from "@/stores/grade";
-import { getSection, getGraderoster, updateGraderoster, submitGraderoster } from "@/utils/data";
+import {
+  getSection,
+  getGraderoster,
+  updateGraderoster,
+  submitGraderoster,
+} from "@/utils/data";
 import { BButton, BCard, BLink, BPlaceholder } from "bootstrap-vue-next";
 
 export default {
@@ -132,7 +154,8 @@ export default {
     Layout,
     Student,
     GradeImport,
-    ConfirmationHeader,
+    Receipt,
+    Errors,
     BButton,
     BCard,
     BLink,
@@ -156,6 +179,7 @@ export default {
       graderoster: {},
       reviewing: false,
       pageTitle: "Course Section",
+      errorResponse: {},
     };
   },
   computed: {
@@ -200,7 +224,7 @@ export default {
             this.graderoster = data.graderoster;
           })
           .catch((error) => {
-            console.log(error.message);
+            this.errorResponse = error.response;
           })
           .finally(() => {
             this.isLoading = false;
@@ -210,6 +234,7 @@ export default {
       }
     },
     reviewGrades: function () {
+      this.isLoading = true;
       this.updateGraderoster(this.section.graderoster_url,
                              this.gradeStore.grades)
         .then((response) => {
@@ -218,25 +243,26 @@ export default {
         .then((data) => {
           this.reviewing = true;
           this.graderoster = data.graderoster;
+          this.isLoading = false;
         })
         .catch((error) => {
-          console.log(error.message);
-          this.gradeError = error.message;
+          this.errorResponse = error.response;
         });
     },
     submitGrades: function () {
       if (this.reviewing) {
+        this.isLoading = true;
         this.submitGraderoster(this.section.graderoster_url, {})
           .then((response) => {
             return response.data;
           })
           .then((data) => {
-            this.reviewing = true;
+            this.reviewing = false;
             this.graderoster = data.graderoster;
+            this.isLoading = false;
           })
           .catch((error) => {
-            console.log(error.message);
-            this.gradeError = error.message;
+            this.errorResponse = error.response;
           });
       }
     },
@@ -248,15 +274,13 @@ export default {
         })
         .then((data) => {
           this.section = data.section;
+          this.pageTitle = this.section.section_name;
+          document.title = this.pageTitle + " - GradePage";
           this.loadGraderoster();
         })
         .catch((error) => {
-          console.log(error.message);
+          this.errorResponse = error.response;
           this.isLoading = false;
-        })
-        .finally(() => {
-          this.pageTitle = this.section.section_name;
-          document.title = this.pageTitle + " - GradePage";
         });
     },
   },
