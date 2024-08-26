@@ -4,7 +4,6 @@
 
 from django.conf import settings
 from django.http import HttpResponse
-from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
 from uw_saml.decorators import group_required
 from course_grader.views.rest_dispatch import RESTDispatch
@@ -24,7 +23,6 @@ logger = getLogger(__name__)
 
 @method_decorator(group_required(settings.GRADEPAGE_SUPPORT_GROUP),
                   name='dispatch')
-@method_decorator(never_cache, name='dispatch')
 class SubmissionsByTerm(RESTDispatch):
     def get(self, request, *args, **kwargs):
         term_id = kwargs.get("term_id")
@@ -78,7 +76,6 @@ class SubmissionsByTerm(RESTDispatch):
 
 @method_decorator(group_required(settings.GRADEPAGE_SUPPORT_GROUP),
                   name='dispatch')
-@method_decorator(never_cache, name='dispatch')
 class SubmittedGradeRoster(RESTDispatch):
     def get(self, request, *args, **kwargs):
         graderoster_id = kwargs.get("graderoster_id")

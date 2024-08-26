@@ -2,9 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
+from course_grader.views.decorators import xhr_login_required
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import all_viewable_terms
 from course_grader.models import GradeImport, ImportConversion
@@ -15,8 +14,7 @@ from logging import getLogger
 logger = getLogger(__name__)
 
 
-@method_decorator(login_required, name='dispatch')
-@method_decorator(never_cache, name='dispatch')
+@method_decorator(xhr_login_required, name='dispatch')
 class ConversionScales(GradeFormHandler):
     def get(self, request, *args, **kwargs):
         try:
@@ -25,7 +23,7 @@ class ConversionScales(GradeFormHandler):
             self.scale = ImportConversion.valid_scale(
                 kwargs.get("scale", "").strip())
         except InvalidUser as ex:
-            return self.error_response(403, "{}".format(ex))
+            return self.error_response(401, "{}".format(ex))
         except InvalidGradingScale as ex:
             return self.error_response(400, "{}".format(ex))
         except Exception as ex:

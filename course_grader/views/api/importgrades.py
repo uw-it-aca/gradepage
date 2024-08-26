@@ -3,8 +3,6 @@
 
 
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
 from django.core.files.storage import default_storage
 from course_grader.models import GradeImport, ImportConversion
@@ -14,6 +12,7 @@ from course_grader.dao.section import (
     section_from_param, is_grader_for_section, section_display_name,
     section_url_token)
 from course_grader.dao.graderoster import graderoster_for_section
+from course_grader.views.decorators import xhr_login_required
 from course_grader.views.api import GradeFormHandler, sorted_students
 from course_grader.views import clean_section_id
 from course_grader.exceptions import *
@@ -28,7 +27,7 @@ import re
 logger = getLogger(__name__)
 
 
-@method_decorator(login_required, name="dispatch")
+@method_decorator(xhr_login_required, name="dispatch")
 class ImportGrades(GradeFormHandler):
     def _authorize(self, request, *args, **kwargs):
         try:
@@ -63,7 +62,7 @@ class ImportGrades(GradeFormHandler):
         except (InvalidUser, GradingNotPermitted, OverrideNotPermitted) as ex:
             logger.info("Grading for {} not permitted for {}".format(
                 section_id, UserService().get_original_user()))
-            return self.error_response(403, "{}".format(ex))
+            return self.error_response(401, "{}".format(ex))
         except (SecondaryGradingEnabled, GradingPeriodNotOpen,
                 InvalidTerm) as ex:
             return self.error_response(400, "{}".format(ex))

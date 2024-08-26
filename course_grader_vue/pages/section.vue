@@ -179,7 +179,7 @@ export default {
       graderoster: {},
       reviewing: false,
       pageTitle: "Course Section",
-      errorResponse: {},
+      errorResponse: null,
     };
   },
   computed: {

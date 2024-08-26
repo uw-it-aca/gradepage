@@ -5,8 +5,6 @@
 from django.conf import settings
 from django.template.context_processors import csrf
 from django.template.loader import render_to_string
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
 from course_grader.models import SubmittedGradeRoster, Grade, GradeImport
 from course_grader.dao.graderoster import graderoster_for_section
@@ -23,6 +21,7 @@ from course_grader.views import (
 from course_grader.views.api import (
     GradeFormHandler, graderoster_status_params, item_is_submitted,
     sorted_students, sorted_grades)
+from course_grader.views.decorators import xhr_login_required
 from course_grader.exceptions import *
 from userservice.user import UserService
 from restclients_core.exceptions import DataFailureException
@@ -36,8 +35,7 @@ import re
 logger = getLogger(__name__)
 
 
-@method_decorator(login_required, name='dispatch')
-@method_decorator(never_cache, name='dispatch')
+@method_decorator(xhr_login_required, name='dispatch')
 class GradeRoster(GradeFormHandler):
     def _authorize(self, request, *args, **kwargs):
         try:
@@ -76,7 +74,7 @@ class GradeRoster(GradeFormHandler):
         except (InvalidUser, GradingNotPermitted, OverrideNotPermitted) as ex:
             logger.info("Grading for {} not permitted for {}".format(
                 section_id, UserService().get_original_user()))
-            return self.error_response(403, "{}".format(ex))
+            return self.error_response(401, "{}".format(ex))
         except (SecondaryGradingEnabled, GradingPeriodNotOpen,
                 InvalidTerm, InvalidSection, MissingInstructorParam) as ex:
             return self.error_response(400, "{}".format(ex))
@@ -401,7 +399,6 @@ class GradeRoster(GradeFormHandler):
         return {"graderoster": data}
 
 
-@method_decorator(never_cache, name="dispatch")
 class GradeRosterExport(GradeRoster):
     def get(self, request, *args, **kwargs):
         start_time = time.time()
@@ -489,7 +486,6 @@ class GradeRosterExport(GradeRoster):
         return response
 
 
-@method_decorator(never_cache, name='dispatch')
 class GradeRosterStatus(GradeFormHandler):
     def get(self, request, *args, **kwargs):
         try:
@@ -500,7 +496,7 @@ class GradeRosterStatus(GradeFormHandler):
                 self.user = person_from_request(request)
                 self.submitted_graderosters_only = True
             except InvalidUser as ex:
-                return self.error_response(403, "Invalid user: {}".format(ex))
+                return self.error_response(401, "Invalid user: {}".format(ex))
             except DataFailureException as ex:
                 logger.info("GET person error: {}".format(ex))
                 (status, msg) = self.data_failure_error(ex)
@@ -534,7 +530,7 @@ class GradeRosterStatus(GradeFormHandler):
         except GradingNotPermitted as ex:
             logger.info("Grading status for {} not permitted for {}".format(
                 ex.section, ex.person))
-            return self.error_response(403, "{}".format(ex))
+            return self.error_response(401, "{}".format(ex))
         except (InvalidSection, InvalidUser, MissingInstructorParam) as ex:
             return self.error_response(400, "{}".format(ex))
         except (GradingPeriodNotOpen, SecondaryGradingEnabled,
