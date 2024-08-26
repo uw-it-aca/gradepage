@@ -86,6 +86,9 @@ class GradeRoster(GradeFormHandler):
             logger.info("GET graderoster error: {}".format(ex))
             (status, msg) = self.data_failure_error(ex)
             return self.error_response(status, msg)
+        except Exception as ex:
+            logger.info("GET graderoster error: {}".format(ex))
+            return self.error_response(500, f'{ex.__class__.__name__}: {ex}')
 
     def get(self, request, *args, **kwargs):
         error = self._authorize(request, *args, **kwargs)
