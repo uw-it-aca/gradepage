@@ -44,9 +44,16 @@
             </li>
           </ul>
         </template>
+        <template v-else-if="errorResponse">
+          <Errors :error-response="errorResponse" />
+        </template>
         <template v-else>
           <template v-if="sections.length > 0">
-            <SectionList :sections="sections"></SectionList>
+            <ul class="list-unstyled">
+              <li v-for="section in sections" :key="section.section_id" class="mb-3">
+                <PrimarySection :section="section"></PrimarySection>
+              </li>
+            </ul>
           </template>
           <div v-else v-html="noClassesWarning"></div>
         </template>
@@ -57,7 +64,8 @@
 
 <script>
 import Layout from "@/layouts/default.vue";
-import SectionList from "@/components/section/list.vue";
+import PrimarySection from "@/components/section/primary.vue";
+import Errors from "@/components/errors.vue";
 import { useContextStore } from "@/stores/context";
 import { getSections } from "@/utils/data";
 import { BCard, BPlaceholder } from "bootstrap-vue-next";
@@ -65,7 +73,8 @@ import { BCard, BPlaceholder } from "bootstrap-vue-next";
 export default {
   components: {
     Layout,
-    SectionList,
+    PrimarySection,
+    Errors,
     BCard
   },
   setup() {
@@ -83,6 +92,7 @@ export default {
       sectionsURL: this.contextStore.context.sections_url,
       currentTerm: this.contextStore.context.terms[0],
       selectedTerm: null,
+      errorResponse: null,
       sections: [],
     };
   },
@@ -97,7 +107,8 @@ export default {
       );
     },
     noClassesWarning() {
-      return interpolate(gettext("no_classes_to_grade"), this.selectedTerm, true);
+      return interpolate(
+        gettext("no_classes_to_grade"), this.selectedTerm, true);
     },
   },
   methods: {
@@ -128,7 +139,7 @@ export default {
           this.sections = data.sections;
         })
         .catch((error) => {
-          console.log(error.message);
+          this.errorResponse = error.response;
         })
         .finally(() => {
           this.isLoading = false;
