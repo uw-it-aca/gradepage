@@ -139,7 +139,7 @@ import Layout from "@/layouts/default.vue";
 import Student from "@/components/graderoster/student.vue";
 import GradeImport from "@/components/gradeimport/import.vue";
 import Receipt from "@/components/graderoster/receipt.vue";
-import Errors from "@/components/graderoster/errors.vue";
+import Errors from "@/components/errors.vue";
 import { useGradeStore } from "@/stores/grade";
 import {
   getSection,

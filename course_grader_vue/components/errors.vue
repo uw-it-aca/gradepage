@@ -26,12 +26,11 @@
       <h3>There was a problem retrieving grade information:</h3>
       <h4>{{ errorText }}</h4>
 
-      <p>Our developers have been alerted of this issue and are working to get you back on track.</p>
+      <p>The Gradepage support team has been alerted of this issue and are working to get you back on track.</p>
       <p>You may want to:
         <ul>
-          <li>Relax, give us a little time, and try again later.</li>
+          <li>Give us a little time, and try again later.</li>
           <li>Drop us a line at <a href="mailto:help@uw.edu">help@uw.edu</a> and let us know that this has been taking awhile.</li>
-          <li><a href="/">Go back to the list of classes</a> you can grade.</li>
         </ul>
       </p>
     </div>
@@ -49,9 +48,6 @@
             </ul>
           </li>
         </ul>
-      </p>
-      <p>
-        <a href="/">Go back to the list of classes</a> you can grade.
       </p>
     </div>
   </template>
