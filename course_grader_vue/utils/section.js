@@ -48,7 +48,12 @@ function formatGradingStatus(data) {
   }
 }
 
+function formatErrorStatus(response) {
+  return response.data ? response.data.error : "Error retrieving grading status";
+}
+
 export {
   formatLinkTitle,
   formatGradingStatus,
+  formatErrorStatus,
 };

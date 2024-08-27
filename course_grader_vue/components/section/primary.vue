@@ -38,7 +38,11 @@
 <script>
 import SecondarySection from "@/components/section/secondary.vue";
 import { getSectionStatus } from "@/utils/data";
-import { formatGradingStatus, formatLinkTitle } from "@/utils/section";
+import {
+  formatGradingStatus,
+  formatErrorStatus,
+  formatLinkTitle
+} from "@/utils/section";
 import { BPlaceholder } from "bootstrap-vue-next";
 
 export default {
@@ -56,6 +60,7 @@ export default {
     return {
       getSectionStatus,
       formatGradingStatus,
+      formatErrorStatus,
       formatLinkTitle,
     };
   },
@@ -64,7 +69,7 @@ export default {
       if (this.section.grading_status) {
         return this.section.grading_status;
       } else if (this.errorStatus) {
-        return this.errorStatus;
+        return this.formatErrorStatus(this.errorStatus);
       } else if (this.gradingStatus) {
         return this.formatGradingStatus(this.gradingStatus);
       }
@@ -97,7 +102,7 @@ export default {
             }
           })
           .catch((error) => {
-            this.errorStatus = error.message;
+            this.errorStatus = error.response;
           });
       }
     },
