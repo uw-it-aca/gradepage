@@ -67,7 +67,7 @@
             v-html="gettext('writing_course_note')"
           />
           <div>
-            <GradeImport />
+            <GradeImport :section="section" :expected-grade-count="unsubmitted" />
           </div>
         </div>
         <div v-else>
@@ -113,20 +113,30 @@
         <template #footer>
           <div v-if="reviewing">
             <div>{{ gettext("review_warning") }}</div>
-            <button
-              @click="loadGraderoster">{{ gettext("btn_review_back") }}</button>
-            <button
-              @click="submitGrades">{{ gettext("btn_submit_grades") }}</button>
+            <div>
+              <BButton
+                :title="`Go back and edit grades for {{ section.section_name }}`"
+                variant="primary"
+                @click="loadGraderoster">{{ gettext("btn_review_back") }}
+              </BButton>&nbsp;
+              <BButton
+                variant="primary"
+                @click="submitGrades">{{ gettext("btn_submit_grades") }}
+              </BButton>
+            </div>
           </div>
           <div v-else-if="studentsLoaded && editing">
-            <span v-if="gradesRemainingText">{{ gradesRemainingText }}</span>
+            <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span>
             <span v-else class="visually-hidden">
               All grades entered. Click Review button to continue.
             </span>
-            <button
+            <BButton
               :disabled="reviewDisabled"
+              variant="primary"
               @click="reviewGrades"
-            >{{ gettext("btn_review_submit") }}</button>
+            >
+              {{ gettext("btn_review_submit") }}
+            </BButton>
           </div>
         </template>
       </BCard>
@@ -137,7 +147,7 @@
 <script>
 import Layout from "@/layouts/default.vue";
 import Student from "@/components/graderoster/student.vue";
-import GradeImport from "@/components/gradeimport/import.vue";
+import GradeImport from "@/components/graderoster/import.vue";
 import Receipt from "@/components/graderoster/receipt.vue";
 import Errors from "@/components/errors.vue";
 import { useGradeStore } from "@/stores/grade";
@@ -183,9 +193,12 @@ export default {
     };
   },
   computed: {
-    editing() {
+    unsubmitted() {
       return this.graderoster.students.filter(
-        s => s.grade_url !== null).length > 0;
+        s => s.grade_url !== null).length;
+    },
+    editing() {
+      return this.unsubmitted > 0;
     },
     graderosterTitle() {
       return this.reviewing
@@ -208,7 +221,8 @@ export default {
       return s.join(", ");
     },
     reviewDisabled() {
-      return this.gradeStore.missing || this.gradeStore.invalid;
+      return (this.gradeStore.missing > 0 ||
+              this.gradeStore.invalid > 0) ? true : false;
     },
   },
   methods: {
