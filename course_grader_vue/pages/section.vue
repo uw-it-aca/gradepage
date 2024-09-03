@@ -88,13 +88,13 @@
         </div>
 
         <!-- Duplicate code legend -->
-        <template
+        <div
           v-if="graderoster && graderoster.has_duplicate_codes"
           class="mb-2 small text-muted"
         >
           {{ gettext("duplicate_code") }}
           <i class="bi bi-circle-fill text-secondary"></i>
-        </template>
+        </div>
 
         <!-- Student roster -->
         <ul v-if="graderoster.students" class="list-unstyled m-0">
