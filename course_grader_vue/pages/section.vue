@@ -14,12 +14,12 @@
       <div class="text-end">
         <a
           :href="section.export_url"
-          class="btn btn-sm btn-outline-secondary me-2"
+          class="btn btn-sm btn-outline-secondary me-2 rounded-2"
           ><i class="bi bi-download"></i> Download Change of Grade template</a
         >
         <a
           href="javascript:window.print()"
-          class="btn btn-sm btn-outline-secondary"
+          class="btn btn-sm btn-outline-secondary rounded-2"
         >
           <i class="bi bi-printer"></i> Print this page
         </a>
