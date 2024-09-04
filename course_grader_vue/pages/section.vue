@@ -10,8 +10,7 @@
       </BLink>
 
       <!-- Grade receipt actions -->
-      <!--<div v-if="studentsLoaded && !reviewing && !editing" class="text-end">-->
-      <div class="text-end">
+      <div v-if="studentsLoaded && !reviewing && !editing" class="text-end">
         <a
           :href="section.export_url"
           class="btn btn-sm btn-outline-secondary me-2 rounded-2"
@@ -126,25 +125,31 @@
 
         <!-- Grade edit/review actions -->
         <template #footer v-if="reviewing">
-          <div>{{ gettext("review_warning") }}</div>
-          <div class="text-end">
-            <BButton
-              :title="`Go back and edit grades for {{ section.section_name }}`"
-              variant="primary"
-              @click="loadGraderoster"
-              >{{ gettext("btn_review_back") }} </BButton
-            >&nbsp;
-            <BButton variant="primary" @click="submitGrades"
-              >{{ gettext("btn_submit_grades") }}
-            </BButton>
+          <div class="d-flex">
+            <div class="flex-fill align-self-center text-end me-2 small">
+              {{ gettext("review_warning") }}
+            </div>
+            <div class="text-nowrap">
+              <BButton
+                :title="`Go back and edit grades for {{ section.section_name }}`"
+                variant="outline-primary"
+                @click="loadGraderoster"
+                >{{ gettext("btn_review_back") }}
+              </BButton>
+              <BButton variant="primary" @click="submitGrades" class="ms-2"
+                >{{ gettext("btn_submit_grades") }}
+              </BButton>
+            </div>
           </div>
         </template>
         <template #footer v-else-if="studentsLoaded && editing">
-          <div class="text-end">
-            <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span>
-            <span v-else class="visually-hidden">
-              All grades entered. Click Review button to continue.
-            </span>
+          <div class="d-flex">
+            <div class="flex-fill align-self-center text-end me-2 small">
+              <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span>
+              <span v-else class="visually-hidden">
+                All grades entered. Click Review button to continue.
+              </span>
+            </div>
             <BButton
               :disabled="reviewDisabled"
               variant="primary"
