@@ -1,56 +1,65 @@
 <template>
   <Layout :page-title="pageTitle">
     <template #content>
-
-      <BLink :href="section.term_url" :variant="'dark'" class="link-dark link-opacity-75 link-opacity-75-hover link-underline-opacity-50 link-underline-opacity-75-hover">
+      <BLink
+        :href="section.term_url"
+        :variant="'dark'"
+        class="link-dark link-opacity-75 link-opacity-75-hover link-underline-opacity-50 link-underline-opacity-75-hover"
+      >
         Back To {{ section.section_year }} {{ section.section_quarter }}
       </BLink>
 
       <!-- Grade receipt actions -->
-      <div v-if="studentsLoaded && !reviewing && !editing">
-        <a href="javascript:window.print()">
-          <i class="fas fa-print"></i> Print this page
-        </a>
+      <div v-if="studentsLoaded && !reviewing && !editing" class="text-end">
         <a
           :href="section.export_url"
-        ><i class="fas fa-file-download"></i> Change of grade template</a>
+          class="btn btn-sm btn-outline-secondary me-2 rounded-2"
+          ><i class="bi bi-download"></i> Download Change of Grade template</a
+        >
+        <a
+          href="javascript:window.print()"
+          class="btn btn-sm btn-outline-secondary rounded-2"
+        >
+          <i class="bi bi-printer"></i> Print this page
+        </a>
       </div>
 
       <!-- Graderoster header -->
-      <BCard class="shadow-sm rounded-3 my-4" header-class="p-3" header="Default">
+      <BCard
+        class="shadow-sm rounded-3 my-3"
+        header-class="p-3"
+        header="Default"
+      >
         <template #header>
-          <div class="">
-            <div class="fs-5 text-muted fw-light">
-              <span v-if="studentsLoaded">{{ graderosterTitle }}</span>
-              <span v-else-if="!errorResponse">Loading...</span>
-            </div>
-            <div v-if="section.section_name">
-              <span class="fs-2 m-0 me-3">
-                <BPlaceholder
-                  v-if="!section.section_name"
-                  class="bg-light-gray"
-                  width="15"
-                  animation="glow"
-                />{{ section.section_name }}
-              </span>
-              <span class="small">
-                {{ gettext("sln") }}
-                <BPlaceholder
-                  v-if="!section.section_sln"
-                  class="bg-light-gray"
-                  width="5"
-                  animation="glow"
-                />{{ section.section_sln }}</span
-              >
-            </div>
-            <div style="float: right">
-              <BLink
-                href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
-                target="_blank"
-                title="Information on assigning and submitting grades"
-                >Info
-              </BLink>
-            </div>
+          <BLink
+            href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
+            target="_blank"
+            title="Information on assigning and submitting grades"
+            class="float-end"
+            >Learn more...
+          </BLink>
+          <div class="fs-5 text-muted fw-light">
+            <span v-if="studentsLoaded">{{ graderosterTitle }}</span>
+            <span v-else-if="!errorResponse">Loading...</span>
+          </div>
+          <div v-if="section.section_name">
+            <span class="fs-2 m-0 me-3">
+              <BPlaceholder
+                v-if="!section.section_name"
+                class="bg-light-gray"
+                width="15"
+                animation="glow"
+              />{{ section.section_name }}
+            </span>
+            <span class="small">
+              {{ gettext("sln") }}
+              <BPlaceholder
+                v-if="!section.section_sln"
+                class="bg-light-gray"
+                width="5"
+                animation="glow"
+              />{{ section.section_sln }}</span
+            >
           </div>
         </template>
 
@@ -66,8 +75,11 @@
             v-if="graderoster.is_writing_section"
             v-html="gettext('writing_course_note')"
           />
-          <div>
-            <GradeImport :section="section" :expected-grade-count="unsubmitted" />
+          <div class="text-end">
+            <GradeImport
+              :section="section"
+              :expected-grade-count="unsubmitted"
+            />
           </div>
         </div>
         <div v-else>
@@ -75,13 +87,13 @@
         </div>
 
         <!-- Duplicate code legend -->
-        <template
+        <div
           v-if="graderoster && graderoster.has_duplicate_codes"
           class="mb-2 small text-muted"
         >
           {{ gettext("duplicate_code") }}
           <i class="bi bi-circle-fill text-secondary"></i>
-        </template>
+        </div>
 
         <!-- Student roster -->
         <ul v-if="graderoster.students" class="list-unstyled m-0">
@@ -92,7 +104,9 @@
           >
             <Student
               :student="student"
-              :gradeChoices="graderoster.grade_choices[student.grade_choices_index]"
+              :gradeChoices="
+                graderoster.grade_choices[student.grade_choices_index]
+              "
               :reviewing="reviewing"
               :last="index === graderoster.students.length - 1"
               v-model:studentsLoaded="studentsLoaded"
@@ -110,26 +124,32 @@
         </ul>
 
         <!-- Grade edit/review actions -->
-        <template #footer>
-          <div v-if="reviewing">
-            <div>{{ gettext("review_warning") }}</div>
-            <div>
+        <template #footer v-if="reviewing">
+          <div class="d-flex">
+            <div class="flex-fill align-self-center text-end me-2 small">
+              {{ gettext("review_warning") }}
+            </div>
+            <div class="text-nowrap">
               <BButton
                 :title="`Go back and edit grades for {{ section.section_name }}`"
-                variant="primary"
-                @click="loadGraderoster">{{ gettext("btn_review_back") }}
-              </BButton>&nbsp;
-              <BButton
-                variant="primary"
-                @click="submitGrades">{{ gettext("btn_submit_grades") }}
+                variant="outline-primary"
+                @click="loadGraderoster"
+                >{{ gettext("btn_review_back") }}
+              </BButton>
+              <BButton variant="primary" @click="submitGrades" class="ms-2"
+                >{{ gettext("btn_submit_grades") }}
               </BButton>
             </div>
           </div>
-          <div v-else-if="studentsLoaded && editing">
-            <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span>
-            <span v-else class="visually-hidden">
-              All grades entered. Click Review button to continue.
-            </span>
+        </template>
+        <template #footer v-else-if="studentsLoaded && editing">
+          <div class="d-flex">
+            <div class="flex-fill align-self-center text-end me-2 small">
+              <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span>
+              <span v-else class="visually-hidden">
+                All grades entered. Click Review button to continue.
+              </span>
+            </div>
             <BButton
               :disabled="reviewDisabled"
               variant="primary"
@@ -169,7 +189,7 @@ export default {
     BButton,
     BCard,
     BLink,
-    BPlaceholder
+    BPlaceholder,
   },
   setup() {
     const gradeStore = useGradeStore();
@@ -194,8 +214,8 @@ export default {
   },
   computed: {
     unsubmitted() {
-      return this.graderoster.students.filter(
-        s => s.grade_url !== null).length;
+      return this.graderoster.students.filter((s) => s.grade_url !== null)
+        .length;
     },
     editing() {
       return this.unsubmitted > 0;
@@ -213,16 +233,17 @@ export default {
         invalid = this.gradeStore.invalid;
 
       if (missing) {
-        s.push((missing > 1) ? `${missing} grades missing` : "1 grade missing");
+        s.push(missing > 1 ? `${missing} grades missing` : "1 grade missing");
       }
       if (invalid) {
-        s.push((invalid > 1) ? `${invalid} grades invalid` : "1 grade invalid");
+        s.push(invalid > 1 ? `${invalid} grades invalid` : "1 grade invalid");
       }
       return s.join(", ");
     },
     reviewDisabled() {
-      return (this.gradeStore.missing > 0 ||
-              this.gradeStore.invalid > 0) ? true : false;
+      return this.gradeStore.missing > 0 || this.gradeStore.invalid > 0
+        ? true
+        : false;
     },
   },
   methods: {
@@ -249,8 +270,10 @@ export default {
     },
     reviewGrades: function () {
       this.isLoading = true;
-      this.updateGraderoster(this.section.graderoster_url,
-                             this.gradeStore.grades)
+      this.updateGraderoster(
+        this.section.graderoster_url,
+        this.gradeStore.grades
+      )
         .then((response) => {
           return response.data;
         })

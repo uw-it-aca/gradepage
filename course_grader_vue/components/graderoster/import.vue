@@ -4,6 +4,7 @@
     size="sm"
     variant="outline-primary"
     no-caret
+    toggle-class="rounded-2"
   >
     <template #button-content>
       <i class="bi bi-arrow-return-right me-1"></i>Import from...</template
