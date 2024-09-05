@@ -67,32 +67,33 @@
         <div v-if="errorResponse">
           <Errors :error-response="errorResponse" />
         </div>
-        <div v-else-if="reviewing">
-          {{ gettext("please_review_grades") }}
-        </div>
-        <div v-else-if="studentsLoaded && editing">
-          <span
-            v-if="graderoster.is_writing_section"
-            v-html="gettext('writing_course_note')"
-          />
-          <div class="text-end">
-            <GradeImport
-              :section="section"
-              :expected-grade-count="unsubmitted"
-            />
+        <div v-else-if="studentsLoaded">
+          <div v-if="reviewing">
+            {{ gettext("please_review_grades") }}
           </div>
-        </div>
-        <div v-else>
-          <Receipt :section="section" :graderoster="graderoster" />
-        </div>
+          <div v-else-if="editing">
+            <span
+              v-if="graderoster.is_writing_section"
+              v-html="gettext('writing_course_note')"
+            />
+            <div class="text-end">
+              <GradeImport
+                :section="section"
+                :expected-grade-count="unsubmitted"
+              />
+            </div>
+          </div>
+          <div v-else>
+            <Receipt :section="section" :graderoster="graderoster" />
+          </div>
 
-        <!-- Duplicate code legend -->
-        <div
-          v-if="graderoster && graderoster.has_duplicate_codes"
-          class="mb-2 small text-muted"
-        >
-          {{ gettext("duplicate_code") }}
-          <i class="bi bi-circle-fill text-secondary"></i>
+          <div
+            v-if="graderoster.has_duplicate_codes"
+            class="mb-2 small text-muted"
+          >
+            {{ gettext("duplicate_code") }}
+            <i class="bi bi-circle-fill text-secondary"></i>
+          </div>
         </div>
 
         <!-- Student roster -->
@@ -131,7 +132,7 @@
             </div>
             <div class="text-nowrap">
               <BButton
-                :title="`Go back and edit grades for {{ section.section_name }}`"
+                :title="`Go back and edit grades for ${section.section_name}`"
                 variant="outline-primary"
                 @click="loadGraderoster"
                 >{{ gettext("btn_review_back") }}
