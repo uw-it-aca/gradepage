@@ -9,11 +9,11 @@
         <span class=""
           ><i class="fas fa-exclamation-circle"></i>
           {{
-            ngettext(
+            interpolate(ngettext(
               "Grades submitted, but one grade had an error.",
               "Grades submitted, but %(failed_submission_count)s grades had errors.",
               graderoster.failed_submission_count
-            )
+            ), graderoster, true)
           }}
         </span>
       </div>
@@ -21,11 +21,11 @@
         <span class=""
           ><i class="fas fa-times-circle"></i>
           {{
-            ngettext(
+            interpolate(ngettext(
               "Grade submitted with error.",
               "Grades submitted with errors.",
               graderoster.failed_submission_count
-            )
+            ), graderoster, true)
           }}
         </span>
       </div>
