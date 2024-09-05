@@ -36,28 +36,35 @@
       </SProfile>
     </template>
     <template #aside>
-      <div class="border border-danger">aside slot area</div>
-    </template>
-    <template #bar>
-      <BAlert
-        v-for="message in messages"
-        :variant="messageLevel"
-        :model-value="true"
-        class="small"
-      >
-        <i class="bi-exclamation-octagon-fill me-1"></i>
-        <span v-html="message"></span>
-      </BAlert>
+      <div class="my-3">
+        <div class="bg-black bg-opacity-10 rounded-3 p-3 small">
+          <div class="mb-2 text-danger">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>System Messages
+          </div>
+          <ul class="list-unstyled m-0 text-danger">
+            <li
+              v-for="(msg, index) in messages"
+              :key="index"
+              v-html="msg"
+              class="mt-2"
+            ></li>
+          </ul>
+        </div>
+      </div>
     </template>
     <template #main>
-      <div v-if="termUrl">
-        <BLink :href="termUrl" title="Back to current quarter">Back To Current Term </BLink>
-      </div>
-      <div class="row justify-content-center">
+      <div class="row justify-content-center my-3">
         <div class="col">
           <slot name="title">
             <h1 class="visually-hidden">{{ pageTitle }}</h1>
           </slot>
+
+          <div v-if="termUrl">
+            <BLink :href="termUrl" title="Back to current quarter"
+              >Back To Current Term
+            </BLink>
+          </div>
+
           <slot name="content"></slot>
         </div>
       </div>
