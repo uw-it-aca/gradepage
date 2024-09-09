@@ -71,7 +71,7 @@ export const useGradeStore = defineStore({
           error = validateGrade(
             student.imported_grade,
             student.is_incomplete,
-            this.gradeChoices[student.item_id]
+            this.gradeChoices[student.student_id]
           );
 
           if (error === "") {
