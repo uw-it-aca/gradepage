@@ -231,7 +231,7 @@ export default {
         this.inprogress_save = true;
 
         this.updateGrade(this.student.grade_url,
-                         this.gradeStore.gradeData[this.student.student_id])
+                         this.gradeStore.gradeData[this.student.item_id])
           .then((response) => {
             return response.data;
           })
@@ -252,7 +252,7 @@ export default {
     },
     updateGradeStatus: function () {
       this.gradeError = this.gradeStore.validate(
-        this.student.student_id,
+        this.student.item_id,
         this.grade,
         this.incomplete,
         this.writing,

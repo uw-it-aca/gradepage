@@ -1,35 +1,104 @@
 <template>
-  <p>
-    8 total grades found in {{ section.section_name }} in Canvas Gradebook
-  </p>
-  <p>
-    The Office of the Registrar requires submitted grades to follow official
-    formatting.
-  </p>
-  <p>Please select a format to use:</p>
+  <div v-if="gradeImport">
+    <div v-if="gradeImport.grade_count">
+      <p v-if="gradeImport.grade_count === 1">
+        One grade found for <strong>{{ section.section_name }}</strong> in
+        <strong>{{ gradeImport.source_name }}</strong>.
+      </p>
+      <p v-else>
+        {{ gradeImport.grade_count }} total grades found for
+        <strong>{{ section.section_name }}</strong> in
+        <strong>{{ gradeImport.source_name }}</strong>.
+      </p>
 
-  <div class="d-grid gap-2">
-    <BButton variant="outline-secondary"
-      >Undergraduate Scale (4.0-0.7)</BButton
-    >
-    <BButton variant="outline-secondary">Graduate Scale (4.0-1.7)</BButton>
-    <BButton variant="outline-secondary">Credit/No Credit Scale</BButton>
-    <BButton variant="outline-secondary"
-      >School of Medicine Pass/No Pass</BButton
-    >
-    <BButton variant="outline-secondary"
-      >Honors/High Pass/Pass/Fail Scale</BButton
-    >
+      <div v-if="gradeImport.override_grade_count" role="alert" class="alert alert-warning">
+        <span class="fa-stack">
+          <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
+          <i class="fas fa-marker fa-flip-horizontal fa-stack-1x fa-inverse" aria-hidden="true"></i>
+        </span>
+        <p v-if="gradeImport.override_grade_count === 1">
+          You have one final grade override in this Canvas Grade Import.
+          This grade WILL BE included in the imported grades.
+        </p>
+        <p v-else>
+          You have <strong>{{ gradeImport.override_grade_count }} final grade overrides</strong>
+          in this Canvas Grade Import.
+          These grades WILL BE included in the imported grades.
+          <BLink
+            target="_blank"
+            href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/new-gradebook/final-grade-override/">
+            {{ gettext("learn_more") }}
+          </BLink>.
+        </p>
+      </div>
+
+      <div v-if="gradeImport.unposted_grade_count" role="alert" class="alert alert-danger">
+        <span class="gp-unposted-grade-icon">
+          <i class="fas fa-exclamation-circle fa-2x" aria-hidden="true"></i>
+        </span>
+        <p v-if="gradeImport.unposted_grade_count === 1">
+          You have <strong>one student with unposted grades</strong>
+          in this Canvas Grade Import.
+        </p>
+        <p v-else>
+          You have <strong>{{ gradeImport.unposted_grade_count }} students
+          with unposted grades</strong> in this Canvas Grade Import.
+        </p>
+        Unposted grades <strong>ARE NOT</strong> represented in the imported final grade.
+        <BLink
+          target="_blank"
+          href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/">
+          {{ gettext("learn_more") }}
+        </BLink>.
+      </div>
+
+      <div v-if="gradeImport.has_valid_percentages" class="d-grid gap-2">
+        <p>{{ gettext("import_conversion_required") }}</p>
+        <p>{{ gettext("import_conversion_required_select") }}</p>
+        <BButton
+          variant="outline-secondary"
+          @click="">
+          {{ gettext("conversion_scale_ug") }}</BButton>
+        <BButton
+          variant="outline-secondary"
+          @click="">
+          {{ gettext("conversion_scale_gr") }}</BButton>
+        <BButton
+          variant="outline-secondary"
+          @click="">
+          {{ gettext("conversion_scale_cnc") }}</BButton>
+        <BButton
+          variant="outline-secondary"
+          @click="">
+          {{ gettext("conversion_scale_pf") }}</BButton>
+        <BButton
+          variant="outline-secondary"
+          @click="">
+          {{ gettext("conversion_scale_hpf") }}</BButton>
+      </div>
+    </div>
+    <div v-else>
+      No grades found for <strong>{{ section.section_name }}</strong>
+      in this <strong>{{ gradeImport.source_name }}</strong>. Select a
+      different source for import or enter grades manually.
+    </div>
+  </div>
+  <div v-else-if="errorResponse">
+    <i class="fas fa-exclamation-circle"></i>
+    <strong>{{ errorResponse.data.error }}</strong>
   </div>
 </template>
 
 <script>
+import { useGradeStore } from "@/stores/grade";
 import { createImport } from "@/utils/data";
-import { BButton } from "bootstrap-vue-next";
+import { BButton, BLink } from "bootstrap-vue-next";
+import { watch } from "vue";
 
 export default {
   components: {
-    BButton
+    BButton,
+    BLink,
   },
   props: {
     section: {
@@ -40,9 +109,20 @@ export default {
       type: Number,
       required: true,
     },
+    modalOpen: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    importSource: {
+      type: String,
+      required: true,
+    },
   },
   setup() {
+    const gradeStore = useGradeStore();
     return {
+      gradeStore,
       createImport,
     };
   },
@@ -53,18 +133,27 @@ export default {
     };
   },
   methods: {
-    processCanvasImport() {
-      this.createImport(this.section.import_url, {"source": "canvas"})
+    loadImportedGrades() {
+      this.createImport(this.section.import_url, {"source": this.importSource})
         .then((response) => {
           return response.data;
         })
         .then((data) => {
-          this.gradeImport = data.grade_import;
+          this.errorResponse = null;
+          this.gradeImport = this.gradeStore.processImport(data.grade_import);
         })
         .catch((error) => {
           this.errorResponse = error.response;
+          this.gradeImport = null;
         });
     },
+  },
+  mounted() {
+    watch(() => this.modalOpen, (newValue, oldValue) => {
+      if (this.modalOpen) {
+        this.loadImportedGrades();
+      }
+    });
   },
 };
 </script>

@@ -10,6 +10,7 @@
       <i class="bi bi-arrow-return-right me-1"></i>Import from...</template
     >
     <BDropdownItemButton v-b-modal.modalImportCanvasGrades
+      @click="showModal"
       >Canvas Gradebook</BDropdownItemButton
     >
     <BDropdownItemButton v-b-modal.modalImportCsvGrades
@@ -25,7 +26,9 @@
   >
     <CanvasGrades
       :section="section"
-      :expected-grade-count="expectedGradeCount" />
+      :expected-grade-count="expectedGradeCount"
+      :modal-open="modalOpen"
+      import-source="canvas"/>
   </BModal>
 
   <BModal
@@ -36,7 +39,8 @@
   >
     <UploadGrades
       :section="section"
-      :expected-grade-count="expectedGradeCount" />
+      :expected-grade-count="expectedGradeCount"
+      import-source="csv" />
   </BModal>
 </template>
 
@@ -69,6 +73,16 @@ export default {
     return {
       showImportOptions,
     };
+  },
+  data() {
+    return {
+      modalOpen: false,
+    };
+  },
+  methods: {
+    showModal() {
+      this.modalOpen = true;
+    },
   },
 };
 </script>
