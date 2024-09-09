@@ -200,9 +200,10 @@ class ImportGrades(GradeFormHandler):
                 g["student_number"] == item.student_number)), None)
 
             if grade is not None:
-                item_id = "-".join([grade_import.section_id,
-                                    item.student_label(separator="-")])
+                student_id = item.student_label(separator="-")
+                item_id = "-".join([grade_import.section_id, student_id])
                 grade["item_id"] = clean_section_id(item_id)
+                grade["student_id"] = student_id
                 grade["section_id"] = self.section.section_id
                 grade["student_firstname"] = item.student_first_name
                 grade["student_lastname"] = item.student_surname
