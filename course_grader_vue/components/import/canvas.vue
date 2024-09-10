@@ -55,6 +55,9 @@
       <ImportConvertSave :section="section" :grade-import="gradeImport" />
 
     </div>
+    <div v-else-if="gradeImport.status_code != 200">
+      There was an error importing grades from Canvas ({{ gradeImport.status_code }}).
+    </div>
   </div>
   <div v-else-if="errorResponse">
     <i class="fas fa-exclamation-circle"></i>
