@@ -52,35 +52,8 @@
         </BLink>.
       </div>
 
-      <div v-if="gradeImport.has_valid_percentages" class="d-grid gap-2">
-        <p>{{ gettext("import_conversion_required") }}</p>
-        <p>{{ gettext("import_conversion_required_select") }}</p>
-        <BButton
-          variant="outline-secondary"
-          @click="">
-          {{ gettext("conversion_scale_ug") }}</BButton>
-        <BButton
-          variant="outline-secondary"
-          @click="">
-          {{ gettext("conversion_scale_gr") }}</BButton>
-        <BButton
-          variant="outline-secondary"
-          @click="">
-          {{ gettext("conversion_scale_cnc") }}</BButton>
-        <BButton
-          variant="outline-secondary"
-          @click="">
-          {{ gettext("conversion_scale_pf") }}</BButton>
-        <BButton
-          variant="outline-secondary"
-          @click="">
-          {{ gettext("conversion_scale_hpf") }}</BButton>
-      </div>
-    </div>
-    <div v-else>
-      No grades found for <strong>{{ section.section_name }}</strong>
-      in this <strong>{{ gradeImport.source_name }}</strong>. Select a
-      different source for import or enter grades manually.
+      <ImportConvertSave :section="section" :grade-import="gradeImport" />
+
     </div>
   </div>
   <div v-else-if="errorResponse">
@@ -92,12 +65,13 @@
 <script>
 import { useGradeStore } from "@/stores/grade";
 import { createImport } from "@/utils/data";
-import { BButton, BLink } from "bootstrap-vue-next";
+import ImportConvertSave from "@/components/import/convert.vue";
+import { BLink } from "bootstrap-vue-next";
 import { watch } from "vue";
 
 export default {
   components: {
-    BButton,
+    ImportConvertSave,
     BLink,
   },
   props: {

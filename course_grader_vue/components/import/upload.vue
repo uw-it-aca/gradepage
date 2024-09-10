@@ -14,42 +14,8 @@
         <strong>{{ file.name }}</strong>
       </p>
 
-      <div v-if="gradeImport.has_valid_percentages" class="d-grid gap-2">
-        <p>{{ gettext("import_conversion_required") }}</p>
-        <p>{{ gettext("import_conversion_required_select") }}</p>
-        <BButton
-          variant="outline-secondary"
-          @click="">
-          {{ gettext("conversion_scale_ug") }}</BButton>
-        <BButton
-          variant="outline-secondary"
-          @click="">
-          {{ gettext("conversion_scale_gr") }}</BButton>
-        <BButton
-          variant="outline-secondary"
-          @click="">
-          {{ gettext("conversion_scale_cnc") }}</BButton>
-        <BButton
-          variant="outline-secondary"
-          @click="">
-          {{ gettext("conversion_scale_pf") }}</BButton>
-        <BButton
-          variant="outline-secondary"
-          @click="">
-          {{ gettext("conversion_scale_hpf") }}</BButton>
-      </div>
-      <div v-else>
-        <p>
-          To continue, click <strong>{{ gettext("import_save_grades") }}</strong>
-          <br /><small><em>You will have a chance to enter, adjust, and review grades on the next screen.</em></small>
-        </p>
-        <p>To select a different file, click <strong>Cancel</strong></p>
-        <div>
-          <BButton variant="primary" @click="">
-            {{ gettext("import_save_grades") }}
-          </BButton>
-        </div>
-      </div>
+      <ImportConvertSave :section="section" :grade-import="gradeImport" />
+
     </div>
     <div v-else>
       No grades found for <strong>{{ section.section_name }}</strong>
@@ -203,10 +169,12 @@
 <script>
 import { useGradeStore } from "@/stores/grade";
 import { uploadGrades } from "@/utils/data";
+import ImportConvertSave from "@/components/import/convert.vue";
 import { BButton, BLink } from "bootstrap-vue-next";
 
 export default {
   components: {
+    ImportConvertSave,
     BButton,
     BLink,
   },
