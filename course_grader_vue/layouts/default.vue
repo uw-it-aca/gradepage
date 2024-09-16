@@ -6,27 +6,25 @@
     :page-title="pageTitle"
     :user-name="userName"
     :sign-out-url="signOutUrl"
-    :background-class="'bg-body-secondary'"
+    :background-class="'bg-body'"
   >
     <template #navigation>
       <ul class="nav flex-column my-3">
-        <li class="nav-item mb-1 bg-secondary bg-opacity-10 rounded-3">
+        <li class="nav-item mb-1 position-relative">
           <BLink class="d-flex justify-content-between nav-link rounded-3 text-body chevron bg-secondary-hover bg-opacity-10-hover"
-            exact-active-class="bg-secondary bg-opacity-10"
+            :class="$route.path.includes('/term/' + currentTerm.id )|| $route.path.includes('/section/' + currentTerm.id) ? 'bg-secondary bg-opacity-10' : ''"
             href="/">
-            <span><i class="bi bi-house-door-fill me-3"></i>Current</span>
+            <span><i class="bi bi-house-door-fill me-3"></i>{{ currentTerm.quarter }} {{ currentTerm.year }}</span>
           </BLink>
         </li>
         <li class="nav-item mb-1 position-relative">
           <BLink
-            class="d-flex justify-content-between nav-link rounded-3 text-dark chevron bg-secondary-hover bg-opacity-10-hover"
-            exact-active-class="bg-secondary bg-opacity-10"
-            href="/term"
+            class="d-flex justify-content-between nav-link rounded-3 text-body chevron bg-secondary-hover bg-opacity-10-hover"
             id="gettingStartedHeading"
             data-bs-toggle="collapse"
             data-bs-target="#gettingStartedCollapse"
             :aria-expanded="
-              $route.path.includes('/term') ? true : false
+              $route.path.includes('/term/' + currentTerm.id) || $route.path.includes('/section/' + currentTerm.id) ? false : true
             "
             aria-controls="gettingStartedCollapse"
           >
@@ -36,17 +34,19 @@
           <div
             id="gettingStartedCollapse"
             class="collapse"
-            :class="$route.path.includes('/getting-started') ? 'show' : ''"
+            :class="$route.path.includes('/term/' + currentTerm.id) || $route.path.includes('/section/' + currentTerm.id) ? '' : 'show'"
             aria-labelledby="gettingStartedHeading"
           >
             <ul class="nav flex-column small mt-1">
-              <li class="nav-item mb-1">
+              <li v-for="(term, index) in this.contextStore.context.terms"
+              :key="index" class="nav-item mb-1">
                 <BLink
+                  v-if="index != 0"
                   class="ps-4 nav-link rounded-3 text-body fw-lighter bg-secondary-hover bg-opacity-10-hover"
+                  :class="$route.path.includes(term.url) ? 'bg-secondary bg-opacity-10' : ''"
                   style="--bs-text-opacity: 0.6"
-                  exact-active-class="bg-secondary bg-opacity-10"
-                  href="/term/2013-winter"
-                  >Winter 2013</BLink
+                  :href="term.url"
+                  >{{ term.quarter}} {{ term.year }}</BLink
                 >
               </li>
             </ul>
@@ -75,10 +75,10 @@
     <template #aside>
       <div class="my-3">
         <div class="bg-secondary bg-opacity-10 rounded-3 p-3">
-          <div class="mb-2 text-dark">
+          <div class="mb-2 text-body">
             <i class="bi bi-exclamation-triangle-fill me-3"></i>System Messages
           </div>
-          <ul class="list-unstyled m-0 text-dark small">
+          <ul class="list-unstyled m-0 text-body small">
             <li
               v-for="(msg, index) in messages"
               :key="index"
@@ -87,6 +87,7 @@
             ></li>
           </ul>
         </div>
+        <SColorMode></SColorMode>
       </div>
     </template>
     <template #main>
@@ -95,13 +96,6 @@
           <slot name="title">
             <h1 class="visually-hidden">{{ pageTitle }}</h1>
           </slot>
-          {{ termUrl }}
-          <div v-if="termUrl">
-            <BLink :href="termUrl" title="Back to current quarter"
-              >Back To Current Term
-            </BLink>
-          </div>
-
           <slot name="content"></slot>
         </div>
       </div>
@@ -114,11 +108,11 @@
 import { useContextStore } from "@/stores/context";
 import { clearOverride } from "@/utils/data";
 import { BAlert, BLink } from "bootstrap-vue-next";
-import { STopbar, SProfile } from "solstice-vue";
+import { STopbar, SProfile, SColorMode } from "solstice-vue";
 
 export default {
   name: "GradepageApp",
-  components: { BAlert, BLink, STopbar, SProfile },
+  components: { BAlert, BLink, STopbar, SProfile, SColorMode },
   props: {
     pageTitle: {
       type: String,
@@ -149,6 +143,7 @@ export default {
       signOutUrl: context.signout_url,
       messages: window.gradepage.messages,
       messageLevel: window.gradepage.message_level,
+      currentTerm: this.contextStore.context.terms[0],
     };
   },
   created: function () {

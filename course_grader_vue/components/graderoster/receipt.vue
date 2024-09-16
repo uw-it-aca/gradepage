@@ -1,46 +1,42 @@
 <template>
   <template v-if="graderoster.is_submission_confirmation">
     <template v-if="graderoster.has_failed_submissions">
-
       <!-- warning -->
-      <div
+      <BAlert
         v-if="graderoster.has_successful_submissions"
-        class="alert alert-warning"
-        role="status"
+        variant="warning"
+        :model-value="true"
+        class="small"
       >
-        <span class=""
-          ><i class="fas fa-exclamation-circle"></i>
-          {{
-            interpolate(
-              ngettext(
-                "Grades submitted, but one grade had an error.",
-                "Grades submitted, but %(failed_submission_count)s grades had errors.",
-                graderoster.failed_submission_count
-              ),
-              graderoster,
-              true
-            )
-          }}
-        </span>
-      </div>
+        <i class="bi bi-exclamation-triangle-fill me-1"></i>
+        {{
+          interpolate(
+            ngettext(
+              "Grades submitted, but one grade had an error.",
+              "Grades submitted, but %(failed_submission_count)s grades had errors.",
+              graderoster.failed_submission_count
+            ),
+            graderoster,
+            true
+          )
+        }}
+      </BAlert>
 
       <!-- danger -->
-      <div v-else class="alert alert-danger" role="status">
-        <span class=""
-          ><i class="fas fa-times-circle"></i>
-          {{
-            interpolate(
-              ngettext(
-                "Grade submitted with error.",
-                "Grades submitted with errors.",
-                graderoster.failed_submission_count
-              ),
-              graderoster,
-              true
-            )
-          }}
-        </span>
-      </div>
+      <BAlert v-else variant="danger" :model-value="true" class="small">
+        <i class="bi bi-exclamation-octagon-fill me-1"></i>
+        {{
+          interpolate(
+            ngettext(
+              "Grade submitted with error.",
+              "Grades submitted with errors.",
+              graderoster.failed_submission_count
+            ),
+            graderoster,
+            true
+          )
+        }}
+      </BAlert>
     </template>
 
     <!-- success -->

@@ -1,16 +1,8 @@
 <template>
   <Layout :page-title="pageTitle">
     <template #content>
-      <BLink
-        :href="section.term_url"
-        :variant="'dark'"
-        class="link-dark link-opacity-75 link-opacity-75-hover link-underline-opacity-50 link-underline-opacity-75-hover"
-      >
-        Back To {{ section.section_year }} {{ section.section_quarter }}
-      </BLink>
-
       <!-- Grade receipt actions -->
-      <div v-if="studentsLoaded && !reviewing && !editing" class="text-end">
+      <div v-if="studentsLoaded && !reviewing && !editing" class="text-end mb-3">
         <a
           :href="section.export_url"
           class="btn btn-sm btn-outline-secondary me-2 rounded-2"
@@ -18,7 +10,7 @@
         >
         <a
           href="javascript:window.print()"
-          class="btn btn-sm btn-outline-secondary rounded-2"
+          class="btn btn-sm btn-outline-primary rounded-2"
         >
           <i class="bi bi-printer"></i> Print this page
         </a>
@@ -26,7 +18,7 @@
 
       <!-- Graderoster header -->
       <BCard
-        class="shadow-sm rounded-3 my-3"
+        class="shadow-sm rounded-3"
         header-class="p-3"
         header="Default"
       >

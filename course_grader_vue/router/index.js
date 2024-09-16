@@ -10,8 +10,10 @@ import Section from "@/pages/section.vue";
 const routes = [
   {
     path: "/",
-    component: Term,
-    props: true,
+    //component: Term,
+    //props: true,
+    path: "/",
+    redirect: "/term/2013-spring",
   },
   {
     path: "/term/:id?",
