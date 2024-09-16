@@ -4,29 +4,8 @@
     :term-url="isCurrentTermDisplay ? null : currentTerm.url"
   >
     <template #content>
-      <div>
-        <select
-          aria-label="Select term"
-          @change="selectTerm"
-          v-model="selectedTerm.url"
-        >
-          <template
-            v-for="term in this.contextStore.context.terms"
-            :key="term.id"
-          >
-            <option
-              :value="term.url"
-              :title="`Select ${term.quarter} ${term.year}`"
-              :selected="term.is_selected"
-            >
-              {{ term.quarter }} {{ term.year }}
-            </option>
-          </template>
-        </select>
-      </div>
-
       <BCard
-        class="shadow-sm rounded-3 my-4"
+        class="shadow-sm rounded-3"
         header-class="p-3"
         header-bg-variant="transparent"
       >
