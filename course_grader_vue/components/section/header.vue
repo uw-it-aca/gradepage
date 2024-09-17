@@ -1,11 +1,4 @@
 <template>
-  <BLink
-    href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
-    target="_blank"
-    title="Information on assigning and submitting grades"
-    class="float-end"
-    >Learn more...
-  </BLink>
   <div class="fs-5 text-muted fw-light">
     <span>{{ title }}</span>
   </div>
