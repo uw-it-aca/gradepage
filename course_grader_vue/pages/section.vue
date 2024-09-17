@@ -3,7 +3,7 @@
     <template #content>
       <!-- grade submission in progress -->
       <BAlert
-        v-if="!graderoster.has_inprogress_submissions"
+        v-if="graderoster.has_inprogress_submissions"
         variant="info"
         :model-value="true"
         class="small d-flex"
