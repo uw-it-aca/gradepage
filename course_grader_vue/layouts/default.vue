@@ -13,7 +13,7 @@
         <li class="nav-item mb-1 position-relative">
           <BLink class="d-flex justify-content-between nav-link rounded-3 text-body chevron bg-secondary-hover bg-opacity-10-hover"
             :class="$route.path.includes('/term/' + currentTerm.id )|| $route.path.includes('/section/' + currentTerm.id) ? 'bg-secondary bg-opacity-10' : ''"
-            href="/">
+            :href="'/term/' + currentTerm.id">
             <span><i class="bi bi-house-door-fill me-3"></i>{{ currentTerm.quarter }} {{ currentTerm.year }}</span>
           </BLink>
         </li>
