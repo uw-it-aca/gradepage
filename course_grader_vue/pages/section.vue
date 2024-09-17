@@ -6,16 +6,12 @@
         v-if="graderoster.has_inprogress_submissions"
         variant="info"
         :model-value="true"
-        class="small d-flex"
+        class="small d-flex align-items-center"
       >
-        <div class="me-3">
+        <div class="flex-fill me-3">
           <i class="bi bi-exclamation-circle-fill me-1"></i>
           {{ gettext("grade_submission_inprogress") }}.
           {{ gettext("in_progress_submission_email") }}
-          {{ gettext("more_grades_to_submit") }}
-          <BLink :href="section.term_url">
-            {{ gettext("return_classes_to_grade") }}
-          </BLink>
         </div>
         <div>
           <BLink
@@ -26,41 +22,70 @@
         </div>
       </BAlert>
 
-      <!-- grade receipt download and print button -->
-      <div
-        v-if="studentsLoaded && !reviewing && !editing"
-        class="text-end mb-3"
-      >
-        <a
-          :href="section.export_url"
-          class="btn btn-sm btn-outline-secondary me-2 rounded-2"
-          ><i class="bi bi-download"></i> Download Change of Grade template</a
-        >
-        <a
-          href="javascript:window.print()"
-          class="btn btn-sm btn-outline-primary rounded-2"
-        >
-          <i class="bi bi-printer"></i> Print this page
-        </a>
-      </div>
-
       <!-- graderoster header -->
       <BCard class="shadow-sm rounded-3" header-class="p-3" header="Default">
-
         <template #header>
-          <SectionHeader :section="section" :title="headerTitle" />
-        </template>
-
-        <!-- submission disclaimer -->
-        <div v-if="!graderoster.is_submission_confirmation" class="small" role="status">
-          {{ gettext("confirmation_alert_warning") }}
           <BLink
-            href="https://registrar.washington.edu/staffandfaculty/grading-resources/#faqs"
+            href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
             target="_blank"
-            class="d-print-none"
-            >More info.
+            title="Information on assigning and submitting grades"
+            class="small float-end"
+            >Learn more on assigning and submitting grades
           </BLink>
-        </div>
+
+          <SectionHeader :section="section" :title="headerTitle" />
+
+
+
+          <!-- submission disclaimer -->
+          <div
+            v-if="!graderoster.is_submission_confirmation"
+            class="small"
+            role="status"
+          >
+            {{ gettext("confirmation_alert_warning") }}
+            <BLink
+              href="https://registrar.washington.edu/staffandfaculty/grading-resources/#faqs"
+              target="_blank"
+              class="d-print-none"
+              >More info.
+            </BLink>
+          </div>
+          <!-- writing credit disclaimer -->
+          <div
+            v-if="graderoster.is_writing_section"
+            class="small"
+            role="status"
+          >
+            {{ gettext("writing_course_note_receipt") }}
+          </div>
+
+          <!-- grade receipt download and print button -->
+          <div
+            v-if="studentsLoaded && !reviewing && !editing"
+            class="text-end"
+          >
+            <a
+              :href="section.export_url"
+              class="btn btn-sm btn-outline-secondary me-2 rounded-2"
+              ><i class="bi bi-download"></i> Download Change of Grade
+              template</a
+            >
+            <a
+              href="javascript:window.print()"
+              class="btn btn-sm btn-outline-primary rounded-2"
+            >
+              <i class="bi bi-printer"></i> Print this page
+            </a>
+          </div>
+
+          <div v-if="editing" class="text-end">
+            <GradeImport
+              :section="section"
+              :expected-grade-count="unsubmitted"
+            />
+          </div>
+        </template>
 
         <!-- Row zero contains errors, information and import action -->
         <div v-if="errorResponse">
@@ -69,18 +94,6 @@
         <div v-else-if="studentsLoaded">
           <div v-if="reviewing">
             {{ gettext("please_review_grades") }}
-          </div>
-          <div v-else-if="editing">
-            <span
-              v-if="graderoster.is_writing_section"
-              v-html="gettext('writing_course_note') + ' sadfasfasdasdfadfsdfs'"
-            />
-            <div class="text-end">
-              <GradeImport
-                :section="section"
-                :expected-grade-count="unsubmitted"
-              />
-            </div>
           </div>
           <div v-else>
             <Receipt :section="section" :graderoster="graderoster" />
@@ -227,11 +240,11 @@ export default {
         ? this.reviewing
           ? gettext("review_submit_grades")
           : this.editing
-            ? gettext("enter_grades")
-            : gettext("submitted_grades_for")
+          ? gettext("enter_grades")
+          : gettext("submitted_grades_for")
         : this.errorResponse
-          ? ""
-          : "Loading...";
+        ? ""
+        : "Loading...";
     },
     gradesRemainingText() {
       var s = [],

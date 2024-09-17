@@ -1,9 +1,9 @@
 <template>
   <div :aria-labelledby="sectionNameId">
     <template v-if="section.section_url">
-      <RouterLink :to="{ path: section.section_url }" :title="routerLinkTitle">
+      <BLink :href="section.section_url" :title="routerLinkTitle">
         <div class="fs-4" :id="sectionNameId">{{ section.display_name }}</div>
-      </RouterLink>
+      </BLink>
     </template>
     <template v-else>
       <div class="fs-4" :id="sectionNameId">{{ section.display_name }}</div>
