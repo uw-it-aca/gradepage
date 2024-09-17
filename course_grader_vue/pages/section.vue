@@ -6,16 +6,12 @@
         v-if="graderoster.has_inprogress_submissions"
         variant="info"
         :model-value="true"
-        class="small d-flex"
+        class="small d-flex align-items-center"
       >
-        <div class="me-3">
+        <div class="flex-fill me-3">
           <i class="bi bi-exclamation-circle-fill me-1"></i>
           {{ gettext("grade_submission_inprogress") }}.
           {{ gettext("in_progress_submission_email") }}
-          {{ gettext("more_grades_to_submit") }}
-          <BLink :href="section.term_url">
-            {{ gettext("return_classes_to_grade") }}
-          </BLink>
         </div>
         <div>
           <BLink
@@ -39,31 +35,7 @@
 
           <SectionHeader :section="section" :title="headerTitle" />
 
-          <!-- grade receipt download and print button -->
-          <div
-            v-if="studentsLoaded && !reviewing && !editing"
-            class="text-end mb-3"
-          >
-            <a
-              :href="section.export_url"
-              class="btn btn-sm btn-outline-secondary me-2 rounded-2"
-              ><i class="bi bi-download"></i> Download Change of Grade
-              template</a
-            >
-            <a
-              href="javascript:window.print()"
-              class="btn btn-sm btn-outline-primary rounded-2"
-            >
-              <i class="bi bi-printer"></i> Print this page
-            </a>
-          </div>
 
-          <div v-if="editing" class="text-end">
-            <GradeImport
-              :section="section"
-              :expected-grade-count="unsubmitted"
-            />
-          </div>
 
           <!-- submission disclaimer -->
           <div
@@ -86,6 +58,32 @@
             role="status"
           >
             {{ gettext("writing_course_note_receipt") }}
+          </div>
+
+          <!-- grade receipt download and print button -->
+          <div
+            v-if="studentsLoaded && !reviewing && !editing"
+            class="text-end"
+          >
+            <a
+              :href="section.export_url"
+              class="btn btn-sm btn-outline-secondary me-2 rounded-2"
+              ><i class="bi bi-download"></i> Download Change of Grade
+              template</a
+            >
+            <a
+              href="javascript:window.print()"
+              class="btn btn-sm btn-outline-primary rounded-2"
+            >
+              <i class="bi bi-printer"></i> Print this page
+            </a>
+          </div>
+
+          <div v-if="editing" class="text-end">
+            <GradeImport
+              :section="section"
+              :expected-grade-count="unsubmitted"
+            />
           </div>
         </template>
 
