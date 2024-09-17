@@ -1,8 +1,36 @@
 <template>
   <Layout :page-title="pageTitle">
     <template #content>
-      <!-- Grade receipt actions -->
-      <div v-if="studentsLoaded && !reviewing && !editing" class="text-end mb-3">
+      <!-- grade submission in progress -->
+      <BAlert
+        v-if="!graderoster.has_inprogress_submissions"
+        variant="info"
+        :model-value="true"
+        class="small d-flex"
+      >
+        <div class="me-3">
+          <i class="bi bi-exclamation-circle-fill me-1"></i>
+          {{ gettext("grade_submission_inprogress") }}.
+          {{ gettext("in_progress_submission_email") }}
+          {{ gettext("more_grades_to_submit") }}
+          <BLink :href="section.term_url">
+            {{ gettext("return_classes_to_grade") }}
+          </BLink>
+        </div>
+        <div>
+          <BLink
+            class="btn btn-info btn-sm rounded-3 text-nowrap"
+            :href="section.term_url"
+            >Return to class list</BLink
+          >
+        </div>
+      </BAlert>
+
+      <!-- grade receipt download and print button -->
+      <div
+        v-if="studentsLoaded && !reviewing && !editing"
+        class="text-end mb-3"
+      >
         <a
           :href="section.export_url"
           class="btn btn-sm btn-outline-secondary me-2 rounded-2"
@@ -16,12 +44,8 @@
         </a>
       </div>
 
-      <!-- Graderoster header -->
-      <BCard
-        class="shadow-sm rounded-3"
-        header-class="p-3"
-        header="Default"
-      >
+      <!-- graderoster header -->
+      <BCard class="shadow-sm rounded-3" header-class="p-3" header="Default">
         <template #header>
           <BLink
             href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
@@ -53,6 +77,17 @@
               />{{ section.section_sln }}</span
             >
           </div>
+
+          <!-- submission disclaimer -->
+          <div v-if="!graderoster.is_submission_confirmation" class="small" role="status">
+            {{ gettext("confirmation_alert_warning") }}
+            <BLink
+              href="https://registrar.washington.edu/staffandfaculty/grading-resources/#faqs"
+              target="_blank"
+              class="d-print-none"
+              >More info.
+            </BLink>
+          </div>
         </template>
 
         <!-- Row zero contains errors, information and import action -->
@@ -66,7 +101,7 @@
           <div v-else-if="editing">
             <span
               v-if="graderoster.is_writing_section"
-              v-html="gettext('writing_course_note')"
+              v-html="gettext('writing_course_note') + ' sadfasfasdasdfadfsdfs'"
             />
             <div class="text-end">
               <GradeImport
