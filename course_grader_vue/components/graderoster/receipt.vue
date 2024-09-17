@@ -46,7 +46,7 @@
     </BAlert>
   </template>
 
-  <!-- info -->
+  <!-- info
   <BAlert
     v-else-if="graderoster.has_inprogress_submissions"
     variant="info"
@@ -62,7 +62,7 @@
         {{ gettext("return_classes_to_grade") }}
       </BLink>
     </p>
-  </BAlert>
+  </BAlert>-->
 
   <!-- success -->
   <BAlert
@@ -71,7 +71,7 @@
     :model-value="true"
     class="small"
   >
-    <i class="bi bi-check-circl-fill me-1"></i>
+    <i class="bi bi-check-circle-fill me-1"></i>
     <span v-if="submission.section_id">
       {{ gettext("section") }} {{ submission.section_id }}:
     </span>
@@ -98,7 +98,7 @@
     {{ gettext("writing_course_note_receipt") }}
   </BAlert>
 
-  <!-- warning -->
+  <!-- warning
   <BAlert
     v-if="!graderoster.is_submission_confirmation"
     variant="warning"
@@ -113,7 +113,7 @@
       class="d-print-none"
       >More info.
     </BLink>
-  </BAlert>
+  </BAlert> -->
 </template>
 
 <script>

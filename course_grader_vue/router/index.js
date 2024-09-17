@@ -8,7 +8,6 @@ import { useContextStore } from "@/stores/context";
 // access the context store
 const contextStore = useContextStore();
 const currentTermUrl = contextStore.context.terms[0].url;
-console.log(currentTermUrl);
 
 // vue-gtag-next track routing
 // import { trackRouter } from "vue-gtag-next";
