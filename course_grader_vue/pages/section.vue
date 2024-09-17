@@ -46,49 +46,21 @@
 
       <!-- graderoster header -->
       <BCard class="shadow-sm rounded-3" header-class="p-3" header="Default">
-        <template #header>
-          <BLink
-            href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
-            target="_blank"
-            title="Information on assigning and submitting grades"
-            class="float-end"
-            >Learn more...
-          </BLink>
-          <div class="fs-5 text-muted fw-light">
-            <span v-if="studentsLoaded">{{ graderosterTitle }}</span>
-            <span v-else-if="!errorResponse">Loading...</span>
-          </div>
-          <div v-if="section.section_name">
-            <span class="fs-2 m-0 me-3">
-              <BPlaceholder
-                v-if="!section.section_name"
-                class="bg-light-gray"
-                width="15"
-                animation="glow"
-              />{{ section.section_name }}
-            </span>
-            <span class="small">
-              {{ gettext("sln") }}
-              <BPlaceholder
-                v-if="!section.section_sln"
-                class="bg-light-gray"
-                width="5"
-                animation="glow"
-              />{{ section.section_sln }}</span
-            >
-          </div>
 
-          <!-- submission disclaimer -->
-          <div v-if="!graderoster.is_submission_confirmation" class="small" role="status">
-            {{ gettext("confirmation_alert_warning") }}
-            <BLink
-              href="https://registrar.washington.edu/staffandfaculty/grading-resources/#faqs"
-              target="_blank"
-              class="d-print-none"
-              >More info.
-            </BLink>
-          </div>
+        <template #header>
+          <SectionHeader :section="section" :title="headerTitle" />
         </template>
+
+        <!-- submission disclaimer -->
+        <div v-if="!graderoster.is_submission_confirmation" class="small" role="status">
+          {{ gettext("confirmation_alert_warning") }}
+          <BLink
+            href="https://registrar.washington.edu/staffandfaculty/grading-resources/#faqs"
+            target="_blank"
+            class="d-print-none"
+            >More info.
+          </BLink>
+        </div>
 
         <!-- Row zero contains errors, information and import action -->
         <div v-if="errorResponse">
@@ -194,6 +166,7 @@
 
 <script>
 import Layout from "@/layouts/default.vue";
+import SectionHeader from "@/components/section/header.vue";
 import Student from "@/components/graderoster/student.vue";
 import GradeImport from "@/components/graderoster/import.vue";
 import Receipt from "@/components/graderoster/receipt.vue";
@@ -210,6 +183,7 @@ import { BButton, BCard, BLink, BPlaceholder } from "bootstrap-vue-next";
 export default {
   components: {
     Layout,
+    SectionHeader,
     Student,
     GradeImport,
     Receipt,
@@ -248,12 +222,16 @@ export default {
     editing() {
       return this.unsubmitted > 0;
     },
-    graderosterTitle() {
-      return this.reviewing
-        ? gettext("review_submit_grades")
-        : this.editing
-        ? gettext("enter_grades")
-        : gettext("submitted_grades_for");
+    headerTitle() {
+      return this.studentsLoaded
+        ? this.reviewing
+          ? gettext("review_submit_grades")
+          : this.editing
+            ? gettext("enter_grades")
+            : gettext("submitted_grades_for")
+        : this.errorResponse
+          ? ""
+          : "Loading...";
     },
     gradesRemainingText() {
       var s = [],
