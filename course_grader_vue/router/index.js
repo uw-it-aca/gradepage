@@ -1,4 +1,14 @@
 import { createWebHistory, createRouter } from "vue-router";
+import { setActivePinia, createPinia } from 'pinia';
+
+// pinia setup to get current term id from context store
+setActivePinia(createPinia());
+import { useContextStore } from "@/stores/context";
+
+// access the context store
+const contextStore = useContextStore();
+const currentTermUrl = contextStore.context.terms[0].url;
+console.log(currentTermUrl);
 
 // vue-gtag-next track routing
 // import { trackRouter } from "vue-gtag-next";
@@ -13,7 +23,7 @@ const routes = [
     //component: Term,
     //props: true,
     path: "/",
-    redirect: "/term/2013-spring",
+    redirect: currentTermUrl,
   },
   {
     path: "/term/:id?",
