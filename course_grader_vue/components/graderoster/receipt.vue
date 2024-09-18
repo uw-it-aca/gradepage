@@ -46,24 +46,6 @@
     </BAlert>
   </template>
 
-  <!-- info
-  <BAlert
-    v-else-if="graderoster.has_inprogress_submissions"
-    variant="info"
-    :model-value="true"
-    class="small"
-  >
-    <i class="bi bi-exclamation-circle-fill me-1"></i>
-    {{ gettext("grade_submission_inprogress") }}
-    <p>{{ gettext("in_progress_submission_email") }}</p>
-    <p>
-      {{ gettext("more_grades_to_submit") }}
-      <BLink :href="section.term_url">
-        {{ gettext("return_classes_to_grade") }}
-      </BLink>
-    </p>
-  </BAlert>-->
-
   <!-- success -->
   <BAlert
     v-for="submission in graderoster.submissions"
@@ -86,34 +68,6 @@
       >Change submitted grades?
     </BLink>
   </BAlert>
-
-  <!-- info -->
-  <BAlert
-    v-if="graderoster.is_writing_section"
-    variant="info"
-    :model-value="true"
-    class="small"
-  >
-    <i class="bi bi-exclamation-circle-fill me-1"></i>
-    {{ gettext("writing_course_note_receipt") }}
-  </BAlert>
-
-  <!-- warning
-  <BAlert
-    v-if="!graderoster.is_submission_confirmation"
-    variant="warning"
-    :model-value="true"
-    class="small"
-  >
-    <i class="bi bi-exclamation-triangle-fill me-1"></i>
-    {{ gettext("confirmation_alert_warning") }}
-    <BLink
-      href="https://registrar.washington.edu/staffandfaculty/grading-resources/#faqs"
-      target="_blank"
-      class="d-print-none"
-      >More info.
-    </BLink>
-  </BAlert> -->
 </template>
 
 <script>

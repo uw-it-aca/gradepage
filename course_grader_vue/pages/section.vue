@@ -25,95 +25,105 @@
       <!-- graderoster header -->
       <BCard class="shadow-sm rounded-3" header-class="p-3" header="Default">
         <template #header>
-          <BLink
-            href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
-            target="_blank"
-            title="Information on assigning and submitting grades"
-            class="small float-end"
-            >Learn more on assigning and submitting grades
-          </BLink>
 
-          <SectionHeader :section="section" :title="headerTitle" />
-
-
-
-          <!-- submission disclaimer -->
-          <div
-            v-if="!graderoster.is_submission_confirmation"
-            class="small"
-            role="status"
-          >
-            {{ gettext("confirmation_alert_warning") }}
-            <BLink
-              href="https://registrar.washington.edu/staffandfaculty/grading-resources/#faqs"
-              target="_blank"
-              class="d-print-none"
-              >More info.
-            </BLink>
-          </div>
-          <!-- writing credit disclaimer -->
-          <div
-            v-if="graderoster.is_writing_section"
-            class="small"
-            role="status"
-          >
-            {{ gettext("writing_course_note_receipt") }}
-          </div>
-
-          <!-- grade receipt download and print button -->
-          <div
-            v-if="studentsLoaded && !reviewing && !editing"
-            class="text-end"
-          >
-            <a
-              :href="section.export_url"
-              class="btn btn-sm btn-outline-secondary me-2 rounded-2"
-              ><i class="bi bi-download"></i> Download Change of Grade
-              template</a
+          <!-- section actions dropdown -->
+          <template v-if="studentsLoaded && !reviewing && !editing">
+            <BDropdown
+              v-model="showSectionOptions"
+              size="sm"
+              variant="outline-secondary"
+              no-caret
+              class="float-end d-inline-block"
+              toggle-class="rounded-2"
             >
-            <a
-              href="javascript:window.print()"
-              class="btn btn-sm btn-outline-primary rounded-2"
-            >
-              <i class="bi bi-printer"></i> Print this page
-            </a>
-          </div>
+              <template #button-content>
+                <i class="bi bi-three-dots"></i
+              ></template>
+              <BDropdownItem :href="section.export_url">
+                <i class="bi bi-download me-1"></i>Download Change of Grade
+              </BDropdownItem>
+              <BDropdownItem href="javascript:window.print()">
+                <i class="bi bi-printer me-1"></i>Print this page
+              </BDropdownItem>
+              <BDropdownDivider />
+              <BDropdownItem
+                href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
+                target="_blank"
+                title="Information on assigning and submitting grades"
+                ><i class="bi bi-question-circle me-1"></i>GradePage Help
+              </BDropdownItem>
+            </BDropdown>
+          </template>
 
-          <div v-if="editing" class="text-end">
-            <GradeImport
+          <template v-if="editing">
+            <GradeImportOptions
               :section="section"
               :expected-grade-count="unsubmitted"
             />
+          </template>
+
+          <SectionHeader :section="section" :title="headerTitle" />
+
+          <div
+            v-if="
+              !graderoster.is_submission_confirmation ||
+              graderoster.is_writing_section
+            "
+            class="bg-secondary-subtle p-3 rounded-3"
+          >
+            <!-- submission disclaimer -->
+            <div
+              v-if="!graderoster.is_submission_confirmation"
+              class="small"
+              role="status"
+            >
+              {{ gettext("confirmation_alert_warning") }}
+              <BLink
+                href="https://registrar.washington.edu/staffandfaculty/grading-resources/#faqs"
+                target="_blank"
+                class="d-print-none"
+                >More info.
+              </BLink>
+            </div>
+            <!-- writing credit disclaimer -->
+            <div
+              v-if="graderoster.is_writing_section"
+              class="small"
+              role="status"
+            >
+              {{ gettext("writing_course_note_receipt") }}
+            </div>
           </div>
         </template>
 
         <!-- Row zero contains errors, information and import action -->
-        <div v-if="errorResponse">
+        <template v-if="errorResponse">
           <Errors :error-response="errorResponse" />
-        </div>
-        <div v-else-if="studentsLoaded">
+        </template>
+        <template v-else-if="studentsLoaded">
           <div v-if="reviewing">
             {{ gettext("please_review_grades") }}
           </div>
-          <div v-else>
+          <template v-else>
             <Receipt :section="section" :graderoster="graderoster" />
-          </div>
+          </template>
 
           <div
             v-if="graderoster.has_duplicate_codes"
-            class="mb-2 small text-muted"
+            class="mb-2 pb-2 small text-muted border-bottom"
           >
             {{ gettext("duplicate_code") }}
             <i class="bi bi-circle-fill text-secondary"></i>
           </div>
-        </div>
+        </template>
 
         <!-- Student roster -->
         <ul v-if="graderoster.students" class="list-unstyled m-0">
           <li
             v-for="(student, index) in graderoster.students"
             :key="student.item_id"
-            class="border-top pt-2 mt-2"
+            class="bpt-2 mt-2"
+            :class="index != 0 ? 'border-top' : ''"
           >
             <Student
               :student="student"
@@ -181,7 +191,7 @@
 import Layout from "@/layouts/default.vue";
 import SectionHeader from "@/components/section/header.vue";
 import Student from "@/components/graderoster/student.vue";
-import GradeImport from "@/components/graderoster/import.vue";
+import GradeImportOptions from "@/components/section/import-options.vue";
 import Receipt from "@/components/graderoster/receipt.vue";
 import Errors from "@/components/errors.vue";
 import { useGradeStore } from "@/stores/grade";
@@ -191,29 +201,41 @@ import {
   updateGraderoster,
   submitGraderoster,
 } from "@/utils/data";
-import { BButton, BCard, BLink, BPlaceholder } from "bootstrap-vue-next";
+import {
+  BButton,
+  BCard,
+  BDropdown,
+  BDropdownItem,
+  BLink,
+  BPlaceholder,
+} from "bootstrap-vue-next";
+import { ref } from "vue";
 
 export default {
   components: {
     Layout,
     SectionHeader,
     Student,
-    GradeImport,
+    GradeImportOptions,
     Receipt,
     Errors,
     BButton,
     BCard,
+    BDropdown,
+    BDropdownItem,
     BLink,
     BPlaceholder,
   },
   setup() {
     const gradeStore = useGradeStore();
+    const showSectionOptions = ref(false);
     return {
       gradeStore,
       getSection,
       getGraderoster,
       updateGraderoster,
       submitGraderoster,
+      showSectionOptions,
     };
   },
   data() {
