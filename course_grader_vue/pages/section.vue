@@ -1,6 +1,7 @@
 <template>
   <Layout :page-title="pageTitle">
     <template #content>
+
       <!-- grade submission in progress -->
       <BAlert
         v-if="graderoster.has_inprogress_submissions"
@@ -21,6 +22,7 @@
           >
         </div>
       </BAlert>
+
 
       <!-- graderoster header -->
       <BCard class="shadow-sm rounded-3" header-class="p-3" header="Default">
@@ -117,6 +119,9 @@
           </div>
         </template>
 
+
+
+
         <!-- Student roster -->
         <ul v-if="graderoster.students" class="list-unstyled m-0">
           <li
@@ -145,6 +150,8 @@
             />
           </li>
         </ul>
+
+
 
         <!-- Grade edit/review actions -->
         <template #footer v-if="reviewing">
@@ -202,6 +209,7 @@ import {
   submitGraderoster,
 } from "@/utils/data";
 import {
+  BAlert,
   BButton,
   BCard,
   BDropdown,
@@ -219,6 +227,7 @@ export default {
     GradeImportOptions,
     Receipt,
     Errors,
+    BAlert,
     BButton,
     BCard,
     BDropdown,
@@ -352,8 +361,9 @@ export default {
         })
         .then((data) => {
           this.section = data.section;
-          this.pageTitle = this.section.section_name;
-          document.title = this.pageTitle + " - GradePage";
+          // this.pageTitle = this.section.section_name;
+          // document.title = this.pageTitle + " - GradePage";
+          document.title = this.section.section_name + " - GradePage";
           this.loadGraderoster();
         })
         .catch((error) => {
