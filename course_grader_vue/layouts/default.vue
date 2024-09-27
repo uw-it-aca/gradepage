@@ -43,7 +43,7 @@
                 <BLink
                   v-if="index != 0"
                   class="ps-4 nav-link rounded-3 text-body fw-lighter bg-secondary-hover bg-opacity-10-hover"
-                  :class="$route.path.includes(term.url) ? 'bg-secondary bg-opacity-10' : ''"
+                  :class="$route.path.includes('/term/' + term.id) || $route.path.includes('/section/' + term.id) ? 'bg-secondary bg-opacity-10' : ''"
                   style="--bs-text-opacity: 0.6"
                   :href="term.url"
                   >{{ term.quarter}} {{ term.year }}</BLink
