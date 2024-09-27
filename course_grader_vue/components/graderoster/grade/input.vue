@@ -1,7 +1,9 @@
 <template>
   <div class="d-flex mt-2">
+
+    <div class="d-flex p-1 rounded-3 me-0" :class="[incomplete ? 'bg-body-secondary' : '']">
     <!-- incomplete checkbox button -->
-    <div class="btn-group btn-group-sm">
+    <div class="btn-group btn-group-sm me-1">
       <input
         type="checkbox"
         class="btn-check"
@@ -14,7 +16,7 @@
       <label
         :for="`incomplete-${student.item_id}`"
         :title="inputIncompleteTitle"
-        class="btn btn-light border fw-bold rounded-2"
+        class="btn btn-outline-secondary fw-bold rounded-2"
         style="width: 32px"
         ><abbr title="Incomplete" class="text-decoration-none pe-none"
           >I</abbr
@@ -23,12 +25,12 @@
     </div>
 
     <!-- grade text input - custom bootstrap -->
-    <div class="dropdown mx-1">
+    <div class="dropdown ms-1">
       <label :for="`grade-${student.item_id}`" class="visually-hidden"
         >Enter grade</label
       >
       <input
-        class="form-control form-control-sm rounded-2 dropdown-toggle"
+        class="form-control form-control-sm rounded-2 dropdown-toggle border-secondary"
         type="text"
         autocomplete="off"
         :id="`grade-${student.item_id}`"
@@ -62,9 +64,10 @@
         </li>
       </ul>
     </div>
+  </div>
 
     <!-- writing checkbox button -->
-    <div v-if="!student.is_writing_section" class="btn-group btn-group-sm">
+    <div v-if="!student.is_writing_section" class="btn-group btn-group-sm p-1 bg-transparent rounded-3">
       <input
         type="checkbox"
         class="btn-check"
@@ -76,12 +79,20 @@
       <label
         :for="`writing-${student.item_id}`"
         :title="inputWritingTitle"
-        class="btn btn-light border fw-bold rounded-2"
+        class="btn btn-outline-secondary fw-bold rounded-2"
         style="width: 32px"
         ><abbr title="Writing" class="text-decoration-none pe-none"
           >W</abbr
         ></label
       >
+    </div>
+    <div v-if="student.is_writing_section" class="btn-group btn-group-sm p-1 bg-transparent rounded-3" aria-hidden="true">
+      <button
+        class="btn btn-secondary disabled fw-bold rounded-2"
+        style="width: 32px"
+      >
+        <abbr title="Writing" class="text-decoration-none pe-none">W</abbr>
+      </button>
     </div>
   </div>
 
@@ -230,8 +241,10 @@ export default {
       if (!this.inprogress_save) {
         this.inprogress_save = true;
 
-        this.updateGrade(this.student.grade_url,
-                         this.gradeStore.gradeData[this.student.student_id])
+        this.updateGrade(
+          this.student.grade_url,
+          this.gradeStore.gradeData[this.student.student_id]
+        )
           .then((response) => {
             return response.data;
           })
