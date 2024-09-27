@@ -1,7 +1,6 @@
 <template>
   <Layout :page-title="pageTitle">
     <template #content>
-
       <!-- grade submission in progress -->
       <BAlert
         v-if="graderoster.has_inprogress_submissions"
@@ -23,11 +22,9 @@
         </div>
       </BAlert>
 
-
       <!-- graderoster header -->
       <BCard class="shadow-sm rounded-3" header-class="p-3" header="Default">
         <template #header>
-
           <!-- section actions dropdown -->
           <template v-if="studentsLoaded && !reviewing && !editing">
             <BDropdown
@@ -42,17 +39,17 @@
                 <i class="bi bi-three-dots"></i
               ></template>
               <BDropdownItem :href="section.export_url">
-                <i class="bi bi-download me-1"></i>Download Change of Grade
+                <i class="bi bi-download me-2 text-body-tertiary"></i>Download Change of Grade
               </BDropdownItem>
               <BDropdownItem href="javascript:window.print()">
-                <i class="bi bi-printer me-1"></i>Print this page
+                <i class="bi bi-printer me-2 text-body-tertiary"></i>Print this page
               </BDropdownItem>
               <BDropdownDivider />
               <BDropdownItem
                 href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
                 target="_blank"
                 title="Information on assigning and submitting grades"
-                ><i class="bi bi-question-circle me-1"></i>GradePage Help
+                ><i class="bi bi-question-circle me-2 text-body-tertiary"></i>GradePage Help
               </BDropdownItem>
             </BDropdown>
           </template>
@@ -71,7 +68,7 @@
               !graderoster.is_submission_confirmation ||
               graderoster.is_writing_section
             "
-            class="bg-secondary-subtle p-3 rounded-3"
+            class="bg-body-secondary p-3 rounded-3"
           >
             <!-- submission disclaimer -->
             <div
@@ -119,9 +116,6 @@
           </div>
         </template>
 
-
-
-
         <!-- Student roster -->
         <ul v-if="graderoster.students" class="list-unstyled m-0">
           <li
@@ -150,8 +144,6 @@
             />
           </li>
         </ul>
-
-
 
         <!-- Grade edit/review actions -->
         <template #footer v-if="reviewing">
