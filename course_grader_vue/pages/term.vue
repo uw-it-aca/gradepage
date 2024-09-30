@@ -14,9 +14,9 @@
         </template>
         <template v-if="isLoading">
           <ul class="list-unstyled">
-            <li v-for="index in 10" class="mb-3">
+            <li v-for="index in 10" class="mb-3" :key="index">
               <BPlaceholder
-                class="d-block bg-light-gray"
+                class="d-block bg-body-secondary"
                 style="height: 60px"
                 animation="glow"
               />
@@ -29,7 +29,11 @@
         <template v-else>
           <template v-if="sections.length > 0">
             <ul class="list-unstyled">
-              <li v-for="section in sections" :key="section.section_id" class="mb-3">
+              <li
+                v-for="section in sections"
+                :key="section.section_id"
+                class="mb-3"
+              >
                 <PrimarySection :section="section"></PrimarySection>
               </li>
             </ul>
@@ -54,7 +58,8 @@ export default {
     Layout,
     PrimarySection,
     Errors,
-    BCard
+    BCard,
+    BPlaceholder,
   },
   setup() {
     const contextStore = useContextStore();
@@ -87,7 +92,10 @@ export default {
     },
     noClassesWarning() {
       return interpolate(
-        gettext("no_classes_to_grade"), this.selectedTerm, true);
+        gettext("no_classes_to_grade"),
+        this.selectedTerm,
+        true
+      );
     },
   },
   methods: {

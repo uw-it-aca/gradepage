@@ -136,9 +136,9 @@
           </li>
         </ul>
         <ul v-else-if="!errorResponse" class="list-unstyled m-0">
-          <li v-for="index in 10" class="border-top pt-2 mt-2">
+          <li v-for="index in 10" class="border-top pt-2 mt-2" :key="index">
             <BPlaceholder
-              class="d-block bg-light-gray"
+              class="d-block bg-body-secondary"
               style="height: 60px"
               animation="glow"
             />

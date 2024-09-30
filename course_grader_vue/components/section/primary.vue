@@ -12,7 +12,7 @@
     <div v-if="gradingStatusText">{{ gradingStatusText }}</div>
     <BPlaceholder
       v-else
-      class="bg-light-gray"
+      class="bg-body-secondary"
       style="max-width: 200px"
       animation="glow"
     />
@@ -43,12 +43,13 @@ import {
   formatErrorStatus,
   formatLinkTitle
 } from "@/utils/section";
-import { BPlaceholder } from "bootstrap-vue-next";
+import { BPlaceholder, BLink } from "bootstrap-vue-next";
 
 export default {
   components: {
     SecondarySection,
-    BPlaceholder
+    BPlaceholder,
+    BLink,
   },
   props: {
     section: {
