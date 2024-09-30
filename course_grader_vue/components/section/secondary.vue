@@ -12,7 +12,7 @@
     <div v-if="gradingStatusText">{{ gradingStatusText }}</div>
     <BPlaceholder
       v-else
-      class="bg-light-gray"
+      class="bg-body-secondary"
       style="max-width: 9rem"
       animation="glow"
     />
@@ -24,13 +24,14 @@ import { getSectionStatus } from "@/utils/data";
 import {
   formatGradingStatus,
   formatErrorStatus,
-  formatLinkTitle
+  formatLinkTitle,
 } from "@/utils/section";
-import { BPlaceholder } from "bootstrap-vue-next";
+import { BPlaceholder, BLink } from "bootstrap-vue-next";
 
 export default {
   components: {
-    BPlaceholder
+    BPlaceholder,
+    BLink,
   },
   props: {
     section: {

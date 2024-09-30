@@ -6,7 +6,7 @@
     <span class="fs-2 m-0 me-3">
       <BPlaceholder
         v-if="!section.section_name"
-        class="bg-light-gray"
+        class="bg-body-secondary"
         width="15"
         animation="glow"
       />{{ section.section_name }}
@@ -15,7 +15,7 @@
       {{ gettext("sln") }}
       <BPlaceholder
         v-if="!section.section_sln"
-        class="bg-light-gray"
+        class="bg-body-secondary"
         width="5"
         animation="glow"
       />{{ section.section_sln }}</span
