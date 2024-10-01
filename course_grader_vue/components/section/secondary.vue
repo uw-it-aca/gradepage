@@ -2,11 +2,11 @@
   <div :aria-labelledby="sectionNameId">
     <template v-if="section.section_url">
       <BLink :href="section.section_url" :title="routerLinkTitle">
-        <div class="fs-4" :id="sectionNameId">{{ section.display_name }}</div>
+        <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
       </BLink>
     </template>
     <template v-else>
-      <div class="fs-4" :id="sectionNameId">{{ section.display_name }}</div>
+      <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
     </template>
 
     <div v-if="gradingStatusText">{{ gradingStatusText }}</div>
@@ -51,6 +51,13 @@ export default {
       formatLinkTitle,
     };
   },
+  data() {
+    return {
+      secondaryStatus: null,
+      errorStatus: null,
+      sectionNameId: "section-name-" + this.section.section_id,
+    };
+  },
   computed: {
     gradingStatusText() {
       if (this.section.grading_status) {
@@ -71,12 +78,10 @@ export default {
       }
     },
   },
-  data() {
-    return {
-      secondaryStatus: null,
-      errorStatus: null,
-      sectionNameId: "section-name-" + this.section.section_id,
-    };
+  created() {
+    setTimeout(() => {
+      this.loadGradingStatus();
+    }, 1000);
   },
   methods: {
     loadGradingStatus: function () {
@@ -94,11 +99,6 @@ export default {
           });
       }
     },
-  },
-  created() {
-    setTimeout(() => {
-      this.loadGradingStatus();
-    }, 1000);
   },
 };
 </script>
