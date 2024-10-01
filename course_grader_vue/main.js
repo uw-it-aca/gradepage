@@ -2,7 +2,7 @@ import { createApp } from "vue";
 import { createBootstrap } from "bootstrap-vue-next";
 import { createPinia } from "pinia";
 import VueGtag from "vue-gtag-next";
-import { Vue3Mq, MqResponsive } from "vue3-mq";
+import { Vue3Mq } from "vue3-mq";
 
 // solstice-vue
 // import SolsticeVue from "solstice-vue";
