@@ -14,7 +14,7 @@ import router from "@/router";
 import "bootstrap";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-// solstice-vue (develop)
+// solstice-vue
 import "solstice-vue/dist/style.css";
 import "solstice-vue/dist/solstice.scss";
 
