@@ -24,12 +24,11 @@
 </template>
 
 <script>
-import { BPlaceholder, BLink } from "bootstrap-vue-next";
+import { BPlaceholder } from "bootstrap-vue-next";
 
 export default {
   components: {
     BPlaceholder,
-    BLink,
   },
   props: {
     section: {
@@ -37,8 +36,8 @@ export default {
       required: true,
     },
     title: {
-     type: String,
-     required: true,
+      type: String,
+      required: true,
     },
   },
 };

@@ -17,8 +17,11 @@
         </template>
       </div>
     </div>
-    <div v-if="student.grade_url && !reviewing" class="text-end">
+    <div v-if="appState.editingGrades && student.grade_url" class="text-end">
       <GradeInput :student="student" :gradeChoices="gradeChoices"></GradeInput>
+    </div>
+    <div v-else-if="appState.reviewingConversion" class="text-end">
+      <GradeImport :student="student"></GradeImport>
     </div>
     <div v-else class="text-end">
       <GradeStatic :student="student"></GradeStatic>
@@ -27,13 +30,16 @@
 </template>
 
 <script>
-import GradeStatic from "@/components/graderoster/grade/static.vue";
-import GradeInput from "@/components/graderoster/grade/input.vue";
+import GradeStatic from "@/components/grade/static.vue";
+import GradeInput from "@/components/grade/input.vue";
+import GradeImport from "@/components/grade/import.vue";
+import { useWorkflowStateStore } from "@/stores/state";
 
 export default {
   components: {
     GradeStatic,
     GradeInput,
+    GradeImport,
   },
   props: {
     student: {
@@ -42,29 +48,14 @@ export default {
     },
     gradeChoices: {
       type: Array,
-      required: true,
       default: [],
     },
-    reviewing: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
-    last: {
-      type: Boolean,
-      required: true,
-    },
   },
-  data() {
+  setup() {
+    const appState = useWorkflowStateStore();
     return {
-      studentsLoaded: false,
+      appState,
     };
-  },
-  mounted() {
-    if (this.last) {
-      // Let the parent know we are loaded
-      this.$emit('update:studentsLoaded', true);
-    }
   },
 };
 </script>

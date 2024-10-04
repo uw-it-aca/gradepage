@@ -7,23 +7,23 @@
     <p>{{ gettext("import_conversion_required_select") }}</p>
     <BButton
       variant="outline-secondary"
-      @click="">
+      @click="convertGrades('ug')">
       {{ gettext("conversion_scale_ug") }}</BButton>
     <BButton
       variant="outline-secondary"
-      @click="">
+      @click="convertGrades('gr')">
       {{ gettext("conversion_scale_gr") }}</BButton>
     <BButton
       variant="outline-secondary"
-      @click="">
+      @click="convertGrades('cnc')">
       {{ gettext("conversion_scale_cnc") }}</BButton>
     <BButton
       variant="outline-secondary"
-      @click="">
+      @click="convertGrades('pf')">
       {{ gettext("conversion_scale_pf") }}</BButton>
     <BButton
       variant="outline-secondary"
-      @click="">
+      @click="convertGrades('hpf')">
       {{ gettext("conversion_scale_hpf") }}</BButton>
   </div>
   <div v-else>
@@ -42,6 +42,7 @@
 
 <script>
 import { saveImportedGrades } from "@/utils/data";
+import { useWorkflowStateStore } from "@/stores/state";
 import { BButton } from "bootstrap-vue-next";
 
 export default {
@@ -59,7 +60,9 @@ export default {
     },
   },
   setup() {
+    const appState = useWorkflowStateStore();
     return {
+      appState,
       saveImportedGrades,
     };
   },
@@ -69,7 +72,10 @@ export default {
     };
   },
   methods: {
-    saveGrades() {
+    convertGrades: function (scale) {
+      this.appState.convertImport(scale);
+    },
+    saveGrades: function () {
       let url = this.section.import_url + "/" + this.gradeImport.id;
       this.saveImportedGrades(url, {})
         .then((response) => {
