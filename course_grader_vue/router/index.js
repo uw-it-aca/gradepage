@@ -19,9 +19,6 @@ import Section from "@/pages/section.vue";
 const routes = [
   {
     path: "/",
-    //component: Term,
-    //props: true,
-    path: "/",
     redirect: currentTermUrl,
   },
   {
@@ -32,7 +29,6 @@ const routes = [
   },
   {
     path: "/section/:id?",
-    name: Section,
     component: Section,
     pathToRegexpOptions: { strict: true },
   },
