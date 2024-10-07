@@ -32,20 +32,23 @@
       <!-- <option v-for=""></option> -->
     </select>
 
-    Using scale {{ appState.defaultScale }}
-
     <GradeConversionCalculator
-      :scale="appState.defaultScale"
-      :scale-values="scaleValues"
-      :calculator-values="calculatorValues"
+      :default-scale="appState.defaultScale"
+      :default-scale-values="scaleValues"
+      :default-calculator-values="calculatorValues"
     />
 
     <template #footer>
-      <BLink :title="gettext('cancel')" @click="editGrades">
-        {{ gettext("cancel") }}
+      <BLink
+        :title="gettext('cancel_title')"
+        @click="editGrades"
+      >{{ gettext("cancel") }}
       </BLink>
-      <BButton variant="primary" @click="reviewConversion">
-        {{ gettext("conversion_submit") }}
+      <BButton
+        variant="primary"
+        :title="gettext('conversion_submit_title')"
+        @click="reviewConversion"
+      >{{ gettext("conversion_submit") }}
       </BButton>
     </template>
   </BCard>

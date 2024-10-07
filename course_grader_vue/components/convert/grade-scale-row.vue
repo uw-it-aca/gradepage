@@ -1,7 +1,8 @@
 <template>
   <div class="pull-left gp-min-sign" aria-hidden="true">
     <span v-if="last">&lt;</span>
-    <span v-else>≥</span>
+    <span v-else>&ge;</span>
+
   </div>
   <div v-if="last">
     <span class="sr-only">{{ gettext("grade_scale_limit_pre") }}</span>
@@ -25,9 +26,9 @@
     </span>
   </div>
   <div class="gp-scale-row-grade">
-    <span class="gp-percent-sign" aria-hidden="true">%</span>
+    <span class="gp-percent-sign" aria-hidden="true">&percnt;</span>
     <div style="display:inline;">
-      <span class="gp-calc-equals" aria-hidden="true">=</span>
+      <span class="gp-calc-equals" aria-hidden="true">&equals;</span>
       <span class="gp-calc-grade" aria-hidden="true">{{ grade }}</span>
     </div>
   </div>
@@ -37,8 +38,8 @@
 export default {
   props: {
     minPercentage: {
-      type: Number,
-      required: true,
+      type: String,
+      default: "",
     },
     grade: {
       type: String,

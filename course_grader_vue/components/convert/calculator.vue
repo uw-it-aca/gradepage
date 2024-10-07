@@ -4,30 +4,25 @@
     <label for="import_scale_selector" class="visually-hidden">
       {{ gettext("conversion_scale_chooser_label") }}
     </label>
-    <select id="import_scale_selector" @change="changeGradingScale()">
-      <option value="ug">{{ gettext("conversion_scale_ug") }}</option>
-      <option value="gr">{{ gettext("conversion_scale_gr") }}</option>
-      <option value="cnc">{{ gettext("conversion_scale_cnc") }}</option>
-      <option value="pf">{{ gettext("conversion_scale_pf") }}</option>
-      <option value="hpf">{{ gettext("conversion_scale_hpf") }}</option>
+    <select v-model="selectedScale" id="import_scale_selector">
+      <option v-for="scale in availableScales" :value="scale">
+        {{ gettext("conversion_scale_" + scale) }}
+      </option>
     </select>
   </div>
 
-  <div>
+  <div v-if="!fixedScale">
     <div class="clearfix">
-       <h4 class="sr-only" id="grade_conversion_header">{{ gettext("calculator_header") }}</h4>
-       <span class="sr-only">{{ gettext("calculator_instructions") }}</span>
-       <div class="pull-left" aria-hidden="true">{{ gettext("calculator_perc_label_vis") }}</div>
-        <div class="pull-right" aria-hidden="true">{{ gettext("calculator_grade_label") }}</div>
-    </div>
-    <div v-if="isFixedScale">
-      {{ gettext("calculator_min_" + scale) }}
+       <h4 class="visually-hidden" id="grade_conversion_header">{{ gettext("calculator_header") }}</h4>
+       <span class="visually-hidden">{{ gettext("calculator_instructions") }}</span>
+       <strong class="pull-left" aria-hidden="true">{{ gettext("calculator_perc_label_vis") }}</strong>
+       <strong class="pull-right" aria-hidden="true">{{ gettext("calculator_grade_label") }}</strong>
     </div>
     <ol>
       <li v-for="(grade, index) in calculatorValues">
-        <div v-if="!isFixedScale && index === calculatorValues.length - 1">
+        <div v-if="index === calculatorValues.length - 1">
           <BLink
-            @click="addCalculatorRow()"
+            @click.prevent="addCalculatorRow"
             :title="gettext('calculator_addrow_title')"
             tabindex="0"
           >
@@ -50,7 +45,7 @@
       <span>
         <BButton
           :title="gettext('calculator_reset_title')"
-          @click="clearCalculator"
+          @click="resetCalculator"
         >{{ gettext("reset") }}</BButton>
       </span>
       <span>
@@ -64,18 +59,21 @@
     </div>
   </div>
 
+  <div v-if="fixedScale">
+    <span>{{ gettext("calculator_min_" + selectedScale) }}</span>
+  </div>
   <div id="conversion_grade_scale_container" aria-labelledby="grade_scale_header">
-    <h4 class="sr-only" id="grade_scale_header">{{ gettext("grade_scale_header") }}</h4>
+    <h4 class="visually-hidden" id="grade_scale_header">{{ gettext("grade_scale_header") }}</h4>
     <div class="clearfix">
-      <div class="pull-left" aria-hidden="true">{{ gettext("grade_scale_grade_label_vis") }}</div>
-      <div class="pull-right" aria-hidden="true">{{ gettext("calculator_grade_label") }}</div>
+      <strong class="pull-left" aria-hidden="true">{{ gettext("grade_scale_grade_label_vis") }}</strong>
+      <strong class="pull-right" aria-hidden="true">{{ gettext("calculator_grade_label") }}</strong>
     </div>
     <ol :aria-label="gettext('grade_scale_list_label_sr')">
-      <li v-for="(data, index) in scaleValues">
+      <li v-for="(grade, index) in scales[selectedScale]">
         <GradeScaleRow
           min-percentage=""
-          grade=""
-          :last="index === scaleValues.length - 1"
+          :grade="grade"
+          :last="index === scales[selectedScale].length - 1"
           :index="index"
         />
       </li>
@@ -86,28 +84,6 @@
       >{{ gettext("grade_scale_clear") }}</BButton>
     </span>
   </div>
-
-  <div class="clearfix" style="max-width:480px;margin:10px 0;">
-    <div class="clearfix">
-      <BButton
-        class="pull-left btn btn-link"
-        :title="gettext('cancel_title')"
-        @click="cancelConversion"
-      >{{ gettext("cancel") }}
-      </BButton>
-      <BButton
-        class="pull-right btn gp-btn"
-        :title="gettext('conversion_submit_title')"
-        @click="reviewConversion"
-      >
-        {{ gettext("conversion_submit") }} <i class="fa fa-angle-double-right fa-lg"></i>
-      </BButton>
-    </div>
-    <div id="grade_conversion_invalid_err" role="alert">
-        <span class="pull-right gp-conversion-err"></span>
-    </div>
-  </div>
-
 </template>
 
 <script>
@@ -118,6 +94,7 @@ import { BButton } from "bootstrap-vue-next";
 export default {
   components: {
     CalculatorRow,
+    GradeScaleRow,
     BButton,
   },
   props: {
@@ -136,41 +113,42 @@ export default {
   },
   data() {
     return {
-      scale: this.defaultScale,
-      scaleValues: this.defaultScaleValues,
-      calculatorValues: this.defaultCalculatorValues,
+      availableScales: ["ug", "gr", "cnc", "pf", "hpf"],
       scales: {
-        "cnc": ["CR", "NC"],
-        "hpf": ["H", "HP", "P", "F"],
-        "pf": ["P", "F"],
         "ug": [],
         "gr": [],
+        "cnc": ["CR", "NC"],
+        "pf": ["P", "F"],
+        "hpf": ["H", "HP", "P", "F"],
       },
       defaultScales: {
         "ug": ["4.0", "0.7"],
         "gr": ["4.0", "1.7"],
       },
+      selectedScale: this.defaultScale,
+      calculatorValues: [],
+      scaleValues: [],
     };
   },
   computed: {
-    isFixedScale() {
-      return (this.scale === "cnc" || this.scale === "hpf" || this.scale === "pf");
+    fixedScale() {
+      return (this.selectedScale === "cnc" ||
+              this.selectedScale === "hpf" ||
+              this.selectedScale === "pf") ? true : false;
     },
   },
   methods: {
     changeGradingScale: function () {
+      this.scaleValues = this.scales[this.selectedScale];
     },
     addCalculatorRow: function () {
+      this.calculatorValues.splice(-1, 0, "");
     },
     resetCalculator: function () {
     },
     resetGradeScale: function () {
     },
     applyConversion: function () {
-    },
-    reviewConversion: function () {
-    },
-    cancelConversion: function () {
     },
     initScales: function () {
       var i, value;
@@ -191,9 +169,18 @@ export default {
       this.scales.ug.push("0.0");
       this.scales.gr.push("0.0");
     },
+    initCalculator: function () {
+      this.initScales();
+      this.scaleValues = this.defaultScaleValues || this.scales[this.selectedScale];
+      if (!this.fixedScale) {
+        this.calculatorValues = this.defaultCalculatorValues.length
+          ? this.defaultCalculatorValues
+          : this.defaultScales[this.selectedScale];
+      }
+    },
   },
   created() {
-    this.initScales();
+    this.initCalculator();
   },
 };
 </script>
