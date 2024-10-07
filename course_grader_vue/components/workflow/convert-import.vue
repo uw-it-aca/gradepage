@@ -54,7 +54,7 @@
 <script>
 import { getConversionScales } from "@/utils/data";
 import SectionHeader from "@/components/section/header.vue";
-import GradeConversionCalculator from "@/components/import/calculator.vue";
+import GradeConversionCalculator from "@/components/convert/calculator.vue";
 import Student from "@/components/student.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { BButton, BCard, BLink } from "bootstrap-vue-next";

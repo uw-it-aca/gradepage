@@ -68,7 +68,7 @@
 <script>
 import { useGradeStore } from "@/stores/grade";
 import { createImport } from "@/utils/data";
-import ImportConvertSave from "@/components/import/convert.vue";
+import ImportConvertSave from "@/components/import/convert-options.vue";
 import { BLink } from "bootstrap-vue-next";
 import { watch } from "vue";
 

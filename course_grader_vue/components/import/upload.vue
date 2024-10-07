@@ -169,7 +169,7 @@
 <script>
 import { useGradeStore } from "@/stores/grade";
 import { uploadGrades } from "@/utils/data";
-import ImportConvertSave from "@/components/import/convert.vue";
+import ImportConvertSave from "@/components/import/convert-options.vue";
 import { BButton, BLink } from "bootstrap-vue-next";
 
 export default {
