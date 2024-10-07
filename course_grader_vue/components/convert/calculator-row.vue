@@ -1,6 +1,6 @@
 <template>
   <fieldset>
-    <legend class="sr-only">{{ gettext("calculator_legend") }}</legend>
+    <legend class="visually-hidden">{{ gettext("calculator_legend") }}</legend>
     <span class="col-xs-4 gp-calc-percentage">
       <input
         type="text"
@@ -10,20 +10,20 @@
         class="form-control gp-calc-input-percentage"
         required />
       <label for="`calculator-percentage-${index}`">
-        <span v-if="last" class="sr-only">
+        <span v-if="last" class="visually-hidden">
           {{ gettext("calculator_perc_label_lower") }}
         </span>
-        <span v-else-if="first" class="sr-only">
+        <span v-else-if="first" class="visually-hidden">
           {{ gettext("calculator_perc_label_upper") }}
         </span>
-         <span v-else class="sr-only">
+         <span v-else class="visually-hidden">
           {{ gettext("calculator_perc_label") }}
          </span>
-        <span class="pull-left gp-calc-err">{{ error }}</span>
+        <span class="pull-left gp-calc-err"></span>
       </label>
     </span>
-    <span aria-hidden="true">%</span>
-    <span aria-hidden="true">=</span>
+    <span aria-hidden="true">&percnt;</span>
+    <span aria-hidden="true">&equals;</span>
     <span class="col-xs-4 gp-calc-grade">
       <input
         type="text"
@@ -33,16 +33,16 @@
         class="form-control gp-calc-input"
         required />
        <label for="`calculator-grade-${index}`">
-        <span v-if="last" class="sr-only">
+        <span v-if="last" class="visually-hidden">
           {{ gettext("calculator_grade_label_lower") }}
         </span>
-        <span v-else-if="first" class="sr-only">
+        <span v-else-if="first" class="visually-hidden">
           {{ gettext("calculator_grade_label_upper") }}
         </span>
-        <span v-else class="sr-only">
+        <span v-else class="visually-hidden">
           {{ gettext("calculator_grade_label") }}
         </span>
-        <span class="pull-right gp-calc-err">{{ error }}</span>
+        <span class="pull-right gp-calc-err"></span>
       </label>
     </span>
   </fieldset>
@@ -52,8 +52,8 @@
 export default {
   props: {
     percentage: {
-      type: Number,
-      required: true,
+      type: String,
+      default: "",
     },
     grade: {
       type: String,
