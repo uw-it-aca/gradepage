@@ -14,7 +14,7 @@
         </template>
         <template v-if="isLoading">
           <ul class="list-unstyled">
-            <li v-for="index in 10" class="mb-3" :key="index">
+            <li v-for="index in 10" :key="index" class="mb-3">
               <BPlaceholder
                 class="d-block bg-body-secondary"
                 style="height: 60px"
@@ -38,7 +38,7 @@
               </li>
             </ul>
           </template>
-          <div v-else v-html="noClassesWarning"></div>
+          <div v-else>{{ noClassesWarning }}</div>
         </template>
       </BCard>
     </template>
@@ -98,6 +98,13 @@ export default {
       );
     },
   },
+  created() {
+    setTimeout(() => {
+      this.loadSectionsForTerm();
+    }, "1000");
+
+    this.updateTerm();
+  },
   methods: {
     selectTerm: function (e) {
       this.contextStore.selectTerm(e.target.value);
@@ -132,13 +139,6 @@ export default {
           this.isLoading = false;
         });
     },
-  },
-  created() {
-    setTimeout(() => {
-      this.loadSectionsForTerm();
-    }, "1000");
-
-    this.updateTerm();
   },
 };
 </script>

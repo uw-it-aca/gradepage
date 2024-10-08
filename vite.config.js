@@ -1,11 +1,10 @@
 import { fileURLToPath, URL } from "url";
-
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
 // TODO: remove automatic bs-vue-next comp registering later
-import Components from 'unplugin-vue-components/vite'
-import { BootstrapVueNextResolver } from "bootstrap-vue-next";
+//import Components from 'unplugin-vue-components/vite'
+//import { BootstrapVueNextResolver } from "bootstrap-vue-next";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -32,9 +31,9 @@ export default defineConfig({
   // MARK: standard vite/vue plugin and resolver config
   plugins: [
     vue(),
-    Components({
-      resolvers: [BootstrapVueNextResolver()],
-    }),
+    //Components({
+    //  resolvers: [BootstrapVueNextResolver()],
+    //}),
   ],
   resolve: {
     alias: {
