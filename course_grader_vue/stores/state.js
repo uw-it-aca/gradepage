@@ -15,7 +15,6 @@ export const useWorkflowStateStore = defineStore({
       workflowState: null,
       graderoster: null,
       unsubmitted: 0,
-      defaultScale: null,
     };
   },
   getters: {
@@ -45,8 +44,7 @@ export const useWorkflowStateStore = defineStore({
     confirmGrades () {
       this.workflowState = CONFIRM_GRADES;
     },
-    convertImport (scale) {
-      this.defaultScale = scale;
+    convertImport () {
       this.workflowState = CONVERT_IMPORT;
     },
     reviewConversion () {

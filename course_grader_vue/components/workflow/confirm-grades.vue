@@ -177,6 +177,58 @@
         />
       </li>
     </ul>
+
+    <div v-if="appState.graderoster.has_grade_imports">
+      <div v-if="appState.graderoster.grade_import_count > 1">
+        {{ gettext("multi_conversion_scale_msg") }}
+        <label class="visually-hidden">
+          {{ gettext("multi_conversion_scale_view") }}
+        </label>
+        <select id="gp-select-scale" @change="showGradeScale($event)">
+          <option selected disabled>
+            {{ gettext("multi_conversion_scale_option_view") }}
+          </option>
+          <option
+            v-for="(submission, index) in appState.graderoster.submissions"
+            v-if="submission.grade_import"
+            :value="index"
+          >
+            Section {{ submission.section_id }}
+          </option>
+        </select>
+      </div>
+      <div v-else-if="!selectedGradeScale">
+        {{ gettext("conversion_scale_msg") }}
+        <BLink
+          :title="gettext('conversion_scale_view_title')"
+          @click="showGradeScale($event)"
+        >
+          {{ gettext("conversion_scale_view") }}
+        </BLink>
+      </div>
+
+      <div v-if="selectedGradeScale">
+        <h2 class="visually-hidden">{{ gettext("conversion_scale_header") }}</h2>
+        <ol>
+          <li v-for="(item, index) in selectedGradeScale">
+            <span v-if="index === selectedGradeScale.length - 1">
+              <span>&lt; <span>{{ item.min_percentage }}&percnt;</span> &equals; </span>
+              <span>{{ lowestValidGrade }}</span>
+            </span>
+            <span v-else>
+              <span>&ge; <span>{{ item.min_percentage }}&percnt;</span> &equals; </span>
+              <span>{{ item.grade }}</span>
+            </span>
+          </li>
+        </ol>
+        <BLink
+          :title="gettext('conversion_scale_hide_title')"
+          @click.prevent="hideGradeScale()"
+        >
+          {{ gettext("conversion_scale_hide") }}
+        </BLink>
+      </div>
+    </div>
   </BCard>
 </template>
 
@@ -214,6 +266,28 @@ export default {
     section: {
       type: Object,
       required: true,
+    },
+  },
+  data() {
+    return {
+      selectedGradeScale: null,
+      lowestValidGrade: null,
+    };
+  },
+  methods: {
+    showGradeScale (ev) {
+      var idx = (ev.target.value) ? ev.target.value : 0,
+          conversion;
+
+      if (appState.graderoster.submissions[idx]) {
+        conversion = appState.graderoster.submissions[idx].import_conversion;
+        this.selectedGradeScale = conversion.grade_scale;
+        this.lowestValidGrade = conversion.lowest_valid_grade;
+      }
+    },
+    hideGradeScale () {
+      this.selectedGradeScale = null;
+      this.lowestValidGrade = null;
     },
   },
   setup() {

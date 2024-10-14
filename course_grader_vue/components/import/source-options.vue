@@ -36,7 +36,6 @@
       :section="section"
       :expected-grade-count="expectedGradeCount"
       :modal-open="modalOpen"
-      import-source="canvas"
     />
   </BModal>
 
@@ -49,7 +48,6 @@
     <UploadGrades
       :section="section"
       :expected-grade-count="expectedGradeCount"
-      import-source="csv"
     />
   </BModal>
 </template>

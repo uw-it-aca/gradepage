@@ -187,10 +187,6 @@ export default {
       type: Number,
       required: true,
     },
-    importSource: {
-      type: String,
-      required: true,
-    },
   },
   setup() {
     const gradeStore = useGradeStore();

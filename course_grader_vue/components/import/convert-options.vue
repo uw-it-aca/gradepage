@@ -5,26 +5,11 @@
   <div v-else-if="gradeImport.has_valid_percentages" class="d-grid gap-2">
     <p>{{ gettext("import_conversion_required") }}</p>
     <p>{{ gettext("import_conversion_required_select") }}</p>
-    <BButton
+    <BButton v-for="scale in calculatorStore.availableScales"
       variant="outline-secondary"
-      @click="convertGrades('ug')">
-      {{ gettext("conversion_scale_ug") }}</BButton>
-    <BButton
-      variant="outline-secondary"
-      @click="convertGrades('gr')">
-      {{ gettext("conversion_scale_gr") }}</BButton>
-    <BButton
-      variant="outline-secondary"
-      @click="convertGrades('cnc')">
-      {{ gettext("conversion_scale_cnc") }}</BButton>
-    <BButton
-      variant="outline-secondary"
-      @click="convertGrades('pf')">
-      {{ gettext("conversion_scale_pf") }}</BButton>
-    <BButton
-      variant="outline-secondary"
-      @click="convertGrades('hpf')">
-      {{ gettext("conversion_scale_hpf") }}</BButton>
+      @click="convertGrades(scale)">
+      {{ gettext("conversion_scale_" + scale) }}
+    </BButton>
   </div>
   <div v-else>
     <p>
@@ -43,6 +28,7 @@
 <script>
 import { saveImportedGrades } from "@/utils/data";
 import { useWorkflowStateStore } from "@/stores/state";
+import { useCalculatorStore } from "@/stores/calculator";
 import { BButton } from "bootstrap-vue-next";
 
 export default {
@@ -61,8 +47,10 @@ export default {
   },
   setup() {
     const appState = useWorkflowStateStore();
+    const calculatorStore = useCalculatorStore();
     return {
       appState,
+      calculatorStore,
       saveImportedGrades,
     };
   },
@@ -73,7 +61,10 @@ export default {
   },
   methods: {
     convertGrades: function (scale) {
-      this.appState.convertImport(scale);
+      this.calculatorStore.$reset();
+      this.calculatorStore.setScale(scale);
+      this.calculatorStore.setGradeImport(this.gradeImport);
+      this.appState.convertImport();
     },
     saveGrades: function () {
       let url = this.section.import_url + "/" + this.gradeImport.id;

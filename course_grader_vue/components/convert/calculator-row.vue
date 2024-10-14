@@ -1,13 +1,14 @@
 <template>
   <fieldset>
     <legend class="visually-hidden">{{ gettext("calculator_legend") }}</legend>
-    <span class="col-xs-4 gp-calc-percentage">
+    <span class="col-xs-4">
       <input
         type="text"
         :id="`calculator-percentage-${index}`"
         name="calculator-percentage"
         :value="percentage"
-        class="form-control gp-calc-input-percentage"
+        class="form-control"
+        @change="percentageChanged($event.target.value)"
         required />
       <label for="`calculator-percentage-${index}`">
         <span v-if="last" class="visually-hidden">
@@ -19,18 +20,19 @@
          <span v-else class="visually-hidden">
           {{ gettext("calculator_perc_label") }}
          </span>
-        <span class="pull-left gp-calc-err"></span>
+        <span class="pull-left">{{ percentageError }}</span>
       </label>
     </span>
     <span aria-hidden="true">&percnt;</span>
     <span aria-hidden="true">&equals;</span>
-    <span class="col-xs-4 gp-calc-grade">
+    <span class="col-xs-4">
       <input
         type="text"
         :id="`calculator-grade-${index}`"
         name="calculator-grade"
         :value="grade"
-        class="form-control gp-calc-input"
+        class="form-control"
+        @change="gradeChanged($event.target.value)"
         required />
        <label for="`calculator-grade-${index}`">
         <span v-if="last" class="visually-hidden">
@@ -42,20 +44,22 @@
         <span v-else class="visually-hidden">
           {{ gettext("calculator_grade_label") }}
         </span>
-        <span class="pull-right gp-calc-err"></span>
+        <span class="pull-right">{{ gradeError }}</span>
       </label>
     </span>
   </fieldset>
 </template>
 
 <script>
+import { useCalculatorStore } from "@/stores/calculator";
+
 export default {
   props: {
-    percentage: {
+    defaultPercentage: {
       type: String,
       default: "",
     },
-    grade: {
+    defaultGrade: {
       type: String,
       required: true,
     },
@@ -72,5 +76,32 @@ export default {
       required: true,
     },
   },
+  setup() {
+    const calculatorStore = useCalculatorStore();
+    return {
+      calculatorStore,
+    };
+  },
+  data() {
+    return {
+      percentage: "",
+      grade: "",
+      percentageError: "",
+      gradeError: "",
+    };
+  },
+  methods: {
+    percentageChanged: function (percentage) {
+    },
+    gradeChanged: function (grade) {
+    },
+    initialize: function () {
+      this.percentage = this.defaultPercentage;
+      this.grade = this.defaultGrade;
+    },
+  },
+  created() {
+    this.initialize();
+  }
 };
 </script>
