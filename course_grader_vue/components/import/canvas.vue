@@ -91,10 +91,6 @@ export default {
       required: true,
       default: false,
     },
-    importSource: {
-      type: String,
-      required: true,
-    },
   },
   setup() {
     const gradeStore = useGradeStore();
@@ -105,6 +101,7 @@ export default {
   },
   data() {
     return {
+      importSource: "canvas",
       gradeImport: null,
       errorResponse: null,
     };

@@ -9,39 +9,51 @@
     <h3>{{ gettext("conversion_header") }}</h3>
     <p>{{ gettext("conversion_instructions") }}</p>
 
-    <label for="course-scale-select" class="visually-hidden">
-      {{ gettext("course_scale_label_sr") }}
-    </label>
-    <select id="course-scale-select">
-      <option role="presentation" value="0" selected disabled>
-        {{ gettext("course_scale_label") }} &gt;
-      </option>
-      <option v-for="scheme in courseGradingSchemes"
-        :value="scheme.grading_scheme_id">
-        {{ course_name }}&nbsp;({{ scheme.grading_scheme_name }})
-      </option>
-    </select>
+    <div v-if="courseGradingSchemes.length">
+      <label for="course-scale-select" class="visually-hidden">
+        {{ gettext("course_scale_label_sr") }}
+      </label>
+      <select
+        id="course-scale-select"
+        @change="useCourseGaradingScheme($event.target.value)"
+      >
+        <option role="presentation" value="0" selected disabled>
+          {{ gettext("course_scale_label") }} &gt;
+        </option>
+        <option v-for="scheme in courseGradingSchemes"
+          :value="scheme.grading_scheme_id">
+          {{ scheme.course_name }}&nbsp;({{ scheme.grading_scheme_name }})
+        </option>
+      </select>
+    </div>
 
-    <label for="previous-scale-select" class="visually-hidden">
-      {{ gettext("previous_scale_label_sr") }}
-    </label>
-    <select id="previous-scale-select">
-      <option role="presentation" value="0" selected disabled>
-        {{ gettext("previous_scale_label") }} &gt;
-      </option>
-      <!-- <option v-for=""></option> -->
-    </select>
+    <div v-if="previousScales && previousScales.terms.length">
+      <label for="previous-scale-select" class="visually-hidden">
+        {{ gettext("previous_scale_label_sr") }}
+      </label>
+      <select
+        id="previous-scale-select"
+        @change="usePreviousScale($event.target.value)"
+      >
+        <option role="presentation" value="0" selected disabled>
+          {{ gettext("previous_scale_label") }} &gt;
+        </option>
+        <optgroup
+          v-for="term in previousScales.terms"
+          :label="term.quarter + ' ' + term.year">
+          <option v-for="scale in term.conversion_scales" :value="scale.id">
+            {{ scale.section }}
+          </option>
+        </optgroup>
+      </select>
+    </div>
 
-    <GradeConversionCalculator
-      :default-scale="appState.defaultScale"
-      :default-scale-values="scaleValues"
-      :default-calculator-values="calculatorValues"
-    />
+    <GradeConversionCalculator />
 
     <template #footer>
       <BLink
         :title="gettext('cancel_title')"
-        @click="editGrades"
+        @click="cancelConversion"
       >{{ gettext("cancel") }}
       </BLink>
       <BButton
@@ -55,11 +67,11 @@
 </template>
 
 <script>
-import { getConversionScales } from "@/utils/data";
 import SectionHeader from "@/components/section/header.vue";
 import GradeConversionCalculator from "@/components/convert/calculator.vue";
 import Student from "@/components/student.vue";
 import { useWorkflowStateStore } from "@/stores/state";
+import { useCalculatorStore } from "@/stores/calculator";
 import { BButton, BCard, BLink } from "bootstrap-vue-next";
 
 export default {
@@ -79,37 +91,29 @@ export default {
   },
   setup() {
     const appState = useWorkflowStateStore();
+    const calculatorStore = useCalculatorStore();
     return {
       appState,
-      getConversionScales,
+      calculatorStore,
     };
   },
-  data() {
-    return {
-      conversionScales: {},
-      courseGradingSchemes: [],
-      scaleValues: [],
-      calculatorValues: [],
-      errorResponse: null,
-    };
+  computed: {
+    previousScales() {
+      return this.calculatorStore.previousScales;
+    },
+    courseGradingSchemes() {
+      return this.calculatorStore.gradeImport.course_grading_schemes;
+    },
   },
   methods: {
-    editGrades: function () {
+    useCourseGradingScheme: function () {
+    },
+    usePreviousScale: function () {
+    },
+    cancelConversion: function () {
       this.appState.editGrades();
     },
     reviewConversion: function() {
-    },
-    loadPriorScales: function() {
-      this.getConversionScales("/api/v1/conversion_scales/" + this.scale)
-        .then((response) => {
-          return response.data;
-        })
-        .then((data) => {
-          this.conversionScales = data;
-        })
-        .catch((error) => {
-          this.errorResponse = error.response;
-        });
     },
   },
 };
