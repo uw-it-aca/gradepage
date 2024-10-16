@@ -21,33 +21,30 @@ export const useCalculatorStore = defineStore({
   state: () => {
     return {
       name: "Calculator",
-      _gradeScales: {
+      gradeScales: {
         "ug": UG_GRADE_SCALE,
         "gr": GR_GRADE_SCALE,
         "cnc": CNC_GRADE_SCALE,
         "pf": PF_GRADE_SCALE,
         "hpf": HPF_GRADE_SCALE,
       },
-      _defaultCalculatorValues: {"ug": ["4.0", "0.7"], "gr": ["4.0", "1.7"]},
+      defaultCalculatorValues: {"ug": ["4.0", "0.7"], "gr": ["4.0", "1.7"]},
       _previousScales: {ug: {}, gr: {}, cnc: {}, pf: {}, hpf: {}},
-      _selectedScale: "ug",
-      _activeCalculatorValues: [],
-      _activeScaleValues: [],
-      _gradeImport: null,
+      selectedScale: "ug",
+      calculatorValues: [],
+      scaleValues: [],
+      gradeImport: null,
     };
   },
   getters: {
-    selectedScale(state) {
-      return this._selectedScale;
-    },
     availableScales(state) {
       return VALID_SCALES;
     },
     isFixedScale(state) {
-      return FIXED_SCALES.includes(this._selectedScale);
+      return FIXED_SCALES.includes(this.selectedScale);
     },
     previousScales(state) {
-      let scale = this._selectedScale,
+      let scale = this.selectedScale,
           url = "/api/v1/conversion_scales/" + scale;
       if (!Object.prototype.hasOwnProperty.call(this._previousScales[scale], 'data')) {
         getConversionScales(url)
@@ -60,53 +57,47 @@ export const useCalculatorStore = defineStore({
       }
       return this._previousScales[scale].data;
     },
-    calculatorValues(state) {
-      if (!this._activeCalculatorValues.length) {
-        this.resetCalculatorValues();
-      }
-      return this._activeCalculatorValues;
-    },
-    scaleValues(state) {
-      if (!this._activeScaleValues.length) {
-        this.resetScaleValues();
-      }
-      return this._activeScaleValues;
-    },
-    gradeImport(state) {
-      return this._gradeImport;
-    }
   },
   actions: {
     validScale(scale) {
       return VALID_SCALES.includes(scale) ? true : false;
     },
     setScale(scale) {
-      if (this.validScale(scale) && scale !== this._selectedScale) {
-        this._selectedScale = scale;
+      if (this.validScale(scale)) {
+        this.selectedScale = scale;
         this.resetCalculatorValues();
         this.resetScaleValues();
       }
     },
     setGradeImport(gradeImport) {
-      this._gradeImport = gradeImport;
+      this.gradeImport = gradeImport;
     },
     addCalculatorRow() {
-      this._activeCalculatorValues.splice(-1, 0, "");
+      this.calculatorValues.splice(-1, 0, {grade: "", percentage: ""});
+    },
+    updateCalculatorPercentage(index, value) {
+      this.calculatorValues[index].percentage = value;
+    },
+    updateCalculatorGrade(index, value) {
+      this.calculatorValues[index].grade = value;
     },
     resetCalculatorValues() {
-      let scale = this._selectedScale;
-      if (Object.prototype.hasOwnProperty.call(this._defaultCalculatorValues, scale)) {
-        this._activeCalculatorValues = this._defaultCalculatorValues[scale].map(
+      let scale = this.selectedScale;
+      //console.log("Before reset:");
+      //console.log(this.calculatorValues);
+      if (Object.prototype.hasOwnProperty.call(this.defaultCalculatorValues, scale)) {
+        this.calculatorValues = this.defaultCalculatorValues[scale].map(
           g => ({grade: g, percentage: ""}));
       }
+      //console.log("After reset:");
+      //console.log(this.calculatorValues);
     },
-    updateScaleValue(grade, minPercentage) {
-      let idx = this._activeScaleValues.findIndex(obj => obj.grade === grade);
-      this._activeScaleValues[idx].minPercentage = minPercentage;
+    updateScalePercentage(index, minPercentage) {
+      this.scaleValues[index].minPercentage = minPercentage;
     },
     resetScaleValues() {
-      let scale = this._selectedScale;
-      this._activeScaleValues = this._gradeScales[scale].map(
+      let scale = this.selectedScale;
+      this.scaleValues = this.gradeScales[scale].map(
         g => ({grade: g, minPercentage: ""}));
     },
   },

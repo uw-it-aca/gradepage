@@ -55,11 +55,11 @@ import { useCalculatorStore } from "@/stores/calculator";
 
 export default {
   props: {
-    defaultPercentage: {
+    percentage: {
       type: String,
-      default: "",
+      required: true,
     },
-    defaultGrade: {
+    grade: {
       type: String,
       required: true,
     },
@@ -84,24 +84,17 @@ export default {
   },
   data() {
     return {
-      percentage: "",
-      grade: "",
       percentageError: "",
       gradeError: "",
     };
   },
   methods: {
-    percentageChanged: function (percentage) {
+    percentageChanged: function (value) {
+      this.calculatorStore.updateCalculatorPercentage(this.index, value);
     },
-    gradeChanged: function (grade) {
-    },
-    initialize: function () {
-      this.percentage = this.defaultPercentage;
-      this.grade = this.defaultGrade;
+    gradeChanged: function (value) {
+      this.calculatorStore.updateCalculatorGrade(this.index, value);
     },
   },
-  created() {
-    this.initialize();
-  }
 };
 </script>

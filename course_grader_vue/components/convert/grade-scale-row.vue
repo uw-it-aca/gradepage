@@ -16,7 +16,7 @@
         name="min-percentage"
         :value="minPercentage"
         :title="gettext('grade_scale_input_title') + grade"
-        @change="minPercentageChanged(grade, $event.target.value)"
+        @change="minPercentageChanged($event.target.value)"
         required />
       <label for="`min-percentage-${index}`" class="calculator-err">
         <span class="visually-hidden"></span>
@@ -38,7 +38,7 @@ import { useCalculatorStore } from "@/stores/calculator";
 
 export default {
   props: {
-    defaultPercentage: {
+    minPercentage: {
       type: String,
       required: true,
     },
@@ -63,20 +63,13 @@ export default {
   },
   data() {
     return {
-      minPercentage: "",
       minPercentageError: "",
     };
   },
   methods: {
-    minPercentageChanged: function (grade, minPercentage) {
-      //this.calculatorStore.updateScaleValue(grade, minPercentage);
-    },
-    initialize: function () {
-      this.minPercentage = this.defaultPercentage;
+    minPercentageChanged: function (value) {
+      this.calculatorStore.updateScalePercentage(this.index, value);
     },
   },
-  created() {
-    this.initialize();
-  }
 };
 </script>

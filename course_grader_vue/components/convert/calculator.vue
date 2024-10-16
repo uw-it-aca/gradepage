@@ -40,8 +40,8 @@
           </span>
         </div>
         <CalculatorRow
-          :default-percentage="data.percentage"
-          :default-grade="data.grade"
+          :percentage="data.percentage"
+          :grade="data.grade"
           :first="index === 0"
           :last="index === calculatorValues.length - 1"
           :index="index"
@@ -50,10 +50,11 @@
     </ol>
     <div class="clearfix">
       <span>
-        <BButton
+        <BLink
           :title="gettext('calculator_reset_title')"
           @click.prevent="resetCalculator()"
-        >{{ gettext("reset") }}</BButton>
+        >{{ gettext("reset") }}
+        </BLink>
       </span>
       <span>
         <BButton
@@ -79,7 +80,7 @@
     <ol :aria-label="gettext('grade_scale_list_label_sr')">
       <li v-for="(data, index) in scaleValues">
         <GradeScaleRow
-          :default-percentage="data.minPercentage"
+          :min-percentage="data.minPercentage"
           :grade="data.grade"
           :last="index === scaleValues.length - 1"
           :index="index"
@@ -99,6 +100,8 @@ import { useCalculatorStore } from "@/stores/calculator";
 import CalculatorRow from "@/components/convert/calculator-row.vue";
 import GradeScaleRow from "@/components/convert/grade-scale-row.vue";
 import { BButton } from "bootstrap-vue-next";
+import { storeToRefs } from "pinia";
+import { watch } from "vue";
 
 export default {
   components: {
@@ -108,8 +111,15 @@ export default {
   },
   setup() {
     const calculatorStore = useCalculatorStore();
+
     return {
       calculatorStore,
+    };
+  },
+  data() {
+    return {
+      calculatorValues: [],
+      scaleValues: [],
     };
   },
   computed: {
@@ -118,12 +128,6 @@ export default {
     },
     availableScales() {
       return this.calculatorStore.availableScales;
-    },
-    calculatorValues() {
-      return this.calculatorStore.calculatorValues;
-    },
-    scaleValues() {
-      return this.calculatorStore.scaleValues;
     },
     isFixedScale() {
       return this.calculatorStore.isFixedScale;
@@ -144,6 +148,18 @@ export default {
     },
     applyConversion: function () {
     },
+    initializeCalculator: function () {
+      this.calculatorValues = this.calculatorStore.calculatorValues;
+      this.scaleValues = this.calculatorStore.scaleValues;
+
+      this.calculatorStore.$subscribe((mutation, state) => {
+        this.calculatorValues = state.calculatorValues;
+        this.scaleValues = state.scaleValues;
+      });
+    },
+  },
+  created() {
+    this.initializeCalculator();
   },
 };
 </script>
