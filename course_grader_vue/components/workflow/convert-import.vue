@@ -60,7 +60,7 @@
         variant="primary"
         :title="gettext('conversion_submit_title')"
         @click="reviewConversion"
-      >{{ gettext("conversion_submit") }}
+      >{{ gettext("conversion_submit") }} &gt;&gt;
       </BButton>
     </template>
   </BCard>

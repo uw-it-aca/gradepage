@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { getConversionScales } from "@/utils/data";
+import { toRaw } from "vue";
 
 const UG_GRADE_SCALE = [
   "4.0", "3.9", "3.8", "3.7", "3.6", "3.5", "3.4", "3.3", "3.2", "3.1",
@@ -95,14 +96,18 @@ export const useCalculatorStore = defineStore({
           highest_valid_grade = parseFloat(curr_scale[0]),
           lowest_valid_grade = parseFloat(curr_scale[curr_scale.length - 2]),
           last_seen_percentage,
-          last_seen_grade;
-
-      // Remove empty rows
-      this.calculatorValues = this.calculatorValues.filter(
-        cv => cv.grade != "" && cv.percentage != "")
+          last_seen_grade,
+          emptyRows = [];
 
       this.calculatorValues.forEach((cv, idx) => {
+        cv.grade = cv.grade.trim();
         cv.percentage = cv.percentage.trim();
+
+        if (cv.percentage === "" && cv.grade === "") {
+          emptyRows.unshift(idx);
+          return;
+        }
+
         if (cv.percentage === "") {
           valid = false;
           cv.percentageError = gettext("calculator_min_missing");
@@ -120,7 +125,6 @@ export const useCalculatorStore = defineStore({
           }
         }
 
-        cv.grade = cv.grade.trim();
         if (cv.grade === "") {
           valid = false;
           cv.gradeError = gettext("calculator_grade_missing");
@@ -145,6 +149,11 @@ export const useCalculatorStore = defineStore({
           }
         }
       });
+
+      // Silently remove empty rows
+      emptyRows.forEach((i) => {
+        this.calculatorValues.splice(i, 1);
+      });
       return valid;
     },
     updateScalePercentage(index, minPercentage) {
@@ -156,16 +165,42 @@ export const useCalculatorStore = defineStore({
         g => ({grade: g, minPercentage: "", minPercentageError: ""}));
     },
     calculateScale() {
+      var curr_calc_grade,
+          curr_calc_pos = 0,
+          matched_pos = null;
+
       if (!this.validateCalculatorValues()) {
         return;
       }
 
-      const sortedGrades = this.calculatorValues.toSorted(function (a, b) {
-        return b.percentage - a.percentage;
-      });
+      //const reverseCalc = this.calculatorValues.slice().reverse();
 
+      curr_calc_grade = this.calculatorValues[0].grade;
       this.scaleValues.forEach((sv, idx) => {
+        var curr_percentage,
+            prev_percentage,
+            step_value,
+            step_percentage,
+            i;
 
+        if (sv.grade === curr_calc_grade) {
+          if (matched_pos !== null) {
+            curr_percentage = parseFloat(this.calculatorValues[curr_calc_pos].percentage, 10);
+            prev_percentage = parseFloat(this.calculatorValues[curr_calc_pos - 1].percentage, 10);
+            step_value = (curr_percentage - prev_percentage) / (idx - matched_pos);
+
+            for (i = matched_pos; i <= idx; i++) {
+              step_percentage = prev_percentage + (step_value * (i - matched_pos));
+              step_percentage = Math.round(step_percentage * 10) / 10;
+              this.scaleValues[i].minPercentage = step_percentage;
+            }
+          }
+          matched_pos = idx;
+          curr_calc_pos++;
+          if (this.calculatorValues[curr_calc_pos]) {
+            curr_calc_grade = this.calculatorValues[curr_calc_pos].grade;
+          }
+        }
       });
     },
   },
