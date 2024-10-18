@@ -6,19 +6,19 @@
     </label>
     <select
       id="import_scale_selector"
-      @change="updateGradingScale($event.target.value)"
+      @change="calculatorStore.setScale($event.target.value)"
     >
       <option
-        v-for="scale in availableScales"
+        v-for="scale in calculatorStore.availableScales"
         :value="scale"
-        :selected="scale === selectedScale"
+        :selected="scale === calculatorStore.selectedScale"
       >
         {{ gettext("conversion_scale_" + scale) }}
       </option>
     </select>
   </div>
 
-  <div v-if="!isFixedScale">
+  <div v-if="!calculatorStore.isFixedScale">
     <div class="clearfix">
        <h4 class="visually-hidden" id="grade_conversion_header">{{ gettext("calculator_header") }}</h4>
        <span class="visually-hidden">{{ gettext("calculator_instructions") }}</span>
@@ -29,7 +29,7 @@
       <li v-for="(data, index) in calculatorValues">
         <div v-if="index === calculatorValues.length - 1">
           <BLink
-            @click.prevent="addCalculatorRow"
+            @click.prevent="calculatorStore.addCalculatorRow()"
             :title="gettext('calculator_addrow_title')"
             tabindex="0"
           >
@@ -40,8 +40,7 @@
           </span>
         </div>
         <CalculatorRow
-          :percentage="data.percentage"
-          :grade="data.grade"
+          :row-data="data"
           :first="index === 0"
           :last="index === calculatorValues.length - 1"
           :index="index"
@@ -52,14 +51,14 @@
       <span>
         <BLink
           :title="gettext('calculator_reset_title')"
-          @click.prevent="resetCalculator()"
+          @click.prevent="calculatorStore.resetCalculatorValues()"
         >{{ gettext("reset") }}
         </BLink>
       </span>
       <span>
         <BButton
           :title="gettext('calculator_apply_title')"
-          @click="applyConversion()"
+          @click="calculatorStore.calculateScale()"
         >
           <i class="fa fa-angle-double-down fa-lg"></i> {{ gettext("apply") }}
         </BButton>
@@ -67,8 +66,10 @@
     </div>
   </div>
 
-  <div v-if="isFixedScale">
-    <span>{{ gettext("calculator_min_" + selectedScale) }}</span>
+  <div v-if="calculatorStore.isFixedScale">
+    <span>
+      {{ gettext("calculator_min_" + calculatorStore.selectedScale) }}
+    </span>
   </div>
 
   <div id="conversion_grade_scale_container" aria-labelledby="grade_scale_header">
@@ -80,8 +81,7 @@
     <ol :aria-label="gettext('grade_scale_list_label_sr')">
       <li v-for="(data, index) in scaleValues">
         <GradeScaleRow
-          :min-percentage="data.minPercentage"
-          :grade="data.grade"
+          :row-data="data"
           :last="index === scaleValues.length - 1"
           :index="index"
         />
@@ -89,7 +89,7 @@
     </ol>
     <span>
       <BButton
-        @click.prevent="resetGradeScale"
+        @click.prevent="calculatorStore.resetScaleValues()"
       >{{ gettext("grade_scale_clear") }}</BButton>
     </span>
   </div>
@@ -99,9 +99,7 @@
 import { useCalculatorStore } from "@/stores/calculator";
 import CalculatorRow from "@/components/convert/calculator-row.vue";
 import GradeScaleRow from "@/components/convert/grade-scale-row.vue";
-import { BButton } from "bootstrap-vue-next";
-import { storeToRefs } from "pinia";
-import { watch } from "vue";
+import { BLink, BButton } from "bootstrap-vue-next";
 
 export default {
   components: {
@@ -122,32 +120,7 @@ export default {
       scaleValues: [],
     };
   },
-  computed: {
-    selectedScale() {
-      return this.calculatorStore.selectedScale;
-    },
-    availableScales() {
-      return this.calculatorStore.availableScales;
-    },
-    isFixedScale() {
-      return this.calculatorStore.isFixedScale;
-    },
-  },
   methods: {
-    addCalculatorRow: function () {
-      this.calculatorStore.addCalculatorRow();
-    },
-    resetCalculator: function () {
-      this.calculatorStore.resetCalculatorValues();
-    },
-    resetGradeScale: function () {
-      this.calculatorStore.resetScaleValues();
-    },
-    updateGradingScale: function (scale) {
-      this.calculatorStore.setScale(scale);
-    },
-    applyConversion: function () {
-    },
     initializeCalculator: function () {
       this.calculatorValues = this.calculatorStore.calculatorValues;
       this.scaleValues = this.calculatorStore.scaleValues;
