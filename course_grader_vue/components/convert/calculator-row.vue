@@ -6,7 +6,7 @@
         type="text"
         :id="`calculator-percentage-${index}`"
         name="calculator-percentage"
-        :value="percentage"
+        :value="rowData.percentage"
         class="form-control"
         @change="percentageChanged($event.target.value)"
         required />
@@ -20,7 +20,9 @@
          <span v-else class="visually-hidden">
           {{ gettext("calculator_perc_label") }}
          </span>
-        <span class="pull-left">{{ percentageError }}</span>
+        <span role="alert" class="text-danger invalid-grade small">
+          {{ rowData.percentageError }}
+        </span>
       </label>
     </span>
     <span aria-hidden="true">&percnt;</span>
@@ -30,7 +32,7 @@
         type="text"
         :id="`calculator-grade-${index}`"
         name="calculator-grade"
-        :value="grade"
+        :value="rowData.grade"
         class="form-control"
         @change="gradeChanged($event.target.value)"
         required />
@@ -44,7 +46,9 @@
         <span v-else class="visually-hidden">
           {{ gettext("calculator_grade_label") }}
         </span>
-        <span class="pull-right">{{ gradeError }}</span>
+        <span role="alert" class="text-danger invalid-grade small">
+          {{ rowData.gradeError }}
+        </span>
       </label>
     </span>
   </fieldset>
@@ -55,12 +59,8 @@ import { useCalculatorStore } from "@/stores/calculator";
 
 export default {
   props: {
-    percentage: {
-      type: String,
-      required: true,
-    },
-    grade: {
-      type: String,
+    rowData: {
+      type: Object,
       required: true,
     },
     first: {
@@ -80,12 +80,6 @@ export default {
     const calculatorStore = useCalculatorStore();
     return {
       calculatorStore,
-    };
-  },
-  data() {
-    return {
-      percentageError: "",
-      gradeError: "",
     };
   },
   methods: {
