@@ -109,9 +109,7 @@ export default {
     },
   },
   created() {
-    setTimeout(() => {
-      this.loadGradingStatus();
-    }, 1000);
+    this.loadGradingStatus();
   },
 };
 </script>
