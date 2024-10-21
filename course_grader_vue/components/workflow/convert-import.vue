@@ -62,6 +62,12 @@
         @click="reviewConversion"
       >{{ gettext("conversion_submit") }} &gt;&gt;
       </BButton>
+      <span
+        v-if="scaleErrorCount"
+        v-html="scaleErrorText"
+        role="alert"
+        class="text-danger invalid-grade small"
+      ></span>
     </template>
   </BCard>
 </template>
@@ -97,12 +103,24 @@ export default {
       calculatorStore,
     };
   },
+  data() {
+    return {
+      scaleErrorCount: 0,
+    };
+  },
   computed: {
     previousScales() {
       return this.calculatorStore.previousScales;
     },
     courseGradingSchemes() {
       return this.calculatorStore.gradeImport.course_grading_schemes;
+    },
+    scaleErrorText() {
+      return interpolate(ngettext(
+        "<strong>One invalid grade</strong> (see above)",
+        "<strong>%(count)s invalid grades</strong> (see above)",
+        this.scaleErrorCount
+      ), {count: this.scaleErrorCount}, true);
     },
   },
   methods: {
@@ -114,6 +132,10 @@ export default {
       this.appState.editGrades();
     },
     reviewConversion: function() {
+      this.scaleErrorCount = this.calculatorStore.validateScaleValues();
+      if (this.scaleErrorCount === 0) {
+        this.appState.reviewConversion();
+      }
     },
   },
 };
