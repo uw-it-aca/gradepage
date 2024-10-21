@@ -4,9 +4,9 @@
       <SectionHeader :section="section" :title="gettext('review_import_grades')" />
     </template>
 
-    <ul v-if="gradeImport.students" class="list-unstyled m-0">
+    <ul v-if="calculatorStore.gradeImport.students" class="list-unstyled m-0">
       <li
-        v-for="(student, index) in gradeImport.students"
+        v-for="(student, index) in calculatorStore.gradeImport.students"
         :key="student.item_id"
         class="border-top pt-2 mt-2"
       >
@@ -36,6 +36,7 @@
 import SectionHeader from "@/components/section/header.vue";
 import Student from "@/components/student.vue";
 import { useWorkflowStateStore } from "@/stores/state";
+import { useCalculatorStore } from "@/stores/calculator";
 import { BButton, BCard } from "bootstrap-vue-next";
 
 export default {
@@ -53,8 +54,10 @@ export default {
   },
   setup() {
     const appState = useWorkflowStateStore();
+    const calculatorStore = useCalculatorStore();
     return {
       appState,
+      calculatorStore,
     };
   },
   data() {
@@ -66,7 +69,7 @@ export default {
     editConversion: function () {
       this.appState.convertImport();
     },
-    importGades: function () {
+    importGrades: function () {
     },
   },
 };

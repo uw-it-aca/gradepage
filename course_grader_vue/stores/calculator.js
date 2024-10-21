@@ -92,11 +92,11 @@ export const useCalculatorStore = defineStore({
     },
     validateCalculatorValues() {
       var valid = true,
-          curr_scale = this.gradeScales[this.selectedScale],
-          highest_valid_grade = parseFloat(curr_scale[0]),
-          lowest_valid_grade = parseFloat(curr_scale[curr_scale.length - 2]),
-          last_seen_percentage,
-          last_seen_grade,
+          currScale = this.gradeScales[this.selectedScale],
+          highestValidGrade = parseFloat(currScale[0]),
+          lowestValidGrade = parseFloat(currScale[currScale.length - 2]),
+          lastSeenPercentage,
+          lastSeenGrade,
           emptyRows = [];
 
       this.calculatorValues.forEach((cv, idx) => {
@@ -116,11 +116,11 @@ export const useCalculatorStore = defineStore({
           cv.percentageError = gettext("calculator_min_invalid");
         } else {
           var pct = Math.round(parseFloat(cv.percentage) * 10) / 10;
-          if (isNaN(pct) || pct >= last_seen_percentage) {
+          if (isNaN(pct) || pct >= lastSeenPercentage) {
             valid = false;
             cv.percentageError = gettext("calculator_min_invalid");
           } else {
-            last_seen_percentage = pct;
+            lastSeenPercentage = pct;
             cv.percentageError = "";
           }
         }
@@ -130,13 +130,14 @@ export const useCalculatorStore = defineStore({
           cv.gradeError = gettext("calculator_grade_missing");
         } else {
           var grd = Math.round(parseFloat(cv.grade) * 10) / 10;
-          if (isNaN(grd) || grd > highest_valid_grade ||
-              grd < lowest_valid_grade ||
-              grd >= last_seen_grade) {
+          if (isNaN(grd) ||
+              grd > highestValidGrade ||
+              grd < lowestValidGrade ||
+              grd >= lastSeenGrade) {
             valid = false;
             cv.gradeError = gettext("calculator_grade_invalid");
           } else {
-            last_seen_grade = grd;
+            lastSeenGrade = grd;
             cv.gradeError = "";
 
             var strgrd = grd.toString();
@@ -165,9 +166,9 @@ export const useCalculatorStore = defineStore({
         g => ({grade: g, minPercentage: "", minPercentageError: ""}));
     },
     calculateScale() {
-      var curr_calc_grade,
-          curr_calc_pos = 0,
-          matched_pos = null;
+      var currCalcGrade,
+          currCalcPos = 0,
+          matchedPos = null;
 
       if (!this.validateCalculatorValues()) {
         return;
@@ -175,33 +176,69 @@ export const useCalculatorStore = defineStore({
 
       //const reverseCalc = this.calculatorValues.slice().reverse();
 
-      curr_calc_grade = this.calculatorValues[0].grade;
+      currCalcGrade = this.calculatorValues[currCalcPos].grade;
       this.scaleValues.forEach((sv, idx) => {
-        var curr_percentage,
-            prev_percentage,
-            step_value,
-            step_percentage,
+        var currPercentage,
+            prevPercentage,
+            stepValue,
+            stepPercentage,
             i;
 
-        if (sv.grade === curr_calc_grade) {
-          if (matched_pos !== null) {
-            curr_percentage = parseFloat(this.calculatorValues[curr_calc_pos].percentage, 10);
-            prev_percentage = parseFloat(this.calculatorValues[curr_calc_pos - 1].percentage, 10);
-            step_value = (curr_percentage - prev_percentage) / (idx - matched_pos);
+        if (sv.grade === currCalcGrade) {
+          if (matchedPos !== null) {
+            currPercentage = parseFloat(
+              this.calculatorValues[currCalcPos].percentage, 10);
+            prevPercentage = parseFloat(
+              this.calculatorValues[currCalcPos - 1].percentage, 10);
+            stepValue = (currPercentage - prevPercentage) / (idx - matchedPos);
 
-            for (i = matched_pos; i <= idx; i++) {
-              step_percentage = prev_percentage + (step_value * (i - matched_pos));
-              step_percentage = Math.round(step_percentage * 10) / 10;
-              this.scaleValues[i].minPercentage = step_percentage;
+            for (i = matchedPos; i <= idx; i++) {
+              stepPercentage = prevPercentage + (stepValue * (i - matchedPos));
+              stepPercentage = Math.round(stepPercentage * 10) / 10;
+              this.scaleValues[i].minPercentage = stepPercentage.toString();
             }
           }
-          matched_pos = idx;
-          curr_calc_pos++;
-          if (this.calculatorValues[curr_calc_pos]) {
-            curr_calc_grade = this.calculatorValues[curr_calc_pos].grade;
+          matchedPos = idx;
+          currCalcPos++;
+          if (this.calculatorValues[currCalcPos]) {
+            currCalcGrade = this.calculatorValues[currCalcPos].grade;
           }
         }
       });
+    },
+    validateScaleValues() {
+      var errorCount = 0,
+          seenMins = {};
+
+      this.scaleValues.forEach((sv, idx, arr) => {
+        if (idx === arr.length - 1) {
+          return;
+        }
+
+        sv.minPercentage = sv.minPercentage.trim();
+        if (sv.minPercentage === "") {
+          errorCount++;
+          sv.minPercentageError = gettext("calculator_min_missing");
+        } else {
+          var pct = Math.round(parseFloat(sv.minPercentage) * 10) / 10;
+          if (isNaN(pct)) {
+            errorCount++;
+            sv.minPercentageError = gettext("calculator_min_invalid");
+          } else {
+            if (pct in seenMins) {
+              let dupeError = gettext("min_percentage_duplicate");
+              errorCount++;
+              sv.minPercentage = pct.toString();
+              sv.minPercentageError = dupeError;
+              this.scaleValues[seenMins[pct]].minPercentageError = dupeError;
+            } else {
+              sv.minPercentageError = "";
+            }
+            seenMins[pct] = idx;
+          }
+        }
+      });
+      return errorCount;
     },
   },
 });
