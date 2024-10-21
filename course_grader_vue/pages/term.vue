@@ -71,16 +71,15 @@ export default {
   data() {
     return {
       isLoading: true,
-      selectedTermUrl: "",
-      selectedTermText: this.contextStore.context.page_title,
-      sectionsURL: this.contextStore.context.sections_url,
-      currentTerm: this.contextStore.context.terms[0],
       selectedTerm: null,
       errorResponse: null,
       sections: [],
     };
   },
   computed: {
+    currentTerm() {
+      return this.contextStore.context.terms[0];
+    },
     selectedTermName() {
       return this.selectedTerm.quarter + " " + this.selectedTerm.year;
     },
@@ -134,8 +133,8 @@ export default {
     },
   },
   created() {
-    this.loadSectionsForTerm();
     this.updateTerm();
+    this.loadSectionsForTerm();
   },
 };
 </script>
