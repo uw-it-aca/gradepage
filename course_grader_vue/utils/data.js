@@ -35,7 +35,7 @@ async function getSections(url) {
   return axios.get(url).catch(_handleError);
 }
 
-function getSection(url) {
+async function getSection(url) {
   return axios.get(url).catch(_handleError);
 }
 
@@ -43,7 +43,7 @@ async function getSectionStatus(url) {
   return axios.get(url);
 }
 
-function getGraderoster(url) {
+async function getGraderoster(url) {
   return axios.get(url).catch(_handleError);
 }
 

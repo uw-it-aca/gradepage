@@ -106,7 +106,7 @@ export default {
       ).url;
     },
     updateTerm: function () {
-      let term;
+      var term;
       if (this.$route.params.id) {
         term = this.contextStore.context.terms.find((t) =>
           t.sections_url.endsWith(this.$route.params.id)
@@ -134,10 +134,7 @@ export default {
     },
   },
   created() {
-    setTimeout(() => {
-      this.loadSectionsForTerm();
-    }, "1000");
-
+    this.loadSectionsForTerm();
     this.updateTerm();
   },
 };

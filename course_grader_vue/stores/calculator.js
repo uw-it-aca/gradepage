@@ -73,6 +73,8 @@ export const useCalculatorStore = defineStore({
     setGradeImport(gradeImport) {
       this.gradeImport = gradeImport;
     },
+
+    // Calculator actions
     addCalculatorRow() {
       this.calculatorValues.splice(-1, 0, {
         grade: "", percentage: "", gradeError: "", percentageError: ""});
@@ -150,12 +152,13 @@ export const useCalculatorStore = defineStore({
         }
       });
 
-      // Silently remove empty rows
       emptyRows.forEach((i) => {
-        this.calculatorValues.splice(i, 1);
+        this.calculatorValues.splice(i, 1);  // Silently remove empty rows
       });
       return valid;
     },
+
+    // Grade scale actions
     updateScalePercentage(index, minPercentage) {
       this.scaleValues[index].minPercentage = minPercentage;
     },
