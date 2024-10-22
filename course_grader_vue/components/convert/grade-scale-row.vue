@@ -1,19 +1,19 @@
 <template>
   <div :style="highlightRow ? 'background-color:lavender;' : ''">
     <div class="d-flex justify-content-between">
-      <div class="me-2">
+      <div class="me-3">
         <span v-if="last">&lt;</span>
         <span v-else>&ge;</span>
       </div>
 
-      <div v-if="last" class="w-50">
+      <div v-if="last">
         <span class="visually-hidden">
           {{ gettext("grade_scale_limit_pre") }} {{ lastMinPercentage }}
           {{ gettext("grade_scale_limit_post") }} {{ rowData.grade }}.
         </span>
         <span> {{ lastMinPercentage }} </span>
       </div>
-      <div v-else class="w-50">
+      <div v-else>
         <div class="input-group mb-3">
           <input
             type="text"
