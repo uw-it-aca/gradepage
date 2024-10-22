@@ -1,39 +1,42 @@
 <template>
   <div :style="highlightRow ? 'background-color:lavender;' : ''">
-    <div class="pull-left" aria-hidden="true">
-      <span v-if="last">&lt;</span>
-      <span v-else>&ge;</span>
-    </div>
-    <div v-if="last">
-      <span class="visually-hidden">
-        {{ gettext("grade_scale_limit_pre") }} {{ lastMinPercentage }}
-        {{ gettext("grade_scale_limit_post") }} {{ rowData.grade }}.
-      </span>
-      <span> {{ lastMinPercentage }} </span>
-    </div>
-    <div v-else>
-      <span class="pull-left">
-        <input
-          type="text"
-          :id="`min-percentage-${index}`"
-          name="min-percentage"
-          :value="rowData.minPercentage"
-          :title="gettext('grade_scale_input_title') + rowData.grade"
-          @change="minPercentageChanged($event.target.value)"
-          required />
+    <div class="d-flex justify-content-between">
+      <div class="me-2">
+        <span v-if="last">&lt;</span>
+        <span v-else>&ge;</span>
+      </div>
+
+      <div v-if="last" class="w-50">
+        <span class="visually-hidden">
+          {{ gettext("grade_scale_limit_pre") }} {{ lastMinPercentage }}
+          {{ gettext("grade_scale_limit_post") }} {{ rowData.grade }}.
+        </span>
+        <span> {{ lastMinPercentage }} </span>
+      </div>
+      <div v-else class="w-50">
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            :id="`min-percentage-${index}`"
+            class="form-control"
+            name="min-percentage"
+            :value="rowData.minPercentage"
+            :title="gettext('grade_scale_input_title') + rowData.grade"
+            @change="minPercentageChanged($event.target.value)"
+            required
+            aria-describedby="percent-addon2"
+          />
+          <span class="input-group-text" id="percent-addon2">&percnt;</span>
+        </div>
         <label for="`min-percentage-${index}`">
           <span role="alert" class="text-danger invalid-grade small">
             {{ rowData.minPercentageError }}
           </span>
         </label>
-      </span>
-    </div>
-    <div>
-      <span aria-hidden="true">&percnt;</span>
-      <div>
-        <span aria-hidden="true">&equals;</span>
-        <span aria-hidden="true">{{ rowData.grade }}</span>
       </div>
+
+      <div aria-hidden="true" class="mx-3">&equals;</div>
+      <div aria-hidden="true" class="w-50 text-center">{{ rowData.grade }}</div>
     </div>
   </div>
 </template>
@@ -64,13 +67,17 @@ export default {
   },
   computed: {
     highlightRow() {
-      return (
-        !this.last && this.calculatorStore.calculatorValues.find(
-          c => c.grade === this.rowData.grade)) ? true : false;
+      return !this.last &&
+        this.calculatorStore.calculatorValues.find(
+          (c) => c.grade === this.rowData.grade
+        )
+        ? true
+        : false;
     },
     lastMinPercentage() {
       return this.calculatorStore.scaleValues[
-        this.calculatorStore.scaleValues.length - 2].minPercentage;
+        this.calculatorStore.scaleValues.length - 2
+      ].minPercentage;
     },
   },
   methods: {
