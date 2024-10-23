@@ -8,9 +8,10 @@
       @change="calculatorStore.setScale($event.target.value)"
     >
       <option
-        v-for="scale in calculatorStore.availableScales"
+        v-for="(scale, index) in calculatorStore.availableScales"
         :value="scale"
         :selected="scale === calculatorStore.selectedScale"
+        :key="index"
       >
         {{ gettext("conversion_scale_" + scale) }}
       </option>
@@ -31,18 +32,23 @@
 
       <ol class="list-unstyled">
         <li v-for="(data, index) in calculatorValues" :key="index">
-          <div v-if="index === calculatorValues.length - 1">
-            <BLink
-              @click.prevent="calculatorStore.addCalculatorRow()"
-              :title="gettext('calculator_addrow_title')"
-              tabindex="0"
-            >
-              {{ gettext("calculator_addrow") }}
-            </BLink>
-            <span class="pull-right" style="margin-right: 3em">
-              <i class="fa fa-ellipsis-v fa-lg"></i>
-            </span>
-          </div>
+          <template v-if="index === calculatorValues.length - 1">
+            <div class="d-flex my-3">
+              <div class="w-50 text-center">
+                <BLink
+                  @click.prevent="calculatorStore.addCalculatorRow()"
+                  :title="gettext('calculator_addrow_title')"
+                  tabindex="0"
+                >
+                  {{ gettext("calculator_addrow") }}
+                </BLink>
+              </div>
+              <div class="w-50 text-center">
+                <i class="bi bi-three-dots-vertical"></i>
+              </div>
+            </div>
+          </template>
+
           <CalculatorRow
             :row-data="data"
             :first="index === 0"

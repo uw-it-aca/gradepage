@@ -1,5 +1,5 @@
 <template>
-  <div :style="highlightRow ? 'background-color:lavender;' : ''">
+  <div :class="highlightRow ? 'bg-primary-subtle' : ''">
     <div class="d-flex justify-content-between">
       <div class="me-3">
         <span v-if="last">&lt;</span>
