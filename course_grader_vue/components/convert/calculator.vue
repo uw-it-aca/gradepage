@@ -128,6 +128,7 @@ export default {
     CalculatorRow,
     GradeScaleRow,
     BButton,
+    BLink,
   },
   setup() {
     const calculatorStore = useCalculatorStore();

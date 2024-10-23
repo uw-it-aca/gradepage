@@ -53,7 +53,11 @@
           style="max-height: 400px"
           :class="[menuOpen ? 'show' : '']"
         >
-          <li v-for="opt in actualChoices" role="presentation">
+          <li
+            v-for="(opt, index) in actualChoices"
+            role="presentation"
+            :key="index"
+          >
             <button
               role="menuitem"
               class="dropdown-item small"
