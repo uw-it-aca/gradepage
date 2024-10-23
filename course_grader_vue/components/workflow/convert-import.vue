@@ -129,11 +129,12 @@ export default {
     usePreviousScale: function () {
     },
     cancelConversion: function () {
-      this.appState.editGrades();
+      this.appState.$reset();
     },
     reviewConversion: function() {
       this.scaleErrorCount = this.calculatorStore.validateScaleValues();
       if (this.scaleErrorCount === 0) {
+        this.calculatorStore.convertGrades();
         this.appState.reviewConversion();
       }
     },

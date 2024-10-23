@@ -75,10 +75,7 @@
       </div>
     </template>
 
-    <template v-if="errorResponse">
-      <Errors :error-response="errorResponse" />
-    </template>
-    <template v-else-if="appState.graderoster.is_submission_confirmation">
+    <template v-if="appState.graderoster.is_submission_confirmation">
       <template v-if="appState.graderoster.has_failed_submissions">
         <!-- warning -->
         <BAlert
@@ -168,7 +165,7 @@
         <Student :student="student" />
       </li>
     </ul>
-    <ul v-else-if="!errorResponse" class="list-unstyled m-0">
+    <ul v-else class="list-unstyled m-0">
       <li v-for="index in 8" class="border-top pt-2 mt-2" :key="index">
         <BPlaceholder
           class="d-block bg-body-secondary"
@@ -235,7 +232,6 @@
 <script>
 import SectionHeader from "@/components/section/header.vue";
 import Student from "@/components/student.vue";
-import Errors from "@/components/errors.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import {
   BCard,
@@ -253,7 +249,6 @@ export default {
   components: {
     SectionHeader,
     Student,
-    Errors,
     BCard,
     BAlert,
     BLink,

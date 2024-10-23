@@ -4,15 +4,20 @@
       <SectionHeader :section="section" :title="gettext('review_import_grades')" />
     </template>
 
-    <ul v-if="calculatorStore.gradeImport.students" class="list-unstyled m-0">
-      <li
-        v-for="(student, index) in calculatorStore.gradeImport.students"
-        :key="student.item_id"
-        class="border-top pt-2 mt-2"
-      >
-        <Student :student="student" />
-      </li>
-    </ul>
+    <template v-if="errorResponse">
+      <Errors :error-response="errorResponse" />
+    </template>
+    <template v-else-if="calculatorStore.gradeImport.students">
+      <ul class="list-unstyled m-0">
+        <li
+          v-for="(student, index) in calculatorStore.gradeImport.students"
+          :key="student.item_id"
+          class="border-top pt-2 mt-2"
+        >
+          <Student :student="student" />
+        </li>
+      </ul>
+    </template>
 
     <template #footer>
       <div class="d-flex">
@@ -20,7 +25,7 @@
           <BButton variant="outline-primary" @click="editConversion">
             {{ gettext("conversion_back_calc") }}
           </BButton>
-          <BButton variant="primary" @click="importGrades" class="ms-2">
+          <BButton variant="primary" @click="saveGrades" class="ms-2">
             {{ gettext("import_grades_btn") }}
             <span class="visually-hidden">
               {{ gettext("import_grades_btn_sr") }}
@@ -35,9 +40,11 @@
 <script>
 import SectionHeader from "@/components/section/header.vue";
 import Student from "@/components/student.vue";
+import Errors from "@/components/errors.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useCalculatorStore } from "@/stores/calculator";
 import { BButton, BCard } from "bootstrap-vue-next";
+import { saveImportedGrades } from "@/utils/data";
 
 export default {
   props: {
@@ -49,6 +56,7 @@ export default {
   components: {
     SectionHeader,
     Student,
+    Errors,
     BButton,
     BCard,
   },
@@ -58,6 +66,7 @@ export default {
     return {
       appState,
       calculatorStore,
+      saveImportedGrades,
     };
   },
   data() {
@@ -69,7 +78,20 @@ export default {
     editConversion: function () {
       this.appState.convertImport();
     },
-    importGrades: function () {
+    saveGrades: function () {
+      let url = this.section.import_url + "/" + this.calculatorStore.gradeImport.id,
+          data = this.calculatorStore.conversionData;
+
+      this.saveImportedGrades(url, data)
+        .then((response) => {
+          return response.data;
+        })
+        .then((data) => {
+          this.appState.$reset();
+        })
+        .catch((error) => {
+          this.errorResponse = error.response;
+        });
     },
   },
 };
