@@ -10,7 +10,7 @@
           <EditGrades :section="section" />
         </template>
         <template v-else-if="appState.confirmingGrades">
-          <ConfirmGrades :section="section" :is-loading="isLoading" />
+          <ConfirmGrades :section="section" />
         </template>
         <template v-else-if="appState.reviewingGrades">
           <ReviewGrades :section="section" />
@@ -22,7 +22,7 @@
           <ReviewConversion :section="section" />
         </template>
         <template v-else>
-           TODO...
+          {{ loadGraderoster() }}
         </template>
       </div>
     </template>
@@ -64,7 +64,7 @@ export default {
   data() {
     return {
       isLoading: true,
-      section: {},
+      section: null,
       pageTitle: "Course Section",
       errorResponse: null,
     };
@@ -72,6 +72,7 @@ export default {
   methods: {
     loadGraderoster: function () {
       if (this.section.graderoster_url) {
+        this.isLoading = true;
         this.gradeStore.$reset();
         this.appState.$reset();
         this.getGraderoster(this.section.graderoster_url)
@@ -80,6 +81,7 @@ export default {
           })
           .then((data) => {
             this.appState.setGraderoster(data.graderoster);
+            this.errorResponse = null;
           })
           .catch((error) => {
             this.errorResponse = error.response;

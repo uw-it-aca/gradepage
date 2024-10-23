@@ -12,43 +12,43 @@ export const useWorkflowStateStore = defineStore({
   state: () => {
     return {
       name: "workflowState",
-      workflowState: null,
+      _workflowState: null,
       graderoster: null,
       unsubmitted: 0,
     };
   },
   getters: {
     editingGrades (state) {
-      return this.workflowState === EDIT_GRADES;
+      return this._workflowState === EDIT_GRADES;
     },
     reviewingGrades (state) {
-      return this.workflowState === REVIEW_GRADES;
+      return this._workflowState === REVIEW_GRADES;
     },
     confirmingGrades (state) {
-      return this.workflowState === CONFIRM_GRADES;
+      return this._workflowState === CONFIRM_GRADES;
     },
     convertingImport (state) {
-      return this.workflowState === CONVERT_IMPORT;
+      return this._workflowState === CONVERT_IMPORT;
     },
     reviewingConversion (state) {
-      return this.workflowState === REVIEW_CONVERSION;
+      return this._workflowState === REVIEW_CONVERSION;
     },
   },
   actions: {
     editGrades () {
-      this.workflowState = EDIT_GRADES;
+      this._workflowState = EDIT_GRADES;
     },
     reviewGrades () {
-      this.workflowState = REVIEW_GRADES;
+      this._workflowState = REVIEW_GRADES;
     },
     confirmGrades () {
-      this.workflowState = CONFIRM_GRADES;
+      this._workflowState = CONFIRM_GRADES;
     },
     convertImport () {
-      this.workflowState = CONVERT_IMPORT;
+      this._workflowState = CONVERT_IMPORT;
     },
     reviewConversion () {
-      this.workflowState = REVIEW_CONVERSION;
+      this._workflowState = REVIEW_CONVERSION;
     },
     setGraderoster (graderoster) {
       this.graderoster = graderoster;

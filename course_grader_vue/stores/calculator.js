@@ -58,6 +58,26 @@ export const useCalculatorStore = defineStore({
       }
       return this._previousScales[scale].data;
     },
+    conversionData(state) {
+      let gradeScale = this.gradeScales[this.selectedScale],
+          lowestValidGrade = gradeScale[gradeScale.length - 1];
+
+      var data = {
+        conversion_scale: {
+          calculator_values: this.calculatorValues.map(r => {
+            return {grade: r.grade, percentage: parseFloat(r.percentage)}
+          }),
+          grade_scale: this.scaleValues.map(r => {
+            return {grade: r.grade, min_percentage: parseFloat(r.minPercentage)}
+              }).filter(r => r.grade != lowestValidGrade),
+          lowest_valid_grade: lowestValidGrade,
+          scale: this.selectedScale,
+        },
+        converted_grades: Object.fromEntries(this.gradeImport.students.map(
+          s => [s.student_reg_id, s.converted_grade]))
+      };
+      return JSON.stringify(data);
+    },
   },
   actions: {
     validScale(scale) {
@@ -242,6 +262,16 @@ export const useCalculatorStore = defineStore({
         }
       });
       return errorCount;
+    },
+    convertGrades() {
+      let currScale = this.gradeScales[this.selectedScale],
+          lowestValidGrade = currScale[currScale.length - 1].grade;
+
+      this.gradeImport.students.forEach(student => {
+        let match = this.scaleValues.find(
+          el => student.imported_grade >= el.minPercentage);
+        student.converted_grade = (match) ? match.grade : lowestValidGrade;
+      });
     },
   },
 });
