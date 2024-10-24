@@ -61,6 +61,18 @@ export const useCalculatorStore = defineStore({
       }
       return this._previousScales[scale].data;
     },
+    conversionData(state) {
+      return {
+        calculator_values: this.calculatorValues.map(r => {
+          return {grade: r.grade, percentage: parseFloat(r.percentage)}
+        }),
+        grade_scale: this.scaleValues.map(r => {
+          return {grade: r.grade, min_percentage: parseFloat(r.minPercentage)}
+            }).filter(r => r.grade != this.lowestValidGrade),
+        lowest_valid_grade: this.lowestValidGrade,
+        scale: this.selectedScale,
+      };
+    },
   },
   actions: {
     validScale(scale) {
