@@ -7,10 +7,10 @@
     <template v-if="errorResponse">
       <Errors :error-response="errorResponse" />
     </template>
-    <template v-else-if="calculatorStore.gradeImport.students">
+    <template v-else-if="appState.gradeImport.students">
       <ul class="list-unstyled m-0">
         <li
-          v-for="(student, index) in calculatorStore.gradeImport.students"
+          v-for="(student, index) in appState.gradeImport.students"
           :key="student.item_id"
           class="border-top pt-2 mt-2"
         >
@@ -79,10 +79,9 @@ export default {
       this.appState.convertImport();
     },
     saveGrades: function () {
-      let url = this.section.import_url + "/" + this.calculatorStore.gradeImport.id,
-          data = this.calculatorStore.conversionData;
+      let url = this.section.import_url + "/" + this.appState.gradeImport.id;
 
-      this.saveImportedGrades(url, data)
+      this.saveImportedGrades(url, this.createConversionData())
         .then((response) => {
           return response.data;
         })
@@ -92,6 +91,26 @@ export default {
         .catch((error) => {
           this.errorResponse = error.response;
         });
+    },
+    createConversionData: function () {
+      let lowestValidGrade = this.calculatorStore.lowestValidGrade,
+          students = this.appState.gradeImport.students;
+
+      var data = {
+        conversion_scale: {
+          calculator_values: this.calculatorStore.calculatorValues.map(r => {
+            return {grade: r.grade, percentage: parseFloat(r.percentage)}
+          }),
+          grade_scale: this.calculatorStore.scaleValues.map(r => {
+            return {grade: r.grade, min_percentage: parseFloat(r.minPercentage)}
+              }).filter(r => r.grade != lowestValidGrade),
+          lowest_valid_grade: lowestValidGrade,
+          scale: this.calculatorStore.selectedScale,
+        },
+        converted_grades: Object.fromEntries(students.map(
+          s => [s.student_reg_id, s.converted_grade]))
+      };
+      return JSON.stringify(data);
     },
   },
 };
