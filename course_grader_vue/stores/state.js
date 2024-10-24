@@ -34,6 +34,10 @@ export const useWorkflowStateStore = defineStore({
     reviewingConversion (state) {
       return this._workflowState === REVIEW_CONVERSION;
     },
+    convertedGradeData (state) {
+      return Object.fromEntries(this.gradeImport.students.map(
+        s => [s.student_reg_id, s.converted_grade]));
+    },
   },
   actions: {
     editGrades () {

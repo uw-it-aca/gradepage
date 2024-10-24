@@ -79,9 +79,13 @@ export default {
       this.appState.convertImport();
     },
     saveGrades: function () {
-      let url = this.section.import_url + "/" + this.appState.gradeImport.id;
+      let url = this.section.import_url + "/" + this.appState.gradeImport.id,
+          data = {};
 
-      this.saveImportedGrades(url, this.createConversionData())
+      data.conversion_scale = this.calculatorStore.conversionData;
+      data.converted_grades = this.appState.convertedGradeData;
+
+      this.saveImportedGrades(url, JSON.stringify(data))
         .then((response) => {
           return response.data;
         })
@@ -91,26 +95,6 @@ export default {
         .catch((error) => {
           this.errorResponse = error.response;
         });
-    },
-    createConversionData: function () {
-      let lowestValidGrade = this.calculatorStore.lowestValidGrade,
-          students = this.appState.gradeImport.students;
-
-      var data = {
-        conversion_scale: {
-          calculator_values: this.calculatorStore.calculatorValues.map(r => {
-            return {grade: r.grade, percentage: parseFloat(r.percentage)}
-          }),
-          grade_scale: this.calculatorStore.scaleValues.map(r => {
-            return {grade: r.grade, min_percentage: parseFloat(r.minPercentage)}
-              }).filter(r => r.grade != lowestValidGrade),
-          lowest_valid_grade: lowestValidGrade,
-          scale: this.calculatorStore.selectedScale,
-        },
-        converted_grades: Object.fromEntries(students.map(
-          s => [s.student_reg_id, s.converted_grade]))
-      };
-      return JSON.stringify(data);
     },
   },
 };

@@ -131,13 +131,11 @@ export default {
       if (this.courseGradingScheme) {
         this.calculatorStore.initializeCalculator(this.courseGradingScheme);
       }
-      this.courseGradingScheme = null;
     },
     previousScaleSelected: function () {
       if (this.previousScale) {
         this.calculatorStore.initializeCalculator(this.previousScale);
       }
-      this.previousScale = null;
     },
     cancelConversion: function () {
       this.appState.$reset();
