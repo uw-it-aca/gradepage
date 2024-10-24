@@ -15,6 +15,7 @@ export const useWorkflowStateStore = defineStore({
       _workflowState: null,
       graderoster: null,
       unsubmitted: 0,
+      gradeImport: null,
     };
   },
   getters: {
@@ -50,6 +51,9 @@ export const useWorkflowStateStore = defineStore({
     reviewConversion () {
       this._workflowState = REVIEW_CONVERSION;
     },
+    setGradeImport (gradeImport) {
+      this.gradeImport = gradeImport;
+    },
     setGraderoster (graderoster) {
       this.graderoster = graderoster;
       this.unsubmitted = graderoster.students.filter(
@@ -61,6 +65,13 @@ export const useWorkflowStateStore = defineStore({
       } else {
         this.confirmGrades();
       }
+    },
+    convertImportedGrades (scaleValues, lowestValidGrade) {
+      this.gradeImport.students.forEach(student => {
+        let match = scaleValues.find(
+          r => student.imported_grade >= r.minPercentage);
+        student.converted_grade = (match) ? match.grade : lowestValidGrade;
+      });
     },
   },
 });

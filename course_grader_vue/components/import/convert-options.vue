@@ -63,7 +63,7 @@ export default {
     convertGrades: function (scale) {
       this.calculatorStore.$reset();
       this.calculatorStore.setScale(scale);
-      this.calculatorStore.setGradeImport(this.gradeImport);
+      this.appState.setGradeImport(this.gradeImport);
       this.appState.convertImport();
     },
     saveGrades: function () {

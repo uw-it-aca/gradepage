@@ -34,7 +34,6 @@ export const useCalculatorStore = defineStore({
       selectedScale: "ug",
       calculatorValues: [],
       scaleValues: [],
-      gradeImport: null,
     };
   },
   getters: {
@@ -43,6 +42,10 @@ export const useCalculatorStore = defineStore({
     },
     isFixedScale(state) {
       return FIXED_SCALES.includes(this.selectedScale);
+    },
+    lowestValidGrade(state) {
+      let gradeScale = this.gradeScales[this.selectedScale];
+      return gradeScale[gradeScale.length - 1];
     },
     previousScales(state) {
       let scale = this.selectedScale,
@@ -58,26 +61,6 @@ export const useCalculatorStore = defineStore({
       }
       return this._previousScales[scale].data;
     },
-    conversionData(state) {
-      let gradeScale = this.gradeScales[this.selectedScale],
-          lowestValidGrade = gradeScale[gradeScale.length - 1];
-
-      var data = {
-        conversion_scale: {
-          calculator_values: this.calculatorValues.map(r => {
-            return {grade: r.grade, percentage: parseFloat(r.percentage)}
-          }),
-          grade_scale: this.scaleValues.map(r => {
-            return {grade: r.grade, min_percentage: parseFloat(r.minPercentage)}
-              }).filter(r => r.grade != lowestValidGrade),
-          lowest_valid_grade: lowestValidGrade,
-          scale: this.selectedScale,
-        },
-        converted_grades: Object.fromEntries(this.gradeImport.students.map(
-          s => [s.student_reg_id, s.converted_grade]))
-      };
-      return JSON.stringify(data);
-    },
   },
   actions: {
     validScale(scale) {
@@ -86,12 +69,31 @@ export const useCalculatorStore = defineStore({
     setScale(scale) {
       if (this.validScale(scale)) {
         this.selectedScale = scale;
+        this.initializeCalculator();
+      }
+    },
+    initializeCalculator(data) {
+      if (data) {
+        this.calculatorValues = data.calculator_values.map(cv => ({
+          grade: cv.grade,
+          percentage: cv.percentage,
+          gradeError: "",
+          percentageError: ""
+        }));
+        this.scaleValues = data.grade_scale.map(gs => ({
+          grade: gs.grade,
+          minPercentage: gs.min_percentage,
+          minPercentageError: ""
+        }));
+        this.scaleValues.push({
+          grade: data.lowest_valid_grade.toString(),
+          minPercentage: "",
+          minPercentageError: ""
+        });
+      } else {
         this.resetCalculatorValues();
         this.resetScaleValues();
       }
-    },
-    setGradeImport(gradeImport) {
-      this.gradeImport = gradeImport;
     },
 
     // Calculator actions
@@ -197,8 +199,6 @@ export const useCalculatorStore = defineStore({
         return;
       }
 
-      //const reverseCalc = this.calculatorValues.slice().reverse();
-
       currCalcGrade = this.calculatorValues[currCalcPos].grade;
       this.scaleValues.forEach((sv, idx) => {
         var currPercentage,
@@ -262,16 +262,6 @@ export const useCalculatorStore = defineStore({
         }
       });
       return errorCount;
-    },
-    convertGrades() {
-      let currScale = this.gradeScales[this.selectedScale],
-          lowestValidGrade = currScale[currScale.length - 1].grade;
-
-      this.gradeImport.students.forEach(student => {
-        let match = this.scaleValues.find(
-          el => student.imported_grade >= el.minPercentage);
-        student.converted_grade = (match) ? match.grade : lowestValidGrade;
-      });
     },
   },
 });

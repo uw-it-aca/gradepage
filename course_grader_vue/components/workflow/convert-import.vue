@@ -15,13 +15,13 @@
       </label>
       <select
         id="course-scale-select"
-        @change="useCourseGaradingScheme($event.target.value)"
+        v-model="courseGradingScheme"
+        @change="courseGradingSchemeSelected()"
       >
-        <option role="presentation" value="0" selected disabled>
+        <option role="presentation" value="" selected disabled>
           {{ gettext("course_scale_label") }} &gt;
         </option>
-        <option v-for="scheme in courseGradingSchemes"
-          :value="scheme.grading_scheme_id">
+        <option v-for="scheme in courseGradingSchemes" :value="scheme">
           {{ scheme.course_name }}&nbsp;({{ scheme.grading_scheme_name }})
         </option>
       </select>
@@ -33,15 +33,16 @@
       </label>
       <select
         id="previous-scale-select"
-        @change="usePreviousScale($event.target.value)"
+        v-model="previousScale"
+        @change="previousScaleSelected()"
       >
-        <option role="presentation" value="0" selected disabled>
+        <option role="presentation" value="" selected disabled>
           {{ gettext("previous_scale_label") }} &gt;
         </option>
         <optgroup
           v-for="term in previousScales.terms"
           :label="term.quarter + ' ' + term.year">
-          <option v-for="scale in term.conversion_scales" :value="scale.id">
+          <option v-for="scale in term.conversion_scales" :value="scale">
             {{ scale.section }}
           </option>
         </optgroup>
@@ -106,6 +107,8 @@ export default {
   data() {
     return {
       scaleErrorCount: 0,
+      courseGradingScheme: null,
+      previousScale: null,
     };
   },
   computed: {
@@ -113,7 +116,7 @@ export default {
       return this.calculatorStore.previousScales;
     },
     courseGradingSchemes() {
-      return this.calculatorStore.gradeImport.course_grading_schemes;
+      return this.appState.gradeImport.course_grading_schemes;
     },
     scaleErrorText() {
       return interpolate(ngettext(
@@ -124,9 +127,17 @@ export default {
     },
   },
   methods: {
-    useCourseGradingScheme: function () {
+    courseGradingSchemeSelected: function () {
+      if (this.courseGradingScheme) {
+        this.calculatorStore.initializeCalculator(this.courseGradingScheme);
+      }
+      this.courseGradingScheme = null;
     },
-    usePreviousScale: function () {
+    previousScaleSelected: function () {
+      if (this.previousScale) {
+        this.calculatorStore.initializeCalculator(this.previousScale);
+      }
+      this.previousScale = null;
     },
     cancelConversion: function () {
       this.appState.$reset();
@@ -134,7 +145,10 @@ export default {
     reviewConversion: function() {
       this.scaleErrorCount = this.calculatorStore.validateScaleValues();
       if (this.scaleErrorCount === 0) {
-        this.calculatorStore.convertGrades();
+        this.appState.convertImportedGrades(
+          this.calculatorStore.scaleValues,
+          this.calculatorStore.lowestValidGrade
+        );
         this.appState.reviewConversion();
       }
     },
