@@ -30,25 +30,39 @@
     id="modalImportCanvasGrades"
     title="Import Canvas Gradebook"
     no-close-on-backdrop
-    hide-footer
   >
     <CanvasGrades
       :section="section"
       :expected-grade-count="expectedGradeCount"
       :modal-open="modalOpen"
     />
+
+    <template #modal-footer="{ cancel }">
+      <BLink
+        :title="gettext('cancel')"
+        @click="cancel()"
+      >
+      {{ gettext("cancel") }}</BLink>
+    </template>
   </BModal>
 
   <BModal
     id="modalImportCsvGrades"
     title="Import CSV File"
     no-close-on-backdrop
-    hide-footer
   >
     <UploadGrades
       :section="section"
       :expected-grade-count="expectedGradeCount"
     />
+
+    <template #modal-footer="{ cancel }">
+      <BLink
+        :title="gettext('cancel')"
+        @click="cancel()"
+      >
+      {{ gettext("cancel") }}</BLink>
+    </template>
   </BModal>
 </template>
 

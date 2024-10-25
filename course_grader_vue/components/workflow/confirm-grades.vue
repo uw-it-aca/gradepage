@@ -263,6 +263,15 @@ export default {
       required: true,
     },
   },
+  setup() {
+    const showSectionOptions = ref(false);
+    const appState = useWorkflowStateStore();
+    return {
+      appState,
+      formatLongDateTime,
+      showSectionOptions,
+    };
+  },
   data() {
     return {
       selectedGradeScale: null,
@@ -284,15 +293,6 @@ export default {
       this.selectedGradeScale = null;
       this.lowestValidGrade = null;
     },
-  },
-  setup() {
-    const showSectionOptions = ref(false);
-    const appState = useWorkflowStateStore();
-    return {
-      appState,
-      formatLongDateTime,
-      showSectionOptions,
-    };
   },
 };
 </script>

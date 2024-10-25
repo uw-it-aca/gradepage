@@ -1,6 +1,6 @@
 <template>
   <div v-if="errorResponse">
-    TODO: {{ errorResponse }}
+    {{ errorResponse }}
   </div>
   <div v-else-if="gradeImport.has_valid_percentages" class="d-grid gap-2">
     <p>{{ gettext("import_conversion_required") }}</p>
@@ -61,7 +61,6 @@ export default {
   },
   methods: {
     convertGrades: function (scale) {
-      this.calculatorStore.$reset();
       this.calculatorStore.setScale(scale);
       this.appState.setGradeImport(this.gradeImport);
       this.appState.convertImport();

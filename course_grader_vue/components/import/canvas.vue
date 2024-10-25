@@ -1,6 +1,16 @@
 <template>
-  <div v-if="gradeImport">
-    <div v-if="gradeImport.grade_count">
+  <div v-if="isLoading">
+    Loading...
+  </div>
+  <div v-else-if="errorResponse">
+    <i class="fas fa-exclamation-circle"></i>
+    <strong>{{ errorResponse.data.error }}</strong>
+  </div>
+  <div v-else>
+    <div v-if="gradeImport.status_code != 200">
+      There was an error importing grades from Canvas ({{ gradeImport.status_code }}).
+    </div>
+    <div v-else="gradeImport.grade_count">
       <p v-if="gradeImport.grade_count === 1">
         One grade found for <strong>{{ section.section_name }}</strong> in
         <strong>{{ gradeImport.source_name }}</strong>.
@@ -55,13 +65,6 @@
       <ImportConvertSave :section="section" :grade-import="gradeImport" />
 
     </div>
-    <div v-else-if="gradeImport.status_code != 200">
-      There was an error importing grades from Canvas ({{ gradeImport.status_code }}).
-    </div>
-  </div>
-  <div v-else-if="errorResponse">
-    <i class="fas fa-exclamation-circle"></i>
-    <strong>{{ errorResponse.data.error }}</strong>
   </div>
 </template>
 
@@ -104,6 +107,7 @@ export default {
       importSource: "canvas",
       gradeImport: null,
       errorResponse: null,
+      isLoading: true,
     };
   },
   methods: {
@@ -119,6 +123,9 @@ export default {
         .catch((error) => {
           this.errorResponse = error.response;
           this.gradeImport = null;
+        })
+        .finally(() => {
+          this.isLoading = false;
         });
     },
   },
