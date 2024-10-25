@@ -5,7 +5,10 @@
       <div v-if="errorResponse">
         <Errors :error-response="errorResponse" />
       </div>
-      <div v-else-if="!isLoading">
+      <div v-else-if="isLoading">
+        Loading...
+      </div>
+      <div v-else>
         <template v-if="appState.editingGrades">
           <EditGrades :section="section" />
         </template>
