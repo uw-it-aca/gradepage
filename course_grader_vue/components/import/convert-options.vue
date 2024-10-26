@@ -2,7 +2,7 @@
   <div v-if="errorResponse">
     {{ errorResponse }}
   </div>
-  <div v-else-if="gradeImport.has_valid_percentages" class="d-grid gap-2">
+  <div v-else-if="appState.gradeImport.has_valid_percentages" class="d-grid gap-2">
     <p>{{ gettext("import_conversion_required") }}</p>
     <p>{{ gettext("import_conversion_required_select") }}</p>
     <BButton v-for="scale in calculatorStore.availableScales"
@@ -40,10 +40,6 @@ export default {
       type: Object,
       required: true,
     },
-    gradeImport: {
-      type: Object,
-      required: true,
-    },
   },
   setup() {
     const appState = useWorkflowStateStore();
@@ -62,17 +58,18 @@ export default {
   methods: {
     convertGrades: function (scale) {
       this.calculatorStore.setScale(scale);
-      this.appState.setGradeImport(this.gradeImport);
       this.appState.convertImport();
     },
     saveGrades: function () {
-      let url = this.section.import_url + "/" + this.gradeImport.id;
-      this.saveImportedGrades(url, {})
+      let url = this.section.import_url + "/" + this.appState.gradeImport.id,
+          data = {conversion_scale: null, converted_grades: {}};
+
+      this.saveImportedGrades(url, JSON.stringify(data))
         .then((response) => {
           return response.data;
         })
         .then((data) => {
-          this.errorResponse = null;
+          this.appState.$reset();
         })
         .catch((error) => {
           this.errorResponse = error.response;

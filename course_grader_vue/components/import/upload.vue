@@ -4,23 +4,23 @@
     <strong>{{ section.section_name }}</strong>
   </p>
 
-  <div v-if="gradeImport">
-    <div v-if="gradeImport.grade_count">
+  <div v-if="appState.gradeImport">
+    <div v-if="appState.gradeImport.grade_count">
       <p>
         <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
-        <strong>{{ gradeImport.grade_count }}</strong> of
+        <strong>{{ appState.gradeImport.grade_count }}</strong> of
         <strong>{{ expectedGradeCount }}</strong>
         {{ ngettext("grade", "grades", expectedGradeCount) }} found in the file
         <strong>{{ file.name }}</strong>
       </p>
 
-      <ImportConvertSave :section="section" :grade-import="gradeImport" />
+      <ImportConvertSave :section="section" />
 
     </div>
     <div v-else>
       No grades found for <strong>{{ section.section_name }}</strong>
-      in this <strong>{{ gradeImport.source_name }}</strong>. Select a
-      different source for import or enter grades manually.
+      in this <strong>{{ appState.gradeImport.source_name }}</strong>.
+      Select a different source for import or enter grades manually.
     </div>
   </div>
   <div v-else>
@@ -133,7 +133,7 @@
         >see other options for submitting grades.</BLink>
       </p>
     </div>
-    <div v-else-if="gradeImport && !gradeImport.grade_count">
+    <div v-else-if="appState.gradeImport && !appState.gradeImport.grade_count">
       <div class="alert alert-danger gp-upload-error" role="alert">
         <i class="fas fa-exclamation-circle"></i>
         <strong>No grades found for {{ section.section_name }}</strong><br>
@@ -171,6 +171,7 @@ import { useGradeStore } from "@/stores/grade";
 import { uploadGrades } from "@/utils/data";
 import ImportConvertSave from "@/components/import/convert-options.vue";
 import { BButton, BLink } from "bootstrap-vue-next";
+import { useWorkflowStateStore } from "@/stores/state";
 
 export default {
   components: {
@@ -189,8 +190,10 @@ export default {
     },
   },
   setup() {
+    const appState = useWorkflowStateStore();
     const gradeStore = useGradeStore();
     return {
+      appState,
       gradeStore,
       uploadGrades,
     };
@@ -199,7 +202,6 @@ export default {
     return {
       file: null,
       errorResponse: null,
-      gradeImport: null,
     };
   },
   computed: {
@@ -233,11 +235,12 @@ export default {
         })
         .then((data) => {
           this.errorResponse = null;
-          this.gradeImport = this.gradeStore.processImport(data.grade_import);
+          let gradeImport = this.gradeStore.processImport(data.grade_import);
+          this.appState.setGradeImport(gradeImport);
         })
         .catch((error) => {
+          this.appState.resetGradeImport();
           this.errorResponse = error.response;
-          this.gradeImport = null;
         });
     },
   },

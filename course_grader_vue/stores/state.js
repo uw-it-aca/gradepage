@@ -58,6 +58,9 @@ export const useWorkflowStateStore = defineStore({
     setGradeImport (gradeImport) {
       this.gradeImport = gradeImport;
     },
+    resetGradeImport () {
+      this.gradeImport = null;
+    },
     setGraderoster (graderoster) {
       this.graderoster = graderoster;
       this.unsubmitted = graderoster.students.filter(
