@@ -13,10 +13,9 @@ export const useContextStore = defineStore({
   getters: {},
   actions: {
     selectTerm (url) {
-      for (let i = 0; i < this.context.terms.length; ++i) {
-        const t = this.context.terms[i];
-        t.is_selected = (t.url === url) ? true : false;
-      }
+      this.context.terms.forEach((term) => {
+        term.is_selected = (term.url === url) ? true : false;
+      });
     },
   },
 });

@@ -182,21 +182,14 @@ export default {
       this.menuOpen = true;
     },
     updateGradeChoices: function () {
-      var i,
-        len,
-        grade,
-        valid = [];
-      for (i = 0, len = this.gradeChoices.length; i < len; i++) {
-        grade =
-          i === 0 && this.gradeChoices[i] === ""
-            ? gettext("x_no_grade_now")
-            : this.gradeChoices[i];
-
+      var valid = [];
+      this.gradeChoices.forEach((gc, idx) => {
+        let grade = (idx === 0 && gc === "") ? gettext("x_no_grade_now") : gc;
         if (this.incomplete && incompleteBlocklist.includes(grade)) {
-          continue;
+          return;
         }
         valid.push(grade);
-      }
+      });
       this.actualChoices = valid;
     },
     incompleteChanged: function (checked) {
@@ -255,7 +248,6 @@ export default {
             this.updateGradeStatus();
           })
           .catch((error) => {
-            console.log(error.message);
             this.gradeError = error.message;
           })
           .finally(() => {

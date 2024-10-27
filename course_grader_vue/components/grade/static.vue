@@ -4,12 +4,16 @@
   </template>
   <template v-else-if="student.is_withdrawn">
     <div class="text-uppercase fs-5 fw-bold">
-      <span v-if="student.withdrawn_week">{{ interpolate(gettext("withdrawn_week %(withdrawn_week)s"), student, true) }}</span>
+      <span v-if="student.withdrawn_week">
+        {{ interpolate(gettext("withdrawn_week %(withdrawn_week)s"), student, true) }}
+      </span>
       <span v-else>{{ gettext("withdrawn") }}</span>
     </div>
   </template>
   <template v-else>
-    <span v-if="student.has_writing_credit" class="me-2"><abbr title="Writing credit">W</abbr></span>
+    <span v-if="student.has_writing_credit" class="me-2">
+      <abbr title="Writing credit">W</abbr>
+    </span>
     <template v-if="student.has_incomplete">
       <span class="visually-hidden">{{ gettext("submitted_grade") }}:</span>
       <span class="fs-2 fw-bold">I</span>

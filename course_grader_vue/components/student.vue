@@ -18,13 +18,13 @@
       </div>
     </div>
     <div v-if="appState.editingGrades && student.grade_url" class="text-end">
-      <GradeInput :student="student" :gradeChoices="gradeChoices"></GradeInput>
+      <GradeInput :student="student" :gradeChoices="gradeChoices" />
     </div>
     <div v-else-if="appState.reviewingConversion" class="text-end">
-      <GradeImport :student="student"></GradeImport>
+      <GradeImport :student="student" />
     </div>
     <div v-else class="text-end">
-      <GradeStatic :student="student"></GradeStatic>
+      <GradeStatic :student="student" />
     </div>
   </div>
 </template>
