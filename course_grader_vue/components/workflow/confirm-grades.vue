@@ -159,18 +159,25 @@
         <label class="visually-hidden">
           {{ gettext("multi_conversion_scale_view") }}
         </label>
-        <select id="gp-select-scale" v-model="importConversion">
-          <option selected disabled>
+        <BDropdown
+          v-model="importConversion"
+          size="sm"
+          variant="outline-secondary"
+          no-caret
+          class="float-end d-inline-block"
+          toggle-class="rounded-2"
+        >
+          <template #button-content>
             {{ gettext("multi_conversion_scale_option_view") }}
-          </option>
-          <option
+          </template>
+          <BDropdownItem
             v-for="(submission, index) in appState.graderoster.submissions"
             v-if="submission.grade_import.import_conversion"
             :value="submission.grade_import.import_conversion"
           >
-            Section {{ submission.section_id }}
-          </option>
-        </select>
+            <i class="me-2 text-body-tertiary"></i>Section {{ submission.section_id }}
+          </BDropdownItem>
+        </BDropdown>
       </div>
       <div v-else-if="!importConversion">
         {{ gettext("conversion_scale_msg") }}
