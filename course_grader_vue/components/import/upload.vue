@@ -215,8 +215,9 @@ export default {
         this.errorResponse.data.error === "Missing header: student");
     },
     fileLimitExceeded() {
+      console.log(this.errorResponse);
       return (
-        this.errorResponse &&
+        this.errorResponse && this.errorResponse.response &&
         this.errorResponse.response.indexOf("Request Entity Too Large") !== -1);
     },
     expectedGradeCountText() {
