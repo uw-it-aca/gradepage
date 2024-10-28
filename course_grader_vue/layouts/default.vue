@@ -28,7 +28,7 @@
             "
             aria-controls="gettingStartedCollapse"
           >
-            <span><i class="bi bi-calendar3 me-3"></i>Previous</span>
+            <span><i class="bi bi-calendar3 me-3"></i>Previous Terms</span>
             <i class="bi bi-chevron-right" aria-hidden="true"></i>
           </BLink>
           <div

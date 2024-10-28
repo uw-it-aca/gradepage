@@ -85,33 +85,13 @@
           class="small"
         >
           <i class="bi bi-exclamation-triangle-fill me-1"></i>
-          {{
-            interpolate(
-              ngettext(
-                "Grades submitted, but one grade had an error.",
-                "Grades submitted, but %(failed_submission_count)s grades had errors.",
-                appState.graderoster.failed_submission_count
-              ),
-              appState.graderoster,
-              true
-            )
-          }}
+          {{ partialGradeErrorText }}
         </BAlert>
 
         <!-- danger -->
         <BAlert v-else variant="danger" :model-value="true" class="small">
           <i class="bi bi-exclamation-octagon-fill me-1"></i>
-          {{
-            interpolate(
-              ngettext(
-                "Grade submitted with error.",
-                "Grades submitted with errors.",
-                appState.graderoster.failed_submission_count
-              ),
-              appState.graderoster,
-              true
-            )
-          }}
+          {{ allGradeErrorText }}
         </BAlert>
       </template>
 
@@ -175,57 +155,57 @@
       </li>
     </ul>
 
-    <div v-if="appState.graderoster.has_grade_imports">
+    <template #footer v-if="appState.graderoster.has_grade_imports">
       <div v-if="appState.graderoster.grade_import_count > 1">
         {{ gettext("multi_conversion_scale_msg") }}
         <label class="visually-hidden">
           {{ gettext("multi_conversion_scale_view") }}
         </label>
-        <select id="gp-select-scale" @change="showGradeScale($event)">
+        <select id="gp-select-scale" v-model="importConversion">
           <option selected disabled>
             {{ gettext("multi_conversion_scale_option_view") }}
           </option>
           <option
             v-for="(submission, index) in appState.graderoster.submissions"
-            v-if="submission.grade_import"
-            :value="index"
+            v-if="submission.grade_import.import_conversion"
+            :value="submission.grade_import.import_conversion"
           >
             Section {{ submission.section_id }}
           </option>
         </select>
       </div>
-      <div v-else-if="!selectedGradeScale">
+      <div v-else-if="!importConversion">
         {{ gettext("conversion_scale_msg") }}
         <BLink
           :title="gettext('conversion_scale_view_title')"
-          @click="showGradeScale($event)"
+          @click.prevent="showImportConversion()"
         >
           {{ gettext("conversion_scale_view") }}
         </BLink>
       </div>
 
-      <div v-if="selectedGradeScale">
+      <div v-if="importConversion">
         <h2 class="visually-hidden">{{ gettext("conversion_scale_header") }}</h2>
         <ol>
-          <li v-for="(item, index) in selectedGradeScale">
-            <span v-if="index === selectedGradeScale.length - 1">
-              <span>&lt; <span>{{ item.min_percentage }}&percnt;</span> &equals; </span>
-              <span>{{ lowestValidGrade }}</span>
+          <li v-for="(row, index) in importConversion.grade_scale">
+            <span v-if="index === importConversion.grade_scale.length - 1">
+              <span>&lt; <span>{{ row.min_percentage }}&percnt;</span> &equals; </span>
+              <span>{{ importConversion.lowest_valid_grade }}</span>
             </span>
             <span v-else>
-              <span>&ge; <span>{{ item.min_percentage }}&percnt;</span> &equals; </span>
-              <span>{{ item.grade }}</span>
+              <span>&ge; <span>{{ row.min_percentage }}&percnt;</span> &equals; </span>
+              <span>{{ row.grade }}</span>
             </span>
           </li>
         </ol>
         <BLink
           :title="gettext('conversion_scale_hide_title')"
-          @click.prevent="hideGradeScale()"
+          @click.prevent="hideImportConversion()"
         >
           {{ gettext("conversion_scale_hide") }}
         </BLink>
       </div>
-    </div>
+    </template>
   </BCard>
 </template>
 
@@ -274,24 +254,34 @@ export default {
   },
   data() {
     return {
-      selectedGradeScale: null,
-      lowestValidGrade: null,
+      importConversion: null,
     };
   },
+  computed: {
+    partialGradeErrorText() {
+      return interpolate(ngettext(
+        "Grades submitted, but one grade had an error.",
+        "Grades submitted, but %(failed_submission_count)s grades had errors.",
+        this.appState.graderoster.failed_submission_count
+      ), this.appState.graderoster, true);
+    },
+    allGradeErrorText() {
+      return interpolate(ngettext(
+        "Grade submitted with error.",
+        "Grades submitted with errors.",
+        this.appState.graderoster.failed_submission_count
+      ), this.appState.graderoster, true);
+    },
+  },
   methods: {
-    showGradeScale (ev) {
-      var idx = (ev.target.value) ? ev.target.value : 0,
-          conversion;
-
-      if (appState.graderoster.submissions[idx]) {
-        conversion = appState.graderoster.submissions[idx].import_conversion;
-        this.selectedGradeScale = conversion.grade_scale;
-        this.lowestValidGrade = conversion.lowest_valid_grade;
+    showImportConversion () {
+      let submission = this.appState.graderoster.submissions[0];
+      if (submission && submission.grade_import) {
+        this.importConversion = submission.grade_import.import_conversion;
       }
     },
-    hideGradeScale () {
-      this.selectedGradeScale = null;
-      this.lowestValidGrade = null;
+    hideImportConversion () {
+      this.importConversion = null;
     },
   },
 };

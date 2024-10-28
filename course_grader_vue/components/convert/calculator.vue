@@ -122,10 +122,10 @@ export default {
     CalculatorRow,
     GradeScaleRow,
     BButton,
+    BLink,
   },
   setup() {
     const calculatorStore = useCalculatorStore();
-
     return {
       calculatorStore,
     };
@@ -136,19 +136,14 @@ export default {
       scaleValues: [],
     };
   },
-  methods: {
-    initializeCalculator: function () {
-      this.calculatorValues = this.calculatorStore.calculatorValues;
-      this.scaleValues = this.calculatorStore.scaleValues;
-
-      this.calculatorStore.$subscribe((mutation, state) => {
-        this.calculatorValues = state.calculatorValues;
-        this.scaleValues = state.scaleValues;
-      });
-    },
-  },
   created() {
-    this.initializeCalculator();
+    this.calculatorValues = this.calculatorStore.calculatorValues;
+    this.scaleValues = this.calculatorStore.scaleValues;
+
+    this.calculatorStore.$subscribe((mutation, state) => {
+      this.calculatorValues = state.calculatorValues;
+      this.scaleValues = state.scaleValues;
+    });
   },
 };
 </script>
