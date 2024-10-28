@@ -207,18 +207,20 @@ export default {
     missingHeaderGrade() {
       return (
         this.errorResponse &&
+        typeof(this.errorResponse.data) === "object" &&
         this.errorResponse.data.error === "Missing header: grade");
     },
     missingHeaderStudent() {
       return (
         this.errorResponse &&
+        typeof(this.errorResponse.data) === "object" &&
         this.errorResponse.data.error === "Missing header: student");
     },
     fileLimitExceeded() {
-      console.log(this.errorResponse);
       return (
-        this.errorResponse && this.errorResponse.response &&
-        this.errorResponse.response.indexOf("Request Entity Too Large") !== -1);
+        this.errorResponse &&
+        typeof(this.errorResponse.data) === "string"  &&
+        this.errorResponse.data.indexOf("Request Entity Too Large") !== -1);
     },
     expectedGradeCountText() {
       return interpolate(ngettext(

@@ -17,6 +17,10 @@ logger = getLogger(__name__)
 STUDENT_NUM_LEN = 7
 
 
+def normalize(s):
+    return s.replace(' ', '').replace('_', '').lower()
+
+
 class InsensitiveDict(dict):
     """
     Override the get method to strip() and lower() the input key, and
@@ -24,9 +28,9 @@ class InsensitiveDict(dict):
     """
     def get(self, *k, default=None):
         for i in k:
-            if i.strip().lower() in self:
+            if normalize(i) in self:
                 try:
-                    return super().get(i.strip().lower()).strip()
+                    return super().get(normalize(i)).strip()
                 except AttributeError:
                     break
         return default
@@ -38,7 +42,7 @@ class InsensitiveDictReader(csv.DictReader):
     """
     @property
     def fieldnames(self):
-        return [field.strip().lower() for field in super().fieldnames]
+        return [normalize(field) for field in super().fieldnames]
 
     def __next__(self):
         return InsensitiveDict(super().__next__())
@@ -47,6 +51,9 @@ class InsensitiveDictReader(csv.DictReader):
 class GradeImportCSV(GradeImportSource):
     def __init__(self):
         self.encoding = None
+        self.student_id_cols = ["uwregid", "sisuserid"]
+        self.student_num_cols = [
+          "studentid", "studentno", "studentnum", "studentnumber"]
 
     def decode_file(self, csvfile):
         if not self.encoding:
@@ -56,20 +63,24 @@ class GradeImportCSV(GradeImportSource):
 
     def validate(self, fileobj):
         # Read the first line of the file to validate the header
-        decoded_file = self.decode_file(fileobj.readline())
-        self.has_header = csv.Sniffer().has_header(decoded_file)
-        self.dialect = csv.Sniffer().sniff(decoded_file)
+        try:
+            decoded_file = self.decode_file(fileobj.readline())
+            self.has_header = csv.Sniffer().has_header(decoded_file)
+            self.dialect = csv.Sniffer().sniff(decoded_file)
+        except Exception as err:
+            raise InvalidCSV(str(err))
 
         reader = InsensitiveDictReader(decoded_file.splitlines(),
                                        dialect=self.dialect)
 
-        if ("import grade" not in reader.fieldnames and
-                "importgrade" not in reader.fieldnames):
+        if ("importgrade" not in reader.fieldnames):
             raise InvalidCSV("Missing header: grade")
 
-        if ("uwregid" not in reader.fieldnames and
-                "sis user id" not in reader.fieldnames and
-                "studentno" not in reader.fieldnames):
+        student_col = next((
+            s for s in (self.student_id_cols + self.student_num_cols) if s in (
+                reader.fieldnames)), None)
+
+        if student_col is None:
             raise InvalidCSV("Missing header: student")
 
         fileobj.seek(0, 0)
@@ -93,15 +104,14 @@ class GradeImportCSV(GradeImportSource):
 
         grade_data = []
         for row in InsensitiveDictReader(decoded_file, dialect=self.dialect):
-            student_number = row.get("StudentNo")
+            student_number = row.get(*self.student_num_cols)
             student_data = {
-                "student_reg_id": row.get("UWRegID", "SIS User ID"),
+                "student_reg_id": row.get(*self.student_id_cols),
                 "student_number": student_number.zfill(STUDENT_NUM_LEN) if (
                     student_number is not None) else student_number,
-                "grade": row.get("Import Grade", "ImportGrade"),
-                "is_incomplete": self.is_true(row.get("Incomplete")),
-                "is_writing": self.is_true(
-                    row.get("Writing Credit", "WritingCredit")),
+                "grade": row.get("importgrade"),
+                "is_incomplete": self.is_true(row.get("incomplete")),
+                "is_writing": self.is_true(row.get("writingcredit")),
             }
             if (student_data["student_reg_id"] or
                     student_data["student_number"]):
