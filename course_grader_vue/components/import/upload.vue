@@ -231,6 +231,7 @@ export default {
   },
   methods: {
     fileSelected(files) {
+      this.errorResponse = null;
       this.file = files[0];
     },
     uploadFile() {

@@ -14,7 +14,7 @@ export const useWorkflowStateStore = defineStore({
       name: "workflowState",
       _workflowState: null,
       graderoster: null,
-      unsubmitted: 0,
+      unsubmittedCount: 0,
       gradeImport: null,
     };
   },
@@ -63,11 +63,11 @@ export const useWorkflowStateStore = defineStore({
     },
     setGraderoster (graderoster) {
       this.graderoster = graderoster;
-      this.unsubmitted = graderoster.students.filter(
+      this.unsubmittedCount = graderoster.students.filter(
           (s) => s.grade_url !== null).length
 
       // Initialize workflow state
-      if (this.unsubmitted > 0) {
+      if (this.unsubmittedCount > 0) {
         this.editGrades();
       } else {
         this.confirmGrades();

@@ -3,16 +3,16 @@
     <div>
       <div class="fs-4 text-uppercase">{{ student.student_lastname }}, {{ student.student_firstname }}</div>
       <div class="small text-muted">
-        <span class="visually-hidden">Section:</span> {{ student.section_id }},
+        <span class="visually-hidden">{{ gettext("section") }}:</span> {{ student.section_id }},
         <span v-if="student.student_credits">
-          <span class="visually-hidden">Student credits:</span>
+          <span class="visually-hidden">{{ gettext("student_credits") }}:</span>
           {{ student.student_credits }} CR,
         </span>
-        <span class="visually-hidden">Student number:</span>
+        <span class="visually-hidden">{{ gettext("student_number") }}:</span>
         {{ student.student_number }}
         <template v-if="student.duplicate_code">
-          <span class="visually-hidden">Duplicate code:</span>
-          <abbr title="Duplicate Code" class="badge rounded-pill text-bg-secondary">
+          <span class="visually-hidden">{{ gettext("duplicate_code") }}:</span>
+          <abbr :title="gettext('duplicate_code')" class="badge rounded-pill text-bg-secondary">
           {{ student.duplicate_code }}</abbr>
         </template>
       </div>

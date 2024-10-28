@@ -40,6 +40,8 @@
 </template>
 
 <script>
+import { useWorkflowStateStore } from "@/stores/state";
+
 export default {
   props: {
     student: {
@@ -47,10 +49,16 @@ export default {
       required: true,
     },
   },
-  data() {
+  setup() {
+    const appState = useWorkflowStateStore();
     return {
-      showDateGraded: false,
+      appState,
     };
+  },
+  computed: {
+    showDateGraded() {
+      return this.appState.unsubmittedCount > 0 ? true : false;
+    },
   },
 };
 </script>
