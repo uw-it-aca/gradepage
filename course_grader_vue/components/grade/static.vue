@@ -30,7 +30,7 @@
         <span class="fs-2 fw-bold">{{ student.grade }}</span>
       </template>
     </template>
-    <div v-if="student.date_graded" class="small text-muted">
+    <div v-if="student.date_graded && showDateGraded" class="small text-muted">
       {{ interpolate(gettext("grade_submitted %(date_graded)s"), student, true) }}
     </div>
     <div v-if="student.grade_status" class="small text-muted">
@@ -46,6 +46,11 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  data() {
+    return {
+      showDateGraded: false,
+    };
   },
 };
 </script>
