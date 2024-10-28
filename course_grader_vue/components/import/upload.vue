@@ -24,11 +24,7 @@
     </div>
   </div>
   <div v-else>
-    <p>
-      {{ interpolate(ngettext(
-           "One grade expected", "%(count)s grades expected",
-            expectedGradeCount), {"count": expectedGradeCount}, true) }}
-    </p>
+    <p>{{ expectedGradeCountText }}</p>
     <p>The CSV is required to contain at least two columns:</p>
     <ul>
       <li>a column for student identifier (<strong>SIS User ID</strong> or <strong>StudentNo)</strong> AND</li>
@@ -222,6 +218,12 @@ export default {
       return (
         this.errorResponse &&
         this.errorResponse.response.indexOf("Request Entity Too Large") !== -1);
+    },
+    expectedGradeCountText() {
+      return interpolate(ngettext(
+        "One grade expected",
+        "%(count)s grades expected",
+        this.expectedGradeCount), {"count": this.expectedGradeCount}, true);
     },
   },
   methods: {
