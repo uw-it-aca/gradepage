@@ -15,42 +15,40 @@
       <BLink
         class="btn btn-info btn-sm rounded-3 text-nowrap"
         :href="section.term_url"
-        >Return to class list</BLink
+        >Return to section list</BLink
       >
     </div>
   </BAlert>
 
   <BCard class="shadow-sm rounded-3" header-class="p-3" header="Default">
     <template #header>
-      <SectionHeader :section="section" :title="gettext('submitted_grades_for')" />
+      <BDropdown
+        v-model="showSectionOptions"
+        size="sm"
+        variant="outline-secondary"
+        no-caret
+        class="float-end d-inline-block"
+        toggle-class="rounded-2"
+      >
+        <template #button-content>
+          <i class="bi bi-three-dots"></i
+        ></template>
+        <BDropdownItem :href="section.export_url">
+          <i class="bi bi-download me-2 text-body-tertiary"></i>Download Change of Grade
+        </BDropdownItem>
+        <BDropdownItem href="javascript:window.print()">
+          <i class="bi bi-printer me-2 text-body-tertiary"></i>Print this page
+        </BDropdownItem>
+        <BDropdownDivider />
+        <BDropdownItem
+          href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
+          target="_blank"
+          title="Information on assigning and submitting grades"
+          ><i class="bi bi-question-circle me-2 text-body-tertiary"></i>GradePage Help
+        </BDropdownItem>
+      </BDropdown>
 
-      <template>
-        <BDropdown
-          v-model="showSectionOptions"
-          size="sm"
-          variant="outline-secondary"
-          no-caret
-          class="float-end d-inline-block"
-          toggle-class="rounded-2"
-        >
-          <template #button-content>
-            <i class="bi bi-three-dots"></i
-          ></template>
-          <BDropdownItem :href="section.export_url">
-            <i class="bi bi-download me-2 text-body-tertiary"></i>Download Change of Grade
-          </BDropdownItem>
-          <BDropdownItem href="javascript:window.print()">
-            <i class="bi bi-printer me-2 text-body-tertiary"></i>Print this page
-          </BDropdownItem>
-          <BDropdownDivider />
-          <BDropdownItem
-            href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
-            target="_blank"
-            title="Information on assigning and submitting grades"
-            ><i class="bi bi-question-circle me-2 text-body-tertiary"></i>GradePage Help
-          </BDropdownItem>
-        </BDropdown>
-      </template>
+      <SectionHeader :section="section" :title="gettext('submitted_grades_for')" />
 
       <div
         v-if="!appState.graderoster.is_submission_confirmation"
