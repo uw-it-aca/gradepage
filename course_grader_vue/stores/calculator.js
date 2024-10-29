@@ -131,60 +131,63 @@ export const useCalculatorStore = defineStore({
           currScale = this.gradeScales[this.selectedScale],
           highestValidGrade = parseFloat(currScale[0]),
           lowestValidGrade = parseFloat(currScale[currScale.length - 2]),
-          lastSeenPercentage,
-          lastSeenGrade,
+          lastSeenPercentage = Infinity,
+          lastSeenGrade = Infinity,
           emptyRows = [];
 
       this.calculatorValues.forEach((cv, idx) => {
-        cv.grade = cv.grade.trim();
-        cv.percentage = cv.percentage.trim();
+        var grdStr = cv.grade.toString().trim(),
+            pctStr = cv.percentage.toString().trim();
 
-        if (cv.percentage === "" && cv.grade === "") {
+        if (pctStr === "" && grdStr === "") {
           emptyRows.unshift(idx);
           return;
         }
 
-        if (cv.percentage === "") {
+        if (pctStr === "") {
           valid = false;
           cv.percentageError = gettext("calculator_min_missing");
-        } else if (cv.percentage.match(/^[^-]+[-]/)) {
+        } else if (pctStr.match(/^[^-]+[-]/)) {
           valid = false;
           cv.percentageError = gettext("calculator_min_invalid");
         } else {
-          var pct = Math.round(parseFloat(cv.percentage) * 10) / 10;
-          if (isNaN(pct) || pct >= lastSeenPercentage) {
+          var pctNum = Math.round(parseFloat(pctStr) * 10) / 10;
+          if (isNaN(pctNum) || pctNum >= lastSeenPercentage) {
             valid = false;
             cv.percentageError = gettext("calculator_min_invalid");
           } else {
-            lastSeenPercentage = pct;
+            lastSeenPercentage = pctNum;
             cv.percentageError = "";
+            pctStr = pctNum.toString();
           }
         }
 
-        if (cv.grade === "") {
+        if (grdStr === "") {
           valid = false;
           cv.gradeError = gettext("calculator_grade_missing");
         } else {
-          var grd = Math.round(parseFloat(cv.grade) * 10) / 10;
-          if (isNaN(grd) ||
-              grd > highestValidGrade ||
-              grd < lowestValidGrade ||
-              grd >= lastSeenGrade) {
+          var grdNum = Math.round(parseFloat(grdStr) * 10) / 10;
+          if (isNaN(grdNum) ||
+              grdNum > highestValidGrade ||
+              grdNum  < lowestValidGrade ||
+              grdNum >= lastSeenGrade) {
             valid = false;
             cv.gradeError = gettext("calculator_grade_invalid");
           } else {
-            lastSeenGrade = grd;
+            lastSeenGrade = grdNum;
             cv.gradeError = "";
 
-            var strgrd = grd.toString();
-            if (!strgrd.match(/\./)) {
-              cv.grade = strgrd += ".0";
+            grdStr = grdNum.toString();
+            if (!grdStr.match(/\./)) {
+              grdStr = grdStr + ".0";
             }
-            if (strgrd.match(/^\./)) {
-              cv.grade = "0" + strgrd;
+            if (grdStr.match(/^\./)) {
+              grdStr = "0" + grdStr;
             }
           }
         }
+        cv.percentage = pctStr;
+        cv.grade = grdStr;
       });
 
       emptyRows.forEach((i) => {
@@ -243,35 +246,40 @@ export const useCalculatorStore = defineStore({
     },
     validateScaleValues() {
       var errorCount = 0,
-          seenMins = {};
+          seenMins = {},
+          lastSeenPercentage = Infinity;
 
       this.scaleValues.forEach((sv, idx, arr) => {
         if (idx === arr.length - 1) {
           return;
         }
 
-        sv.minPercentage = sv.minPercentage.trim();
-        if (sv.minPercentage === "") {
+        var minPctStr = sv.minPercentage.toString().trim();
+        if (minPctStr === "") {
           errorCount++;
           sv.minPercentageError = gettext("calculator_min_missing");
         } else {
-          var pct = Math.round(parseFloat(sv.minPercentage) * 10) / 10;
-          if (isNaN(pct)) {
+          var minPctNum = Math.round(parseFloat(minPctStr) * 10) / 10;
+          if (isNaN(minPctNum) ||
+              minPctNum < 0 ||
+              minPctNum > lastSeenPercentage) {
             errorCount++;
             sv.minPercentageError = gettext("calculator_min_invalid");
           } else {
-            if (pct in seenMins) {
+            if (minPctNum in seenMins) {
               let dupeError = gettext("min_percentage_duplicate");
               errorCount++;
-              sv.minPercentage = pct.toString();
               sv.minPercentageError = dupeError;
-              this.scaleValues[seenMins[pct]].minPercentageError = dupeError;
+              this.scaleValues[seenMins[minPctNum]].minPercentageError = dupeError;
             } else {
               sv.minPercentageError = "";
             }
-            seenMins[pct] = idx;
+            lastSeenPercentage = minPctNum;
+            seenMins[minPctNum] = idx;
+            minPctStr = minPctNum.toString();
           }
         }
+        sv.minPercentage = minPctStr;
       });
       return errorCount;
     },
