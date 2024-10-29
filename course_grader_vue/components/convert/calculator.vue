@@ -1,10 +1,10 @@
 <template>
   <div>
-    <label for="import_scale_selector" class="visually-hidden">
+    <label for="import-scale-selector" class="visually-hidden">
       {{ gettext("conversion_scale_chooser_label") }}
     </label>
     <BDropdown
-      id="import_scale_selector"
+      id="import-scale-selector"
       size="sm"
       variant="outline-secondary"
       class="d-inline-block"
