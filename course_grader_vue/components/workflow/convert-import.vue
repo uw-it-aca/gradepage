@@ -13,40 +13,48 @@
       <label for="course-scale-select" class="visually-hidden">
         {{ gettext("course_scale_label_sr") }}
       </label>
-      <select
+      <BDropdown
         id="course-scale-select"
-        v-model="courseGradingScheme"
-        @change="courseGradingSchemeSelected()"
+        size="sm"
+        variant="outline-secondary"
+        class="d-inline-block"
       >
-        <option role="presentation" value="" selected disabled>
-          {{ gettext("course_scale_label") }} &gt;
-        </option>
-        <option v-for="scheme in courseGradingSchemes" :value="scheme">
-          {{ scheme.course_name }}&nbsp;({{ scheme.grading_scheme_name }})
-        </option>
-      </select>
+        <template #button-content>
+          {{ gettext("course_scale_label") }}
+        </template>
+        <BDropdownItem
+          v-for="scheme in courseGradingSchemes"
+          :value="scheme"
+          @click.prevent="courseGradingSchemeSelected(scheme)"
+        >{{ scheme.course_name }}&nbsp;({{ scheme.grading_scheme_name }})
+        </BDropdownItem>
+      </BDropdown>
     </div>
 
     <div v-if="previousScales && previousScales.terms.length">
       <label for="previous-scale-select" class="visually-hidden">
         {{ gettext("previous_scale_label_sr") }}
       </label>
-      <select
+      <BDropdown
         id="previous-scale-select"
-        v-model="previousScale"
-        @change="previousScaleSelected()"
+        size="sm"
+        variant="outline-secondary"
+        class="d-inline-block"
       >
-        <option role="presentation" value="" selected disabled>
-          {{ gettext("previous_scale_label") }} &gt;
-        </option>
-        <optgroup
+        <template #button-content>
+          {{ gettext("previous_scale_label") }}
+        </template>
+        <BDropdownGroup
           v-for="term in previousScales.terms"
-          :label="term.quarter + ' ' + term.year">
-          <option v-for="scale in term.conversion_scales" :value="scale">
-            {{ scale.section }}
-          </option>
-        </optgroup>
-      </select>
+          :header="term.quarter + ' ' + term.year"
+        >
+          <BDropdownItem
+            v-for="scale in term.conversion_scales"
+            :value="scale"
+            @click.prevent="previousScaleSelected(scale)"
+          >{{ scale.section }}</BDropdownItem>
+        </BDropdownGroup>
+      </BDropdown>
     </div>
 
     <GradeConversionCalculator />
@@ -79,7 +87,14 @@ import GradeConversionCalculator from "@/components/convert/calculator.vue";
 import Student from "@/components/student.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useCalculatorStore } from "@/stores/calculator";
-import { BButton, BCard, BLink } from "bootstrap-vue-next";
+import {
+  BCard,
+  BButton,
+  BLink,
+  BDropdown,
+  BDropdownItem,
+  BDropdownGroup,
+} from "bootstrap-vue-next";
 
 export default {
   props: {
@@ -92,9 +107,12 @@ export default {
     SectionHeader,
     GradeConversionCalculator,
     Student,
-    BButton,
     BCard,
+    BButton,
     BLink,
+    BDropdown,
+    BDropdownItem,
+    BDropdownGroup,
   },
   setup() {
     const appState = useWorkflowStateStore();
@@ -107,8 +125,6 @@ export default {
   data() {
     return {
       scaleErrorCount: 0,
-      courseGradingScheme: null,
-      previousScale: null,
     };
   },
   computed: {
@@ -127,15 +143,11 @@ export default {
     },
   },
   methods: {
-    courseGradingSchemeSelected: function () {
-      if (this.courseGradingScheme) {
-        this.calculatorStore.initializeCalculator(this.courseGradingScheme);
-      }
+    courseGradingSchemeSelected: function (scheme) {
+      this.calculatorStore.initializeCalculator(scheme);
     },
-    previousScaleSelected: function () {
-      if (this.previousScale) {
-        this.calculatorStore.initializeCalculator(this.previousScale);
-      }
+    previousScaleSelected: function (scale) {
+      this.calculatorStore.initializeCalculator(scale);
     },
     cancelConversion: function () {
       this.appState.$reset();
