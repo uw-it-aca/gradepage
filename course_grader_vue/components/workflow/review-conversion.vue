@@ -4,7 +4,10 @@
       <SectionHeader :section="section" :title="gettext('review_import_grades')" />
     </template>
 
-    <template v-if="errorResponse">
+    <template v-if="isLoading">
+      Importing grades...
+    </template>
+    <template v-else-if="errorResponse">
       <Errors :error-response="errorResponse" />
     </template>
     <template v-else-if="appState.gradeImport.students">
@@ -19,7 +22,7 @@
       </ul>
     </template>
 
-    <template #footer>
+    <template v-if="!isLoading && !errorResponse" #footer>
       <div class="d-flex">
         <div class="text-nowrap">
           <BButton variant="outline-primary" @click="editConversion">
@@ -71,6 +74,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       errorResponse: null,
     };
   },
@@ -85,6 +89,7 @@ export default {
       data.conversion_scale = this.calculatorStore.conversionData;
       data.converted_grades = this.appState.convertedGradeData;
 
+      this.isLoading = true;
       this.saveImportedGrades(url, JSON.stringify(data))
         .then((response) => {
           return response.data;
@@ -94,6 +99,7 @@ export default {
         })
         .catch((error) => {
           this.errorResponse = error.response;
+          this.isLoading = false;
         });
     },
   },
