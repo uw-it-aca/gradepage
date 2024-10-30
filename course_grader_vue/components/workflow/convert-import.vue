@@ -1,9 +1,7 @@
 <template>
   <BCard class="shadow-sm rounded-3" header-class="p-3" header="Default">
     <template #header>
-
       <SectionHeader :section="section" :title="gettext('convert_grades')" />
-
     </template>
 
     <h3>{{ gettext("conversion_header") }}</h3>

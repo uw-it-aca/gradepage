@@ -8,7 +8,6 @@ INSTALLED_APPS += [
     'userservice',
     'persistent_message',
     'rc_django',
-    'grade_conversion_calculator',
     'django.contrib.humanize',
 ]
 
