@@ -105,6 +105,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       errorResponse: null,
     };
   },
@@ -113,6 +114,7 @@ export default {
       this.appState.editGrades();
     },
     submitGrades: function () {
+      this.isLoading = true;
       this.submitGraderoster(this.section.graderoster_url, {})
         .then((response) => {
           return response.data;
@@ -122,6 +124,7 @@ export default {
         })
         .catch((error) => {
           this.errorResponse = error.response;
+          this.isLoading = false;
         });
     },
   },
