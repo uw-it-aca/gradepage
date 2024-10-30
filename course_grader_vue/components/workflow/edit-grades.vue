@@ -9,26 +9,23 @@
       </div>
 
       <SectionHeader :section="section" :title="gettext('enter_grades')" />
-
-      <div
-        v-if="appState.graderoster.is_writing_section"
-        class="bg-body-secondary p-3 rounded-3"
-      >
-        <div class="small" role="status">
-          {{ gettext("writing_course_note_receipt") }}
-        </div>
-      </div>
     </template>
 
     <template v-if="errorResponse">
       <Errors :error-response="errorResponse" />
     </template>
     <template v-else-if="appState.graderoster">
-      <div v-if="appState.graderoster.has_duplicate_codes"
+      <div
+        v-if="appState.graderoster.is_writing_section || appState.graderoster.has_duplicate_codes"
         class="mb-2 pb-2 small text-muted border-bottom"
       >
-        {{ gettext("duplicate_code") }}
-        <i class="bi bi-circle-fill text-secondary"></i>
+        <div v-if="appState.graderoster.is_writing_section"
+          v-html="gettext('writing_course_note')">
+        </div>
+        <div v-if="appState.graderoster.has_duplicate_codes">
+          {{ gettext("duplicate_code") }}
+          <i class="bi bi-circle-fill text-secondary"></i>
+        </div>
       </div>
     </template>
 
