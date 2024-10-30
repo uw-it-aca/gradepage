@@ -75,8 +75,10 @@ export const useWorkflowStateStore = defineStore({
     },
     convertImportedGrades (scaleValues, lowestValidGrade) {
       this.gradeImport.students.forEach(student => {
-        let match = scaleValues.find(
-          r => student.imported_grade >= r.minPercentage);
+        let importedPct = parseFloat(student.imported_grade);
+        let match = scaleValues.find(sv => {
+          return importedPct >= parseFloat(sv.minPercentage);
+        });
         student.converted_grade = (match) ? match.grade : lowestValidGrade;
       });
     },
