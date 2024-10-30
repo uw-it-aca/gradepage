@@ -100,8 +100,8 @@
     Student will receive default grade
   </div>
 
-  <div :id="`status-${student.item_id}`">
-    <span v-if="student.import_source" class="imported-grade">
+  <div>
+    <span v-if="student.import_source" class="imported-grade small text-muted">
       {{ student.import_source }} grade: {{ student.import_grade }}
       <span
         v-if="student.is_override_grade"
