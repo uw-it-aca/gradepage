@@ -4,8 +4,8 @@
     :app-name="appName"
     :app-root-url="appRootUrl"
     :page-title="pageTitle"
-    :user-name="userName"
-    :sign-out-url="signOutUrl"
+    :user-name="context.login_user"
+    :sign-out-url="context.signout_url"
     :background-class="'bg-body'"
   >
     <template #navigation>
@@ -56,9 +56,9 @@
     </template>
     <template #profile>
       <SProfile
-        v-if="userOverride != null"
-        :user-netid="userName"
-        :user-override="userOverride"
+        v-if="context.override_user != null"
+        :user-netid="context.login_user"
+        :user-override="context.override_user"
       >
         <button
           class="btn btn-link btn-sm text-danger p-0 m-0 border-0"
@@ -68,8 +68,8 @@
           Clear override
         </button>
       </SProfile>
-      <SProfile v-else :user-netid="userName">
-        <a :href="signOutUrl" class="text-white">Sign out</a>
+      <SProfile v-else :user-netid="context.login_user">
+        <a :href="context.signout_url" class="text-white">Sign out</a>
       </SProfile>
     </template>
     <template #aside>
@@ -80,9 +80,9 @@
           </div>
           <ul class="list-unstyled m-0 text-body small">
             <li
-              v-for="(msg, index) in messages"
+              v-for="(message, index) in window.gradepage.messages"
               :key="index"
-              v-html="msg"
+              v-html="message"
               class="mt-2"
             ></li>
           </ul>
@@ -131,20 +131,18 @@ export default {
     };
   },
   data() {
-    let context = this.contextStore.context,
-      appName = "GradePage";
     return {
-      appName: appName,
+      appName: "GradePage",
       appRootUrl: "/",
-      userName: context.login_user,
-      userFullName: context.user_fullname,
-      userOverride: context.override_user,
-      clearOverrideUrl: context.clear_override_url,
-      signOutUrl: context.signout_url,
-      messages: window.gradepage.messages,
-      messageLevel: window.gradepage.message_level,
-      currentTerm: this.contextStore.context.terms[0],
     };
+  },
+  computed: {
+    context() {
+      return this.contextStore.context;
+    },
+    currentTerm() {
+      return this.contextStore.context.terms[0];
+    },
   },
   created: function () {
     // constructs page title in the following format "Page Title - AppName"
@@ -152,8 +150,8 @@ export default {
   },
   methods: {
     clearUserOverride: function () {
-      this.clearOverride(this.clearOverrideUrl).then(() => {
-        window.location.href = this.clearOverrideUrl;
+      this.clearOverride(this.context.clear_override_url).then(() => {
+        window.location.href = this.context.clear_override_url;
       });
     },
   },
