@@ -112,7 +112,7 @@ export default {
         );
       }
       if (!term) {
-        term = this.contextStore.context.terms[0];
+        term = this.currentTerm;
       }
       this.selectedTerm = term;
     },
