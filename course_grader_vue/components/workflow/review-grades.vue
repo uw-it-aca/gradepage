@@ -57,15 +57,15 @@
           <BButton
             :title="interpolate(gettext('btn_review_back_title'), section, true)"
             variant="outline-primary"
+            v-text="gettext('btn_review_back')"
             @click="editGrades"
-            >{{ gettext("btn_review_back") }}
-          </BButton>
+          ></BButton>
           <BButton
             variant="primary"
+            v-text="gettext('btn_submit_grades')"
             @click="submitGrades"
             class="ms-2"
-            >{{ gettext("btn_submit_grades") }}
-          </BButton>
+          ></BButton>
         </div>
       </div>
     </template>

@@ -63,8 +63,9 @@
         <BButton
           :disabled="reviewDisabled"
           variant="primary"
+          v-text="gettext('btn_review_submit')"
           @click="reviewGrades"
-        >{{ gettext("btn_review_submit") }}
+        >
         </BButton>
       </div>
     </template>

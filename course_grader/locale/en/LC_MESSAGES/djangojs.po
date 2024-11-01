@@ -132,8 +132,8 @@ msgstr "Confirm"
 msgid "import_grades_btn"
 msgstr "Import Grades"
 
-msgid "import_grades_btn_sr"
-msgstr "to GradePage"
+msgid "import_grades_btn_title"
+msgstr "Import grades to GradePage"
 
 msgid "import_grades_dd"
 msgstr "Import from..."
@@ -460,6 +460,9 @@ msgstr "The Office of the Registrar requires submitted grades to follow official
 msgid "import_conversion_required_select"
 msgstr "Please select a format to use:"
 
+msgid "import_select_different_file"
+msgstr "To select a different file, click <strong>Cancel</strong>."
+
 msgid "import_grade_found"
 msgstr "One grade found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>."
 
@@ -487,14 +490,14 @@ msgstr "Unposted grades <strong>ARE NOT</strong> represented in the imported fin
 msgid "import_unposted_grade_title"
 msgstr "Learn more about importing Canvas grades on IT Connect"
 
+msgid "import_save_continue"
+msgstr "To continue, click <strong>Import grades</strong>."
+
 msgid "import_save_note"
 msgstr "You will have a chance to enter, adjust, and review grades on the next screen."
 
-msgid "import_save_grades"
+msgid "import_save_grades_btn"
 msgstr "Import grades"
-
-msgid "import_confirm_note"
-msgstr "Grades can be adjusted on next page."
 
 msgid "convert_grades"
 msgstr "Convert grades for"
@@ -513,6 +516,12 @@ msgstr "Use one of your previous conversion scales"
 
 msgid "no_classes_to_grade"
 msgstr "You do not have any classes to grade for <strong>%(quarter)s %(year)s</strong>. If you believe this to be incorrect, please contact your department's Time Schedule Coordinator."
+
+msgid "import_canvas_btn"
+msgstr "Canvas Gradebook"
+
+msgid "import_csv_btn"
+msgstr "CSV File"
 
 msgid "import_canvas_title"
 msgstr "Import Canvas Gradebook"
