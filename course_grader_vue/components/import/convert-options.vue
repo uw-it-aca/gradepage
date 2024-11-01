@@ -14,7 +14,7 @@
   <div v-else>
     <p>
       To continue, click <strong>{{ gettext("import_save_grades") }}</strong>.
-      <br /><small><em>You will have a chance to enter, adjust, and review grades on the next screen.</em></small>
+      <br /><small><em>{{ gettext("import_save_note") }}</em></small>
     </p>
     <p>To select a different file, click <strong>Cancel</strong>.</p>
     <div>

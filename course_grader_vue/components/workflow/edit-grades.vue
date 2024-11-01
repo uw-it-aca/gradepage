@@ -57,7 +57,7 @@
         <div class="flex-fill align-self-center text-end me-2 small">
           <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span>
           <span v-else class="visually-hidden">
-            All grades entered. Click Review button to continue.
+            {{ gettext("grades_ok_review") }}
           </span>
         </div>
         <BButton

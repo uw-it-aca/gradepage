@@ -8,34 +8,23 @@
   </div>
   <div v-else-if="appState.gradeImport">
     <div v-if="appState.gradeImport.status_code != 200">
-      There was an error importing grades from Canvas ({{ appState.gradeImport.status_code }}).
+      {{ gettext("import_canvas_error") }}
+      ({{ appState.gradeImport.status_code }}).
     </div>
-    <div v-else="appState.gradeImport.grade_count">
-      <p v-if="appState.gradeImport.grade_count === 1">
-        One grade found for <strong>{{ section.section_name }}</strong> in
-        <strong>{{ appState.gradeImport.source_name }}</strong>.
-      </p>
-      <p v-else>
-        {{ appState.gradeImport.grade_count }} total grades found for
-        <strong>{{ section.section_name }}</strong> in
-        <strong>{{ appState.gradeImport.source_name }}</strong>.
-      </p>
+    <div v-else-if="appState.gradeImport.grade_count">
+      <p v-html="gradesFoundText"></p>
 
       <div v-if="appState.gradeImport.override_grade_count" role="alert" class="alert alert-warning">
         <span class="fa-stack">
           <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
           <i class="fas fa-marker fa-flip-horizontal fa-stack-1x fa-inverse" aria-hidden="true"></i>
         </span>
-        <p v-if="appState.gradeImport.override_grade_count === 1">
-          You have one final grade override in this Canvas Grade Import.
-          This grade WILL BE included in the imported grades.
-        </p>
-        <p v-else>
-          You have <strong>{{ appState.gradeImport.override_grade_count }} final grade overrides</strong>
-          in this Canvas Grade Import.
-          These grades WILL BE included in the imported grades.
+
+        <p>
+          <span v-html="overrideGradesFoundText"></span>
           <BLink
             target="_blank"
+            :title="gettext('import_override_grades_title')"
             href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/new-gradebook/final-grade-override/">
             {{ gettext("learn_more") }}
           </BLink>.
@@ -43,20 +32,12 @@
       </div>
 
       <div v-if="appState.gradeImport.unposted_grade_count" role="alert" class="alert alert-danger">
-        <span class="gp-unposted-grade-icon">
-          <i class="fas fa-exclamation-circle fa-2x" aria-hidden="true"></i>
-        </span>
-        <p v-if="appState.gradeImport.unposted_grade_count === 1">
-          You have <strong>one student with unposted grades</strong>
-          in this Canvas Grade Import.
-        </p>
-        <p v-else>
-          You have <strong>{{ appState.gradeImport.unposted_grade_count }} students
-          with unposted grades</strong> in this Canvas Grade Import.
-        </p>
-        Unposted grades <strong>ARE NOT</strong> represented in the imported final grade.
+        <i class="fas fa-exclamation-circle fa-2x" aria-hidden="true"></i>
+        <p v-html="unpostedGradesFoundText"></p>
+        <span v-html="gettext('import_unposted_grade_warning')"></span>
         <BLink
           target="_blank"
+          :title="gettext('import_unposted_grade_title')"
           href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/">
           {{ gettext("learn_more") }}
         </BLink>.
@@ -64,6 +45,10 @@
 
       <ImportConvertSave :section="section" />
 
+    </div>
+    <div v-else>
+      <span v-html="noGradesFoundText"></span>
+      {{ gettext("select_alternate_import") }}
     </div>
   </div>
 </template>
@@ -111,6 +96,41 @@ export default {
       errorResponse: null,
       isLoading: true,
     };
+  },
+  computed: {
+    gradesFoundText() {
+      return interpolate(ngettext(
+        "import_grade_found",
+        "import_grades_found",
+        this.appState.gradeImport.grade_count), {
+          section_name: this.section.section_name,
+          source_name: this.appState.gradeImport.source_name,
+          grade_count: this.appState.gradeImport.grade_count,
+        }, true
+      );
+    },
+    noGradesFoundText() {
+      return interpolate(gettext("no_grades_found_canvas"),
+        {section_name: this.section.section_name}, true);
+    },
+    overrideGradesFoundText() {
+      return interpolate(ngettext(
+        "import_override_grade_found",
+        "import_override_grades_found",
+        this.appState.gradeImport.override_grade_count), {
+          override_grade_count: this.appState.gradeImport.override_grade_count
+        }, true
+      );
+    },
+    unpostedGradesFoundText() {
+      return interpolate(ngettext(
+        "import_unposted_grade_found",
+        "import_unposted_grades_found",
+        this.appState.gradeImport.unposted_grade_count), {
+          unposted_grade_count: this.appState.gradeImport.unposted_grade_count
+        }, true
+      );
+    },
   },
   methods: {
     loadImportedGrades() {

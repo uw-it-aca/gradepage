@@ -17,6 +17,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+############## Layout ##############
+
+msgid "previous_terms"
+msgstr "Previous terms"
+
+msgid "clear_override"
+msgstr "Clear override"
+
+msgid "logout"
+msgstr "Sign out"
+
+msgid "grading_period_status"
+msgstr "Grading Period Status"
+
 ############## Class Chooser - Status ##############
 
 msgid "%(submitted_count)s grade submitted by %(submitted_by)s on %(submitted_date)s"
@@ -121,6 +135,15 @@ msgstr "Import Grades"
 msgid "import_grades_btn_sr"
 msgstr "to GradePage"
 
+msgid "import_grades_dd"
+msgstr "Import from..."
+
+msgid "help_btn"
+msgstr "GradePage Help"
+
+msgid "help_btn_title"
+msgstr "Information on assigning and submitting grades"
+
 ############## FGR Invalid Grades ##################
 
 msgid "grade_invalid_short"
@@ -191,6 +214,9 @@ msgstr "X (No grade now)"
 msgid "no_grade_now"
 msgstr "(No grade now)"
 
+msgid "grades_ok_review"
+msgstr "All grades entered. Click Review to continue."
+
 msgid "btn_review_submit"
 msgstr "Review"
 
@@ -224,6 +250,15 @@ msgstr "Click to remove Writing Credit for %(student_firstname)s %(student_lastn
 msgid "writing_unchecked_title"
 msgstr "Click to assign Writing Credit for %(student_firstname)s %(student_lastname)s"
 
+msgid "enter_grade"
+msgstr "Enter grade"
+
+msgid "default_grade"
+msgstr "Student will receive default grade"
+
+msgid "override_grade_title"
+msgstr "Override grade imported from Canvas Gradebook"
+
 ############### Review ###############
 
 msgid "review_submit_grades"
@@ -234,6 +269,9 @@ msgstr "Please review grades and submit below."
 
 msgid "default_grade_label %(grade)s"
 msgstr "Default: %(grade)s"
+
+msgid "btn_review_back_title"
+msgstr "Go back and edit grades for %(section_name)s"
 
 msgid "btn_review_back"
 msgstr "Edit"
@@ -261,8 +299,11 @@ msgstr "Grade Receipt for"
 msgid "submitted_grade"
 msgstr "Submitted grade"
 
-msgid "btn_print_this_page"
+msgid "btn_print_page"
 msgstr "Print this page"
+
+msgid "btn_download_cog"
+msgstr "Download Change of Grade"
 
 msgid "grade_submission_successful"
 msgstr "Grade submission successful!"
@@ -282,8 +323,14 @@ msgstr "Return to the list of classes you can grade."
 msgid "grade_submitted_by"
 msgstr "grades submitted by"
 
-msgid "grades_submitted_to_registrar_by"
-msgstr "grades submitted to the Registrar by"
+msgid "grade_submitted_to_registrar"
+msgstr "<strong>One</strong> grade submitted to the Registrar by <strong>%(submitted_by)s</strong> on %(submitted_date)s."
+
+msgid "grades_submitted_to_registrar"
+msgstr "<strong>%(submitted_count)s</strong> grades submitted to the Registrar by <strong>%(submitted_by)s</strong> on %(submitted_date)s."
+
+msgid "change_submitted_grades"
+msgstr "Change submitted grades"
 
 msgid "confirmation_alert_warning"
 msgstr "Submitted grade may differ from official final grade."
@@ -305,7 +352,6 @@ msgstr "Show grade conversion scale that was used."
 
 msgid "conversion_scale_hide_title"
 msgstr "Hide grade conversion scale."
-
 
 msgid "multi_conversion_scale_option_view"
 msgstr "View Scale"
@@ -354,9 +400,59 @@ msgstr "Importing grades..."
 msgid "import_save_in_progress"
 msgstr "Saving imported grades..."
 
-msgid "import_no_grades_found"
-msgstr "No grades found for <strong>%(section_name)s</strong> in "
-"<strong>%(source_name)s</strong>. Select a different source for import or enter grades manually."
+msgid "verify_file_btn"
+msgstr "Verify CSV"
+
+msgid "importing_grades_for_section"
+msgstr "You are importing final grades for section <strong>%(section_name)s</strong>"
+
+msgid "begin_csv_import"
+msgstr "To begin import, choose the CSV file, and then click <strong>Verify CSV</strong>."
+
+msgid "format_csv_help"
+msgstr "Learn more about formatting and importing a CSV file for GradePage."
+
+msgid "format_csv_help_title"
+msgstr "Learn about importing a CSV file on IT Connect"
+
+msgid "select_csv_file"
+msgstr "Select a CSV file to Import"
+
+msgid "file_size_exceeded"
+msgstr "Allowable file size exceeded (2 Mb)."
+
+msgid "missing_header_grade"
+msgstr "Missing column heading: &quot;ImportGrade&quot;"
+
+msgid "missing_header_grade_help"
+msgstr "Confirm that the .csv file contains a column with the heading &quot;ImportGrade&quot; and that the column contains the grades you want to submit."
+
+msgid "missing_header_student"
+msgstr "Missing column heading: &quot;SIS User ID&quot; OR &quot;StudentNo&quot;"
+
+msgid "missing_header_student_help"
+msgstr "Confirm that the .csv file contains a column with the heading &quot;SIS User ID&quot; or &quot;StudentNo&quot;."
+
+msgid "file_name"
+msgstr "File"
+
+msgid "select_different_file"
+msgstr "Select a different file for import."
+
+msgid "no_grades_found_csv"
+msgstr "No grades found for <strong>%(section_name)s</strong> in this CSV file."
+
+msgid "no_grades_found_canvas"
+msgstr "No grades found for <strong>%(section_name)s</strong> in Canvas."
+
+msgid "select_alternate_import"
+msgstr "Select a different file for import or enter grades manually."
+
+msgid "import_other_options_title"
+msgstr "Learn about other options to submit grades on IT Connect"
+
+msgid "import_canvas_error"
+msgstr "There was an error importing grades from Canvas"
 
 msgid "import_conversion_required"
 msgstr "The Office of the Registrar requires submitted grades to follow official formatting."
@@ -364,11 +460,35 @@ msgstr "The Office of the Registrar requires submitted grades to follow official
 msgid "import_conversion_required_select"
 msgstr "Please select a format to use:"
 
-msgid "One grade found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>."
-msgstr ""
+msgid "import_grade_found"
+msgstr "One grade found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>."
 
-msgid "%(grade_count)s total grades found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>."
-msgstr ""
+msgid "import_grades_found"
+msgstr "%(grade_count)s total grades found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>."
+
+msgid "import_override_grade_found"
+msgstr "You have one final grade override in this Canvas Grade Import. This grade WILL BE included in the imported grades."
+
+msgid "import_override_grades_found"
+msgstr "You have <strong>{{ override_grade_count }} final grade overrides</strong> in this Canvas Grade Import. These grades WILL BE included in the imported grades."
+
+msgid "import_override_grades_title"
+msgstr "Learn more about importing grade overrides on IT Connect"
+
+msgid "import_unposted_grade_found"
+msgstr "You have <strong>one student with unposted grades</strong> in this Canvas Grade Import."
+
+msgid "import_unposted_grades_found"
+msgstr "You have <strong>{{ unposted_grade_count }} students with unposted grades</strong> in this Canvas Grade Import."
+
+msgid "import_unposted_grade_warning"
+msgstr "Unposted grades <strong>ARE NOT</strong> represented in the imported final grade."
+
+msgid "import_unposted_grade_title"
+msgstr "Learn more about importing Canvas grades on IT Connect"
+
+msgid "import_save_note"
+msgstr "You will have a chance to enter, adjust, and review grades on the next screen."
 
 msgid "import_save_grades"
 msgstr "Import grades"
@@ -393,3 +513,146 @@ msgstr "Use one of your previous conversion scales"
 
 msgid "no_classes_to_grade"
 msgstr "You do not have any classes to grade for <strong>%(quarter)s %(year)s</strong>. If you believe this to be incorrect, please contact your department's Time Schedule Coordinator."
+
+msgid "import_canvas_title"
+msgstr "Import Canvas Gradebook"
+
+msgid "import_csv_title"
+msgstr "Import CSV File"
+
+############### Grade Conversion Calculator ###############
+
+msgid "cancel_title"
+msgstr "Cancel"
+
+msgid "conversion_instructions"
+msgstr "To use the conversion calculator, enter minimum percentages and equivalent class grades in two or more rows in the calculator, and click Apply. The calculator fills in the rest of the grade point scale."
+
+msgid "conversion_header"
+msgstr "Convert Final Score to Grade Points"
+
+msgid "conversion_scale_chooser_label"
+msgstr "Choose your grade scale:"
+
+msgid "conversion_scale_ug"
+msgstr "Undergraduate Scale (4.0-0.7)"
+
+msgid "conversion_scale_gr"
+msgstr "Graduate Scale (4.0-1.7)"
+
+msgid "conversion_scale_cnc"
+msgstr "Credit/No Credit Scale"
+
+msgid "conversion_scale_pf"
+msgstr "School of Medicine Pass/No Pass"
+
+msgid "conversion_scale_hpf"
+msgstr "Honors/High Pass/Pass/Fail Scale"
+
+msgid "calculator_min_cnc"
+msgstr "Set the minimum score for a Credit grade in the grade scale below."
+
+msgid "calculator_min_pf"
+msgstr "Set the minimum score for a Pass grade in the grade scale below."
+
+msgid "calculator_min_hpf"
+msgstr "Set the minimum score for Honors, High Pass, and Pass grades in the grade scale below."
+
+msgid "calculator_min_invalid"
+msgstr "Invalid percentage"
+
+msgid "calculator_min_missing"
+msgstr "Required"
+
+msgid "calculator_grade_invalid"
+msgstr "Invalid grade"
+
+msgid "calculator_grade_missing"
+msgstr "Required"
+
+msgid "min_percentage_duplicate"
+msgstr "Duplicate"
+
+msgid "calculator_header"
+msgstr "Grade conversion calculator"
+
+msgid "calculator_instructions"
+msgstr "Set at least two Percentage to Grade Point conversion points and click Apply to create the full Grade Scale below."
+
+msgid "calculator_legend"
+msgstr "Relate a Final Score (percentage) to a Grade Point: "
+
+msgid "calculator_perc_label_vis"
+msgstr "Final Score"
+
+msgid "calculator_perc_label"
+msgstr "Final Score (percentage) "
+
+msgid "calculator_grade_label"
+msgstr "Grade Point"
+
+msgid "calculator_perc_label_upper"
+msgstr "Upper Limit: Final Score (percentage) "
+
+msgid "calculator_grade_label_upper"
+msgstr "Upper Limit: Grade Point"
+
+msgid "calculator_perc_label_lower"
+msgstr "Lower Limit: Final Score (percentage) "
+
+msgid "calculator_grade_label_lower"
+msgstr "Lower Limit: Grade Point"
+
+msgid "calculator_addrow_title"
+msgstr "Add a row to the conversion table. Leave unused rows blank."
+
+msgid "calculator_addrow"
+msgstr "+ Add a row"
+
+msgid "calculator_reset_title"
+msgstr "Reset the grade conversion calculator"
+
+msgid "calculator_apply_title"
+msgstr "Create grade scale"
+
+msgid "grade_scale_header"
+msgstr "Grade Scale:"
+
+msgid "grade_scale_grade_label_vis"
+msgstr "Minimum score for class grade"
+
+msgid "grade_scale_list_label_sr"
+msgstr "Review and adjust Grade Scale:"
+
+msgid "grade_scale_input_title"
+msgstr "Minimum percentage that will result in a "
+
+msgid "grade_scale_limit_pre"
+msgstr "Any final grade below a "
+
+msgid "grade_scale_limit_post"
+msgstr "% will result in a "
+
+msgid "grade_scale_clear"
+msgstr "Clear scale"
+
+msgid "conversion_submit"
+msgstr "Review converted grades"
+
+msgid "conversion_submit_title"
+msgstr "Review converted grades"
+
+msgid "conversion_back_calc"
+msgstr "Back to calculator"
+
+msgid "conversion_confirm_btn_sr"
+msgstr " grades for import"
+
+msgid "conversion_confirm_grade_text"
+msgstr "converted to"
+
+msgid "<strong>One invalid grade</strong> (see above)"
+msgstr ""
+
+msgid "<strong>%(count)s invalid grades</strong> (see above)"
+msgstr ""

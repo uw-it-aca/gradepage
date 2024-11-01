@@ -35,7 +35,6 @@ setup(
         'uw-restclients-canvas~=1.2',
         'uw-restclients-graderoster~=1.1',
         'uw-restclients-django-utils~=2.3',
-        'uw-grade-conversion-calculator~=1.4',
         'chardet~=5.0'
     ],
     license='Apache License, Version 2.0',
