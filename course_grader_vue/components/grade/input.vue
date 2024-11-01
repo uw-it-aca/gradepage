@@ -27,7 +27,7 @@
     <!-- grade text input - custom bootstrap -->
     <div class="dropdown ms-1">
       <label :for="`grade-${student.item_id}`" class="visually-hidden"
-        >Enter grade</label
+        >{{ gettext("enter_grade") }}</label
       >
       <input
         class="form-control form-control-sm rounded-2 dropdown-toggle border-secondary"
@@ -97,7 +97,7 @@
   </div>
 
   <div v-if="incomplete" class="text-start small mb-3 text-muted">
-    Student will receive default grade
+    {{ gettext("default_grade") }}
   </div>
 
   <div>
@@ -106,14 +106,9 @@
       <span
         v-if="student.is_override_grade"
         class="override-icon"
-        title="Override grade imported from Canvas Gradebook"
+        :title="gettext('override_grade_title')"
       >
-        <i
-          class="fas fa-circle fa-stack-2x"
-          title="Override grade imported from Canvas Gradebook"
-          aria-hidden="true"
-        >
-        </i>
+        <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
       </span>
     </span>
     <span role="alert" class="text-danger invalid-grade small">

@@ -55,7 +55,7 @@
         </div>
         <div v-if="section" class="text-nowrap">
           <BButton
-            :title="`Go back and edit grades for ${section.section_name}`"
+            :title="interpolate(gettext('btn_review_back_title'), section, true)"
             variant="outline-primary"
             @click="editGrades"
             >{{ gettext("btn_review_back") }}

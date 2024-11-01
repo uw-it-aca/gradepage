@@ -8,7 +8,6 @@ INSTALLED_APPS += [
     'userservice',
     'persistent_message',
     'rc_django',
-    'grade_conversion_calculator',
     'django.contrib.humanize',
 ]
 
@@ -27,9 +26,10 @@ if os.getenv('ENV', 'localdev') == 'localdev':
     GRADEPAGE_ADMIN_GROUP = 'u_test_group'
     CURRENT_DATETIME_OVERRIDE = '2013-06-17 10:00:00'
     PAST_TERMS_VIEWABLE = 1
-    MEDIA_ROOT = os.getenv('IMPORT_DATA_ROOT', '/app/csv')
+    MEDIA_ROOT = os.getenv('IMPORT_DATA_ROOT', os.path.join(BASE_DIR, 'csv'))
     VITE_MANIFEST_PATH = os.path.join(
-        BASE_DIR, "course_grader", "static", "manifest.json")
+        BASE_DIR, 'course_grader', 'static', 'manifest.json')
+    LOCALE_PATHS = [os.path.join(BASE_DIR, 'course_grader', 'locale')]
 
 else:
     GRADEPAGE_SUPPORT_GROUP = os.getenv('SUPPORT_GROUP', 'u_acadev_gradepage_support')

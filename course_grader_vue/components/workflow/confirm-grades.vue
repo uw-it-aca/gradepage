@@ -15,8 +15,8 @@
       <BLink
         class="btn btn-info btn-sm rounded-3 text-nowrap"
         :href="section.term_url"
-        >Return to section list</BLink
-      >
+        >{{ gettext("return_classes_to_grade") }}
+      </BLink>
     </div>
   </BAlert>
 
@@ -34,17 +34,20 @@
           <i class="bi bi-three-dots"></i
         ></template>
         <BDropdownItem :href="section.export_url">
-          <i class="bi bi-download me-2 text-body-tertiary"></i>Download Change of Grade
+          <i class="bi bi-download me-2 text-body-tertiary"></i>
+          {{ gettext("btn_download_cog") }}
         </BDropdownItem>
         <BDropdownItem href="javascript:window.print()">
-          <i class="bi bi-printer me-2 text-body-tertiary"></i>Print this page
+          <i class="bi bi-printer me-2 text-body-tertiary"></i>
+          {{ gettext("btn_print_page") }}
         </BDropdownItem>
         <BDropdownDivider />
         <BDropdownItem
           href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
           target="_blank"
-          title="Information on assigning and submitting grades"
-          ><i class="bi bi-question-circle me-2 text-body-tertiary"></i>GradePage Help
+          :title="gettext('help_btn_title')"
+          ><i class="bi bi-question-circle me-2 text-body-tertiary"></i>
+         {{ gettext("help_btn") }}
         </BDropdownItem>
       </BDropdown>
 
@@ -60,7 +63,7 @@
           href="https://registrar.washington.edu/staffandfaculty/grading-resources/#faqs"
           target="_blank"
           class="d-print-none"
-        >More info.
+        >{{ gettext("more_info") }}
         </BLink>
       </div>
     </template>
@@ -103,15 +106,12 @@
       <span v-if="submission.section_id">
         {{ gettext("section") }} {{ submission.section_id }}:
       </span>
-      <strong>{{ submission.submitted_count }}</strong>
-      {{ gettext("grades_submitted_to_registrar_by") }}
-      <strong>{{ submission.submitted_by }}</strong>
-      on {{ formatLongDateTime(submission.submitted_date) }}.
+      <span v-html="gradesSubmittedText(submission)"></span>
       <BLink
         href="https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/"
         target="_blank"
-        title="Change submitted grades"
-        >Change submitted grades?
+        :title="gettext('change_submitted_grades')"
+        >{{ gettext("change_submitted_grades") }}?
       </BLink>
     </BAlert>
 
@@ -274,6 +274,16 @@ export default {
     },
   },
   methods: {
+    gradesSubmittedText(submission) {
+      return interpolate(ngettext(
+        "grade_submitted_to_registrar",
+        "grades_submitted_to_registrar",
+        submission.submitted_count), {
+          submitted_count: submission.submitted_count,
+          submitted_by: submission.submitted_by,
+          submitted_date: formatLongDateTime(submission.submitted_date),
+        }, true);
+    },
     showImportConversion () {
       let submission = this.appState.graderoster.submissions[0];
       if (submission && submission.grade_import) {
