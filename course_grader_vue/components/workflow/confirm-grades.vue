@@ -14,8 +14,9 @@
     <div>
       <BLink
         class="btn btn-info btn-sm rounded-3 text-nowrap"
+        v-text="gettext('return_classes_to_grade')"
         :href="section.term_url"
-        >{{ gettext("return_classes_to_grade") }}
+        >
       </BLink>
     </div>
   </BAlert>
@@ -63,7 +64,8 @@
           href="https://registrar.washington.edu/staffandfaculty/grading-resources/#faqs"
           target="_blank"
           class="d-print-none"
-        >{{ gettext("more_info") }}
+          v-text="gettext('more_info')"
+        >
         </BLink>
       </div>
     </template>
@@ -178,9 +180,9 @@
         {{ gettext("conversion_scale_msg") }}
         <BLink
           :title="gettext('conversion_scale_view_title')"
+          v-text="gettext('conversion_scale_view')"
           @click.prevent="showImportConversion()"
         >
-          {{ gettext("conversion_scale_view") }}
         </BLink>
       </div>
 
@@ -200,9 +202,9 @@
         </ol>
         <BLink
           :title="gettext('conversion_scale_hide_title')"
+          v-text="gettext('conversion_scale_hide')"
           @click.prevent="hideImportConversion()"
         >
-          {{ gettext("conversion_scale_hide") }}
         </BLink>
       </div>
     </template>

@@ -25,8 +25,8 @@
           <BLink
             target="_blank"
             :title="gettext('import_override_grades_title')"
+            v-text="gettext('learn_more')"
             href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/new-gradebook/final-grade-override/">
-            {{ gettext("learn_more") }}
           </BLink>.
         </p>
       </div>
@@ -38,8 +38,8 @@
         <BLink
           target="_blank"
           :title="gettext('import_unposted_grade_title')"
+          v-text="gettext('learn_more')"
           href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/">
-          {{ gettext("learn_more") }}
         </BLink>.
       </div>
 

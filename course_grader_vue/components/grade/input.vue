@@ -57,9 +57,9 @@
             class="dropdown-item small"
             type="button"
             :value="opt"
+            v-text="opt"
             @click="gradeChanged(opt)"
           >
-            {{ opt }}
           </button>
         </li>
       </ul>

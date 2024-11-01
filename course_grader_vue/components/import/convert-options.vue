@@ -3,23 +3,27 @@
     {{ errorResponse }}
   </div>
   <div v-else-if="appState.gradeImport.has_valid_percentages" class="d-grid gap-2">
-    <p>{{ gettext("import_conversion_required") }}</p>
-    <p>{{ gettext("import_conversion_required_select") }}</p>
+    <p v-html="gettext('import_conversion_required')"></p>
+    <p v-html="gettext('import_conversion_required_select')"></p>
+
     <BButton v-for="scale in calculatorStore.availableScales"
       variant="outline-secondary"
+      v-text="gettext('conversion_scale_' + scale)"
       @click="convertGrades(scale)">
-      {{ gettext("conversion_scale_" + scale) }}
     </BButton>
   </div>
   <div v-else>
     <p>
-      To continue, click <strong>{{ gettext("import_save_grades") }}</strong>.
+      <span v-html="gettext('import_save_continue')"></span>
       <br /><small><em>{{ gettext("import_save_note") }}</em></small>
     </p>
-    <p>To select a different file, click <strong>Cancel</strong>.</p>
+    <p v-html="gettext('import_select_different_file')"></p>
     <div>
-      <BButton variant="primary" @click="saveGrades">
-        {{ gettext("import_save_grades") }}
+      <BButton
+        variant="primary"
+        v-text="gettext('import_save_grades_btn')"
+        @click="saveGrades"
+      >
       </BButton>
     </div>
   </div>

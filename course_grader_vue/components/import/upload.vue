@@ -140,7 +140,8 @@
         :disabled="uploadDisabled"
         variant="primary"
         @click="uploadFile"
-      >{{ gettext("verify_file_btn") }}
+        v-text="gettext('verify_file_btn')"
+      >
       </BButton>
     </div>
   </div>

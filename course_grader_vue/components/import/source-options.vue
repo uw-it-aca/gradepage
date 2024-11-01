@@ -14,11 +14,11 @@
     >
     <BDropdownItemButton v-b-modal.modalImportCanvasGrades
       ><i class="bi bi-journal-check me-2 text-body-tertiary"></i>
-      Canvas Gradebook
+      {{ gettext("import_canvas_btn") }}
     </BDropdownItemButton>
     <BDropdownItemButton v-b-modal.modalImportCsvGrades
       ><i class="bi bi-filetype-csv me-2 text-body-tertiary"></i>
-      CSV File
+      {{ gettext("import_csv_btn") }}
     </BDropdownItemButton>
     <BDropdownDivider />
     <BDropdownItem

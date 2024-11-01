@@ -25,15 +25,18 @@
     <template v-if="!isLoading && !errorResponse" #footer>
       <div class="d-flex">
         <div class="text-nowrap">
-          <BButton variant="outline-primary" @click="editConversion">
-            {{ gettext("conversion_back_calc") }}
-          </BButton>
-          <BButton variant="primary" @click="saveGrades" class="ms-2">
-            {{ gettext("import_grades_btn") }}
-            <span class="visually-hidden">
-              {{ gettext("import_grades_btn_sr") }}
-            </span>
-          </BButton>
+          <BButton
+            variant="outline-primary"
+            v-text="gettext('conversion_back_calc')"
+            @click="editConversion"
+          ></BButton>
+          <BButton
+            variant="primary"
+            :title="gettext('import_grades_btn_title')"
+            v-text="gettext('import_grades_btn')"
+            @click="saveGrades"
+            class="ms-2"
+          ></BButton>
         </div>
       </div>
     </template>

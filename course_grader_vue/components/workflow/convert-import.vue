@@ -60,8 +60,9 @@
     <template #footer>
       <BLink
         :title="gettext('cancel_title')"
+        v-text="gettext('cancel')"
         @click="cancelConversion"
-      >{{ gettext("cancel") }}
+      >
       </BLink>
       <BButton
         variant="primary"
