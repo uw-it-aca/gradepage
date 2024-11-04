@@ -19,17 +19,17 @@ msgstr ""
 
 ############## Layout ##############
 
-msgid "previous_terms"
-msgstr "Previous terms"
+msgid "Previous terms"
+msgstr ""
 
-msgid "clear_override"
-msgstr "Clear override"
+msgid "Clear override"
+msgstr ""
 
-msgid "logout"
-msgstr "Sign out"
+msgid "Sign out"
+msgstr ""
 
-msgid "grading_period_status"
-msgstr "Grading Period Status"
+msgid "Grading Period Status"
+msgstr ""
 
 ############## Class Chooser - Status ##############
 
@@ -45,6 +45,9 @@ msgstr ""
 msgid "%(submitted_count)s grades submitted"
 msgstr ""
 
+msgid "submitted_grades_title"
+msgstr "View submitted grades for %(display_name)s"
+
 msgid "%(submitted_count)s grade submission in progress"
 msgstr ""
 
@@ -56,6 +59,9 @@ msgstr ""
 
 msgid "%(unsubmitted_count)s grades to submit"
 msgstr ""
+
+msgid "submit_grades_title"
+msgstr "Submit grades for %(display_name)s"
 
 msgid "no_submission_information"
 msgstr "No submission information"
@@ -87,9 +93,6 @@ msgid "hours_remaining_alert_short"
 msgstr "Grading period closes in (remaining_hour) hours!"
 
 ############## Header ##############################
-
-msgid "submit_grades_for"
-msgstr "Submit grades for"
 
 msgid "submitted_grades_for"
 msgstr "Grade Receipt for"
@@ -195,6 +198,9 @@ msgstr "Saved"
 
 msgid "enter_grades"
 msgstr "Enter grades for"
+
+msgid "enter_valid_grade"
+msgstr "Enter a valid grade"
 
 msgid "writing_course_note"
 msgstr "<strong>Note:</strong> Writing credit automatically given to all students with a passing grade in this course."
@@ -323,12 +329,6 @@ msgstr "Return to the list of classes you can grade."
 msgid "grade_submitted_by"
 msgstr "grades submitted by"
 
-msgid "grade_submitted_to_registrar"
-msgstr "<strong>One</strong> grade submitted to the Registrar by <strong>%(submitted_by)s</strong> on %(submitted_date)s."
-
-msgid "grades_submitted_to_registrar"
-msgstr "<strong>%(submitted_count)s</strong> grades submitted to the Registrar by <strong>%(submitted_by)s</strong> on %(submitted_date)s."
-
 msgid "change_submitted_grades"
 msgstr "Change submitted grades"
 
@@ -421,6 +421,18 @@ msgstr "Select a CSV file to Import"
 msgid "file_size_exceeded"
 msgstr "Allowable file size exceeded (2 Mb)."
 
+msgid "csv_grade_types"
+msgstr "An imported CSV file can contain final grades or percentages. You will be prompted to convert percentages during the import process."
+
+msgid "csv_required_cols"
+msgstr "The CSV is required to contain at least two columns:"
+
+msgid "required_col_student"
+msgstr "a column for student identifier (<strong>SIS User ID</strong> or <strong>StudentNo)</strong> AND"
+
+msgid "required_col_grade"
+msgstr "a column for grades to be submitted (<strong>ImportGrade</strong>)"
+
 msgid "missing_header_grade"
 msgstr "Missing column heading: &quot;ImportGrade&quot;"
 
@@ -439,6 +451,9 @@ msgstr "File"
 msgid "select_different_file"
 msgstr "Select a different file for import."
 
+msgid "convert_percentages_help_title"
+msgstr "Learn about converting percentages on IT Connect"
+
 msgid "no_grades_found_csv"
 msgstr "No grades found for <strong>%(section_name)s</strong> in this CSV file."
 
@@ -454,6 +469,18 @@ msgstr "Learn about other options to submit grades on IT Connect"
 msgid "import_canvas_error"
 msgstr "There was an error importing grades from Canvas"
 
+msgid "confirm_grade_column"
+msgstr "Confirm that the ImportGrade column contains grade values."
+
+msgid "confirm_student_column"
+msgstr "Confirm that the SIS User ID or StudentNo column contains student identifiers."
+
+msgid "confirm_roster_students"
+msgstr "Confirm that the .csv file contains students from this section's roster."
+
+msgid "import_other_options"
+msgstr "See other options for submitting grades."
+
 msgid "import_conversion_required"
 msgstr "The Office of the Registrar requires submitted grades to follow official formatting."
 
@@ -463,26 +490,8 @@ msgstr "Please select a format to use:"
 msgid "import_select_different_file"
 msgstr "To select a different file, click <strong>Cancel</strong>."
 
-msgid "import_grade_found"
-msgstr "One grade found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>."
-
-msgid "import_grades_found"
-msgstr "%(grade_count)s total grades found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>."
-
-msgid "import_override_grade_found"
-msgstr "You have one final grade override in this Canvas Grade Import. This grade WILL BE included in the imported grades."
-
-msgid "import_override_grades_found"
-msgstr "You have <strong>{{ override_grade_count }} final grade overrides</strong> in this Canvas Grade Import. These grades WILL BE included in the imported grades."
-
 msgid "import_override_grades_title"
 msgstr "Learn more about importing grade overrides on IT Connect"
-
-msgid "import_unposted_grade_found"
-msgstr "You have <strong>one student with unposted grades</strong> in this Canvas Grade Import."
-
-msgid "import_unposted_grades_found"
-msgstr "You have <strong>{{ unposted_grade_count }} students with unposted grades</strong> in this Canvas Grade Import."
 
 msgid "import_unposted_grade_warning"
 msgstr "Unposted grades <strong>ARE NOT</strong> represented in the imported final grade."
@@ -514,8 +523,8 @@ msgstr "Convert grades using a scale that you have used before:"
 msgid "previous_scale_label"
 msgstr "Use one of your previous conversion scales"
 
-msgid "no_classes_to_grade"
-msgstr "You do not have any classes to grade for <strong>%(quarter)s %(year)s</strong>. If you believe this to be incorrect, please contact your department's Time Schedule Coordinator."
+msgid "You do not have any classes to grade for <strong>%(quarter)s %(year)s</strong>. If you believe this to be incorrect, please contact your department's Time Schedule Coordinator."
+msgstr ""
 
 msgid "import_canvas_btn"
 msgstr "Canvas Gradebook"

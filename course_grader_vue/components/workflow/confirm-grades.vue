@@ -172,7 +172,8 @@
             v-if="submission.grade_import.import_conversion"
             :value="submission.grade_import.import_conversion"
           >
-            <i class="me-2 text-body-tertiary"></i>Section {{ submission.section_id }}
+            <i class="me-2 text-body-tertiary"></i>
+            {{ gettext("section") }} {{ submission.section_id }}
           </BDropdownItem>
         </BDropdown>
       </div>
@@ -278,8 +279,8 @@ export default {
   methods: {
     gradesSubmittedText(submission) {
       return interpolate(ngettext(
-        "grade_submitted_to_registrar",
-        "grades_submitted_to_registrar",
+        "<strong>One</strong> grade submitted to the Registrar by <strong>%(submitted_by)s</strong> on %(submitted_date)s.",
+        "<strong>%(submitted_count)s</strong> grades submitted to the Registrar by <strong>%(submitted_by)s</strong> on %(submitted_date)s.",
         submission.submitted_count), {
           submitted_count: submission.submitted_count,
           submitted_by: submission.submitted_by,

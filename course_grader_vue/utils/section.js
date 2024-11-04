@@ -2,10 +2,10 @@ import { formatLongDateTime } from "@/utils/dates";
 
 function formatLinkTitle(data) {
   if (data.unsubmitted_count && data.grading_period_open) {
-    return "Submit grades for " + data.display_name;
+    return interpolate("submit_grades_title", data, true);
   } else {
     if (data.submitted_count && data.submitted_date) {
-      return "View grade receipt for " + data.display_name;
+      return interpolate("submitted_grades_title", data, true);
     }
   }
 }

@@ -28,7 +28,7 @@
             "
             aria-controls="gettingStartedCollapse"
           >
-            <span><i class="bi bi-calendar3 me-3"></i>{{ gettext("previous_terms") }}</span>
+            <span><i class="bi bi-calendar3 me-3"></i>{{ $_("Previous terms") }}</span>
             <i class="bi bi-chevron-right" aria-hidden="true"></i>
           </BLink>
           <div
@@ -65,12 +65,12 @@
           value="Clear override"
           @click="clearUserOverride()"
         >
-          {{ gettext("clear_override") }}
+          {{ $_("Clear override") }}
         </button>
       </SProfile>
       <SProfile v-else :user-netid="context.login_user">
         <a :href="context.signout_url" class="text-white">
-          {{ gettext("logout") }}
+          {{ $_("Sign out") }}
         </a>
       </SProfile>
     </template>
@@ -79,7 +79,7 @@
         <div class="bg-secondary bg-opacity-10 rounded-3 p-3">
           <div class="mb-2 text-body">
             <i class="bi bi-exclamation-triangle-fill me-3"></i>
-            {{ gettext("grading_period_status") }}
+            {{ $_("Grading Period Status") }}
           </div>
           <ul class="list-unstyled m-0 text-body small">
             <li
