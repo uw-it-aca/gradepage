@@ -90,11 +90,9 @@ export default {
       );
     },
     noClassesWarning() {
-      return interpolate(
-        gettext("no_classes_to_grade"),
-        this.selectedTerm,
-        true
-      );
+      return interpolate(gettext(
+        "You do not have any classes to grade for <strong>%(quarter)s %(year)s</strong>. If you believe this to be incorrect, please contact your department's Time Schedule Coordinator."
+        ), this.selectedTerm, true);
     },
   },
   methods: {

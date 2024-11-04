@@ -26,6 +26,9 @@ app.config.globalProperties.window = window;
 app.config.globalProperties.gettext = window.gettext;
 app.config.globalProperties.ngettext = window.ngettext;
 app.config.globalProperties.interpolate = window.interpolate;
+app.config.globalProperties.$_ = (msgid) => {
+  return window.gettext(msgid);
+}
 
 // vue-gtag-next
 const gaCode = document.body.getAttribute("data-google-analytics");

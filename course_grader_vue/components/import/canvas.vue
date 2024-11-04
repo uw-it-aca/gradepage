@@ -100,8 +100,8 @@ export default {
   computed: {
     gradesFoundText() {
       return interpolate(ngettext(
-        "import_grade_found",
-        "import_grades_found",
+        "One grade found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>.",
+        "%(grade_count)s total grades found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>.",
         this.appState.gradeImport.grade_count), {
           section_name: this.section.section_name,
           source_name: this.appState.gradeImport.source_name,
@@ -115,8 +115,8 @@ export default {
     },
     overrideGradesFoundText() {
       return interpolate(ngettext(
-        "import_override_grade_found",
-        "import_override_grades_found",
+        "You have one final grade override in this Canvas Grade Import. This grade WILL BE included in the imported grades.",
+        "You have <strong>%(override_grade_count)s final grade overrides</strong> in this Canvas Grade Import. These grades WILL BE included in the imported grades.",
         this.appState.gradeImport.override_grade_count), {
           override_grade_count: this.appState.gradeImport.override_grade_count
         }, true
@@ -124,8 +124,8 @@ export default {
     },
     unpostedGradesFoundText() {
       return interpolate(ngettext(
-        "import_unposted_grade_found",
-        "import_unposted_grades_found",
+        "You have <strong>one student with unposted grades</strong> in this Canvas Grade Import.",
+        "You have <strong>%(unposted_grade_count)s students with unposted grades</strong> in this Canvas Grade Import.",
         this.appState.gradeImport.unposted_grade_count), {
           unposted_grade_count: this.appState.gradeImport.unposted_grade_count
         }, true

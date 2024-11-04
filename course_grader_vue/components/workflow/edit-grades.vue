@@ -8,7 +8,7 @@
         />
       </div>
 
-      <SectionHeader :section="section" :title="gettext('enter_grades')" />
+      <SectionHeader :section="section" :title="$_('enter_grades')" />
     </template>
 
     <template v-if="errorResponse">
@@ -20,10 +20,10 @@
         class="mb-2 pb-2 small text-muted border-bottom"
       >
         <div v-if="appState.graderoster.is_writing_section"
-          v-html="gettext('writing_course_note')">
+          v-html="$_('writing_course_note')">
         </div>
         <div v-if="appState.graderoster.has_duplicate_codes">
-          {{ gettext("duplicate_code") }}
+          {{ $_("duplicate_code") }}
           <i class="bi bi-circle-fill text-secondary"></i>
         </div>
       </div>
@@ -57,13 +57,13 @@
         <div class="flex-fill align-self-center text-end me-2 small">
           <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span>
           <span v-else class="visually-hidden">
-            {{ gettext("grades_ok_review") }}
+            {{ $_("grades_ok_review") }}
           </span>
         </div>
         <BButton
           :disabled="reviewDisabled"
           variant="primary"
-          v-text="gettext('btn_review_submit')"
+          v-text="$_('btn_review_submit')"
           @click="reviewGrades"
         >
         </BButton>
