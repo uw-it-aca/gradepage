@@ -1,11 +1,11 @@
 <template>
   <BCard class="shadow-sm rounded-3" header-class="p-3" header="Default">
     <template #header>
-      <SectionHeader :section="section" :title="gettext('review_submit_grades')" />
+      <SectionHeader :section="section" title="Review grades for" />
     </template>
 
     <template v-if="isLoading">
-      Grade submission in progress...
+      Please wait, submitting grades to the Registrar...
     </template>
     <template v-else-if="errorResponse">
       <Errors :error-response="errorResponse" />
@@ -13,14 +13,16 @@
     <template v-else-if="appState.graderoster">
       <div class="mb-2 pb-2 small text-muted border-bottom">
         <div>
-          {{ gettext("please_review_grades") }}
+          Please review grades and submit below.
         </div>
         <div v-if="appState.graderoster.is_writing_section">
-          {{ gettext("writing_course_note_receipt") }}
+          Writing credit automatically given to all students with a passing grade in this course.
         </div>
-        <div v-if="appState.graderoster.has_duplicate_codes"
-        >
-          {{ gettext("duplicate_code") }}
+        <div v-if="appState.graderoster.has_duplicate_codes">
+          <span class="visually-hidden">
+            In the list below, duplicate listings of the same student are differentiated with a
+          </span>
+          Duplicate code
           <i class="bi bi-circle-fill text-secondary"></i>
         </div>
       </div>
@@ -51,21 +53,19 @@
     <template v-if="!isLoading && !errorResponse" #footer>
       <div class="d-flex">
         <div class="flex-fill align-self-center text-end me-2 small">
-          {{ gettext("review_warning") }}
+          All grades will be submitted to the Registrar as displayed above. No further online changes will be possible after submission.
         </div>
         <div v-if="section" class="text-nowrap">
           <BButton
-            :title="interpolate(gettext('btn_review_back_title'), section, true)"
+            :title="reviewBackTitle"
             variant="outline-primary"
-            v-text="gettext('btn_review_back')"
             @click="editGrades"
-          ></BButton>
+          >Edit</BButton>
           <BButton
             variant="primary"
-            v-text="gettext('btn_submit_grades')"
             @click="submitGrades"
             class="ms-2"
-          ></BButton>
+          >Submit</BButton>
         </div>
       </div>
     </template>
@@ -107,6 +107,11 @@ export default {
       isLoading: false,
       errorResponse: null,
     };
+  },
+  computed: {
+    reviewBackTitle() {
+      return "Go back and edit grades for " + this.section.section_name;
+    },
   },
   methods: {
     editGrades: function () {

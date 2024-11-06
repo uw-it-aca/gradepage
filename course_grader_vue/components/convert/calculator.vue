@@ -1,7 +1,7 @@
 <template>
   <div>
     <label for="import-scale-selector" class="visually-hidden">
-      {{ gettext("conversion_scale_chooser_label") }}
+      Choose your grade scale:
     </label>
     <BDropdown
       id="import-scale-selector"
@@ -23,14 +23,14 @@
 
   <div class="col-7 bg-body-tertiary p-3">
     <div v-if="!calculatorStore.isFixedScale">
-      <h4 class="" id="grade_conversion_header">
-        {{ gettext("calculator_header") }}
-      </h4>
-      <p class="">{{ gettext("calculator_instructions") }}</p>
+      <h4 id="grade_conversion_header">Grade conversion calculator</h4>
+      <p>
+        Set at least two Percentage to Grade Point conversion points and click <strong>Apply</strong> to create the full Grade Scale below.
+      </p>
 
       <div class="d-flex justify-content-between">
-        <div class="fw-bold">{{ gettext("calculator_perc_label_vis") }}</div>
-        <div class="fw-bold">{{ gettext("calculator_grade_label") }}</div>
+        <div class="fw-bold">Final Score</div>
+        <div class="fw-bold">Grade Point</div>
       </div>
 
       <ol class="list-unstyled">
@@ -38,11 +38,9 @@
           <div v-if="index === calculatorValues.length - 1">
             <BLink
               @click.prevent="calculatorStore.addCalculatorRow()"
-              :title="gettext('calculator_addrow_title')"
+              title="Add a row to the conversion table. Leave unused rows blank."
               tabindex="0"
-            >
-              {{ gettext("calculator_addrow") }}
-            </BLink>
+            >+ Add a row</BLink>
             <span class="pull-right" style="margin-right: 3em">
               <i class="fa fa-ellipsis-v fa-lg"></i>
             </span>
@@ -59,17 +57,16 @@
       <div class="my-5">
         <span>
           <BLink
-            :title="gettext('calculator_reset_title')"
+            title="Reset the grade conversion calculator"
             @click.prevent="calculatorStore.resetCalculatorValues()"
-            >{{ gettext("reset") }}
-          </BLink>
+          >Reset</BLink>
         </span>
         <span>
           <BButton
-            :title="gettext('calculator_apply_title')"
+            title="Create grade scale"
             @click="calculatorStore.calculateScale()"
           >
-            <i class="fa fa-angle-double-down fa-lg"></i> {{ gettext("apply") }}
+            <i class="fa fa-angle-double-down fa-lg"></i> Apply
           </BButton>
         </span>
       </div>
@@ -86,16 +83,16 @@
       aria-labelledby="grade_scale_header"
     >
       <h4 class="visually-hidden" id="grade_scale_header">
-        {{ gettext("grade_scale_header") }}
+        Grade Scale:
       </h4>
 
       <div class="d-flex justify-content-between">
-        <div class="fw-bold">{{ gettext("grade_scale_grade_label_vis") }}</div>
-        <div class="fw-bold">{{ gettext("calculator_grade_label") }}</div>
+        <div class="fw-bold">Minimum score for class grade</div>
+        <div class="fw-bold">Grade Point</div>
       </div>
 
       <ol
-        :aria-label="gettext('grade_scale_list_label_sr')"
+        aria-label="Review and adjust Grade Scale:"
         class="list-unstyled"
       >
         <li v-for="(data, index) in scaleValues" :key="index">
@@ -107,9 +104,9 @@
         </li>
       </ol>
       <span>
-        <BButton @click.prevent="calculatorStore.resetScaleValues()">{{
-          gettext("grade_scale_clear")
-        }}</BButton>
+        <BButton
+          @click.prevent="calculatorStore.resetScaleValues()"
+        >Clear scale</BButton>
       </span>
     </div>
   </div>

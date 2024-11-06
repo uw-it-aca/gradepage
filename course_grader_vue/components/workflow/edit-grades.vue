@@ -8,7 +8,7 @@
         />
       </div>
 
-      <SectionHeader :section="section" :title="$_('enter_grades')" />
+      <SectionHeader :section="section" title="Enter grades for" />
     </template>
 
     <template v-if="errorResponse">
@@ -19,11 +19,15 @@
         v-if="appState.graderoster.is_writing_section || appState.graderoster.has_duplicate_codes"
         class="mb-2 pb-2 small text-muted border-bottom"
       >
-        <div v-if="appState.graderoster.is_writing_section"
-          v-html="$_('writing_course_note')">
+        <div v-if="appState.graderoster.is_writing_section">
+          <strong>Note:</strong>
+          Writing credit automatically given to all students with a passing grade in this course.
         </div>
         <div v-if="appState.graderoster.has_duplicate_codes">
-          {{ $_("duplicate_code") }}
+          <span class="visually-hidden">
+            In the list below, duplicate listings of the same student are differentiated with a
+          </span>
+          Duplicate code
           <i class="bi bi-circle-fill text-secondary"></i>
         </div>
       </div>
@@ -57,15 +61,14 @@
         <div class="flex-fill align-self-center text-end me-2 small">
           <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span>
           <span v-else class="visually-hidden">
-            {{ $_("grades_ok_review") }}
+            All grades entered. Click Review to continue.
           </span>
         </div>
         <BButton
           :disabled="reviewDisabled"
           variant="primary"
-          v-text="$_('btn_review_submit')"
           @click="reviewGrades"
-        >
+        >Review
         </BButton>
       </div>
     </template>

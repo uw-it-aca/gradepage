@@ -1,7 +1,7 @@
 <template>
   <BCard class="shadow-sm rounded-3" header-class="p-3" header="Default">
     <template #header>
-      <SectionHeader :section="section" :title="gettext('review_import_grades')" />
+      <SectionHeader :section="section" title="Review grades for import to" />
     </template>
 
     <template v-if="isLoading">
@@ -27,16 +27,14 @@
         <div class="text-nowrap">
           <BButton
             variant="outline-primary"
-            v-text="gettext('conversion_back_calc')"
             @click="editConversion"
-          ></BButton>
+          >Back to calculator</BButton>
           <BButton
             variant="primary"
-            :title="gettext('import_grades_btn_title')"
-            v-text="gettext('import_grades_btn')"
+            title="Import grades to GradePage"
             @click="saveGrades"
             class="ms-2"
-          ></BButton>
+          >Import Grades</BButton>
         </div>
       </div>
     </template>

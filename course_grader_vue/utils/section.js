@@ -2,10 +2,10 @@ import { formatLongDateTime } from "@/utils/dates";
 
 function formatLinkTitle(data) {
   if (data.unsubmitted_count && data.grading_period_open) {
-    return interpolate("submit_grades_title", data, true);
+    return interpolate("Submit grades for %(display_name)s", data, true);
   } else {
     if (data.submitted_count && data.submitted_date) {
-      return interpolate("submitted_grades_title", data, true);
+      return interpolate("View submitted grades for %(display_name)s", data, true);
     }
   }
 }
@@ -38,7 +38,7 @@ function formatGradingStatus(data) {
       }
     } else {
       if (!data.grading_period_open) {
-        return gettext("no_submission_information");
+        return gettext("No submission information");
       }
     }
   }
@@ -49,7 +49,9 @@ function formatGradingStatus(data) {
 }
 
 function formatErrorStatus(response) {
-  return response.data ? response.data.error : "Error retrieving grading status";
+  return response.data
+    ? response.data.error
+    : gettext("Error retrieving grading status");
 }
 
 export {

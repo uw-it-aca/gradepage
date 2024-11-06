@@ -26,9 +26,11 @@
 
     <!-- grade text input - custom bootstrap -->
     <div class="dropdown ms-1">
-      <label :for="`grade-${student.item_id}`" class="visually-hidden"
-        >{{ gettext("enter_grade") }}</label
-      >
+      <label
+        :for="`grade-${student.item_id}`"
+        class="visually-hidden"
+      >Enter grade
+      </label>
       <input
         class="form-control form-control-sm rounded-2 dropdown-toggle border-secondary"
         type="text"
@@ -97,7 +99,7 @@
   </div>
 
   <div v-if="incomplete" class="text-start small mb-3 text-muted">
-    {{ gettext("default_grade") }}
+    Student will receive default grade
   </div>
 
   <div>
@@ -106,7 +108,7 @@
       <span
         v-if="student.is_override_grade"
         class="override-icon"
-        :title="gettext('override_grade_title')"
+        title="Override grade imported from Canvas Gradebook"
       >
         <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
       </span>
@@ -156,20 +158,22 @@ export default {
       return this.incomplete ? "Enter default grade..." : "Enter grade...";
     },
     inputIncompleteTitle() {
-      return this.student.allows_incomplete
-        ? ""
-        : "Incomplete not allowed for " +
-            this.student.student_firstname +
-            " " +
-            this.student.student_lastname;
+      return interpolate(this.student.allows_incomplete
+        ? this.incomplete
+          ? "Click to remove Incomplete for %(student_firstname)s %(student_lastname)s"
+          : "Click to assign Incomplete for %(student_firstname)s %(student_lastname)s"
+        : "Incomplete not allowed for %(student_firstname)s %(student_lastname)s",
+        this.student, true
+      );
     },
     inputWritingTitle() {
-      return this.student.allows_writing_credit
-        ? ""
-        : "Writing Credit not allowed for " +
-            this.student.student_firstname +
-            " " +
-            this.student.student_lastname;
+      return interpolate(this.student.allows_writing_credit
+        ? this.writing
+          ? "Click to remove Writing Credit for %(student_firstname)s %(student_lastname)s"
+          : "Click to assign Writing Credit for %(student_firstname)s %(student_lastname)s"
+        : "Writing Credit not allowed for %(student_firstname)s %(student_lastname)s",
+        this.student, true
+      );
     },
   },
   methods: {

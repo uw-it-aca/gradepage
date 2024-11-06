@@ -11,8 +11,7 @@
         animation="glow"
       />{{ section.section_name }}
     </span>
-    <span class="small">
-      {{ gettext("sln") }}
+    <span class="small">SLN
       <BPlaceholder
         v-if="!section.section_sln"
         class="bg-body-secondary"

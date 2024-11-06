@@ -3,27 +3,32 @@
     {{ errorResponse }}
   </div>
   <div v-else-if="appState.gradeImport.has_valid_percentages" class="d-grid gap-2">
-    <p v-html="gettext('import_conversion_required')"></p>
-    <p v-html="gettext('import_conversion_required_select')"></p>
+    <p>
+      The Office of the Registrar requires submitted grades to follow official formatting.
+    </p>
+    <p>Please select a format to use:</p>
 
     <BButton v-for="scale in calculatorStore.availableScales"
       variant="outline-secondary"
-      v-text="gettext('conversion_scale_' + scale)"
-      @click="convertGrades(scale)">
+      @click="convertGrades(scale)">{{ gettext('conversion_scale_' + scale) }}
     </BButton>
   </div>
   <div v-else>
     <p>
-      <span v-html="gettext('import_save_continue')"></span>
-      <br /><small><em>{{ gettext("import_save_note") }}</em></small>
+      <span>To continue, click <strong>Import grades</strong>.</span>
+      <br />
+      <small>
+        <em>
+          You will have a chance to enter, adjust, and review grades on the next screen.
+        </em>
+      </small>
     </p>
-    <p v-html="gettext('import_select_different_file')"></p>
+    <p>To select a different file, click <strong>Cancel</strong>.</p>
     <div>
       <BButton
         variant="primary"
-        v-text="gettext('import_save_grades_btn')"
         @click="saveGrades"
-      >
+      >Import grades
       </BButton>
     </div>
   </div>
