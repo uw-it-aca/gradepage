@@ -13,8 +13,9 @@
         {{ gettext("conversion_scale_" + calculatorStore.selectedScale) }}
       </template>
       <BDropdownItem
-        v-for="scale in calculatorStore.availableScales"
+        v-for="(scale, index) in calculatorStore.availableScales"
         :value="scale"
+        :key="index"
         @click.prevent="calculatorStore.setScale(scale)"
       >{{ gettext("conversion_scale_" + scale) }}
       </BDropdownItem>
@@ -35,16 +36,21 @@
 
       <ol class="list-unstyled">
         <li v-for="(data, index) in calculatorValues" :key="index">
-          <div v-if="index === calculatorValues.length - 1">
-            <BLink
-              @click.prevent="calculatorStore.addCalculatorRow()"
-              title="Add a row to the conversion table. Leave unused rows blank."
-              tabindex="0"
-            >+ Add a row</BLink>
-            <span class="pull-right" style="margin-right: 3em">
-              <i class="fa fa-ellipsis-v fa-lg"></i>
-            </span>
-          </div>
+          <template v-if="index === calculatorValues.length - 1">
+            <div class="d-flex my-3">
+              <div class="w-50 text-center">
+                <BLink
+                  @click.prevent="calculatorStore.addCalculatorRow()"
+                  title="Add a row to the conversion table. Leave unused rows blank."
+                  tabindex="0"
+                >+ Add a row</BLink>
+              </div>
+              <div class="w-50 text-center">
+                <i class="bi bi-three-dots-vertical"></i>
+              </div>
+            </div>
+          </template>
+
           <CalculatorRow
             :row-data="data"
             :first="index === 0"
