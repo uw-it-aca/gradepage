@@ -7,7 +7,7 @@
       </span>
     </span>
     {{ student.imported_grade }}%
-    <span class="visually-hidden">{{ gettext("conversion_confirm_grade_text") }}</span>
+    <span class="visually-hidden">converted to</span>
     <i class="fas fa-long-arrow-alt-right"></i>
     <strong>{{ student.converted_grade }}</strong>
   </div>

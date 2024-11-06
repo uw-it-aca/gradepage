@@ -8,15 +8,14 @@
   >
     <div class="flex-fill me-3">
       <i class="bi bi-exclamation-circle-fill me-1"></i>
-      {{ gettext("grade_submission_inprogress") }}.
-      {{ gettext("in_progress_submission_email") }}
+      Grade submission in progress.
+      You will receive an email once grades are submitted to Registrar.
     </div>
     <div>
       <BLink
         class="btn btn-info btn-sm rounded-3 text-nowrap"
-        v-text="gettext('return_classes_to_grade')"
         :href="section.term_url"
-        >
+        >Return to the list of classes you can grade.
       </BLink>
     </div>
   </BAlert>
@@ -36,36 +35,35 @@
         ></template>
         <BDropdownItem :href="section.export_url">
           <i class="bi bi-download me-2 text-body-tertiary"></i>
-          {{ gettext("btn_download_cog") }}
+          Download Change of Grade
         </BDropdownItem>
         <BDropdownItem href="javascript:window.print()">
           <i class="bi bi-printer me-2 text-body-tertiary"></i>
-          {{ gettext("btn_print_page") }}
+          Print this page
         </BDropdownItem>
         <BDropdownDivider />
         <BDropdownItem
           href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
           target="_blank"
-          :title="gettext('help_btn_title')"
+          title="Information on assigning and submitting grades"
           ><i class="bi bi-question-circle me-2 text-body-tertiary"></i>
-         {{ gettext("help_btn") }}
+         GradePage Help
         </BDropdownItem>
       </BDropdown>
 
-      <SectionHeader :section="section" :title="gettext('submitted_grades_for')" />
+      <SectionHeader :section="section" title="Grade Receipt for" />
 
       <div
         v-if="!appState.graderoster.is_submission_confirmation"
         class="small"
         role="status"
       >
-        {{ gettext("confirmation_alert_warning") }}
+        Submitted grade may differ from official final grade.
         <BLink
           href="https://registrar.washington.edu/staffandfaculty/grading-resources/#faqs"
           target="_blank"
           class="d-print-none"
-          v-text="gettext('more_info')"
-        >
+        >More info
         </BLink>
       </div>
     </template>
@@ -93,7 +91,7 @@
       <!-- success -->
       <BAlert v-else variant="success" :model-value="true" class="small">
         <i class="bi bi-check-circle-fill me-1"></i>
-        {{ gettext("grade_submission_successful") }}
+        Grade submission successful!
       </BAlert>
     </template>
 
@@ -106,14 +104,14 @@
     >
       <i class="bi bi-check-circle-fill me-1"></i>
       <span v-if="submission.section_id">
-        {{ gettext("section") }} {{ submission.section_id }}:
+        Section {{ submission.section_id }}:
       </span>
       <span v-html="gradesSubmittedText(submission)"></span>
       <BLink
         href="https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/"
         target="_blank"
-        :title="gettext('change_submitted_grades')"
-        >{{ gettext("change_submitted_grades") }}?
+        title="Change submitted grades"
+        >Change submitted grades
       </BLink>
     </BAlert>
 
@@ -121,10 +119,13 @@
       class="mb-2 pb-2 small text-muted border-bottom"
     >
       <div v-if="appState.graderoster.is_writing_section">
-        {{ gettext("writing_course_note_receipt") }}
+        Writing credit automatically given to all students with a passing grade in this course.
       </div>
       <div v-if="appState.graderoster.has_duplicate_codes">
-        {{ gettext("duplicate_code") }}
+        <span class="visually-hidden">
+          In the list below, duplicate listings of the same student are differentiated with a
+        </span>
+        Duplicate code
         <i class="bi bi-circle-fill text-secondary"></i>
       </div>
     </div>
@@ -152,9 +153,9 @@
 
     <template #footer v-if="appState.graderoster.has_grade_imports">
       <div v-if="appState.graderoster.grade_import_count > 1">
-        {{ gettext("multi_conversion_scale_msg") }}
+        Grades calculated using grade conversion scales.
         <label class="visually-hidden">
-          {{ gettext("multi_conversion_scale_view") }}
+          Select grade conversion scale to view:
         </label>
         <BDropdown
           v-model="importConversion"
@@ -165,7 +166,7 @@
           toggle-class="rounded-2"
         >
           <template #button-content>
-            {{ gettext("multi_conversion_scale_option_view") }}
+            View Scale
           </template>
           <BDropdownItem
             v-for="(submission, index) in appState.graderoster.submissions"
@@ -173,22 +174,21 @@
             :value="submission.grade_import.import_conversion"
           >
             <i class="me-2 text-body-tertiary"></i>
-            {{ gettext("section") }} {{ submission.section_id }}
+            Section {{ submission.section_id }}
           </BDropdownItem>
         </BDropdown>
       </div>
       <div v-else-if="!importConversion">
-        {{ gettext("conversion_scale_msg") }}
+        Grades calculated using a grade conversion scale.
         <BLink
-          :title="gettext('conversion_scale_view_title')"
-          v-text="gettext('conversion_scale_view')"
+          title="Show the grade conversion scale that was used"
           @click.prevent="showImportConversion()"
-        >
+        >View scale
         </BLink>
       </div>
 
       <div v-if="importConversion">
-        <h2 class="visually-hidden">{{ gettext("conversion_scale_header") }}</h2>
+        <h2 class="visually-hidden">Grade Conversion Scale</h2>
         <ol>
           <li v-for="(row, index) in importConversion.grade_scale">
             <span v-if="index === importConversion.grade_scale.length - 1">
@@ -202,10 +202,9 @@
           </li>
         </ol>
         <BLink
-          :title="gettext('conversion_scale_hide_title')"
-          v-text="gettext('conversion_scale_hide')"
+          title="Hide grade conversion scale"
           @click.prevent="hideImportConversion()"
-        >
+        >Hide scale
         </BLink>
       </div>
     </template>

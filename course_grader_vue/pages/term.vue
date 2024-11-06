@@ -38,7 +38,12 @@
               </li>
             </ul>
           </template>
-          <div v-else v-html="noClassesWarning"></div>
+          <div v-else>
+            You do not have any classes to grade for
+            <strong>{{ selectedTerm.quarter }} {{ selectedTerm.year }}</strong>.
+            If you believe this to be incorrect, please contact your
+            department's Time Schedule Coordinator.
+          </div>
         </template>
       </BCard>
     </template>
@@ -88,11 +93,6 @@ export default {
         this.currentTerm.quarter === this.selectedTerm.quarter &&
         this.currentTerm.year === this.selectedTerm.year
       );
-    },
-    noClassesWarning() {
-      return interpolate(gettext(
-        "You do not have any classes to grade for <strong>%(quarter)s %(year)s</strong>. If you believe this to be incorrect, please contact your department's Time Schedule Coordinator."
-        ), this.selectedTerm, true);
     },
   },
   methods: {

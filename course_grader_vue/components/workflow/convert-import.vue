@@ -1,15 +1,17 @@
 <template>
   <BCard class="shadow-sm rounded-3" header-class="p-3" header="Default">
     <template #header>
-      <SectionHeader :section="section" :title="gettext('convert_grades')" />
+      <SectionHeader :section="section" title="Convert grades for" />
     </template>
 
-    <h3>{{ gettext("conversion_header") }}</h3>
-    <p>{{ gettext("conversion_instructions") }}</p>
+    <h3>Convert Final Score to Grade Points</h3>
+    <p>
+      To use the conversion calculator, enter minimum percentages and equivalent class grades in two or more rows in the calculator, and click <strong>Apply</strong>. The calculator fills in the rest of the grade point scale.
+    </p>
 
     <div v-if="courseGradingSchemes.length">
       <label for="course-scale-select" class="visually-hidden">
-        {{ gettext("course_scale_label_sr") }}
+        Convert grades using a Canvas grading scheme:
       </label>
       <BDropdown
         id="course-scale-select"
@@ -18,7 +20,7 @@
         class="d-inline-block"
       >
         <template #button-content>
-          {{ gettext("course_scale_label") }}
+          Use the Canvas grading scheme from your course
         </template>
         <BDropdownItem
           v-for="scheme in courseGradingSchemes"
@@ -31,7 +33,7 @@
 
     <div v-if="previousScales && previousScales.terms.length">
       <label for="previous-scale-select" class="visually-hidden">
-        {{ gettext("previous_scale_label_sr") }}
+        Convert grades using a scale that you have used before:
       </label>
       <BDropdown
         id="previous-scale-select"
@@ -40,7 +42,7 @@
         class="d-inline-block"
       >
         <template #button-content>
-          {{ gettext("previous_scale_label") }}
+          Use one of your previous conversion scales
         </template>
         <BDropdownGroup
           v-for="term in previousScales.terms"
@@ -59,23 +61,23 @@
 
     <template #footer>
       <BLink
-        :title="gettext('cancel_title')"
-        v-text="gettext('cancel')"
+        title="Cancel"
         @click="cancelConversion"
-      >
+      >Cancel
       </BLink>
       <BButton
         variant="primary"
-        :title="gettext('conversion_submit_title')"
+        title="Review converted grades"
         @click="reviewConversion"
-      >{{ gettext("conversion_submit") }} &gt;&gt;
+      >Review converted grades &gt;&gt;
       </BButton>
       <span
         v-if="scaleErrorCount"
-        v-html="scaleErrorText"
         role="alert"
         class="text-danger invalid-grade small"
-      ></span>
+      >
+        <strong>{{ scaleErrorText }}</strong> (see above)
+      </span>
     </template>
   </BCard>
 </template>
@@ -135,10 +137,8 @@ export default {
     },
     scaleErrorText() {
       return interpolate(ngettext(
-        "<strong>One invalid grade</strong> (see above)",
-        "<strong>%(count)s invalid grades</strong> (see above)",
-        this.scaleErrorCount
-      ), {count: this.scaleErrorCount}, true);
+        "One invalid grade", "%(count)s invalid grades", this.scaleErrorCount),
+          {count: this.scaleErrorCount}, true);
     },
   },
   methods: {

@@ -1,6 +1,8 @@
 <template>
   <fieldset>
-    <legend class="visually-hidden">{{ gettext("calculator_legend") }}</legend>
+    <legend class="visually-hidden">
+      Relate a Final Score (percentage) to a Grade Point:
+    </legend>
 
     <div class="d-flex justify-content-between">
       <div class="w-50">
@@ -19,13 +21,13 @@
         </div>
         <label for="`calculator-percentage-${index}`">
           <span v-if="last" class="visually-hidden">
-            {{ gettext("calculator_perc_label_lower") }}
+            Lower Limit: Final Score (percentage)
           </span>
           <span v-else-if="first" class="visually-hidden">
-            {{ gettext("calculator_perc_label_upper") }}
+            Upper Limit: Final Score (percentage)
           </span>
           <span v-else class="visually-hidden">
-            {{ gettext("calculator_perc_label") }}
+            Final Score (percentage)
           </span>
           <span role="alert" class="text-danger invalid-grade small">
             {{ rowData.percentageError }}
@@ -45,13 +47,13 @@
         />
         <label for="`calculator-grade-${index}`">
           <span v-if="last" class="visually-hidden">
-            {{ gettext("calculator_grade_label_lower") }}
+            Lower Limit: Grade Point
           </span>
           <span v-else-if="first" class="visually-hidden">
-            {{ gettext("calculator_grade_label_upper") }}
+            Upper Limit: Grade Point
           </span>
           <span v-else class="visually-hidden">
-            {{ gettext("calculator_grade_label") }}
+            Lower Limit: Grade Point
           </span>
           <span role="alert" class="text-danger invalid-grade small">
             {{ rowData.gradeError }}

@@ -9,31 +9,31 @@
   >
     <template #button-content>
       <i class="bi bi-arrow-return-right me-2 text-body-tertiary"></i>
-      {{ gettext("import_grades_dd") }}
+      Import from...
     </template
     >
     <BDropdownItemButton v-b-modal.modalImportCanvasGrades
       ><i class="bi bi-journal-check me-2 text-body-tertiary"></i>
-      {{ gettext("import_canvas_btn") }}
+      Canvas Gradebook
     </BDropdownItemButton>
     <BDropdownItemButton v-b-modal.modalImportCsvGrades
       ><i class="bi bi-filetype-csv me-2 text-body-tertiary"></i>
-      {{ gettext("import_csv_btn") }}
+      CSV File
     </BDropdownItemButton>
     <BDropdownDivider />
     <BDropdownItem
       href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
       target="_blank"
-      :title="gettext('help_btn_title')"
+      title="Information on assigning and submitting grades"
     >
       <i class="bi bi-question-circle me-2 text-body-tertiary"></i>
-      {{ gettext("help_btn") }}
+      GradePage Help
     </BDropdownItem>
   </BDropdown>
 
   <BModal
     id="modalImportCanvasGrades"
-    :title="gettext('import_canvas_title')"
+    title="Import Canvas Gradebook"
     ok-only
     ok-variant="secondary"
     ok-title="Cancel"
@@ -50,7 +50,7 @@
 
   <BModal
     id="modalImportCsvGrades"
-    :title="gettext('import_csv_title')"
+    title="Import CSV File"
     ok-only
     ok-variant="secondary"
     ok-title="Cancel"

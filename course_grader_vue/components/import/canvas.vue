@@ -8,7 +8,7 @@
   </div>
   <div v-else-if="appState.gradeImport">
     <div v-if="appState.gradeImport.status_code != 200">
-      {{ gettext("import_canvas_error") }}
+      There was an error importing grades from Canvas
       ({{ appState.gradeImport.status_code }}).
     </div>
     <div v-else-if="appState.gradeImport.grade_count">
@@ -24,9 +24,8 @@
           <span v-html="overrideGradesFoundText"></span>
           <BLink
             target="_blank"
-            :title="gettext('import_override_grades_title')"
-            v-text="gettext('learn_more')"
-            href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/new-gradebook/final-grade-override/">
+            title="Learn more about importing grade overrides on IT Connect"
+            href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/new-gradebook/final-grade-override/">Learn more
           </BLink>.
         </p>
       </div>
@@ -34,12 +33,13 @@
       <div v-if="appState.gradeImport.unposted_grade_count" role="alert" class="alert alert-danger">
         <i class="fas fa-exclamation-circle fa-2x" aria-hidden="true"></i>
         <p v-html="unpostedGradesFoundText"></p>
-        <span v-html="gettext('import_unposted_grade_warning')"></span>
+        <span>
+          Unposted grades <strong>ARE NOT</strong> represented in the imported final grade.
+        </span>
         <BLink
           target="_blank"
-          :title="gettext('import_unposted_grade_title')"
-          v-text="gettext('learn_more')"
-          href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/">
+          title="Learn more about importing Canvas grades on IT Connect"
+          href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/">Learn more
         </BLink>.
       </div>
 
@@ -47,8 +47,10 @@
 
     </div>
     <div v-else>
-      <span v-html="noGradesFoundText"></span>
-      {{ gettext("select_alternate_import") }}
+      <span>
+        No grades found for <strong>{{ section.section_name }}</strong> in Canvas.
+      </span>
+      Select a different option for import or enter grades manually.
     </div>
   </div>
 </template>
@@ -108,10 +110,6 @@ export default {
           grade_count: this.appState.gradeImport.grade_count,
         }, true
       );
-    },
-    noGradesFoundText() {
-      return interpolate(gettext("no_grades_found_canvas"),
-        {section_name: this.section.section_name}, true);
     },
     overrideGradesFoundText() {
       return interpolate(ngettext(

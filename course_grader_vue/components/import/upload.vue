@@ -1,5 +1,7 @@
 <template>
-  <p v-html="importingGradesText"></p>
+  <p>
+    You are importing final grades for section <strong>{{ section.section_name }}</strong>
+  </p>
 
   <div v-if="appState.gradeImport">
     <div v-if="appState.gradeImport.grade_count">
@@ -12,41 +14,47 @@
 
     </div>
     <div v-else>
-      <span v-html="noGradesFoundText"></span>
-      {{ gettext("select_alternate_import") }}
+      <span>
+        No grades found for <strong>{{ section.section_name }}</strong> in this CSV file.
+      </span>
+      Select a different file for import or enter grades manually.
     </div>
   </div>
   <div v-else>
-    <p>{{ expectedGradeCountText }}</p>
-    <p>{{ gettext("csv_required_cols") }}</p>
+    <p>
+      {{ interpolate(ngettext("One grade expected", "%(count)s grades expected",
+        this.expectedGradeCount), {count: this.expectedGradeCount}, true) }}
+    </p>
+    <p>The CSV is required to contain at least two columns:</p>
     <ul>
-      <li v-html="gettext('required_col_student')"></li>
-      <li v-html="gettext('required_col_grade')"></li>
+      <li>a column for student identifier (<strong>SIS User ID</strong> or <strong>StudentNo)</strong> AND</li>
+      <li>a column for grades to be submitted (<strong>ImportGrade</strong></li>
     </ul>
 
     <p>
-      {{ gettext("csv_grade_types") }}
+      An imported CSV file can contain final grades or percentages. You will be prompted to convert percentages during the import process.
       <BLink
         href="https://itconnect.uw.edu/learn/tools/gradepage/import-convert-csv/#convert"
-        :title="gettext('convert_percentages_help_title')"
-        v-text="gettext('learn_more')"
-        target="_blank">
+        title="Learn about converting percentages on IT Connect"
+        target="_blank">Learn more
       </BLink>
     </p>
 
     <p>
       <BLink
         href="https://itconnect.uw.edu/learn/tools/gradepage/import-convert-csv/"
-        :title="gettext('format_csv_help_title')"
-        v-text="gettext('format_csv_help')"
+        title="Learn about importing a CSV file on IT Connect"
         target="_blank">
+        Learn more about formatting and importing a CSV file for GradePage.
       </BLink>
     </p>
-    <p v-html="gettext('begin_csv_import')"></p>
+    <p>
+      To begin import, choose the CSV file, and then click <strong>Verify CSV</strong>.
+    </p>
 
     <div class="mb-3">
       <label for="formFile" class="visually-hidden">
-        {{ gettext("select_csv_file") }}
+        Select a CSV file to import.
       </label>
       <input
         class="form-control"
@@ -60,72 +68,74 @@
     <div v-if="errorResponse" class="alert alert-danger" role="alert">
       <div v-if="fileLimitExceeded">
         <i class="fas fa-exclamation-circle"></i>
-        <strong>{{ gettext("file_size_exceeded") }}</strong><br/>
-        <small>{{ gettext("file_name") }}: <em>{{ file.name }}</em></small>
+        <strong>Allowable file size exceeded (2 Mb).</strong><br/>
+        <small>File: <em>{{ file.name }}</em></small>
         <ul>
-          <li v-html="gettext('select_different_file')"</li>
+          <li>Select a different file for import.</li>
         </ul>
       </div>
       <div v-else-if="missingHeaderGrade">
         <i class="fas fa-exclamation-circle"></i>
-        <strong v-html="gettext('missing_header_grade')"></strong><br/>
-        <small>{{ gettext("file_name") }}: <em>{{ file.name }}</em></small>
+        <strong>Missing column heading: &quot;ImportGrade&quot;</strong>
+        <br/>
+        <small>File: <em>{{ file.name }}</em></small>
         <ul>
-          <li v-html="gettext('missing_header_grade_help')"></li>
-          <li v-html="gettext('select_different_file')"</li>
+          <li>Confirm that the .csv file contains a column with the heading &quot;ImportGrade&quot; and that the column contains the grades you want to submit.</li>
+          <li>Select a different file for import.</li>
           <li>
             <BLink
               href="https://itconnect.uw.edu/learn/tools/gradepage/import-convert-csv/#format"
-              :title="gettext('format_csv_help')"
+              title="Learn about importing a CSV file on IT Connect"
               target="_blank"
-            >{{ gettext("format_csv_help") }}</BLink>
+            >Learn more about formatting and importing a CSV file for GradePage.</BLink>
           </li>
         </ul>
       </div>
       <div v-else-if="missingHeaderStudent">
         <i class="fas fa-exclamation-circle"></i>
-        <strong v-html="gettext('missing_header_student')"></strong><br/>
-        <small>{{ gettext("file_name") }}: <em>{{ file.name }}</em></small>
+        <strong>Missing column heading: &quot;SIS User ID&quot; OR &quot;StudentNo&quot;</strong>
+        <br/>
+        <small>File: <em>{{ file.name }}</em></small>
         <ul>
-          <li v-html="gettext('missing_header_student_help')"></li>
-          <li v-html="gettext('select_different_file')"</li>
+          <li>Confirm that the .csv file contains a column with the heading &quot;SIS User ID&quot; or &quot;StudentNo&quot;.</li>
+          <li>Select a different file for import.</li>
         </ul>
       </div>
       <div v-else>
         <i class="fas fa-exclamation-circle"></i>
         <strong>{{ errorResponse.data.error }}</strong><br>
-        <small>{{ gettext("file_name") }}: <em>{{ file.name }}</em></small>
+        <small>File: <em>{{ file.name }}</em></small>
         <ul>
-          <li v-html="gettext('select_different_file')"</li>
+          <li>Select a different file for import.</li>
         </ul>
       </div>
       <p>
         <BLink
           href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
-          :title="gettext('import_other_options_title')"
-          v-text="gettext('import_other_options')"
+          title="Learn about other options to submit grades on IT Connect"
           target="_blank"
-        ></BLink>
+        >See other options for submitting grades.</BLink>
       </p>
     </div>
     <div v-else-if="appState.gradeImport && !appState.gradeImport.grade_count">
       <div class="alert alert-danger gp-upload-error" role="alert">
         <i class="fas fa-exclamation-circle"></i>
-        <span v-html="import_no_grades_found"></span><br/>
-        <small>{{ gettext("file_name") }}: <em>{{ file.name }}</em></small>
+        <span>
+          No grades found for <strong>{{ section.section_name }}</strong> in this CSV file.
+        </span><br/>
+        <small>File: <em>{{ file.name }}</em></small>
         <ul>
-          <li v-text="gettext('confirm_grade_column')"></li>
-          <li v-text="gettext('confirm_student_column')"></li>
-          <li v-text="gettext('confirm_roster_students')"></li>
-          <li v-html="gettext('select_different_file')"</li>
+          <li>Confirm that the ImportGrade column contains grade values.</li>
+          <li>Confirm that the SIS User ID or StudentNo column contains student identifiers.</li>
+          <li>Confirm that the .csv file contains students from this section.</li>
+          <li>Select a different file for import.</li>
         </ul>
         <p>
           <BLink
             href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
-            :title="gettext('import_other_options_title')"
-            v-text="gettext('import_other_options')"
+            title="Learn about other options to submit grades on IT Connect"
             target="_blank"
-          ></BLink>
+          ></BLink>See other options for submitting grades.
         </p>
       </div>
     </div>
@@ -135,8 +145,7 @@
         :disabled="uploadDisabled"
         variant="primary"
         @click="uploadFile"
-        v-text="gettext('verify_file_btn')"
-      >
+      >Verify CSV
       </BButton>
     </div>
   </div>
@@ -202,16 +211,6 @@ export default {
         typeof(this.errorResponse.data) === "string"  &&
         this.errorResponse.data.indexOf("Request Entity Too Large") !== -1);
     },
-    expectedGradeCountText() {
-      return interpolate(ngettext(
-        "One grade expected",
-        "%(count)s grades expected",
-        this.expectedGradeCount), {"count": this.expectedGradeCount}, true);
-    },
-    importingGradesText() {
-      return interpolate(gettext("importing_grades_for_section"),
-        {section_name: this.section.section_name}, true);
-    },
     gradesFoundText() {
       return interpolate(ngettext(
         "<strong>%(grade_count)s</strong> of <strong>%(expected_count)s</strong> grade found in the file <strong>%(file_name)s</strong>",
@@ -222,10 +221,6 @@ export default {
           file_name: this.file.name,
         }, true
       );
-    },
-    noGradesFoundText() {
-      return interpolate(gettext("no_grades_found_csv"),
-        {section_name: this.section.section_name}, true);
     },
   },
   methods: {

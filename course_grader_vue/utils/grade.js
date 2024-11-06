@@ -89,7 +89,7 @@ function validateGrade(grade, incomplete, choices) {
     // H/HP/P/F
     return gettext("grade_invalid_H_HP_P_F");
   } else {
-    return gettext("enter_valid_grade");
+    return "Enter a valid grade";
   }
 }
 

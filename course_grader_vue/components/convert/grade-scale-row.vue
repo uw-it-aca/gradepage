@@ -7,10 +7,7 @@
       </div>
 
       <div v-if="last">
-        <span class="visually-hidden">
-          {{ gettext("grade_scale_limit_pre") }} {{ lastMinPercentage }}
-          {{ gettext("grade_scale_limit_post") }} {{ rowData.grade }}.
-        </span>
+        <span class="visually-hidden">{{ gradeScaleLimitText }}</span>
         <span> {{ lastMinPercentage }} </span>
       </div>
       <div v-else>
@@ -21,7 +18,7 @@
             class="form-control"
             name="min-percentage"
             :value="rowData.minPercentage"
-            :title="gettext('grade_scale_input_title') + rowData.grade"
+            :title="gradeScaleTitle"
             @change="minPercentageChanged($event.target.value)"
             required
             aria-describedby="percent-addon2"
@@ -78,6 +75,19 @@ export default {
       return this.calculatorStore.scaleValues[
         this.calculatorStore.scaleValues.length - 2
       ].minPercentage;
+    },
+    gradeScaleLimitText() {
+      return interpolate(
+        "Any final grade below a %(min_percentage)s% will result in a %(grade)s.",
+        {
+          min_percentage: this.lastMinPercentage,
+          grade: this.rowData.grade
+        }, true
+      );
+    },
+    gradeScaleTitle() {
+      return interpolate(
+        "Minimum percentage that will result in a %(grade)s", this.rowData, true);
     },
   },
   methods: {
