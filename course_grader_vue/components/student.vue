@@ -1,7 +1,9 @@
 <template>
   <div class="d-flex justify-content-between">
     <div>
-      <div class="fs-4 text-uppercase">{{ student.student_lastname }}, {{ student.student_firstname }}</div>
+      <div class="fs-4 text-uppercase">
+        {{ student.student_lastname }}, {{ student.student_firstname }}
+      </div>
       <div class="small text-muted">
         <span class="visually-hidden">Section:</span> {{ student.section_id }},
         <span v-if="student.student_credits">
@@ -12,8 +14,12 @@
         {{ student.student_number }}
         <template v-if="student.duplicate_code">
           <span class="visually-hidden">Duplicate code:</span>
-          <abbr title="Duplicate Code" class="badge rounded-pill text-bg-secondary">
-          {{ student.duplicate_code }}</abbr>
+          <abbr
+            title="Duplicate Code"
+            class="badge rounded-pill text-bg-secondary"
+          >
+            {{ student.duplicate_code }}</abbr
+          >
         </template>
       </div>
     </div>
