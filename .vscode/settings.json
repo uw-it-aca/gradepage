@@ -1,0 +1,7 @@
+{
+  "black-formatter.args": [
+    "--line-length","79",
+    "--skip-string-normalization","true"
+  ],
+  "stylelint.validate": ["vue", "scss"]
+}

@@ -3,8 +3,13 @@
 
 
 from django.apps import AppConfig
+from django.contrib.staticfiles.apps import StaticFilesConfig
 from restclients_core.dao import MockDAO
 import os
+
+
+class CourseGraderFilesConfig(StaticFilesConfig):
+    ignore_patterns = ['CVS', '*~']
 
 
 class CourseGraderConfig(AppConfig):

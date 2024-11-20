@@ -3,6 +3,7 @@ from google.oauth2 import service_account
 import os
 
 INSTALLED_APPS += [
+    'course_grader.apps.CourseGraderFilesConfig',
     'course_grader.apps.CourseGraderConfig',
     'supporttools',
     'userservice',
@@ -10,6 +11,8 @@ INSTALLED_APPS += [
     'rc_django',
     'django.contrib.humanize',
 ]
+
+INSTALLED_APPS.remove('django.contrib.staticfiles')
 
 MIDDLEWARE += [
     'userservice.user.UserServiceMiddleware',
@@ -28,7 +31,8 @@ if os.getenv('ENV', 'localdev') == 'localdev':
     PAST_TERMS_VIEWABLE = 1
     MEDIA_ROOT = os.getenv('IMPORT_DATA_ROOT', os.path.join(BASE_DIR, 'csv'))
     VITE_MANIFEST_PATH = os.path.join(
-        BASE_DIR, 'course_grader', 'static', 'manifest.json')
+        BASE_DIR, 'course_grader', 'static', '.vite', 'manifest.json'
+    )
     LOCALE_PATHS = [os.path.join(BASE_DIR, 'course_grader', 'locale')]
 
 else:
@@ -44,21 +48,24 @@ else:
                 'bucket_name': os.getenv('STORAGE_BUCKET_NAME', ''),
                 'location': os.path.join(os.getenv('STORAGE_DATA_ROOT', '')),
                 'credentials': service_account.Credentials.from_service_account_file(
-                    '/gcs/credentials.json'),
-            }
+                    '/gcs/credentials.json'
+                ),
+            },
         },
         'staticfiles': {
             'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
         },
     }
     CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('CLUSTER_CNAME')]
-    VITE_MANIFEST_PATH = os.path.join(os.sep, "static", "manifest.json")
+    VITE_MANIFEST_PATH = os.path.join(os.sep, 'static', '.vite', 'manifest.json')
 
-ALLOW_GRADE_SUBMISSION_OVERRIDE = (os.getenv('ENV', 'localdev') != 'prod')
+ALLOW_GRADE_SUBMISSION_OVERRIDE = os.getenv('ENV', 'localdev') != 'prod'
 USERSERVICE_VALIDATION_MODULE = 'course_grader.dao.person.is_netid'
 USERSERVICE_OVERRIDE_AUTH_MODULE = 'course_grader.views.support.can_override_user'
 RESTCLIENTS_ADMIN_AUTH_MODULE = 'course_grader.views.support.can_proxy_restclient'
-PERSISTENT_MESSAGE_AUTH_MODULE = 'course_grader.views.support.can_manage_persistent_messages'
+PERSISTENT_MESSAGE_AUTH_MODULE = (
+    'course_grader.views.support.can_manage_persistent_messages'
+)
 
 EMAIL_NOREPLY_ADDRESS = os.getenv('EMAIL_NOREPLY_ADDRESS')
 GRADEPAGE_HOST = 'https://' + os.getenv('CLUSTER_CNAME', 'localhost')
@@ -87,17 +94,15 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'filters': {
-        'add_user': {
-            '()': 'course_grader.log.UserFilter'
-        },
+        'add_user': {'()': 'course_grader.log.UserFilter'},
         'stdout_stream': {
             '()': 'django.utils.log.CallbackFilter',
-            'callback': lambda record: record.levelno < logging.WARNING
+            'callback': lambda record: record.levelno < logging.WARNING,
         },
         'stderr_stream': {
             '()': 'django.utils.log.CallbackFilter',
-            'callback': lambda record: record.levelno > logging.INFO
-        }
+            'callback': lambda record: record.levelno > logging.INFO,
+        },
     },
     'formatters': {
         'course_grader': {
@@ -154,7 +159,7 @@ LOGGING = {
         },
         '': {
             'handlers': ['stdout', 'stderr'],
-            'level': 'INFO' if os.getenv('ENV', 'localdev') == 'prod' else 'DEBUG'
-        }
-    }
+            'level': 'INFO' if os.getenv('ENV', 'localdev') == 'prod' else 'DEBUG',
+        },
+    },
 }

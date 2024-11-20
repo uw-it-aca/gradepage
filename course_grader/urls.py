@@ -61,10 +61,10 @@ urlpatterns = [
 
     # vue-router paths
     re_path(
-        r"^term/(?P<term_id>[^/]*)$", HomeView.as_view(), name="term-page"),
+        r'^term/(?P<term_id>[^/]*)$', HomeView.as_view(), name='term-page'),
     re_path(
-        r"^section/(?P<section_id>[^/]*)$", HomeView.as_view(),
-        name="section-page"),
+        r'^section/(?P<section_id>[^/]*)$', HomeView.as_view(),
+        name='section-page'),
 
     # default landing
     re_path(r'^$', HomeView.as_view(), name='home'),
