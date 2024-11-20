@@ -9,12 +9,12 @@ import os
 
 
 class CourseGraderFilesConfig(StaticFilesConfig):
-    ignore_patterns = ["CVS", "*~"]
+    ignore_patterns = ['CVS', '*~']
 
 
 class CourseGraderConfig(AppConfig):
-    name = "course_grader"
+    name = 'course_grader'
 
     def ready(self):
-        mocks = os.path.join(os.path.dirname(__file__), "resources")
+        mocks = os.path.join(os.path.dirname(__file__), 'resources')
         MockDAO.register_mock_path(mocks)
