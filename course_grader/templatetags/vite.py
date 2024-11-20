@@ -35,7 +35,9 @@ def vite_manifest(entries_names):
 
             chunk = manifest[name]
 
-            import_scripts, import_styles = _process_entries(chunk.get("imports", []))
+            import_scripts, import_styles = _process_entries(
+                chunk.get("imports", [])
+            )
             scripts += import_scripts
             styles += import_styles
 
