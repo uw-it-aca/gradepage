@@ -39,9 +39,9 @@
         :value="grade"
         :disabled="student.is_submitted"
         :placeholder="gradePlaceholder"
-        @change="gradeChanged($event.target.value)"
         :aria-controls="`grade-${student.item_id}-menu`"
         data-bs-toggle="dropdown"
+        @change="gradeChanged($event.target.value)"
         @keydown.tab.exact="false"
         @keydown.down.exact="openMenu"
       />
@@ -122,7 +122,11 @@
 <script>
 import { useGradeStore } from "@/stores/grade";
 import { updateGrade } from "@/utils/data";
-import { incompleteBlocklist, normalizeGrade } from "@/utils/grade";
+import {
+  incompleteBlocklist,
+  normalizeGrade,
+  normalizeDefaultGrade,
+} from "@/utils/grade";
 
 export default {
   props: {
@@ -194,6 +198,9 @@ export default {
     incompleteChanged: function (checked) {
       this.incomplete = checked;
       this.updateGradeChoices();
+      if (checked) {
+        this.grade = normalizeDefaultGrade(this.grade, this.actualChoices);
+      }
       this.saveGrade();
     },
     writingChanged: function (checked) {

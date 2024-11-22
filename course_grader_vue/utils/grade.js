@@ -14,6 +14,13 @@ function normalizeGrade(grade) {
   return grade;
 }
 
+function normalizeDefaultGrade(grade, choices) {
+  if (grade === "" || incompleteBlocklist.includes(grade)) {
+    return choices.includes("0.0")
+      ? "0.0" : choices.includes("NC") ? "NC" : "";
+  }
+}
+
 function validateGrade(grade, incomplete, choices) {
   var is_hypenated,
       is_cnc,
@@ -96,5 +103,6 @@ function validateGrade(grade, incomplete, choices) {
 export {
   incompleteBlocklist,
   normalizeGrade,
+  normalizeDefaultGrade,
   validateGrade,
 };
