@@ -30,7 +30,7 @@ setup(
         'uw-django-saml2~=1.8',
         'uw-memcached-clients~=1.0',
         'uw-restclients-core~=1.4',
-        'uw-restclients-sws~=2.3',
+        'uw-restclients-sws~=2.4',
         'uw-restclients-pws~=2.1',
         'uw-restclients-canvas~=1.2',
         'uw-restclients-graderoster~=1.1',
