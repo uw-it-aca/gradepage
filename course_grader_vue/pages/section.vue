@@ -1,13 +1,10 @@
 <template>
   <Layout :page-title="pageTitle">
     <template #content>
-
       <div v-if="errorResponse">
         <Errors :error-response="errorResponse" />
       </div>
-      <div v-else-if="isLoading">
-        Loading...
-      </div>
+      <div v-else-if="isLoading">Loading...</div>
       <div v-else>
         <template v-if="appState.editingGrades">
           <EditGrades :section="section" />
@@ -45,6 +42,7 @@ import { useGradeStore } from "@/stores/grade";
 import { getSection, getGraderoster } from "@/utils/data";
 
 export default {
+  name: "SectionPage",
   components: {
     Layout,
     EditGrades,
@@ -71,6 +69,9 @@ export default {
       pageTitle: "Course Section",
       errorResponse: null,
     };
+  },
+  created() {
+    this.loadSection();
   },
   methods: {
     loadGraderoster: function () {
@@ -112,9 +113,6 @@ export default {
           this.isLoading = false;
         });
     },
-  },
-  created() {
-    this.loadSection();
   },
 };
 </script>

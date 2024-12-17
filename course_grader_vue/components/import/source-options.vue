@@ -10,8 +10,7 @@
     <template #button-content>
       <i class="bi bi-arrow-return-right me-2 text-body-tertiary"></i>
       Import from...
-    </template
-    >
+    </template>
     <BDropdownItemButton v-b-modal.modalImportCanvasGrades
       ><i class="bi bi-journal-check me-2 text-body-tertiary"></i>
       Canvas Gradebook
@@ -78,6 +77,15 @@ import { useWorkflowStateStore } from "@/stores/state";
 import { ref } from "vue";
 
 export default {
+  components: {
+    CanvasGrades,
+    UploadGrades,
+    BDropdown,
+    BDropdownDivider,
+    BDropdownItem,
+    BDropdownItemButton,
+    BModal,
+  },
   props: {
     section: {
       type: Object,
@@ -87,15 +95,6 @@ export default {
       type: Number,
       required: true,
     },
-  },
-  components: {
-    CanvasGrades,
-    UploadGrades,
-    BDropdown,
-    BDropdownDivider,
-    BDropdownItem,
-    BDropdownItemButton,
-    BModal,
   },
   setup() {
     const showImportOptions = ref(false);

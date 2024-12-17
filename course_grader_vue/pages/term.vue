@@ -14,7 +14,7 @@
         </template>
         <template v-if="isLoading">
           <ul class="list-unstyled">
-            <li v-for="index in 10" class="mb-3" :key="index">
+            <li v-for="index in 10" :key="index" class="mb-3">
               <BPlaceholder
                 class="d-block bg-body-secondary"
                 style="height: 60px"
@@ -40,8 +40,8 @@
           </template>
           <div v-else>
             You do not have any classes to grade for
-            <strong>{{ selectedTerm.quarter }} {{ selectedTerm.year }}</strong>.
-            If you believe this to be incorrect, please contact your
+            <strong>{{ selectedTerm.quarter }} {{ selectedTerm.year }}</strong
+            >. If you believe this to be incorrect, please contact your
             department's Time Schedule Coordinator.
           </div>
         </template>
@@ -59,6 +59,7 @@ import { getSections } from "@/utils/data";
 import { BCard, BPlaceholder } from "bootstrap-vue-next";
 
 export default {
+  name: "TermPage",
   components: {
     Layout,
     PrimarySection,
@@ -95,6 +96,10 @@ export default {
       );
     },
   },
+  created() {
+    this.updateTerm();
+    this.loadSectionsForTerm();
+  },
   methods: {
     selectTerm: function (e) {
       this.contextStore.selectTerm(e.target.value);
@@ -129,10 +134,6 @@ export default {
           this.isLoading = false;
         });
     },
-  },
-  created() {
-    this.updateTerm();
-    this.loadSectionsForTerm();
   },
 };
 </script>

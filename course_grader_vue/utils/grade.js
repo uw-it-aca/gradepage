@@ -16,17 +16,12 @@ function normalizeGrade(grade) {
 
 function normalizeDefaultGrade(grade, choices) {
   if (grade === "" || incompleteBlocklist.includes(grade)) {
-    return choices.includes("0.0")
-      ? "0.0" : choices.includes("NC") ? "NC" : "";
+    return choices.includes("0.0") ? "0.0" : choices.includes("NC") ? "NC" : "";
   }
 }
 
 function validateGrade(grade, incomplete, choices) {
-  var is_hypenated,
-      is_cnc,
-      is_hhppf,
-      is_undergrad_numeric,
-      is_grad_numeric;
+  var is_hypenated, is_cnc, is_hhppf, is_undergrad_numeric, is_grad_numeric;
 
   if (grade === "" || choices.includes(grade)) {
     return "";

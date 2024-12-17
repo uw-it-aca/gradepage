@@ -14,10 +14,10 @@
       </template>
       <BDropdownItem
         v-for="(scale, index) in calculatorStore.availableScales"
-        :value="scale"
         :key="index"
+        :value="scale"
         @click.prevent="calculatorStore.setScale(scale)"
-      >{{ gettext("conversion_scale_" + scale) }}
+        >{{ gettext("conversion_scale_" + scale) }}
       </BDropdownItem>
     </BDropdown>
   </div>
@@ -26,7 +26,8 @@
     <div v-if="!calculatorStore.isFixedScale">
       <h4 id="grade_conversion_header">Grade conversion calculator</h4>
       <p>
-        Set at least two Percentage to Grade Point conversion points and click <strong>Apply</strong> to create the full Grade Scale below.
+        Set at least two Percentage to Grade Point conversion points and click
+        <strong>Apply</strong> to create the full Grade Scale below.
       </p>
 
       <div class="d-flex justify-content-between">
@@ -40,10 +41,11 @@
             <div class="d-flex my-3">
               <div class="w-50 text-center">
                 <BLink
-                  @click.prevent="calculatorStore.addCalculatorRow()"
                   title="Add a row to the conversion table. Leave unused rows blank."
                   tabindex="0"
-                >+ Add a row</BLink>
+                  @click.prevent="calculatorStore.addCalculatorRow()"
+                  >+ Add a row</BLink
+                >
               </div>
               <div class="w-50 text-center">
                 <i class="bi bi-three-dots-vertical"></i>
@@ -65,7 +67,8 @@
           <BLink
             title="Reset the grade conversion calculator"
             @click.prevent="calculatorStore.resetCalculatorValues()"
-          >Reset</BLink>
+            >Reset</BLink
+          >
         </span>
         <span>
           <BButton
@@ -88,19 +91,14 @@
       id="conversion_grade_scale_container"
       aria-labelledby="grade_scale_header"
     >
-      <h4 class="visually-hidden" id="grade_scale_header">
-        Grade Scale:
-      </h4>
+      <h4 id="grade_scale_header" class="visually-hidden">Grade Scale:</h4>
 
       <div class="d-flex justify-content-between">
         <div class="fw-bold">Minimum score for class grade</div>
         <div class="fw-bold">Grade Point</div>
       </div>
 
-      <ol
-        aria-label="Review and adjust Grade Scale:"
-        class="list-unstyled"
-      >
+      <ol aria-label="Review and adjust Grade Scale:" class="list-unstyled">
         <li v-for="(data, index) in scaleValues" :key="index">
           <GradeScaleRow
             :row-data="data"
@@ -110,9 +108,9 @@
         </li>
       </ol>
       <span>
-        <BButton
-          @click.prevent="calculatorStore.resetScaleValues()"
-        >Clear scale</BButton>
+        <BButton @click.prevent="calculatorStore.resetScaleValues()"
+          >Clear scale</BButton
+        >
       </span>
     </div>
   </div>
@@ -125,6 +123,7 @@ import GradeScaleRow from "@/components/convert/grade-scale-row.vue";
 import { BLink, BButton, BDropdown, BDropdownItem } from "bootstrap-vue-next";
 
 export default {
+  name: "CalculatorComp",
   components: {
     CalculatorRow,
     GradeScaleRow,

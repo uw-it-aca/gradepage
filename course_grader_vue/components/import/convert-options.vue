@@ -2,15 +2,22 @@
   <div v-if="errorResponse">
     {{ errorResponse }}
   </div>
-  <div v-else-if="appState.gradeImport.has_valid_percentages" class="d-grid gap-2">
+  <div
+    v-else-if="appState.gradeImport.has_valid_percentages"
+    class="d-grid gap-2"
+  >
     <p>
-      The Office of the Registrar requires submitted grades to follow official formatting.
+      The Office of the Registrar requires submitted grades to follow official
+      formatting.
     </p>
     <p>Please select a format to use:</p>
 
-    <BButton v-for="scale in calculatorStore.availableScales"
+    <BButton
+      v-for="(scale, index) in calculatorStore.availableScales"
+      :key="index"
       variant="outline-secondary"
-      @click="convertGrades(scale)">{{ gettext('conversion_scale_' + scale) }}
+      @click="convertGrades(scale)"
+      >{{ gettext("conversion_scale_" + scale) }}
     </BButton>
   </div>
   <div v-else>
@@ -19,17 +26,14 @@
       <br />
       <small>
         <em>
-          You will have a chance to enter, adjust, and review grades on the next screen.
+          You will have a chance to enter, adjust, and review grades on the next
+          screen.
         </em>
       </small>
     </p>
     <p>To select a different file, click <strong>Cancel</strong>.</p>
     <div>
-      <BButton
-        variant="primary"
-        @click="saveGrades"
-      >Import grades
-      </BButton>
+      <BButton variant="primary" @click="saveGrades">Import grades </BButton>
     </div>
   </div>
 </template>
@@ -71,7 +75,7 @@ export default {
     },
     saveGrades: function () {
       let url = this.section.import_url + "/" + this.appState.gradeImport.id,
-          data = {conversion_scale: null, converted_grades: {}};
+        data = { conversion_scale: null, converted_grades: {} };
 
       this.saveImportedGrades(url, JSON.stringify(data))
         .then((response) => {

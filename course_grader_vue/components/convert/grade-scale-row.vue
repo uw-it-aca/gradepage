@@ -13,17 +13,17 @@
       <div v-else>
         <div class="input-group mb-3">
           <input
-            type="text"
             :id="`min-percentage-${index}`"
+            type="text"
             class="form-control"
             name="min-percentage"
             :value="rowData.minPercentage"
             :title="gradeScaleTitle"
-            @change="minPercentageChanged($event.target.value)"
             required
             aria-describedby="percent-addon2"
+            @change="minPercentageChanged($event.target.value)"
           />
-          <span class="input-group-text" id="percent-addon2">&percnt;</span>
+          <span id="percent-addon2" class="input-group-text">&percnt;</span>
         </div>
         <label for="`min-percentage-${index}`">
           <span role="alert" class="text-danger invalid-grade small">
@@ -81,13 +81,17 @@ export default {
         "Any final grade below a %(min_percentage)s% will result in a %(grade)s.",
         {
           min_percentage: this.lastMinPercentage,
-          grade: this.rowData.grade
-        }, true
+          grade: this.rowData.grade,
+        },
+        true
       );
     },
     gradeScaleTitle() {
       return interpolate(
-        "Minimum percentage that will result in a %(grade)s", this.rowData, true);
+        "Minimum percentage that will result in a %(grade)s",
+        this.rowData,
+        true
+      );
     },
   },
   methods: {

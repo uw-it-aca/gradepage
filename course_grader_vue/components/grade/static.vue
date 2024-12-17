@@ -45,6 +45,7 @@
 import { useWorkflowStateStore } from "@/stores/state";
 
 export default {
+  name: "GradeStatic",
   props: {
     student: {
       type: Object,

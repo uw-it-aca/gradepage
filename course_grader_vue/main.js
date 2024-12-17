@@ -46,7 +46,7 @@ app.use(VueGtag, {
 app.use(Vue3Mq, {
   preset: "bootstrap5",
 });
-app.component("mq-responsive", MqResponsive);
+app.component("MqResponsive", MqResponsive);
 
 // pinia (vuex) state management
 const pinia = createPinia();

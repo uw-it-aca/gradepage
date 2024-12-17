@@ -1,5 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
-import { setActivePinia, createPinia } from 'pinia';
+import { setActivePinia, createPinia } from "pinia";
 
 // pinia setup to get current term id from context store
 setActivePinia(createPinia());

@@ -71,11 +71,13 @@ async function uploadGrades(url, file) {
   var formData = new FormData();
   formData.append("file", file);
 
-  return axios.post(url, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data"
-    }
-  }).catch(_handleError);
+  return axios
+    .post(url, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .catch(_handleError);
 }
 
 async function getConversionScales(url) {
@@ -98,5 +100,5 @@ export {
   saveImportedGrades,
   uploadGrades,
   getConversionScales,
-  clearOverride
+  clearOverride,
 };

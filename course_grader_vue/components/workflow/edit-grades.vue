@@ -16,16 +16,21 @@
     </template>
     <template v-else-if="appState.graderoster">
       <div
-        v-if="appState.graderoster.is_writing_section || appState.graderoster.has_duplicate_codes"
+        v-if="
+          appState.graderoster.is_writing_section ||
+          appState.graderoster.has_duplicate_codes
+        "
         class="mb-2 pb-2 small text-muted border-bottom"
       >
         <div v-if="appState.graderoster.is_writing_section">
           <strong>Note:</strong>
-          Writing credit automatically given to all students with a passing grade in this course.
+          Writing credit automatically given to all students with a passing
+          grade in this course.
         </div>
         <div v-if="appState.graderoster.has_duplicate_codes">
           <span class="visually-hidden">
-            In the list below, duplicate listings of the same student are differentiated with a
+            In the list below, duplicate listings of the same student are
+            differentiated with a
           </span>
           Duplicate code
           <i class="bi bi-circle-fill text-secondary"></i>
@@ -42,12 +47,14 @@
       >
         <Student
           :student="student"
-          :gradeChoices="appState.graderoster.grade_choices[student.grade_choices_index]"
+          :grade-choices="
+            appState.graderoster.grade_choices[student.grade_choices_index]
+          "
         />
       </li>
     </ul>
     <ul v-else-if="!errorResponse" class="list-unstyled m-0">
-      <li v-for="index in 8" class="border-top pt-2 mt-2" :key="index">
+      <li v-for="index in 8" :key="index" class="border-top pt-2 mt-2">
         <BPlaceholder
           class="d-block bg-body-secondary"
           style="height: 60px"
@@ -68,7 +75,7 @@
           :disabled="reviewDisabled"
           variant="primary"
           @click="reviewGrades"
-        >Review
+          >Review
         </BButton>
       </div>
     </template>
@@ -138,7 +145,8 @@ export default {
   methods: {
     reviewGrades: function () {
       this.updateGraderoster(
-        this.section.graderoster_url, this.gradeStore.grades
+        this.section.graderoster_url,
+        this.gradeStore.grades
       )
         .then((response) => {
           return response.data;
