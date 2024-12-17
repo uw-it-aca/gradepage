@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <!-- layout.vue: this is where you override the layout -->
   <STopbar
@@ -109,9 +110,8 @@
               v-for="(message, index) in window.gradepage.messages"
               :key="index"
               class="mt-2"
-            >
-              {{ message }}
-            </li>
+              v-html="message"
+            ></li>
           </ul>
         </div>
         <SColorMode></SColorMode>
