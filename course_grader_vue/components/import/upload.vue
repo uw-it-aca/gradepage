@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <p>
     You are importing final grades for section
@@ -8,7 +9,7 @@
     <div v-if="appState.gradeImport.grade_count">
       <p>
         <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
-        <span>{{ gradesFoundText }}</span>
+        <span v-html="gradesFoundText"></span>
       </p>
 
       <ImportConvertSave :section="section" />

@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <div v-if="isLoading">Loading...</div>
   <div v-else-if="errorResponse">
@@ -11,7 +12,7 @@
       }}).
     </div>
     <div v-else-if="appState.gradeImport.grade_count">
-      <p>{{ gradesFoundText }}</p>
+      <p v-html="gradesFoundText"></p>
 
       <div
         v-if="appState.gradeImport.override_grade_count"
@@ -27,7 +28,7 @@
         </span>
 
         <p>
-          <span>{{ overrideGradesFoundText }}</span>
+          <span v-html="overrideGradesFoundText"></span>
           <BLink
             target="_blank"
             title="Learn more about importing grade overrides on IT Connect"
@@ -43,7 +44,7 @@
         class="alert alert-danger"
       >
         <i class="fas fa-exclamation-circle fa-2x" aria-hidden="true"></i>
-        <p>{{ unpostedGradesFoundText }}</p>
+        <p v-html="unpostedGradesFoundText"></p>
         <span>
           Unposted grades <strong>ARE NOT</strong> represented in the imported
           final grade.
