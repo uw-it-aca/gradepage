@@ -7,8 +7,7 @@ const CONFIRM_GRADES = 3;
 const CONVERT_IMPORT = 4;
 const REVIEW_CONVERSION = 5;
 
-export const useWorkflowStateStore = defineStore({
-  id: "workflow-state",
+export const useWorkflowStateStore = defineStore("workflow-state", {
   state: () => {
     return {
       name: "workflowState",

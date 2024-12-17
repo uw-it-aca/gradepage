@@ -72,8 +72,7 @@ const HPF_GRADE_SCALE = ["H", "HP", "P", "F"];
 const VALID_SCALES = ["ug", "gr", "cnc", "pf", "hpf"];
 const FIXED_SCALES = ["cnc", "pf", "hpf"];
 
-export const useCalculatorStore = defineStore({
-  id: "calculator",
+export const useCalculatorStore = defineStore("calculator", {
   state: () => {
     return {
       name: "Calculator",

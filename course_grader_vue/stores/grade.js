@@ -1,8 +1,7 @@
 import { defineStore } from "pinia";
 import { validateGrade } from "@/utils/grade";
 
-export const useGradeStore = defineStore({
-  id: "grade",
+export const useGradeStore = defineStore("grade", {
   state: () => {
     return {
       name: "Grade",
