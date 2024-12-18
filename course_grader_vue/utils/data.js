@@ -68,7 +68,7 @@ async function saveImportedGrades(url, data) {
 }
 
 async function uploadGrades(url, file) {
-  var formData = new FormData();
+  const formData = new FormData();
   formData.append("file", file);
 
   return axios
