@@ -76,6 +76,8 @@ async function uploadGrades(url, file) {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+      // MARK: the following added as a fix for axios 1.7.9
+      transformRequest: (formData) => formData,
     })
     .catch(_handleError);
 }
