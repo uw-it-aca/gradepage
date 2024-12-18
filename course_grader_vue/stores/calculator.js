@@ -173,8 +173,8 @@ export const useCalculatorStore = defineStore("calculator", {
     },
 
     // Calculator actions
-    addCalculatorRow() {
-      this.calculatorValues.splice(-1, 0, {
+    addCalculatorRow(idx) {
+      this.calculatorValues.splice(idx, 0, {
         grade: "",
         percentage: "",
         gradeError: "",
