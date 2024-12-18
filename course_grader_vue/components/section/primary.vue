@@ -2,11 +2,11 @@
   <div class="mb-3" :aria-labelledby="sectionNameId">
     <template v-if="section.section_url">
       <BLink :href="section.section_url" :title="routerLinkTitle">
-        <div class="fs-4" :id="sectionNameId">{{ section.display_name }}</div>
+        <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
       </BLink>
     </template>
     <template v-else>
-      <div class="fs-4" :id="sectionNameId">{{ section.display_name }}</div>
+      <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
     </template>
 
     <div v-if="gradingStatusText">{{ gradingStatusText }}</div>
@@ -23,9 +23,9 @@
     class="list-unstyled ms-4"
   >
     <li
-      class="mb-3"
       v-for="(secondary, index) in section.secondary_sections"
       :key="secondary.section_id"
+      class="mb-3"
     >
       <SecondarySection
         :section="secondary"
@@ -41,11 +41,12 @@ import { getSectionStatus } from "@/utils/data";
 import {
   formatGradingStatus,
   formatErrorStatus,
-  formatLinkTitle
+  formatLinkTitle,
 } from "@/utils/section";
 import { BPlaceholder, BLink } from "bootstrap-vue-next";
 
 export default {
+  name: "SectionPrimary",
   components: {
     SecondarySection,
     BPlaceholder,
@@ -65,6 +66,14 @@ export default {
       formatLinkTitle,
     };
   },
+  data() {
+    return {
+      gradingStatus: null,
+      secondaryStatus: [],
+      errorStatus: null,
+      sectionNameId: "section-name-" + this.section.section_id,
+    };
+  },
   computed: {
     gradingStatusText() {
       if (this.section.grading_status) {
@@ -73,21 +82,20 @@ export default {
         return this.formatErrorStatus(this.errorStatus);
       } else if (this.gradingStatus) {
         return this.formatGradingStatus(this.gradingStatus);
+      } else {
+        return "";
       }
     },
     routerLinkTitle() {
       if (this.gradingStatus) {
         return this.formatLinkTitle(this.gradingStatus);
+      } else {
+        return "";
       }
     },
   },
-  data() {
-    return {
-      gradingStatus: null,
-      secondaryStatus: [],
-      errorStatus: null,
-      sectionNameId: "section-name-" + this.section.section_id,
-    };
+  created() {
+    this.loadGradingStatus();
   },
   methods: {
     loadGradingStatus: function () {
@@ -107,9 +115,6 @@ export default {
           });
       }
     },
-  },
-  created() {
-    this.loadGradingStatus();
   },
 };
 </script>

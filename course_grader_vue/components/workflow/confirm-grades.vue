@@ -8,8 +8,8 @@
   >
     <div class="flex-fill me-3">
       <i class="bi bi-exclamation-circle-fill me-1"></i>
-      Grade submission in progress.
-      You will receive an email once grades are submitted to Registrar.
+      Grade submission in progress. You will receive an email once grades are
+      submitted to Registrar.
     </div>
     <div>
       <BLink
@@ -30,9 +30,7 @@
         class="float-end d-inline-block"
         toggle-class="rounded-2"
       >
-        <template #button-content>
-          <i class="bi bi-three-dots"></i
-        ></template>
+        <template #button-content> <i class="bi bi-three-dots"></i></template>
         <BDropdownItem :href="section.export_url">
           <i class="bi bi-download me-2 text-body-tertiary"></i>
           Download Change of Grade
@@ -47,7 +45,7 @@
           target="_blank"
           title="Information on assigning and submitting grades"
           ><i class="bi bi-question-circle me-2 text-body-tertiary"></i>
-         GradePage Help
+          GradePage Help
         </BDropdownItem>
       </BDropdown>
 
@@ -63,7 +61,7 @@
           href="https://registrar.washington.edu/staffandfaculty/grading-resources/#faqs"
           target="_blank"
           class="d-print-none"
-        >More info
+          >More info
         </BLink>
       </div>
     </template>
@@ -97,7 +95,8 @@
 
     <!-- success -->
     <BAlert
-      v-for="submission in appState.graderoster.submissions"
+      v-for="(submission, index) in appState.graderoster.submissions"
+      :key="index"
       variant="success"
       :model-value="true"
       class="small"
@@ -106,7 +105,7 @@
       <span v-if="submission.section_id">
         Section {{ submission.section_id }}:
       </span>
-      <span v-html="gradesSubmittedText(submission)"></span>
+      <span>{{ gradesSubmittedText(submission) }}</span>
       <BLink
         href="https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/"
         target="_blank"
@@ -115,25 +114,30 @@
       </BLink>
     </BAlert>
 
-    <div v-if="appState.graderoster.is_writing_section || appState.graderoster.has_duplicate_codes"
+    <div
+      v-if="
+        appState.graderoster.is_writing_section ||
+        appState.graderoster.has_duplicate_codes
+      "
       class="mb-2 pb-2 small text-muted border-bottom"
     >
       <div v-if="appState.graderoster.is_writing_section">
-        Writing credit automatically given to all students with a passing grade in this course.
+        Writing credit automatically given to all students with a passing grade
+        in this course.
       </div>
       <div v-if="appState.graderoster.has_duplicate_codes">
         <span class="visually-hidden">
-          In the list below, duplicate listings of the same student are differentiated with a
+          In the list below, duplicate listings of the same student are
+          differentiated with a
         </span>
         Duplicate code
         <i class="bi bi-circle-fill text-secondary"></i>
       </div>
     </div>
 
-    <ul v-if="appState.graderoster.students"
-      class="list-unstyled m-0">
+    <ul v-if="appState.graderoster.students" class="list-unstyled m-0">
       <li
-        v-for="(student, index) in appState.graderoster.students"
+        v-for="student in appState.graderoster.students"
         :key="student.item_id"
         class="bpt-2 mt-2"
         :class="index != 0 ? 'border-top' : ''"
@@ -142,7 +146,7 @@
       </li>
     </ul>
     <ul v-else class="list-unstyled m-0">
-      <li v-for="index in 8" class="border-top pt-2 mt-2" :key="index">
+      <li v-for="index in 8" :key="index" class="border-top pt-2 mt-2">
         <BPlaceholder
           class="d-block bg-body-secondary"
           style="height: 60px"
@@ -151,7 +155,7 @@
       </li>
     </ul>
 
-    <template #footer v-if="appState.graderoster.has_grade_imports">
+    <template v-if="appState.graderoster.has_grade_imports" #footer>
       <div v-if="appState.graderoster.grade_import_count > 1">
         Grades calculated using grade conversion scales.
         <label class="visually-hidden">
@@ -165,17 +169,17 @@
           class="float-end d-inline-block"
           toggle-class="rounded-2"
         >
-          <template #button-content>
-            View Scale
+          <template #button-content> View Scale </template>
+          <template v-if="submission.grade_import.import_conversion">
+            <BDropdownItem
+              v-for="(submission, index) in appState.graderoster.submissions"
+              :key="index"
+              :value="submission.grade_import.import_conversion"
+            >
+              <i class="me-2 text-body-tertiary"></i>
+              Section {{ submission.section_id }}
+            </BDropdownItem>
           </template>
-          <BDropdownItem
-            v-for="(submission, index) in appState.graderoster.submissions"
-            v-if="submission.grade_import.import_conversion"
-            :value="submission.grade_import.import_conversion"
-          >
-            <i class="me-2 text-body-tertiary"></i>
-            Section {{ submission.section_id }}
-          </BDropdownItem>
         </BDropdown>
       </div>
       <div v-else-if="!importConversion">
@@ -183,20 +187,24 @@
         <BLink
           title="Show the grade conversion scale that was used"
           @click.prevent="showImportConversion()"
-        >View scale
+          >View scale
         </BLink>
       </div>
 
       <div v-if="importConversion">
         <h2 class="visually-hidden">Grade Conversion Scale</h2>
         <ol>
-          <li v-for="(row, index) in importConversion.grade_scale">
+          <li v-for="(row, index) in importConversion.grade_scale" :key="index">
             <span v-if="index === importConversion.grade_scale.length - 1">
-              <span>&lt; <span>{{ row.min_percentage }}&percnt;</span> &equals; </span>
+              <span
+                >&lt; <span>{{ row.min_percentage }}&percnt;</span> &equals;
+              </span>
               <span>{{ importConversion.lowest_valid_grade }}</span>
             </span>
             <span v-else>
-              <span>&ge; <span>{{ row.min_percentage }}&percnt;</span> &equals; </span>
+              <span
+                >&ge; <span>{{ row.min_percentage }}&percnt;</span> &equals;
+              </span>
               <span>{{ row.grade }}</span>
             </span>
           </li>
@@ -204,7 +212,7 @@
         <BLink
           title="Hide grade conversion scale"
           @click.prevent="hideImportConversion()"
-        >Hide scale
+          >Hide scale
         </BLink>
       </div>
     </template>
@@ -261,38 +269,51 @@ export default {
   },
   computed: {
     partialGradeErrorText() {
-      return interpolate(ngettext(
-        "Grades submitted, but one grade had an error.",
-        "Grades submitted, but %(failed_submission_count)s grades had errors.",
-        this.appState.graderoster.failed_submission_count
-      ), this.appState.graderoster, true);
+      return interpolate(
+        ngettext(
+          "Grades submitted, but one grade had an error.",
+          "Grades submitted, but %(failed_submission_count)s grades had errors.",
+          this.appState.graderoster.failed_submission_count
+        ),
+        this.appState.graderoster,
+        true
+      );
     },
     allGradeErrorText() {
-      return interpolate(ngettext(
-        "Grade submitted with error.",
-        "Grades submitted with errors.",
-        this.appState.graderoster.failed_submission_count
-      ), this.appState.graderoster, true);
+      return interpolate(
+        ngettext(
+          "Grade submitted with error.",
+          "Grades submitted with errors.",
+          this.appState.graderoster.failed_submission_count
+        ),
+        this.appState.graderoster,
+        true
+      );
     },
   },
   methods: {
     gradesSubmittedText(submission) {
-      return interpolate(ngettext(
-        "<strong>One</strong> grade submitted to the Registrar by <strong>%(submitted_by)s</strong> on %(submitted_date)s.",
-        "<strong>%(submitted_count)s</strong> grades submitted to the Registrar by <strong>%(submitted_by)s</strong> on %(submitted_date)s.",
-        submission.submitted_count), {
+      return interpolate(
+        ngettext(
+          "<strong>One</strong> grade submitted to the Registrar by <strong>%(submitted_by)s</strong> on %(submitted_date)s.",
+          "<strong>%(submitted_count)s</strong> grades submitted to the Registrar by <strong>%(submitted_by)s</strong> on %(submitted_date)s.",
+          submission.submitted_count
+        ),
+        {
           submitted_count: submission.submitted_count,
           submitted_by: submission.submitted_by,
           submitted_date: formatLongDateTime(submission.submitted_date),
-        }, true);
+        },
+        true
+      );
     },
-    showImportConversion () {
+    showImportConversion() {
       let submission = this.appState.graderoster.submissions[0];
       if (submission && submission.grade_import) {
         this.importConversion = submission.grade_import.import_conversion;
       }
     },
-    hideImportConversion () {
+    hideImportConversion() {
       this.importConversion = null;
     },
   },

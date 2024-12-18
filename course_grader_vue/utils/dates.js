@@ -23,7 +23,4 @@ function formatShortDate(date) {
   return formatDate(date, "MM/DD/YY");
 }
 
-export {
-  formatLongDateTime,
-  formatShortDate,
-};
+export { formatLongDateTime, formatShortDate };

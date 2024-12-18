@@ -1,7 +1,9 @@
 <template>
   <div class="d-flex justify-content-between">
     <div>
-      <div class="fs-4 text-uppercase">{{ student.student_lastname }}, {{ student.student_firstname }}</div>
+      <div class="fs-4 text-uppercase">
+        {{ student.student_lastname }}, {{ student.student_firstname }}
+      </div>
       <div class="small text-muted">
         <span class="visually-hidden">Section:</span> {{ student.section_id }},
         <span v-if="student.student_credits">
@@ -12,13 +14,17 @@
         {{ student.student_number }}
         <template v-if="student.duplicate_code">
           <span class="visually-hidden">Duplicate code:</span>
-          <abbr title="Duplicate code" class="badge rounded-pill text-bg-secondary">
-          {{ student.duplicate_code }}</abbr>
+          <abbr
+            title="Duplicate code"
+            class="badge rounded-pill text-bg-secondary"
+          >
+            {{ student.duplicate_code }}</abbr
+          >
         </template>
       </div>
     </div>
     <div v-if="appState.editingGrades && student.grade_url" class="text-end">
-      <GradeInput :student="student" :gradeChoices="gradeChoices" />
+      <GradeInput :student="student" :grade-choices="gradeChoices" />
     </div>
     <div v-else-if="appState.reviewingConversion" class="text-end">
       <GradeImport :student="student" />
@@ -36,6 +42,7 @@ import GradeImport from "@/components/grade/import.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 
 export default {
+  name: "StudentComp",
   components: {
     GradeStatic,
     GradeInput,
@@ -48,7 +55,9 @@ export default {
     },
     gradeChoices: {
       type: Array,
-      default: [],
+      default() {
+        return [];
+      },
     },
   },
   setup() {

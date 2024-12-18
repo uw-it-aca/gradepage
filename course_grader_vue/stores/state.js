@@ -7,8 +7,7 @@ const CONFIRM_GRADES = 3;
 const CONVERT_IMPORT = 4;
 const REVIEW_CONVERSION = 5;
 
-export const useWorkflowStateStore = defineStore({
-  id: "workflow-state",
+export const useWorkflowStateStore = defineStore("workflow-state", {
   state: () => {
     return {
       name: "workflowState",
@@ -19,52 +18,57 @@ export const useWorkflowStateStore = defineStore({
     };
   },
   getters: {
-    editingGrades (state) {
+    editingGrades(state) {
       return this._workflowState === EDIT_GRADES;
     },
-    reviewingGrades (state) {
+    reviewingGrades(state) {
       return this._workflowState === REVIEW_GRADES;
     },
-    confirmingGrades (state) {
+    confirmingGrades(state) {
       return this._workflowState === CONFIRM_GRADES;
     },
-    convertingImport (state) {
+    convertingImport(state) {
       return this._workflowState === CONVERT_IMPORT;
     },
-    reviewingConversion (state) {
+    reviewingConversion(state) {
       return this._workflowState === REVIEW_CONVERSION;
     },
-    convertedGradeData (state) {
-      return Object.fromEntries(this.gradeImport.students.map(
-        s => [s.student_reg_id, s.converted_grade]));
+    convertedGradeData(state) {
+      return Object.fromEntries(
+        this.gradeImport.students.map((s) => [
+          s.student_reg_id,
+          s.converted_grade,
+        ])
+      );
     },
   },
   actions: {
-    editGrades () {
+    editGrades() {
       this._workflowState = EDIT_GRADES;
     },
-    reviewGrades () {
+    reviewGrades() {
       this._workflowState = REVIEW_GRADES;
     },
-    confirmGrades () {
+    confirmGrades() {
       this._workflowState = CONFIRM_GRADES;
     },
-    convertImport () {
+    convertImport() {
       this._workflowState = CONVERT_IMPORT;
     },
-    reviewConversion () {
+    reviewConversion() {
       this._workflowState = REVIEW_CONVERSION;
     },
-    setGradeImport (gradeImport) {
+    setGradeImport(gradeImport) {
       this.gradeImport = gradeImport;
     },
-    resetGradeImport () {
+    resetGradeImport() {
       this.gradeImport = null;
     },
-    setGraderoster (graderoster) {
+    setGraderoster(graderoster) {
       this.graderoster = graderoster;
       this.unsubmittedCount = graderoster.students.filter(
-          (s) => s.grade_url !== null).length
+        (s) => s.grade_url !== null
+      ).length;
 
       // Initialize workflow state
       if (this.unsubmittedCount > 0) {
@@ -73,13 +77,13 @@ export const useWorkflowStateStore = defineStore({
         this.confirmGrades();
       }
     },
-    convertImportedGrades (scaleValues, lowestValidGrade) {
-      this.gradeImport.students.forEach(student => {
+    convertImportedGrades(scaleValues, lowestValidGrade) {
+      this.gradeImport.students.forEach((student) => {
         let importedPct = parseFloat(student.imported_grade);
-        let match = scaleValues.find(sv => {
+        let match = scaleValues.find((sv) => {
           return importedPct >= parseFloat(sv.minPercentage);
         });
-        student.converted_grade = (match) ? match.grade : lowestValidGrade;
+        student.converted_grade = match ? match.grade : lowestValidGrade;
       });
     },
   },

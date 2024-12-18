@@ -1,25 +1,25 @@
 import { defineStore } from "pinia";
 import { validateGrade } from "@/utils/grade";
 
-export const useGradeStore = defineStore({
-  id: "grade",
+export const useGradeStore = defineStore("grade", {
   state: () => {
     return {
       name: "Grade",
-      gradeStatus: { "missing": new Set(), "invalid": new Set() },
+      gradeStatus: { missing: new Set(), invalid: new Set() },
       gradeData: {},
       gradeChoices: {},
     };
   },
   getters: {
-    missing (state) {
+    missing(state) {
       return this.gradeStatus.missing.size;
     },
-    invalid (state) {
+    invalid(state) {
       return this.gradeStatus.invalid.size;
     },
-    grades (state) {
-      var key, arr = [];
+    grades(state) {
+      var key,
+        arr = [];
       for (key in this.gradeData) {
         if (this.gradeData.hasOwnProperty(key)) {
           arr.push(this.gradeData[key]);
@@ -29,7 +29,7 @@ export const useGradeStore = defineStore({
     },
   },
   actions: {
-    validate (studentId, grade, incomplete, writing, choices) {
+    validate(studentId, grade, incomplete, writing, choices) {
       let error = validateGrade(grade, incomplete, choices);
 
       this.gradeStatus.missing.delete(studentId);
@@ -42,30 +42,33 @@ export const useGradeStore = defineStore({
       }
 
       this.gradeData[studentId] = {
-        "student_id": studentId,
-        "grade": grade,
-        "is_incomplete": incomplete,
-        "is_writing": writing,
-        "no_grade_now": grade === gettext("x_no_grade_now"),
+        student_id: studentId,
+        grade: grade,
+        is_incomplete: incomplete,
+        is_writing: writing,
+        no_grade_now: grade === gettext("x_no_grade_now"),
       };
       this.gradeChoices[studentId] = choices;
 
       return error;
     },
-    processImport (data) {
+    processImport(data) {
       var grade_count = 0,
-          valid_grade_count = 0,
-          valid_percentage_count = 0,
-          override_grade_count = 0,
-          unposted_grade_count = 0,
-          unposted_with_override_grade_count = 0,
-          min_valid = 0.5,
-          error;
+        valid_grade_count = 0,
+        valid_percentage_count = 0,
+        override_grade_count = 0,
+        unposted_grade_count = 0,
+        unposted_with_override_grade_count = 0,
+        min_valid = 0.5,
+        error;
 
       for (const student of data.students) {
-        if (!student.is_auditor && !student.is_withdrawn &&
-              student.imported_grade !== null &&
-              student.imported_grade !== "") {
+        if (
+          !student.is_auditor &&
+          !student.is_withdrawn &&
+          student.imported_grade !== null &&
+          student.imported_grade !== ""
+        ) {
           grade_count += 1;
 
           error = validateGrade(
@@ -98,7 +101,8 @@ export const useGradeStore = defineStore({
       data.has_valid_percentages = false;
       data.override_grade_count = override_grade_count;
       data.unposted_grade_count = unposted_grade_count;
-      data.unposted_with_override_grade_count = unposted_with_override_grade_count;
+      data.unposted_with_override_grade_count =
+        unposted_with_override_grade_count;
 
       if (grade_count > 0) {
         if (valid_grade_count / grade_count >= min_valid) {

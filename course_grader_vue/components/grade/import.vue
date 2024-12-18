@@ -1,9 +1,15 @@
 <template>
   <div>
     <span v-if="student.is_override_grade">
-      <span class="fa-stack" title="Override grade imported from Canvas Gradebook">
+      <span
+        class="fa-stack"
+        title="Override grade imported from Canvas Gradebook"
+      >
         <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
-        <i class="fas fa-marker fa-flip-horizontal fa-stack-1x fa-inverse" aria-hidden="true"></i>
+        <i
+          class="fas fa-marker fa-flip-horizontal fa-stack-1x fa-inverse"
+          aria-hidden="true"
+        ></i>
       </span>
     </span>
     {{ student.imported_grade }}%
@@ -15,6 +21,7 @@
 
 <script>
 export default {
+  name: "GradeImport",
   props: {
     student: {
       type: Object,

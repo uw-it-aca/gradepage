@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 
-export const useContextStore = defineStore({
-  id: "django-context",
+export const useContextStore = defineStore("django-context", {
   state: () => {
     return {
       name: "Context",
@@ -12,9 +11,9 @@ export const useContextStore = defineStore({
   },
   getters: {},
   actions: {
-    selectTerm (url) {
+    selectTerm(url) {
       this.context.terms.forEach((term) => {
-        term.is_selected = (term.url === url) ? true : false;
+        term.is_selected = term.url === url ? true : false;
       });
     },
   },

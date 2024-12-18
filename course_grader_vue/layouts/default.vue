@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <!-- layout.vue: this is where you override the layout -->
   <STopbar
@@ -11,20 +12,33 @@
     <template #navigation>
       <ul class="nav flex-column my-3">
         <li class="nav-item mb-1 position-relative">
-          <BLink class="d-flex justify-content-between nav-link rounded-3 text-body chevron bg-secondary-hover bg-opacity-10-hover"
-            :class="$route.path.includes('/term/' + currentTerm.id )|| $route.path.includes('/section/' + currentTerm.id) ? 'bg-secondary bg-opacity-10' : ''"
-            :href="'/term/' + currentTerm.id">
-            <span><i class="bi bi-house-door-fill me-3"></i>{{ currentTerm.quarter }} {{ currentTerm.year }}</span>
+          <BLink
+            class="d-flex justify-content-between nav-link rounded-3 text-body chevron bg-secondary-hover bg-opacity-10-hover"
+            :class="
+              $route.path.includes('/term/' + currentTerm.id) ||
+              $route.path.includes('/section/' + currentTerm.id)
+                ? 'bg-secondary bg-opacity-10'
+                : ''
+            "
+            :href="'/term/' + currentTerm.id"
+          >
+            <span
+              ><i class="bi bi-house-door-fill me-3"></i
+              >{{ currentTerm.quarter }} {{ currentTerm.year }}</span
+            >
           </BLink>
         </li>
         <li class="nav-item mb-1 position-relative">
           <BLink
-            class="d-flex justify-content-between nav-link rounded-3 text-body chevron bg-secondary-hover bg-opacity-10-hover"
             id="gettingStartedHeading"
+            class="d-flex justify-content-between nav-link rounded-3 text-body chevron bg-secondary-hover bg-opacity-10-hover"
             data-bs-toggle="collapse"
             data-bs-target="#gettingStartedCollapse"
             :aria-expanded="
-              $route.path.includes('/term/' + currentTerm.id) || $route.path.includes('/section/' + currentTerm.id) ? false : true
+              $route.path.includes('/term/' + currentTerm.id) ||
+              $route.path.includes('/section/' + currentTerm.id)
+                ? false
+                : true
             "
             aria-controls="gettingStartedCollapse"
           >
@@ -34,19 +48,31 @@
           <div
             id="gettingStartedCollapse"
             class="collapse"
-            :class="$route.path.includes('/term/' + currentTerm.id) || $route.path.includes('/section/' + currentTerm.id) ? '' : 'show'"
+            :class="
+              $route.path.includes('/term/' + currentTerm.id) ||
+              $route.path.includes('/section/' + currentTerm.id)
+                ? ''
+                : 'show'
+            "
             aria-labelledby="gettingStartedHeading"
           >
             <ul class="nav flex-column small mt-1">
-              <li v-for="(term, index) in this.contextStore.context.terms"
-              :key="index" class="nav-item mb-1">
+              <li
+                v-for="(term, index) in contextStore.context.terms"
+                :key="index"
+                class="nav-item mb-1"
+              >
                 <BLink
                   v-if="index != 0"
                   class="ps-4 nav-link rounded-3 text-body fw-lighter bg-secondary-hover bg-opacity-10-hover"
-                  :class="$route.path.includes('/term/' + term.id) || $route.path.includes('/section/' + term.id) ? 'bg-secondary bg-opacity-10' : ''"
-                  style="--bs-text-opacity: 0.6"
+                  :class="
+                    $route.path.includes('/term/' + term.id) ||
+                    $route.path.includes('/section/' + term.id)
+                      ? 'bg-secondary bg-opacity-10'
+                      : ''
+                  "
                   :href="term.url"
-                  >{{ term.quarter}} {{ term.year }}</BLink
+                  >{{ term.quarter }} {{ term.year }}</BLink
                 >
               </li>
             </ul>
@@ -64,13 +90,12 @@
           class="btn btn-link btn-sm text-danger p-0 m-0 border-0"
           value="Clear override"
           @click="clearUserOverride()"
-        >Clear override
+        >
+          Clear override
         </button>
       </SProfile>
       <SProfile v-else :user-netid="context.login_user">
-        <a :href="context.signout_url" class="text-white">
-          Sign out
-        </a>
+        <a :href="context.signout_url" class="text-white"> Sign out </a>
       </SProfile>
     </template>
     <template #aside>
@@ -84,8 +109,8 @@
             <li
               v-for="(message, index) in window.gradepage.messages"
               :key="index"
-              v-html="message"
               class="mt-2"
+              v-html="message"
             ></li>
           </ul>
         </div>
@@ -109,12 +134,12 @@
 <script>
 import { useContextStore } from "@/stores/context";
 import { clearOverride } from "@/utils/data";
-import { BAlert, BLink } from "bootstrap-vue-next";
+import { BLink } from "bootstrap-vue-next";
 import { STopbar, SProfile, SColorMode } from "solstice-vue";
 
 export default {
   name: "GradepageApp",
-  components: { BAlert, BLink, STopbar, SProfile, SColorMode },
+  components: { BLink, STopbar, SProfile, SColorMode },
   props: {
     pageTitle: {
       type: String,

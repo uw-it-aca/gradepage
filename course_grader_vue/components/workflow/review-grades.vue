@@ -12,15 +12,15 @@
     </template>
     <template v-else-if="appState.graderoster">
       <div class="mb-2 pb-2 small text-muted border-bottom">
-        <div>
-          Please review grades and submit below.
-        </div>
+        <div>Please review grades and submit below.</div>
         <div v-if="appState.graderoster.is_writing_section">
-          Writing credit automatically given to all students with a passing grade in this course.
+          Writing credit automatically given to all students with a passing
+          grade in this course.
         </div>
         <div v-if="appState.graderoster.has_duplicate_codes">
           <span class="visually-hidden">
-            In the list below, duplicate listings of the same student are differentiated with a
+            In the list below, duplicate listings of the same student are
+            differentiated with a
           </span>
           Duplicate code
           <i class="bi bi-circle-fill text-secondary"></i>
@@ -40,7 +40,7 @@
     </template>
     <template v-else>
       <ul class="list-unstyled m-0">
-        <li v-for="index in 8" class="border-top pt-2 mt-2" :key="index">
+        <li v-for="index in 8" :key="index" class="border-top pt-2 mt-2">
           <BPlaceholder
             class="d-block bg-body-secondary"
             style="height: 60px"
@@ -53,19 +53,19 @@
     <template v-if="!isLoading && !errorResponse" #footer>
       <div class="d-flex">
         <div class="flex-fill align-self-center text-end me-2 small">
-          All grades will be submitted to the Registrar as displayed above. No further online changes will be possible after submission.
+          All grades will be submitted to the Registrar as displayed above. No
+          further online changes will be possible after submission.
         </div>
         <div v-if="section" class="text-nowrap">
           <BButton
             :title="reviewBackTitle"
             variant="outline-primary"
             @click="editGrades"
-          >Edit</BButton>
-          <BButton
-            variant="primary"
-            @click="submitGrades"
-            class="ms-2"
-          >Submit</BButton>
+            >Edit</BButton
+          >
+          <BButton variant="primary" class="ms-2" @click="submitGrades"
+            >Submit</BButton
+          >
         </div>
       </div>
     </template>

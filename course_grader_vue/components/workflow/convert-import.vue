@@ -6,7 +6,10 @@
 
     <h3>Convert Final Score to Grade Points</h3>
     <p>
-      To use the conversion calculator, enter minimum percentages and equivalent class grades in two or more rows in the calculator, and click <strong>Apply</strong>. The calculator fills in the rest of the grade point scale.
+      To use the conversion calculator, enter minimum percentages and equivalent
+      class grades in two or more rows in the calculator, and click
+      <strong>Apply</strong>. The calculator fills in the rest of the grade
+      point scale.
     </p>
 
     <div v-if="courseGradingSchemes.length">
@@ -23,10 +26,11 @@
           Use the Canvas grading scheme from your course
         </template>
         <BDropdownItem
-          v-for="scheme in courseGradingSchemes"
+          v-for="(scheme, index) in courseGradingSchemes"
+          :key="index"
           :value="scheme"
           @click.prevent="courseGradingSchemeSelected(scheme)"
-        >{{ scheme.course_name }}&nbsp;({{ scheme.grading_scheme_name }})
+          >{{ scheme.course_name }}&nbsp;({{ scheme.grading_scheme_name }})
         </BDropdownItem>
       </BDropdown>
     </div>
@@ -45,14 +49,17 @@
           Use one of your previous conversion scales
         </template>
         <BDropdownGroup
-          v-for="term in previousScales.terms"
+          v-for="(term, index1) in previousScales.terms"
+          :key="index1"
           :header="term.quarter + ' ' + term.year"
         >
           <BDropdownItem
-            v-for="scale in term.conversion_scales"
+            v-for="(scale, index2) in term.conversion_scales"
+            :key="index2"
             :value="scale"
             @click.prevent="previousScaleSelected(scale)"
-          >{{ scale.section }}</BDropdownItem>
+            >{{ scale.section }}</BDropdownItem
+          >
         </BDropdownGroup>
       </BDropdown>
     </div>
@@ -60,16 +67,12 @@
     <GradeConversionCalculator />
 
     <template #footer>
-      <BLink
-        title="Cancel"
-        @click="cancelConversion"
-      >Cancel
-      </BLink>
+      <BLink title="Cancel" @click="cancelConversion">Cancel </BLink>
       <BButton
         variant="primary"
         title="Review converted grades"
         @click="reviewConversion"
-      >Review converted grades &gt;&gt;
+        >Review converted grades &gt;&gt;
       </BButton>
       <span
         v-if="scaleErrorCount"
@@ -85,7 +88,6 @@
 <script>
 import SectionHeader from "@/components/section/header.vue";
 import GradeConversionCalculator from "@/components/convert/calculator.vue";
-import Student from "@/components/student.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useCalculatorStore } from "@/stores/calculator";
 import {
@@ -98,22 +100,21 @@ import {
 } from "bootstrap-vue-next";
 
 export default {
-  props: {
-    section: {
-      type: Object,
-      required: true,
-    },
-  },
   components: {
     SectionHeader,
     GradeConversionCalculator,
-    Student,
     BCard,
     BButton,
     BLink,
     BDropdown,
     BDropdownItem,
     BDropdownGroup,
+  },
+  props: {
+    section: {
+      type: Object,
+      required: true,
+    },
   },
   setup() {
     const appState = useWorkflowStateStore();
@@ -136,9 +137,15 @@ export default {
       return this.appState.gradeImport.course_grading_schemes;
     },
     scaleErrorText() {
-      return interpolate(ngettext(
-        "One invalid grade", "%(count)s invalid grades", this.scaleErrorCount),
-          {count: this.scaleErrorCount}, true);
+      return interpolate(
+        ngettext(
+          "One invalid grade",
+          "%(count)s invalid grades",
+          this.scaleErrorCount
+        ),
+        { count: this.scaleErrorCount },
+        true
+      );
     },
   },
   methods: {
@@ -151,7 +158,7 @@ export default {
     cancelConversion: function () {
       this.appState.$reset();
     },
-    reviewConversion: function() {
+    reviewConversion: function () {
       this.scaleErrorCount = this.calculatorStore.validateScaleValues();
       if (this.scaleErrorCount === 0) {
         this.appState.convertImportedGrades(

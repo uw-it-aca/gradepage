@@ -4,16 +4,14 @@
       <SectionHeader :section="section" title="Review grades for import to" />
     </template>
 
-    <template v-if="isLoading">
-      Importing grades...
-    </template>
+    <template v-if="isLoading"> Importing grades... </template>
     <template v-else-if="errorResponse">
       <Errors :error-response="errorResponse" />
     </template>
     <template v-else-if="appState.gradeImport.students">
       <ul class="list-unstyled m-0">
         <li
-          v-for="(student, index) in appState.gradeImport.students"
+          v-for="student in appState.gradeImport.students"
           :key="student.item_id"
           class="border-top pt-2 mt-2"
         >
@@ -25,16 +23,16 @@
     <template v-if="!isLoading && !errorResponse" #footer>
       <div class="d-flex">
         <div class="text-nowrap">
-          <BButton
-            variant="outline-primary"
-            @click="editConversion"
-          >Back to calculator</BButton>
+          <BButton variant="outline-primary" @click="editConversion"
+            >Back to calculator</BButton
+          >
           <BButton
             variant="primary"
             title="Import grades to GradePage"
-            @click="saveGrades"
             class="ms-2"
-          >Import Grades</BButton>
+            @click="saveGrades"
+            >Import Grades</BButton
+          >
         </div>
       </div>
     </template>
@@ -51,18 +49,18 @@ import { BButton, BCard } from "bootstrap-vue-next";
 import { saveImportedGrades } from "@/utils/data";
 
 export default {
-  props: {
-    section: {
-      type: Object,
-      required: true,
-    },
-  },
   components: {
     SectionHeader,
     Student,
     Errors,
     BButton,
     BCard,
+  },
+  props: {
+    section: {
+      type: Object,
+      required: true,
+    },
   },
   setup() {
     const appState = useWorkflowStateStore();
@@ -85,7 +83,7 @@ export default {
     },
     saveGrades: function () {
       let url = this.section.import_url + "/" + this.appState.gradeImport.id,
-          data = {};
+        data = {};
 
       data.conversion_scale = this.calculatorStore.conversionData;
       data.converted_grades = this.appState.convertedGradeData;

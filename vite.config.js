@@ -41,4 +41,12 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./course_grader_vue", import.meta.url)),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        quietDeps: true,
+        silenceDeprecations: ["global-builtin", "import"], // silence bootstrap5 related deprecations
+      },
+    },
+  },
 });
