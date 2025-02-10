@@ -76,12 +76,12 @@ environmentVariables:
   - name: SWS_ENV
     value: EVAL
   - name: SWS_TIMEOUT
-    value: "10"
+    value: "45"
 
   - name: CANVAS_ENV
     value: EVAL
   - name: CANVAS_TIMEOUT
-    value: "10"
+    value: "25"
 
   - name: AUTH
     value: SAML

@@ -203,6 +203,64 @@
           Grade submitter source:
           <span class="grade_submitter_source"></span></div>
         </li>
+        <li class="graderoster_item">
+          <h1>AVERAGE-SMITH, LISA</h1>
+          <div>
+            <a class="person" rel="student" href="/student/v5/person/8136CCB8F66711D5BE060004AC494FFB">
+              <span class="name">AVERAGE-SMITH, LISA</span> - <span class="reg_id">8136CCB8F66711D5BE060004AC494FFB</span></a>
+          </div>
+          <div>
+          Duplicate code:
+          <span class="duplicate_code"> A</span></div>
+          <div>
+          Student Former Name:
+          <span class="student_former_name"></span></div>
+          <div>
+          Student Number:
+          <span class="student_number">1033149</span></div>
+          <div>
+          Student Type:
+          <span class="student_type"></span></div>
+          <div>
+          Student Credits:
+          <span class="student_credits"> 3.0</span></div>
+          <div>
+          Date Withdrawn:
+          <span class="date_withdrawn date"/></div>
+          <div>
+            <label for="incomplete_8136CCB8F66711D5BE060004AC494FFB">Incomplete:
+    </label>
+            <input type="checkbox" class="incomplete" id="incomplete_8136CCB8F66711D5BE060004AC494FFB" name="incomplete_8136CCB8F66711D5BE060004AC494FFB"/>
+          </div>
+          <div>
+            <label for="writing_course_8136CCB8F66711D5BE060004AC494FFB_ ">Writing course:
+    </label>
+            <input type="checkbox" class="writing_course" id="writing_course_8136CCB8F66711D5BE060004AC494FFB_ " name="writing_course_8136CCB8F66711D5BE060004AC494FFB_ "/>
+          </div>
+          <div>
+            <label for="auditor_8136CCB8F66711D5BE060004AC494FFB_ ">Auditor:
+    </label>
+            <input type="checkbox" class="auditor" id="auditor_8136CCB8F66711D5BE060004AC494FFB_ " name="auditor_8136CCB8F66711D5BE060004AC494FFB_ " disabled="disabled"/>
+          </div>
+          <div>
+            <label for="no_grade_now_8136CCB8F66711D5BE060004AC494FFB_ ">No grade now:
+    </label>
+            <input type="checkbox" class="no_grade_now" id="no_grade_now_8136CCB8F66711D5BE060004AC494FFB_ " name="no_grade_now_8136CCB8F66711D5BE060004AC494FFB_ "/>
+          </div>
+          <div>
+          Grade:
+          <select class="grades"><option value="" class="grade"/><option class="grade" value="H">H</option><option class="grade" value="HP">HP</option><option class="grade" value="P">P</option><option class="grade" value="F">F</option></select></div>
+          <div>
+          Grade document ID: <span class="grade_document_id"></span></div>
+          <div>
+          Date Graded: <span class="date_graded date"></span></div>
+          <div>
+          Grade submitter person:
+          </div>
+          <div>
+          Grade submitter source:
+          <span class="grade_submitter_source"></span></div>
+        </li>
       </ul>
     </div>
   </body>
