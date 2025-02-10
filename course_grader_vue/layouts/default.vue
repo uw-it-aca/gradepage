@@ -14,12 +14,7 @@
         <li class="nav-item mb-1 position-relative">
           <BLink
             class="d-flex justify-content-between nav-link rounded-3 text-body chevron bg-secondary-hover bg-opacity-10-hover"
-            :class="
-              $route.path.includes('/term/' + currentTerm.id) ||
-              $route.path.includes('/section/' + currentTerm.id)
-                ? 'bg-secondary bg-opacity-10'
-                : ''
-            "
+            :class="matchedTerm(currentTerm.id) ? 'bg-secondary bg-opacity-10' : ''"
             :href="'/term/' + currentTerm.id"
           >
             <span
@@ -34,12 +29,7 @@
             class="d-flex justify-content-between nav-link rounded-3 text-body chevron bg-secondary-hover bg-opacity-10-hover"
             data-bs-toggle="collapse"
             data-bs-target="#gettingStartedCollapse"
-            :aria-expanded="
-              $route.path.includes('/term/' + currentTerm.id) ||
-              $route.path.includes('/section/' + currentTerm.id)
-                ? false
-                : true
-            "
+            :aria-expanded="matchedTerm(currentTerm.id) ? false : true"
             aria-controls="gettingStartedCollapse"
           >
             <span><i class="bi bi-calendar3 me-3"></i>Previous terms</span>
@@ -48,12 +38,7 @@
           <div
             id="gettingStartedCollapse"
             class="collapse"
-            :class="
-              $route.path.includes('/term/' + currentTerm.id) ||
-              $route.path.includes('/section/' + currentTerm.id)
-                ? ''
-                : 'show'
-            "
+            :class="matchedTerm(currentTerm.id) ? '' : 'show'"
             aria-labelledby="gettingStartedHeading"
           >
             <ul class="nav flex-column small mt-1">
@@ -65,12 +50,7 @@
                 <BLink
                   v-if="index != 0"
                   class="ps-4 nav-link rounded-3 text-body fw-lighter bg-secondary-hover bg-opacity-10-hover"
-                  :class="
-                    $route.path.includes('/term/' + term.id) ||
-                    $route.path.includes('/section/' + term.id)
-                      ? 'bg-secondary bg-opacity-10'
-                      : ''
-                  "
+                  :class="matchedTerm(term.id) ? 'bg-secondary bg-opacity-10' : ''"
                   :href="term.url"
                   >{{ term.quarter }} {{ term.year }}</BLink
                 >
@@ -176,6 +156,10 @@ export default {
     document.title = this.pageTitle + " - " + this.appName;
   },
   methods: {
+    matchedTerm: function (id) {
+      return this.$route.path.includes('/term/' + id) ||
+        this.$route.path.includes('/section/' + id);
+    },
     clearUserOverride: function () {
       this.clearOverride(this.context.clear_override_url).then(() => {
         window.location.href = this.context.clear_override_url;
