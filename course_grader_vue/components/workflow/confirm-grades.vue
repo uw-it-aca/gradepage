@@ -137,7 +137,7 @@
 
     <ul v-if="appState.graderoster.students" class="list-unstyled m-0">
       <li
-        v-for="student in appState.graderoster.students"
+        v-for="(student, index) in appState.graderoster.students"
         :key="student.item_id"
         class="bpt-2 mt-2"
         :class="index != 0 ? 'border-top' : ''"
