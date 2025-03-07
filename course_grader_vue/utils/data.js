@@ -179,11 +179,6 @@ async function uploadGrades(url, file) {
   return customFetch(url, {
     method: "POST",
     body: formData,
-    headers: {
-      // Override default JSON content-type for multipart form data
-      "X-CSRFToken": getTokenStore().csrfToken,
-      "X-Requested-With": "XMLHttpRequest",
-    },
   });
 }
 
