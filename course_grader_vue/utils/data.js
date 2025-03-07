@@ -192,10 +192,10 @@ async function getConversionScales(url) {
 //async function clearOverride(url) {
 //  return axios.post(url, { clear_override: true });
 //}
-async function clearOverride(url, data) {
+async function clearOverride(url) {
   return customFetch(url, {
     method: "POST",
-    body: JSON.stringify(data),
+    body: JSON.stringify({ clear_override: true }),
   });
 }
 
