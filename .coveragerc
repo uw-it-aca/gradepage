@@ -1,7 +1,6 @@
 [run]
 source = gradepage
 parallel = True
-omit = */migrations/*,*/test/*
 
 [paths]
 source =

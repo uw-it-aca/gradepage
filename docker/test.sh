@@ -15,7 +15,7 @@ function run_test {
 
 run_test "pycodestyle ${DJANGO_APP}/ --exclude=migrations,static"
 
-run_test "python -Wd -m coverage run --source=${DJANGO_APP} manage.py test ${DJANGO_APP}"
+run_test "python -Wd -m coverage run --source=${DJANGO_APP} '--omit=*/migrations/*,*/test/*' manage.py test ${DJANGO_APP}"
 
 # put generated coverage result where it will get processed
 cp .coverage.* /coverage
