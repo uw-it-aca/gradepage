@@ -143,7 +143,8 @@ class GradeRoster(GradeFormHandler):
                     secondary_section.section_id != item.section_id):
                 continue
 
-            if item.is_auditor or item.date_withdrawn is not None:
+            if (item_is_submitted(item) or item.is_auditor or
+                    item.date_withdrawn is not None):
                 continue
 
             student_id = item.student_label(separator="-")
@@ -172,7 +173,8 @@ class GradeRoster(GradeFormHandler):
                     secondary_section.section_id != item.section_id):
                 continue
 
-            if (item.is_auditor or item.date_withdrawn is not None):
+            if (item_is_submitted(item) or item.is_auditor or
+                    item.date_withdrawn is not None):
                 continue
 
             unsubmitted_count += 1
@@ -334,7 +336,7 @@ class GradeRoster(GradeFormHandler):
                         withdrawn_week = m.group("week")
                     grade = ""
 
-            if grading_period_open and not item.is_auditor:
+            elif grading_period_open and not item.is_auditor:
                 grade_url = url_for_graderoster(section_id)
 
                 # Use an existing grade_choices list, or add this one
