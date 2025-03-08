@@ -81,7 +81,7 @@ export default {
         this.appState.$reset();
         this.getGraderoster(this.section.graderoster_url)
           .then((response) => {
-            return response.data;
+            return response;
           })
           .then((data) => {
             this.appState.setGraderoster(data.graderoster);
@@ -101,7 +101,7 @@ export default {
       let section_id = this.$route.params.id;
       this.getSection("/api/v1/section/" + section_id)
         .then((response) => {
-          return response.data;
+          return response;
         })
         .then((data) => {
           this.section = data.section;

@@ -93,7 +93,7 @@ export default {
       if (this.section.status_url) {
         this.getSectionStatus(this.section.status_url)
           .then((response) => {
-            return response.data;
+            return response;
           })
           .then((data) => {
             // Secondary status overrules the prop

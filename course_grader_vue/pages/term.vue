@@ -122,7 +122,7 @@ export default {
     loadSectionsForTerm: function () {
       this.getSections(this.selectedTerm.sections_url)
         .then((response) => {
-          return response.data;
+          return response;
         })
         .then((data) => {
           this.sections = data.sections;
