@@ -37,13 +37,13 @@
 
       <ol class="list-unstyled">
         <li v-for="(data, index) in calculatorValues" :key="index">
-          <template v-if="index === calculatorValues.length - 1">
+          <template v-if="0 < index && index < calculatorValues.length">
             <div class="d-flex my-3">
               <div class="w-50 text-center">
                 <BLink
                   title="Add a row to the conversion table. Leave unused rows blank."
                   tabindex="0"
-                  @click.prevent="calculatorStore.addCalculatorRow()"
+                  @click.prevent="calculatorStore.addCalculatorRow(index)"
                   >+ Add a row</BLink
                 >
               </div>
