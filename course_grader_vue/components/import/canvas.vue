@@ -51,8 +51,8 @@
         </span>
         <BLink
           target="_blank"
-          title="Learn more about importing Canvas grades on IT Connect"
-          href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/correctly-import-grades/"
+          title="Learn more about Canvas grade posting on IT Connect"
+          href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/new-gradebook/posting-policy/"
           >Learn more </BLink
         >.
       </div>

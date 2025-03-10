@@ -76,20 +76,20 @@
           class="small"
         >
           <i class="bi bi-exclamation-triangle-fill me-1"></i>
-          {{ partialGradeErrorText }}
+          <span v-html="partialGradeErrorText"></span>
         </BAlert>
 
         <!-- danger -->
         <BAlert v-else variant="danger" :model-value="true" class="small">
           <i class="bi bi-exclamation-octagon-fill me-1"></i>
-          {{ allGradeErrorText }}
+          <span v-html="allGradeErrorText"></span>
         </BAlert>
       </template>
 
       <!-- success -->
       <BAlert v-else variant="success" :model-value="true" class="small">
         <i class="bi bi-check-circle-fill me-1"></i>
-        Grade submission successful!
+        <span>Grade submission successful!</span>
       </BAlert>
     </template>
 
@@ -105,7 +105,7 @@
       <span v-if="submission.section_id">
         Section {{ submission.section_id }}:
       </span>
-      <span>{{ gradesSubmittedText(submission) }}</span>
+      <span v-html="gradesSubmittedText(submission)"></span>
       <BLink
         href="https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/"
         target="_blank"
@@ -137,7 +137,7 @@
 
     <ul v-if="appState.graderoster.students" class="list-unstyled m-0">
       <li
-        v-for="student in appState.graderoster.students"
+        v-for="(student, index) in appState.graderoster.students"
         :key="student.item_id"
         class="bpt-2 mt-2"
         :class="index != 0 ? 'border-top' : ''"
@@ -271,8 +271,8 @@ export default {
     partialGradeErrorText() {
       return interpolate(
         ngettext(
-          "Grades submitted, but one grade had an error.",
-          "Grades submitted, but %(failed_submission_count)s grades had errors.",
+          "Grades submitted, but <strong>one</strong> grade had an error.",
+          "Grades submitted, but <strong>%(failed_submission_count)s</strong> grades had errors.",
           this.appState.graderoster.failed_submission_count
         ),
         this.appState.graderoster,
