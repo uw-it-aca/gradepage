@@ -80,15 +80,12 @@ export default {
         this.gradeStore.$reset();
         this.appState.$reset();
         this.getGraderoster(this.section.graderoster_url)
-          .then((response) => {
-            return response;
-          })
           .then((data) => {
             this.appState.setGraderoster(data.graderoster);
             this.errorResponse = null;
           })
           .catch((error) => {
-            this.errorResponse = error.response;
+            this.errorResponse = error;
           })
           .finally(() => {
             this.isLoading = false;
@@ -100,16 +97,13 @@ export default {
     loadSection: function () {
       let section_id = this.$route.params.id;
       this.getSection("/api/v1/section/" + section_id)
-        .then((response) => {
-          return response;
-        })
         .then((data) => {
           this.section = data.section;
           document.title = this.section.section_name + " - GradePage";
           this.loadGraderoster();
         })
         .catch((error) => {
-          this.errorResponse = error.response;
+          this.errorResponse = error;
           this.isLoading = false;
         });
     },

@@ -90,7 +90,8 @@ export default {
   },
   computed: {
     errorText() {
-      return this.errorResponse.data ? this.errorResponse.data.error : "";
+      return this.errorResponse.error
+        ? this.errorResponse.error : this.errorResponse;
     },
   },
 };

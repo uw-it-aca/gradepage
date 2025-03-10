@@ -111,11 +111,11 @@ export const useCalculatorStore = defineStore("calculator", {
         )
       ) {
         getConversionScales(url)
-          .then((response) => {
-            return response.data;
-          })
           .then((data) => {
             this._previousScales[scale].data = data;
+          })
+          .catch((error) => {
+            console.log(error);
           });
       }
       return this._previousScales[scale].data;

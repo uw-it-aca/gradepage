@@ -91,13 +91,10 @@ export default {
       this.isLoading = true;
       this.saveImportedGrades(url, JSON.stringify(data))
         .then((response) => {
-          return response.data;
-        })
-        .then((data) => {
           this.appState.$reset();
         })
         .catch((error) => {
-          this.errorResponse = error.response;
+          this.errorResponse = error;
           this.isLoading = false;
         });
     },

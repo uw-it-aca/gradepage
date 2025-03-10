@@ -53,7 +53,7 @@ class ImportGrades(GradeFormHandler):
             if section.is_primary_section and section.allows_secondary_grading:
                 raise SecondaryGradingEnabled()
 
-            if "PUT" == request.method:
+            if "PUT" == request.method or "POST" == request.method:
                 self.valid_user_override()
 
             self.graderoster = graderoster_for_section(

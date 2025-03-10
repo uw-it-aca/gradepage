@@ -120,14 +120,11 @@ export default {
     submitGrades: function () {
       this.isLoading = true;
       this.submitGraderoster(this.section.graderoster_url, {})
-        .then((response) => {
-          return response.data;
-        })
         .then((data) => {
           this.appState.setGraderoster(data.graderoster);
         })
         .catch((error) => {
-          this.errorResponse = error.response;
+          this.errorResponse = error;
           this.isLoading = false;
         });
     },
