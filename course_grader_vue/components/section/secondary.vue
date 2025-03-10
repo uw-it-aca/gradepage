@@ -57,6 +57,7 @@ export default {
       secondaryStatus: null,
       errorStatus: null,
       sectionNameId: "section-name-" + this.section.section_id,
+      isLoading: false,
     };
   },
   computed: {
@@ -91,16 +92,17 @@ export default {
   methods: {
     loadGradingStatus: function () {
       if (this.section.status_url) {
+        this.isLoading = true;
         this.getSectionStatus(this.section.status_url)
-          .then((response) => {
-            return response.data;
-          })
           .then((data) => {
             // Secondary status overrules the prop
             this.secondaryStatus = data.grading_status;
           })
           .catch((error) => {
-            this.errorStatus = error.response;
+            this.errorStatus = error;
+          })
+          .finally(() => {
+            this.isLoading = false;
           });
       }
     },

@@ -3,7 +3,7 @@
   <div v-if="isLoading">Loading...</div>
   <div v-else-if="errorResponse">
     <i class="fas fa-exclamation-circle"></i>
-    <strong>{{ errorResponse.data.error }}</strong>
+    <strong>{{ errorResponse.error }}</strong>
   </div>
   <div v-else-if="appState.gradeImport">
     <div v-if="appState.gradeImport.status_code != 200">
@@ -171,9 +171,6 @@ export default {
   methods: {
     loadImportedGrades() {
       this.createImport(this.section.import_url, { source: this.importSource })
-        .then((response) => {
-          return response.data;
-        })
         .then((data) => {
           this.errorResponse = null;
           let gradeImport = this.gradeStore.processImport(data.grade_import);
@@ -181,7 +178,7 @@ export default {
         })
         .catch((error) => {
           this.appState.resetGradeImport();
-          this.errorResponse = error.response;
+          this.errorResponse = error;
         })
         .finally(() => {
           this.isLoading = false;

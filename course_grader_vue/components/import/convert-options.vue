@@ -1,6 +1,6 @@
 <template>
   <div v-if="errorResponse">
-    {{ errorResponse }}
+    {{ errorResponse.error }}
   </div>
   <div
     v-else-if="appState.gradeImport.has_valid_percentages"
@@ -78,14 +78,11 @@ export default {
         data = { conversion_scale: null, converted_grades: {} };
 
       this.saveImportedGrades(url, JSON.stringify(data))
-        .then((response) => {
-          return response.data;
-        })
         .then((data) => {
           this.appState.$reset();
         })
         .catch((error) => {
-          this.errorResponse = error.response;
+          this.errorResponse = error;
         });
     },
   },

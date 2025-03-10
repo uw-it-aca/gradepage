@@ -148,15 +148,12 @@ export default {
         this.section.graderoster_url,
         this.gradeStore.grades
       )
-        .then((response) => {
-          return response.data;
-        })
         .then((data) => {
           this.appState.setGraderoster(data.graderoster);
           this.appState.reviewGrades();
         })
         .catch((error) => {
-          this.errorResponse = error.response;
+          this.errorResponse = error;
         });
     },
   },

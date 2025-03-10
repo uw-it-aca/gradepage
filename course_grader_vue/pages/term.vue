@@ -121,14 +121,11 @@ export default {
     },
     loadSectionsForTerm: function () {
       this.getSections(this.selectedTerm.sections_url)
-        .then((response) => {
-          return response.data;
-        })
         .then((data) => {
           this.sections = data.sections;
         })
         .catch((error) => {
-          this.errorResponse = error.response;
+          this.errorResponse = error;
         })
         .finally(() => {
           this.isLoading = false;

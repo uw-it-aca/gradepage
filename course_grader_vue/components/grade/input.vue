@@ -262,17 +262,14 @@ export default {
           this.student.grade_url,
           this.gradeStore.gradeData[this.student.student_id]
         )
-          .then((response) => {
-            return response.data;
-          })
           .then((data) => {
             this.grade = data.grade;
             this.incomplete = data.is_incomplete;
             this.is_writing = data.is_writing;
             this.updateGradeStatus();
           })
-          .catch((error) => {
-            this.gradeError = error.message;
+          .catch((err) => {
+            this.gradeError = err.error;
           })
           .finally(() => {
             this.inprogress_save = false;

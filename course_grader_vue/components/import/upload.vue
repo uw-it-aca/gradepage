@@ -139,7 +139,7 @@
       </div>
       <div v-else>
         <i class="fas fa-exclamation-circle"></i>
-        <strong>{{ errorResponse.data.error }}</strong
+        <strong>{{ errorResponse.error }}</strong
         ><br />
         <small
           >File: <em>{{ file.name }}</em></small
@@ -243,15 +243,15 @@ export default {
     missingHeaderGrade() {
       return (
         this.errorResponse &&
-        typeof this.errorResponse.data === "object" &&
-        this.errorResponse.data.error === "Missing header: grade"
+        typeof this.errorResponse === "object" &&
+        this.errorResponse.error === "Missing header: grade"
       );
     },
     missingHeaderStudent() {
       return (
         this.errorResponse &&
-        typeof this.errorResponse.data === "object" &&
-        this.errorResponse.data.error === "Missing header: student"
+        typeof this.errorResponse === "object" &&
+        this.errorResponse.error === "Missing header: student"
       );
     },
     fileLimitExceeded() {
@@ -284,9 +284,6 @@ export default {
     },
     uploadFile() {
       this.uploadGrades(this.section.upload_url, this.file)
-        .then((response) => {
-          return response.data;
-        })
         .then((data) => {
           this.errorResponse = null;
           let gradeImport = this.gradeStore.processImport(data.grade_import);
@@ -294,7 +291,7 @@ export default {
         })
         .catch((error) => {
           this.appState.resetGradeImport();
-          this.errorResponse = error.response;
+          this.errorResponse = error;
         });
     },
   },

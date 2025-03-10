@@ -61,9 +61,9 @@ function formatGradingStatus(data) {
   }
 }
 
-function formatErrorStatus(response) {
-  return response.data
-    ? response.data.error
+function formatErrorStatus(error) {
+  return error.error
+    ? error.error
     : gettext("Error retrieving grading status");
 }
 
