@@ -6,7 +6,6 @@ async function customFetch(url, options = {}) {
 
   // Default headers
   const defaultHeaders = {
-    "Content-Type": "application/json;charset=UTF-8",
     "Access-Control-Allow-Origin": "*",
     "X-CSRFToken": tokenStore.csrfToken,
     "X-Requested-With": "XMLHttpRequest",
@@ -56,9 +55,16 @@ async function getGraderoster(url) {
   return customFetch(url);
 }
 
+async function getConversionScales(url) {
+  return customFetch(url);
+}
+
 async function updateGraderoster(url, data) {
   return customFetch(url, {
     method: "PUT",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+    },
     body: JSON.stringify(data),
   });
 }
@@ -66,6 +72,9 @@ async function updateGraderoster(url, data) {
 async function submitGraderoster(url, data) {
   return customFetch(url, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+    },
     body: JSON.stringify(data),
   });
 }
@@ -73,6 +82,9 @@ async function submitGraderoster(url, data) {
 async function updateGrade(url, data) {
   return customFetch(url, {
     method: "PATCH",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+    },
     body: JSON.stringify(data),
   });
 }
@@ -80,6 +92,9 @@ async function updateGrade(url, data) {
 async function createImport(url, data) {
   return customFetch(url, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+    },
     body: JSON.stringify(data),
   });
 }
@@ -87,6 +102,9 @@ async function createImport(url, data) {
 async function saveImportedGrades(url, data) {
   return customFetch(url, {
     method: "PUT",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+    },
     body: JSON.stringify(data),
   });
 }
@@ -95,22 +113,19 @@ async function uploadGrades(url, file) {
   let formData = new FormData();
   formData.append("file", file);
 
+  // Do not send a Content-Type header
   return customFetch(url, {
     method: "POST",
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
     body: formData,
   });
-}
-
-async function getConversionScales(url) {
-  return customFetch(url);
 }
 
 async function clearOverride(url) {
   return customFetch(url, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+    },
     body: JSON.stringify({ clear_override: true }),
   });
 }
