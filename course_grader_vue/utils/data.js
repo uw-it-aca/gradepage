@@ -24,7 +24,8 @@ async function customFetch(url, options = {}) {
       const jsonResponse = await response.json();
       return jsonResponse;
     } else {
-      if (response.status === 403) {  // Expired session
+      if (response.status === 403) {
+        // Expired session
         return alert(
           "Your session has expired. Refresh the page to start a new session."
         );
