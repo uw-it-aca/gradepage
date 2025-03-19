@@ -1,4 +1,4 @@
-# Copyright 2024 UW-IT, University of Washington
+# Copyright 2025 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -94,7 +94,7 @@ def status(request):
         "grade_submission_deadline": selected_term.grade_submission_deadline,
         "current_datetime": current_datetime(),
         "chart_data": json.dumps(chart_data),
-        "term_id": term_id
+        "term_id": f"{selected_term.year}-{selected_term.quarter}",
     }
     return render(request, "support/status.html", params)
 
