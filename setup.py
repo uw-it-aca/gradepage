@@ -36,7 +36,7 @@ setup(
         'uw-restclients-graderoster~=1.1',
         'uw-restclients-django-utils~=2.3',
         'chardet~=5.0',
-        'libxml==1.3.14',
+        'xmlsec==1.3.14',
     ],
     license='Apache License, Version 2.0',
     description='UW application that supports online grade submission',
