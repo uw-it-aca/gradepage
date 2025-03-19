@@ -35,7 +35,8 @@ setup(
         'uw-restclients-canvas~=1.2',
         'uw-restclients-graderoster~=1.1',
         'uw-restclients-django-utils~=2.3',
-        'chardet~=5.0'
+        'chardet~=5.0',
+        'lxml==5.3.0',
     ],
     license='Apache License, Version 2.0',
     description='UW application that supports online grade submission',
