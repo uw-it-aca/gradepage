@@ -94,7 +94,7 @@ def status(request):
         "grade_submission_deadline": selected_term.grade_submission_deadline,
         "current_datetime": current_datetime(),
         "chart_data": json.dumps(chart_data),
-        "term_id": term_id
+        "term_id": f"{selected_term.year}-{selected_term.quarter}",
     }
     return render(request, "support/status.html", params)
 
