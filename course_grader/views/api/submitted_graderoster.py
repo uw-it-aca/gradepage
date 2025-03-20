@@ -82,15 +82,14 @@ class SubmissionsByTerm(RESTDispatch):
 class SubmittedGradeRoster(RESTDispatch):
     def get(self, request, *args, **kwargs):
         graderoster_id = kwargs.get("graderoster_id")
+        file_type = request.GET.get("type", "csv").strip().lower()
 
         try:
             model = SubmittedGradeRosterModel.objects.get(pk=graderoster_id)
             section = section_from_label(model.section_id)
             instructor = person_from_regid(model.instructor_id)
             submitter = person_from_regid(model.submitted_by)
-            graderoster = GradeRoster.from_xhtml(
-                etree.fromstring(model.document.strip()),
-                section=section, instructor=instructor)
+            document = model.document.strip()
 
         except SubmittedGradeRosterModel.DoesNotExist:
             return self.error_response(404, "Not Found")
@@ -105,6 +104,12 @@ class SubmittedGradeRoster(RESTDispatch):
             filename = model.secondary_section_id
         else:
             filename = model.section_id
+
+        if file_type == "xml":
+            return self.xml_response(content=document, filename=filename)
+
+        graderoster = GradeRoster.from_xhtml(
+            etree.fromstring(document), section=section, instructor=instructor)
 
         response = self.csv_response(filename=filename)
 
@@ -152,5 +157,19 @@ class SubmittedGradeRoster(RESTDispatch):
 
         logger.info("Graderoster downloaded: {}-{}".format(
             model.section_id, model.instructor_id))
+
+        return response
+
+    @staticmethod
+    def xml_response(content="", status=200, filename="file"):
+        response = HttpResponse(content=content,
+                                status=status,
+                                content_type="application/xhtml+xml")
+
+        if not filename.lower().endswith(".xhtml"):
+            filename += ".xhtml"
+
+        response["Content-Disposition"] = (
+            'attachment; filename="{}"').format(re.sub(r"[,/]", "-", filename))
 
         return response
