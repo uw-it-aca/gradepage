@@ -98,9 +98,9 @@ class SubmittedGradeRoster(RESTDispatch):
             return self.error_response(500, "{}".format(ex))
 
         if model.secondary_section_id is not None:
-            filename = model.secondary_section_id
+            filename = f"{model.secondary_section_id}-{model.instructor_id}"
         else:
-            filename = model.section_id
+            filename = f"{model.section_id}-{model.instructor_id}"
 
         if file_type == "xml":
             return self.xml_response(content=document, filename=filename)
