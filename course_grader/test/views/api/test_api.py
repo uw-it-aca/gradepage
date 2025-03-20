@@ -56,6 +56,15 @@ class RestDispatchTest(TestCase):
         self.assertEqual(response['Content-Disposition'],
                          'attachment; filename="test-test.csv"')
 
+    def test_xml_response(self):
+        response = RESTDispatch.xml_response(filename="test")
+        self.assertEqual(response['Content-Disposition'],
+                         'attachment; filename="test.xhtml"')
+
+        response = RESTDispatch.xhml_response(filename="test/test")
+        self.assertEqual(response['Content-Disposition'],
+                         'attachment; filename="test-test.xhtml"')
+
 
 @fdao_sws_override
 @fdao_pws_override

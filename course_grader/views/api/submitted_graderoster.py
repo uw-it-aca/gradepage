@@ -156,17 +156,3 @@ class SubmittedGradeRoster(RESTDispatch):
             model.section_id, model.instructor_id))
 
         return response
-
-    @staticmethod
-    def xml_response(content="", status=200, filename="file"):
-        response = HttpResponse(content=content,
-                                status=status,
-                                content_type="application/xhtml+xml")
-
-        if not filename.lower().endswith(".xhtml"):
-            filename += ".xhtml"
-
-        response["Content-Disposition"] = (
-            'attachment; filename="{}"').format(re.sub(r"[,/]", "-", filename))
-
-        return response
