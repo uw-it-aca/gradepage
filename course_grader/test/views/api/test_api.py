@@ -61,7 +61,7 @@ class RestDispatchTest(TestCase):
         self.assertEqual(response['Content-Disposition'],
                          'attachment; filename="test.xhtml"')
 
-        response = RESTDispatch.xhml_response(filename="test/test")
+        response = RESTDispatch.xml_response(filename="test/test")
         self.assertEqual(response['Content-Disposition'],
                          'attachment; filename="test-test.xhtml"')
 
