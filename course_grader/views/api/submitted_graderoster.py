@@ -4,7 +4,6 @@
 
 from django.conf import settings
 from django.http import HttpResponse
-from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
 from uw_saml.decorators import group_required
 from course_grader.views.rest_dispatch import RESTDispatch
@@ -24,7 +23,6 @@ logger = getLogger(__name__)
 
 @method_decorator(group_required(settings.GRADEPAGE_SUPPORT_GROUP),
                   name='dispatch')
-@method_decorator(never_cache, name='dispatch')
 class SubmissionsByTerm(RESTDispatch):
     def get(self, request, *args, **kwargs):
         term_id = kwargs.get("term_id")
@@ -78,7 +76,6 @@ class SubmissionsByTerm(RESTDispatch):
 
 @method_decorator(group_required(settings.GRADEPAGE_SUPPORT_GROUP),
                   name='dispatch')
-@method_decorator(never_cache, name='dispatch')
 class SubmittedGradeRoster(RESTDispatch):
     def get(self, request, *args, **kwargs):
         graderoster_id = kwargs.get("graderoster_id")
@@ -101,9 +98,9 @@ class SubmittedGradeRoster(RESTDispatch):
             return self.error_response(500, "{}".format(ex))
 
         if model.secondary_section_id is not None:
-            filename = model.secondary_section_id
+            filename = f"{model.secondary_section_id}-{model.instructor_id}"
         else:
-            filename = model.section_id
+            filename = f"{model.section_id}-{model.instructor_id}"
 
         if file_type == "xml":
             return self.xml_response(content=document, filename=filename)
@@ -157,19 +154,5 @@ class SubmittedGradeRoster(RESTDispatch):
 
         logger.info("Graderoster downloaded: {}-{}".format(
             model.section_id, model.instructor_id))
-
-        return response
-
-    @staticmethod
-    def xml_response(content="", status=200, filename="file"):
-        response = HttpResponse(content=content,
-                                status=status,
-                                content_type="application/xhtml+xml")
-
-        if not filename.lower().endswith(".xhtml"):
-            filename += ".xhtml"
-
-        response["Content-Disposition"] = (
-            'attachment; filename="{}"').format(re.sub(r"[,/]", "-", filename))
 
         return response
