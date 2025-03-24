@@ -89,8 +89,13 @@ def create_message(graderoster, submitter):
 def graderoster_people(graderoster):
     people = {graderoster.instructor.uwregid: graderoster.instructor}
 
-    for person in graderoster.authorized_grade_submitters:
-        people[person.uwregid] = person
+    for instructor in graderoster.section.get_instructors():
+        people[instructor.uwregid] = instructor
+
+    secondary = getattr(graderoster, "secondary_section", None)
+    if secondary:
+        for instructor in graderoster.secondary_section.get_instructors():
+            people[instructor.uwregid] = instructor
 
     for delegate in graderoster.grade_submission_delegates:
         people[delegate.person.uwregid] = delegate.person
