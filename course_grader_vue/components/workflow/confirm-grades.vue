@@ -58,7 +58,7 @@
       >
         Submitted grade may differ from official final grade.
         <BLink
-          href="https://registrar.washington.edu/staffandfaculty/grading-resources/#faqs"
+          href="https://registrar.washington.edu/staff-faculty/grading-resources/"
           target="_blank"
           class="d-print-none"
           >More info
