@@ -119,6 +119,7 @@ export default {
       }
       this.selectedTerm = term;
     },
+
     loadSectionsForTerm: function () {
       this.getSections(this.selectedTerm.sections_url)
         .then((data) => {
