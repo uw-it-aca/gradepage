@@ -91,7 +91,8 @@ export default {
   computed: {
     errorText() {
       return this.errorResponse.error
-        ? this.errorResponse.error : this.errorResponse;
+        ? this.errorResponse.error
+        : this.errorResponse;
     },
   },
 };

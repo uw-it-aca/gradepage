@@ -62,9 +62,7 @@ function formatGradingStatus(data) {
 }
 
 function formatErrorStatus(error) {
-  return error.error
-    ? error.error
-    : gettext("Error retrieving grading status");
+  return error.error ? error.error : gettext("Error retrieving grading status");
 }
 
 export { formatLinkTitle, formatGradingStatus, formatErrorStatus };
