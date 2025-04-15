@@ -14,7 +14,9 @@
         <li class="nav-item mb-1 position-relative">
           <BLink
             class="d-flex justify-content-between nav-link rounded-3 text-body chevron bg-secondary-hover bg-opacity-10-hover"
-            :class="matchedTerm(currentTerm.id) ? 'bg-secondary bg-opacity-10' : ''"
+            :class="
+              matchedTerm(currentTerm.id) ? 'bg-secondary bg-opacity-10' : ''
+            "
             :href="'/term/' + currentTerm.id"
           >
             <span
@@ -50,7 +52,9 @@
                 <BLink
                   v-if="index != 0"
                   class="ps-4 nav-link rounded-3 text-body fw-lighter bg-secondary-hover bg-opacity-10-hover"
-                  :class="matchedTerm(term.id) ? 'bg-secondary bg-opacity-10' : ''"
+                  :class="
+                    matchedTerm(term.id) ? 'bg-secondary bg-opacity-10' : ''
+                  "
                   :href="term.url"
                   >{{ term.quarter }} {{ term.year }}</BLink
                 >
@@ -157,8 +161,10 @@ export default {
   },
   methods: {
     matchedTerm: function (id) {
-      return this.$route.path.includes('/term/' + id) ||
-        this.$route.path.includes('/section/' + id);
+      return (
+        this.$route.path.includes("/term/" + id) ||
+        this.$route.path.includes("/section/" + id)
+      );
     },
     clearUserOverride: function () {
       this.clearOverride(this.context.clear_override_url).then(() => {
