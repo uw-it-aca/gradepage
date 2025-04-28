@@ -37,10 +37,10 @@ def create_message(graderoster, submitter):
     for item in graderoster.items:
         if (not item.is_auditor and item.date_withdrawn is None and
                 item.status_code is not None):
-            if item.status_code != "200":
-                error_count += 1
-            else:
+            if item.status_code == "200" or item.status_code == "220":
                 success_count += 1
+            else:
+                error_count += 1
 
     if success_count > 0 and error_count > 0:
         subject = "Failed grade submission attempt for {}".format(section_name)
