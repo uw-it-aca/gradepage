@@ -375,12 +375,10 @@ class GradeRoster(GradeFormHandler):
                 "withdrawn_week": withdrawn_week,
                 "is_submitted": is_submitted,
                 "date_graded": date_graded,
-                "allows_incomplete": (item.allows_incomplete and
-                                      not is_submitted),
+                "allows_incomplete": item.allows_incomplete,
                 "has_incomplete": has_incomplete,
                 "is_writing_section": not allows_writing_credit,
-                "allows_writing_credit": (allows_writing_credit and
-                                          not is_submitted),
+                "allows_writing_credit": allows_writing_credit,
                 "has_writing_credit": has_writing_credit,
                 "no_grade_now": no_grade_now,
                 "duplicate_code": item.duplicate_code,
