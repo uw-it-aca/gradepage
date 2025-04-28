@@ -11,32 +11,33 @@
     </div>
   </template>
   <template v-else>
-    <span v-if="student.has_writing_credit" class="me-2">
+    <span v-if="student.saved_grade.is_writing" class="me-2">
       <abbr title="Writing credit">W</abbr>
     </span>
-    <template v-if="student.has_incomplete">
-      <span class="visually-hidden">Submitted grade:</span>
+    <template v-if="student.saved_grade.is_incomplete">
+      <span class="visually-hidden">Review grade:</span>
       <span class="fs-2 fw-bold">I</span>
       <div class="small text-muted">
-        (Incomplete) Default: {{ student.grade }}
+        (Incomplete) Default: {{ grade }}
       </div>
     </template>
     <template v-else>
-      <template v-if="student.no_grade_now">
-        <span class="visually-hidden">Submitted grade:</span>
+      <template v-if="student.saved_grade.no_grade_now">
+        <span class="visually-hidden">Review grade:</span>
         <span class="fs-2 fw-bold">X</span>
         <div class="small text-muted">(No grade now)</div>
       </template>
       <template v-else>
-        <span class="visually-hidden">Submitted grade:</span>
-        <span class="fs-2 fw-bold">{{ student.grade }}</span>
+        <span class="visually-hidden">Review grade:</span>
+        <span class="fs-2 fw-bold">{{ student.saved_grade.grade }}</span>
       </template>
     </template>
-    <div v-if="student.date_graded && showDateGraded" class="small text-muted">
-      Submitted {{ student.date_graded }}
+    <div v-if="student.date_graded" class="small text-muted">
+      Submitted {{ priorGrade }} on {{ student.date_graded }}
     </div>
     <div v-if="student.grade_status" class="small text-muted">
-      Submitted with error: {{ student.grade_status }}
+      <span v-if="hasGradeError">Submitted with error: </span>
+      {{ student.grade_status }}
     </div>
   </template>
 </template>
@@ -45,7 +46,7 @@
 import { useWorkflowStateStore } from "@/stores/state";
 
 export default {
-  name: "GradeStatic",
+  name: "GradeReview",
   props: {
     student: {
       type: Object,
@@ -59,8 +60,22 @@ export default {
     };
   },
   computed: {
+    hasGradeError() {
+      return (this.student.grade_status_code !== '200');
+    },
     showDateGraded() {
-      return this.appState.unsubmittedCount > 0 ? true : false;
+      return this.appState.graderoster.gradable_student_count > 0 ? true : false;
+    },
+    priorGrade() {
+      if (this.student.date_graded) {
+        if (this.student.no_grade_now) {
+          return "X (No grade now)";
+        } else if (this.student.has_incomplete) {
+          return "Incomplete (Default " + this.student.grade + ")";
+        } else {
+          return this.student.grade;
+        }
+      }
     },
   },
 };

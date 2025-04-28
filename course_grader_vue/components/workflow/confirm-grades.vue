@@ -31,6 +31,12 @@
         toggle-class="rounded-2"
       >
         <template #button-content> <i class="bi bi-three-dots"></i></template>
+        <BDropdownItem
+          v-if="appState.graderoster.gradable_student_count > 0"
+          @click.prevent="editGrades()"
+          ><i class="bi bi-pencil me-2 text-body-tertiary"></i>
+          Edit Grades and Resubmit
+        </BDropdownItem>
         <BDropdownItem :href="section.export_url">
           <i class="bi bi-download me-2 text-body-tertiary"></i>
           Download Change of Grade
@@ -106,7 +112,12 @@
         Section {{ submission.section_id }}:
       </span>
       <span v-html="gradesSubmittedText(submission)"></span>
-      <BLink
+      <BLink v-if="appState.graderoster.gradable_student_count > 0"
+        @click.prevent="editGrades()"
+        title="Change submitted grades"
+        >Change submitted grades
+      </BLink>
+      <BLink v-else
         href="https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/"
         target="_blank"
         title="Change submitted grades"
@@ -222,6 +233,7 @@
 <script>
 import SectionHeader from "@/components/section/header.vue";
 import Student from "@/components/student.vue";
+import Errors from "@/components/errors.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import {
   BCard,
@@ -232,6 +244,7 @@ import {
   BDropdownItem,
   BDropdownDivider,
 } from "bootstrap-vue-next";
+import { getGraderoster } from "@/utils/data";
 import { formatLongDateTime } from "@/utils/dates";
 import { ref } from "vue";
 
@@ -239,6 +252,7 @@ export default {
   components: {
     SectionHeader,
     Student,
+    Errors,
     BCard,
     BAlert,
     BLink,
@@ -259,11 +273,14 @@ export default {
     return {
       appState,
       formatLongDateTime,
+      getGraderoster,
       showSectionOptions,
     };
   },
   data() {
     return {
+      isLoading: false,
+      errorResponse: null,
       importConversion: null,
     };
   },
@@ -292,7 +309,19 @@ export default {
     },
   },
   methods: {
-    gradesSubmittedText(submission) {
+    editGrades: function () {
+      this.isLoading = true;
+      this.getGraderoster(this.section.graderoster_url)
+        .then((data) => {
+          this.appState.setGraderoster(data.graderoster);
+          this.appState.editGrades();
+        })
+        .catch((error) => {
+          this.errorResponse = error;
+          this.isLoading = false;
+        });
+    },
+    gradesSubmittedText: function (submission) {
       return interpolate(
         ngettext(
           "<strong>One</strong> grade submitted to the Registrar by <strong>%(submitted_by)s</strong> on %(submitted_date)s.",
@@ -307,13 +336,13 @@ export default {
         true
       );
     },
-    showImportConversion() {
+    showImportConversion: function () {
       let submission = this.appState.graderoster.submissions[0];
       if (submission && submission.grade_import) {
         this.importConversion = submission.grade_import.import_conversion;
       }
     },
-    hideImportConversion() {
+    hideImportConversion: function () {
       this.importConversion = null;
     },
   },

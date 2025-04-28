@@ -35,6 +35,8 @@ function formatGradingStatus(data) {
               "%(submitted_count)s grades submitted on ",
               data.submitted_count
             ) + submitted_date_str;
+        } else if (data.status_code !== "200") {
+          "There was an error submitting grades"
         } else {
           base = ngettext(
             "%(submitted_count)s grade submission in progress",
