@@ -15,8 +15,24 @@ from course_grader.views.api.conversionscales import ConversionScales
 from course_grader.views.api.submitted_graderoster import (
     SubmissionsByTerm, SubmittedGradeRoster)
 
+urlpatterns = []
 
-urlpatterns = [
+# debug routes for developing error pages
+if settings.DEBUG:
+    urlpatterns += [
+        re_path(
+            r"^500$",
+            TemplateView.as_view(template_name="500.html"),
+            name="500_response",
+        ),
+        re_path(
+            r"^404$",
+            TemplateView.as_view(template_name="404.html"),
+            name="404_response",
+        ),
+    ]
+
+urlpatterns += [
     re_path(
         r'^api/v1/sections/(?P<term_id>[^/]*)$',
         Sections.as_view(), name='section-list'),
@@ -69,10 +85,3 @@ urlpatterns = [
     # default landing
     re_path(r'^$', HomeView.as_view(), name='home'),
 ]
-
-# debug routes for developing error pages
-if settings.DEBUG:
-    urlpatterns.extend([
-        re_path(r'^404$', TemplateView.as_view(template_name='404.html')),
-        re_path(r'^500$', TemplateView.as_view(template_name='500.html')),
-    ])
