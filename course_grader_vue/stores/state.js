@@ -13,7 +13,6 @@ export const useWorkflowStateStore = defineStore("workflow-state", {
       name: "workflowState",
       _workflowState: null,
       graderoster: null,
-      unsubmittedCount: 0,
       gradeImport: null,
     };
   },
@@ -66,13 +65,18 @@ export const useWorkflowStateStore = defineStore("workflow-state", {
     },
     setGraderoster(graderoster) {
       this.graderoster = graderoster;
-      this.unsubmittedCount = graderoster.students.filter(
-        (s) => s.grade_url !== null
-      ).length;
 
       // Initialize workflow state
-      if (this.unsubmittedCount > 0) {
-        this.editGrades();
+      if (this.graderoster.gradable_student_count > 0) {
+        if (this.graderoster.has_successful_submissions) {
+          if (this.graderoster.has_saved_grades) {
+            this.editGrades();
+          } else {
+            this.confirmGrades();
+          }
+        } else {
+          this.editGrades();
+        }
       } else {
         this.confirmGrades();
       }

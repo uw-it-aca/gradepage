@@ -11,7 +11,7 @@
           type="checkbox"
           class="btn-check"
           autocomplete="off"
-          :disabled="!student.allows_incomplete || student.is_submitted"
+          :disabled="!student.allows_incomplete"
           :checked="incomplete"
           @change="incompleteChanged($event.target.checked)"
         />
@@ -37,7 +37,6 @@
           type="text"
           autocomplete="off"
           :value="grade"
-          :disabled="student.is_submitted"
           :placeholder="gradePlaceholder"
           :aria-controls="`grade-${student.item_id}-menu`"
           data-bs-toggle="dropdown"
@@ -80,7 +79,7 @@
         :id="`writing-${student.item_id}`"
         type="checkbox"
         class="btn-check"
-        :disabled="!student.allows_writing_credit || student.is_submitted"
+        :disabled="!student.allows_writing_credit"
         :checked="writing"
         @change="writingChanged($event.target.checked)"
       />
@@ -113,10 +112,10 @@
   </div>
 
   <div>
-    <span v-if="student.import_source" class="imported-grade small text-muted">
-      {{ student.import_source }} grade: {{ student.import_grade }}
+    <span v-if="import_source" class="imported-grade small text-muted">
+      {{ import_source }} grade: {{ import_grade }}
       <span
-        v-if="student.is_override_grade"
+        v-if="is_override_grade"
         class="override-icon"
         title="Override grade imported from Canvas Gradebook"
       >
@@ -139,7 +138,7 @@ import {
 } from "@/utils/grade";
 
 export default {
-  name: "GradeInput",
+  name: "GradeEdit",
   props: {
     student: {
       type: Object,
@@ -166,6 +165,9 @@ export default {
       gradeError: "",
       menuOpen: false,
       inprogress_save: false,
+      import_source: null,
+      import_grade: null,
+      is_override_grade: false,
     };
   },
   computed: {
@@ -194,9 +196,6 @@ export default {
         true
       );
     },
-  },
-  created() {
-    this.initializeGrade();
   },
   methods: {
     openMenu(e) {
@@ -231,23 +230,38 @@ export default {
       this.menuOpen = false;
     },
     initializeGrade: function () {
+      let has_saved_grade = (Object.keys(this.student.saved_grade).length > 0),
+          grade = has_saved_grade
+            ? this.student.saved_grade.grade : this.student.grade,
+          no_grade_now = has_saved_grade
+            ? this.student.saved_grade.no_grade_now
+            : this.student.no_grade_now;
+
       if (this.student.allows_incomplete) {
-        this.incomplete = this.student.has_incomplete;
+        this.incomplete = has_saved_grade
+          ? this.student.saved_grade.is_incomplete
+          : this.student.has_incomplete;
       }
       if (this.student.allows_writing_credit) {
-        this.writing = this.student.has_writing_credit;
+        this.writing = has_saved_grade
+          ? this.student.saved_grade.is_writing
+          : this.student.has_writing_credit;
       }
-      if (this.student.no_grade_now) {
+      if (no_grade_now) {
         this.grade = gettext("x_no_grade_now");
-      } else if (
-        this.student.grade === null &&
-        !this.has_incomplete &&
-        this.gradeChoices.includes("N")
-      ) {
+      } else if (grade === null && !this.incomplete &&
+          this.gradeChoices.includes("N")) {
         this.grade = "N";
-      } else if (this.student.grade !== null) {
-        this.grade = this.student.grade;
+      } else if (grade !== null) {
+        this.grade = grade;
       }
+
+      if (has_saved_grade) {
+        this.import_source = this.student.saved_grade.import_source;
+        this.import_grade = this.student.saved_grade.import_grade;
+        this.is_override_grade = this.student.saved_grade.is_override_grade;
+      }
+
       this.updateGradeChoices();
       this.updateGradeStatus();
     },
@@ -285,6 +299,9 @@ export default {
         this.actualChoices
       );
     },
+  },
+  created() {
+    this.initializeGrade();
   },
 };
 </script>

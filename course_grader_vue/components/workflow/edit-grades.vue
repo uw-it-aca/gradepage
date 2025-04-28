@@ -4,7 +4,7 @@
       <div v-if="section">
         <GradeImportOptions
           :section="section"
-          :expected-grade-count="appState.unsubmittedCount"
+          :expected-grade-count="appState.graderoster.gradable_student_count"
         />
       </div>
 

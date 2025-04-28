@@ -3,7 +3,7 @@
 
 
 from django.db import models
-from django.db.models import Q
+from django.db.models import F, Q
 from restclients_core.exceptions import DataFailureException
 from uw_sws_graderoster.models import GradingScale
 from course_grader.dao.gradesubmission import submit_grades
@@ -23,56 +23,59 @@ class SubmittedGradeRosterManager(models.Manager):
         kwargs = {'section_id': section.section_label()}
         if secondary_section is not None:
             args = (
-                Q(secondary_section_id=secondary_section.section_label())
-                | Q(secondary_section_id__isnull=True),
+                Q(secondary_section_id=secondary_section.section_label()) |
+                Q(secondary_section_id__isnull=True),
             )
         else:
             args = ()
             if section.is_independent_study:
                 kwargs['instructor_id'] = instructor.uwregid
 
-        return (
-            super()
-            .get_queryset()
-            .filter(*args, **kwargs)
-            .order_by('secondary_section_id')
-        )
+        models = super().get_queryset().filter(
+                *args, **kwargs
+            ).order_by(
+                F('secondary_section_id').asc(),
+                F('submitted_date').desc()
+            )
 
+        seen_rosters = set()
+        latest_rosters = []
+        for sgr in models:
+            sid = sgr.secondary_section_id if (
+                sgr.secondary_section_id) else sgr.section_id
+            if sid not in seen_rosters:
+                latest_rosters.append(sgr)
+                seen_rosters.add(sid)
+        return latest_rosters
+
+    # TODO: Deprecate this method??
     def resubmit_failed(self):
         compare_dt = datetime.now(timezone.utc) - timedelta(minutes=10)
-        fails = (
-            super()
-            .get_queryset()
-            .filter(
-                Q(status_code__isnull=False)
-                | Q(submitted_date__lt=compare_dt),
-                accepted_date__isnull=True,
-            )
-            .order_by('submitted_date')
-        )
+        fails = super().get_queryset().filter(
+            Q(status_code__isnull=False) | Q(submitted_date__lt=compare_dt),
+            accepted_date__isnull=True
+        ).order_by('submitted_date')
 
         for roster in fails:
             roster.submit()
 
     def get_status_by_term(self, term):
-        return (
-            super()
-            .get_queryset()
-            .filter(term_id=term.term_label())
-            .order_by('submitted_date')
-            .values(
+        return super().get_queryset().filter(
+                term_id=term.term_label()
+            ).order_by(
+                'submitted_date'
+            ).values(
                 'section_id',
                 'secondary_section_id',
                 'submitted_date',
                 'submitted_by',
                 'status_code',
             )
-        )
 
     def get_all_terms(self):
-        return (
-            super().get_queryset().values_list('term_id', flat=True).distinct()
-        )
+        return super().get_queryset().values_list(
+                'term_id', flat=True
+            ).distinct()
 
 
 class SubmittedGradeRoster(models.Model):
@@ -105,16 +108,13 @@ class SubmittedGradeRoster(models.Model):
         else:
             return self.section_id.split("/")[-1]
 
-    def submit(self):
+    def submit(self, grades_section_id):
         try:
             graderoster = submit_grades(self)
         except Exception as ex:
             logger.error(
-                (
-                    "PUT graderoster failed: {}, Section: {}, "
-                    "Instructor: {}"
-                ).format(ex, self.section_id, self.instructor_id)
-            )
+                f"PUT graderoster failed: {ex}, Section: {self.section_id}, "
+                f"Instructor: {self.instructor_id}")
             self.status_code = getattr(ex, "status", 500)
             self.save()
             return
@@ -124,16 +124,17 @@ class SubmittedGradeRoster(models.Model):
         self.document = graderoster.xhtml()
         self.save()
 
+        # Delete saved grades for this section and submitter
+        Grade.objects.get_by_section_id_and_person(
+            grades_section_id, self.submitted_by).delete()
+
         notify_grade_submitters(graderoster, self.submitted_by)
 
 
 class GradeManager(models.Manager):
     def get_by_section_id_and_person(self, section_id, person_id):
-        return (
-            super()
-            .get_queryset()
-            .filter(section_id=section_id, modified_by=person_id)
-        )
+        return super().get_queryset().filter(
+            section_id=section_id, modified_by=person_id)
 
 
 class Grade(models.Model):

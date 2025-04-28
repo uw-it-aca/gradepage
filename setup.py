@@ -37,7 +37,6 @@ setup(
         'uw-restclients-django-utils~=2.3',
         'uw-grade-conversion-calculator~=1.4',
         'chardet~=5.0',
-        'xmlsec==1.3.14',
     ],
     license='Apache License, Version 2.0',
     description='UW application that supports online grade submission',
