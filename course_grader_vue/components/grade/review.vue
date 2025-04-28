@@ -32,12 +32,11 @@
         <span class="fs-2 fw-bold">{{ student.saved_grade.grade }}</span>
       </template>
     </template>
-    <div v-if="student.date_graded" class="small text-muted">
+    <div v-if="hasChangedGrade" class="small text-muted">
       Submitted {{ priorGrade }} on {{ student.date_graded }}
     </div>
-    <div v-if="student.grade_status" class="small text-muted">
-      <span v-if="hasGradeError">Submitted with error: </span>
-      {{ student.grade_status }}
+    <div v-if="hasGradeError" class="small text-muted">
+      Submitted with error: {{ student.grade_status }}
     </div>
   </template>
 </template>
@@ -61,10 +60,13 @@ export default {
   },
   computed: {
     hasGradeError() {
-      return (this.student.grade_status_code !== '200');
+      return (this.student.grade_status_code !== "" &&
+        this.student.grade_status_code !== "200" &&
+        this.student.grade_status_code !== "220");
     },
-    showDateGraded() {
-      return this.appState.graderoster.gradable_student_count > 0 ? true : false;
+    hasChangedGrade() {
+      return (this.student.date_graded &&
+        this.student.saved_grade.grade !== this.student.grade);
     },
     priorGrade() {
       if (this.student.date_graded) {

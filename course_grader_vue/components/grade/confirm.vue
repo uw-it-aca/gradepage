@@ -32,10 +32,10 @@
         <span class="fs-2 fw-bold">{{ student.grade }}</span>
       </template>
     </template>
-    <div v-if="student.date_graded && showDateGraded" class="small text-muted">
-      Submitted {{ student.date_graded }}
+    <div v-if="hasChangedGrade" class="small text-muted">
+      TODO: {{ student.grade_status }}
     </div>
-    <div v-if="student.grade_status" class="small text-muted">
+    <div v-else-if="hasGradeError" class="small text-muted">
       Submitted with error: {{ student.grade_status }}
     </div>
   </template>
@@ -59,8 +59,14 @@ export default {
     };
   },
   computed: {
-    showDateGraded() {
-      return this.appState.unsubmittedCount > 0 ? true : false;
+    hasGradeError() {
+      return (this.student.grade_status_code !== "" &&
+        this.student.grade_status_code !== "200" &&
+        this.student.grade_status_code !== "220");
+    },
+    hasChangedGrade() {
+      return (this.student.date_graded &&
+        this.student.grade_status_code === "220");
     },
   },
 };
