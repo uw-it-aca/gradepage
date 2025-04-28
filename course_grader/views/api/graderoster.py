@@ -321,7 +321,7 @@ class GradeRoster(GradeFormHandler):
                     date_graded = date.strftime("%m/%d/%Y")
 
                 if item.status_code is not None:
-                    if item.status_code == "200":
+                    if item.status_code == "200" or item.status_code == "220":
                         data["has_successful_submissions"] = True
                     else:
                         data["has_failed_submissions"] = True
