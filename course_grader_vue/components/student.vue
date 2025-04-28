@@ -24,28 +24,33 @@
       </div>
     </div>
     <div v-if="appState.editingGrades && student.grade_url" class="text-end">
-      <GradeInput :student="student" :grade-choices="gradeChoices" />
+      <GradeEdit :student="student" :grade-choices="gradeChoices" />
+    </div>
+    <div v-else-if="appState.reviewingGrades && student.grade_url" class="text-end">
+      <GradeReview :student="student" />
     </div>
     <div v-else-if="appState.reviewingConversion" class="text-end">
       <GradeImport :student="student" />
     </div>
     <div v-else class="text-end">
-      <GradeStatic :student="student" />
+      <GradeConfirm :student="student" />
     </div>
   </div>
 </template>
 
 <script>
-import GradeStatic from "@/components/grade/static.vue";
-import GradeInput from "@/components/grade/input.vue";
+import GradeEdit from "@/components/grade/edit.vue";
+import GradeReview from "@/components/grade/review.vue";
 import GradeImport from "@/components/grade/import.vue";
+import GradeConfirm from "@/components/grade/confirm.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 
 export default {
   name: "StudentComp",
   components: {
-    GradeStatic,
-    GradeInput,
+    GradeEdit,
+    GradeReview,
+    GradeConfirm,
     GradeImport,
   },
   props: {

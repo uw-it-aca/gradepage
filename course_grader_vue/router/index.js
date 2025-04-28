@@ -23,12 +23,14 @@ const routes = [
   },
   {
     path: "/term/:id?",
+    name: "term",
     component: Term,
     pathToRegexpOptions: { strict: true },
     props: true,
   },
   {
     path: "/section/:id?",
+    name: "section",
     component: Section,
     pathToRegexpOptions: { strict: true },
   },

@@ -166,7 +166,7 @@ class GradeRoster(GradeFormHandler):
                                     None)
 
         status = 200
-        unsubmitted_count = 0
+        gradable_count = 0
         for item in self.graderoster.items:
             if (secondary_section is not None and
                     secondary_section.section_id != item.section_id):
@@ -175,7 +175,7 @@ class GradeRoster(GradeFormHandler):
             if (item.is_auditor or item.date_withdrawn is not None):
                 continue
 
-            unsubmitted_count += 1
+            gradable_count += 1
             student_id = item.student_label(separator="-")
             saved_grade = saved_grades.get(student_id, None)
             if self.validate_grade(item, saved_grade):
@@ -188,7 +188,7 @@ class GradeRoster(GradeFormHandler):
             else:
                 status = 409
 
-        if status == 200 and unsubmitted_count:
+        if status == 200 and gradable_count:
             section = self.graderoster.section
             model = SubmittedGradeRoster(
                 section_id=section.section_label(),
@@ -201,12 +201,12 @@ class GradeRoster(GradeFormHandler):
                 model.secondary_section_id = secondary_section.section_label()
 
             model.save()
-            model.submit()
+            model.submit(section_id)
 
             self.graderoster = graderoster_for_section(
                 self.section, self.instructor, self.user)
 
-        kwargs["saved_grades"] = saved_grades
+        kwargs["saved_grades"] = self.saved_grades(section_id)
 
         content = self.response_content(**kwargs)
         content["graderoster"]["is_submission_confirmation"] = True
@@ -236,7 +236,6 @@ class GradeRoster(GradeFormHandler):
         for grade in Grade.objects.get_by_section_id_and_person(
                 section_id, self.user.uwregid):
             grade_lookup[grade.student_label] = grade
-
         return grade_lookup
 
     def response_content(self, **kwargs):
@@ -258,8 +257,10 @@ class GradeRoster(GradeFormHandler):
                 "has_failed_submissions": False,
                 "failed_submission_count": 0,
                 "has_inprogress_submissions": False,
+                "has_saved_grades": False,
                 "has_grade_imports": False,
                 "has_csv_import": False,
+                "gradable_student_count": 0,
                 "grade_import_count": 0}
 
         secondary_section = getattr(self.graderoster, "secondary_section",
@@ -271,7 +272,8 @@ class GradeRoster(GradeFormHandler):
             submission_status = graderoster_status_params(
                 self.graderoster, secondary_section_id=sid)
             submission_status["section_id"] = sid
-            if submission_status["accepted_date"] is None:
+            if (submission_status["accepted_date"] is None and
+                    submission_status["status_code"] == "200"):
                 data["has_inprogress_submissions"] = True
             if submission_status["grade_import"] is not None:
                 data["has_grade_imports"] = True
@@ -305,9 +307,7 @@ class GradeRoster(GradeFormHandler):
             has_writing_credit = item.has_writing_credit
             date_graded = None
             withdrawn_week = None
-            import_source = None
-            import_grade = None
-            is_override_grade = False
+            saved_grade_data = {}
 
             if item.duplicate_code is not None:
                 data["has_duplicate_codes"] = True
@@ -336,6 +336,8 @@ class GradeRoster(GradeFormHandler):
 
             if grading_period_open and not item.is_auditor:
                 grade_url = url_for_graderoster(section_id)
+                if grade_url:
+                    data["gradable_student_count"] += 1
 
                 # Use an existing grade_choices list, or add this one
                 grade_choices_csv = ",".join(item.grade_choices)
@@ -347,19 +349,16 @@ class GradeRoster(GradeFormHandler):
                     grade_choices_index = len(data["grade_choices"]) - 1
                     grade_lookup[grade_choices_csv] = grade_choices_index
 
-                # Use saved grade data if it exists
+                # Add saved grade data if it exists
                 try:
                     saved_grade = saved_grades[student_id]
-                    grade = saved_grade.grade
+                    saved_grade_data = saved_grade.json_data()
                     if saved_grade.no_grade_now is True:
-                        grade = ""
-                    no_grade_now = saved_grade.no_grade_now
-                    has_incomplete = saved_grade.is_incomplete
-                    has_writing_credit = saved_grade.is_writing
-                    if saved_grade.import_grade is not None:
-                        import_source = sources[saved_grade.import_source]
-                        import_grade = saved_grade.import_grade
-                        is_override_grade = saved_grade.is_override_grade
+                        saved_grade_data["grade"] = ""
+                    if saved_grade.import_source is not None:
+                        saved_grade_data["import_source"] = (
+                            sources[saved_grade.import_source])
+                    data["has_saved_grades"] = True
                 except KeyError:
                     pass
 
@@ -374,6 +373,7 @@ class GradeRoster(GradeFormHandler):
                 "is_auditor": item.is_auditor,
                 "is_withdrawn": item.date_withdrawn is not None,
                 "withdrawn_week": withdrawn_week,
+                "is_submitted": is_submitted,
                 "date_graded": date_graded,
                 "allows_incomplete": (item.allows_incomplete and
                                       not is_submitted),
@@ -387,10 +387,9 @@ class GradeRoster(GradeFormHandler):
                 "grade": grade,
                 "grade_choices_index": grade_choices_index,
                 "grade_url": grade_url,
+                "grade_status_code": item.status_code,
                 "grade_status": item.status_message,
-                "import_source": import_source,
-                "import_grade": import_grade,
-                "is_override_grade": is_override_grade,
+                "saved_grade": saved_grade_data,
             }
             data["students"].append(student_data)
 
