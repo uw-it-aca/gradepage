@@ -60,9 +60,10 @@ export default {
   },
   computed: {
     hasGradeError() {
-      return (this.student.grade_status_code !== "" &&
-        this.student.grade_status_code !== "200" &&
-        this.student.grade_status_code !== "220");
+      return (this.student.grade_status_code === null ||
+        this.student.grade_status_code === "" ||
+        this.student.grade_status_code === "200" ||
+        this.student.grade_status_code === "220") ? false : true;
     },
     hasChangedGrade() {
       return (this.student.date_graded &&
