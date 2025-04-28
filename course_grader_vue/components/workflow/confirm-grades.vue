@@ -155,6 +155,11 @@
       </li>
     </ul>
 
+    <div class="text-center">
+      <p>Need to make changes before 5PM? <button class="btn btn-primary">Edit and resubmit</button></p>
+    </div>
+
+
     <template v-if="appState.graderoster.has_grade_imports" #footer>
       <div v-if="appState.graderoster.grade_import_count > 1">
         Grades calculated using grade conversion scales.
@@ -215,6 +220,9 @@
           >Hide scale
         </BLink>
       </div>
+
+
+
     </template>
   </BCard>
 </template>
