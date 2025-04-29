@@ -53,8 +53,7 @@
     <template v-if="!isLoading && !errorResponse" #footer>
       <div class="d-flex">
         <div class="flex-fill align-self-center text-end me-2 small">
-          All grades will be submitted to the Registrar as displayed above. No
-          further online changes will be possible after submission.
+          All grades will be submitted to the Registrar as displayed above.
         </div>
         <div v-if="section" class="text-nowrap">
           <BButton
