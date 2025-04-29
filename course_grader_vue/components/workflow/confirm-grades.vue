@@ -114,13 +114,13 @@
       <span v-html="gradesSubmittedText(submission)"></span>
       <BLink v-if="appState.graderoster.gradable_student_count > 0"
         @click.prevent="editGrades()"
-        title="Change submitted grades"
+        title="Edit Grades and Resubmit"
         >Change submitted grades
       </BLink>
       <BLink v-else
         href="https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/"
         target="_blank"
-        title="Change submitted grades"
+        title="Learn how to change submitted grades"
         >Change submitted grades
       </BLink>
     </BAlert>

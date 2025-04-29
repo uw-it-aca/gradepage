@@ -18,7 +18,7 @@
       <span class="visually-hidden">Review grade:</span>
       <span class="fs-2 fw-bold">I</span>
       <div class="small text-muted">
-        (Incomplete) Default: {{ grade }}
+        Incomplete (Default: {{ student.saved_grade.grade }})
       </div>
     </template>
     <template v-else>
