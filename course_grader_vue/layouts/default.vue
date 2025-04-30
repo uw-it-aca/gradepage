@@ -167,9 +167,14 @@ export default {
       );
     },
     clearUserOverride: function () {
-      this.clearOverride(this.context.clear_override_url).then(() => {
-        window.location.href = this.context.clear_override_url;
-      });
+      this.clearOverride(this.context.clear_override_url)
+        .then((data) => {
+        })
+        .catch((error) => {
+        })
+        .finally(() => {
+          window.location.href = this.context.clear_override_url;
+        });
     },
   },
 };
