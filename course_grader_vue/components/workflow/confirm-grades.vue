@@ -101,28 +101,36 @@
 
     <!-- success -->
     <BAlert
-      v-for="(submission, index) in appState.graderoster.submissions"
-      :key="index"
+      v-if="appState.graderoster.submissions.length > 0"
       variant="success"
       :model-value="true"
       class="small"
     >
-      <i class="bi bi-check-circle-fill me-1"></i>
-      <span v-if="submission.section_id">
-        Section {{ submission.section_id }}:
-      </span>
-      <span v-html="gradesSubmittedText(submission)"></span>
-      <BLink v-if="appState.graderoster.gradable_student_count > 0"
-        @click.prevent="editGrades()"
-        title="Edit Grades and Resubmit"
-        >Change submitted grades
-      </BLink>
-      <BLink v-else
-        href="https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/"
-        target="_blank"
-        title="Learn how to change submitted grades"
-        >Change submitted grades
-      </BLink>
+      <ul>
+        <li
+          v-for="(submission, index) in appState.graderoster.submissions"
+          :key="index"
+        >
+          <i class="bi bi-check-circle-fill me-1"></i>
+          <span v-if="submission.section_id">
+            Section {{ submission.section_id }}:
+          </span>
+          <span v-html="gradesSubmittedText(submission)"></span>
+        </li>
+      </ul>
+      <div>
+        <BLink v-if="appState.graderoster.gradable_student_count > 0"
+          @click.prevent="editGrades()"
+          title="Edit Grades and Resubmit"
+          >Change submitted grades
+        </BLink>
+        <BLink v-else
+          href="https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/"
+          target="_blank"
+          title="Learn how to change submitted grades"
+          >Change submitted grades
+        </BLink>
+      </div>
     </BAlert>
 
     <div

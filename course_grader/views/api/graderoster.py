@@ -261,6 +261,7 @@ class GradeRoster(GradeFormHandler):
                 "has_grade_imports": False,
                 "has_csv_import": False,
                 "gradable_student_count": 0,
+                "ungraded_count": 0,
                 "grade_import_count": 0}
 
         secondary_section = getattr(self.graderoster, "secondary_section",
@@ -333,6 +334,8 @@ class GradeRoster(GradeFormHandler):
                     if m is not None and m.group("week"):
                         withdrawn_week = m.group("week")
                     grade = ""
+            else:
+                data["ungraded_count"] += 1
 
             if grading_period_open and not item.is_auditor:
                 grade_url = url_for_graderoster(section_id)

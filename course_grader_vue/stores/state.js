@@ -69,7 +69,7 @@ export const useWorkflowStateStore = defineStore("workflow-state", {
       // Initialize workflow state
       if (this.graderoster.gradable_student_count > 0) {
         if (this.graderoster.has_successful_submissions) {
-          if (this.graderoster.has_saved_grades) {
+          if (this.graderoster.has_saved_grades || this.graderoster.ungraded_count) {
             this.editGrades();
           } else {
             this.confirmGrades();
