@@ -75,9 +75,9 @@ export default {
     },
     saveGrades: function () {
       let url = this.section.import_url + "/" + this.appState.gradeImport.id,
-        data = { conversion_scale: null, converted_grades: {} };
+        put_data = { conversion_scale: null, converted_grades: {} };
 
-      this.saveImportedGrades(url, JSON.stringify(data))
+      this.saveImportedGrades(url, put_data)
         .then((data) => {
           this.appState.$reset();
         })

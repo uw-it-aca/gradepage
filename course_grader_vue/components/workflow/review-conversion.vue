@@ -83,13 +83,13 @@ export default {
     },
     saveGrades: function () {
       let url = this.section.import_url + "/" + this.appState.gradeImport.id,
-        data = {};
+        put_data = {};
 
-      data.conversion_scale = this.calculatorStore.conversionData;
-      data.converted_grades = this.appState.convertedGradeData;
+      put_data.conversion_scale = this.calculatorStore.conversionData;
+      put_data.converted_grades = this.appState.convertedGradeData;
 
       this.isLoading = true;
-      this.saveImportedGrades(url, JSON.stringify(data))
+      this.saveImportedGrades(url, put_data)
         .then((response) => {
           this.appState.$reset();
         })
