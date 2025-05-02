@@ -1,74 +1,70 @@
 <template>
-  <BCard class="shadow-sm rounded-3" header-class="p-3" header="Default">
-    <template #header>
-      <SectionHeader :section="section" title="Review grades for" />
-    </template>
+  <SectionHeader :section="section" title="Review grades for" />
 
-    <template v-if="isLoading">
-      Please wait, submitting grades to the Registrar...
-    </template>
-    <template v-else-if="errorResponse">
-      <Errors :error-response="errorResponse" />
-    </template>
-    <template v-else-if="appState.graderoster">
-      <div class="mb-2 pb-2 small text-muted border-bottom">
-        <div>Please review grades and submit below.</div>
-        <div v-if="appState.graderoster.is_writing_section">
-          Writing credit automatically given to all students with a passing
-          grade in this course.
-        </div>
-        <div v-if="appState.graderoster.has_duplicate_codes">
-          <span class="visually-hidden">
-            In the list below, duplicate listings of the same student are
-            differentiated with a
-          </span>
-          Duplicate code
-          <i class="bi bi-circle-fill text-secondary"></i>
-        </div>
+  <template v-if="isLoading">
+    Please wait, submitting grades to the Registrar...
+  </template>
+  <template v-else-if="errorResponse">
+    <Errors :error-response="errorResponse" />
+  </template>
+  <template v-else-if="appState.graderoster">
+    <div class="mb-2 pb-2 small text-muted border-bottom">
+      <div>Please review grades and submit below.</div>
+      <div v-if="appState.graderoster.is_writing_section">
+        Writing credit automatically given to all students with a passing grade
+        in this course.
       </div>
+      <div v-if="appState.graderoster.has_duplicate_codes">
+        <span class="visually-hidden">
+          In the list below, duplicate listings of the same student are
+          differentiated with a
+        </span>
+        Duplicate code
+        <i class="bi bi-circle-fill text-secondary"></i>
+      </div>
+    </div>
 
-      <ul v-if="appState.graderoster.students" class="list-unstyled m-0">
-        <li
-          v-for="(student, index) in appState.graderoster.students"
-          :key="student.item_id"
-          class="bpt-2 mt-2"
-          :class="index != 0 ? 'border-top' : ''"
+    <ul v-if="appState.graderoster.students" class="list-unstyled m-0">
+      <li
+        v-for="(student, index) in appState.graderoster.students"
+        :key="student.item_id"
+        class="bpt-2 mt-2"
+        :class="index != 0 ? 'border-top' : ''"
+      >
+        <Student :student="student" />
+      </li>
+    </ul>
+  </template>
+  <template v-else>
+    <ul class="list-unstyled m-0">
+      <li v-for="index in 8" :key="index" class="border-top pt-2 mt-2">
+        <BPlaceholder
+          class="d-block bg-body-secondary"
+          style="height: 60px"
+          animation="glow"
+        />
+      </li>
+    </ul>
+  </template>
+
+  <template v-if="!isLoading && !errorResponse">
+    <div class="d-flex">
+      <div class="flex-fill align-self-center text-end me-2 small">
+        All grades will be submitted to the Registrar as displayed above.
+      </div>
+      <div v-if="section" class="text-nowrap">
+        <BButton
+          :title="reviewBackTitle"
+          variant="outline-primary"
+          @click="editGrades"
+          >Edit</BButton
         >
-          <Student :student="student" />
-        </li>
-      </ul>
-    </template>
-    <template v-else>
-      <ul class="list-unstyled m-0">
-        <li v-for="index in 8" :key="index" class="border-top pt-2 mt-2">
-          <BPlaceholder
-            class="d-block bg-body-secondary"
-            style="height: 60px"
-            animation="glow"
-          />
-        </li>
-      </ul>
-    </template>
-
-    <template v-if="!isLoading && !errorResponse" #footer>
-      <div class="d-flex">
-        <div class="flex-fill align-self-center text-end me-2 small">
-          All grades will be submitted to the Registrar as displayed above.
-        </div>
-        <div v-if="section" class="text-nowrap">
-          <BButton
-            :title="reviewBackTitle"
-            variant="outline-primary"
-            @click="editGrades"
-            >Edit</BButton
-          >
-          <BButton variant="primary" class="ms-2" @click="submitGrades"
-            >Submit</BButton
-          >
-        </div>
+        <BButton variant="primary" class="ms-2" @click="submitGrades"
+          >Submit</BButton
+        >
       </div>
-    </template>
-  </BCard>
+    </div>
+  </template>
 </template>
 
 <script>

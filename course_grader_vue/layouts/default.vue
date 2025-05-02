@@ -105,7 +105,7 @@
       <div class="row justify-content-center my-3">
         <div class="col">
           <slot name="title">
-            <h1 class="visually-hidden">{{ pageTitle }}</h1>
+            <h1>{{ pageTitle }}</h1>
           </slot>
           <slot name="content"></slot>
         </div>
