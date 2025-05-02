@@ -12,7 +12,7 @@
       }}).
     </div>
     <div v-else-if="appState.gradeImport.grade_count">
-      <p v-html="gradesFoundText"></p>
+      <p v-html="canvasGradesFoundText"></p>
 
       <div
         v-if="appState.gradeImport.override_grade_count"
@@ -115,7 +115,7 @@ export default {
     };
   },
   computed: {
-    gradesFoundText() {
+    canvasGradesFoundText() {
       return interpolate(
         ngettext(
           "One grade found for <strong>%(section_name)s</strong> in <strong>%(source_name)s</strong>.",

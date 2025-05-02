@@ -1,3 +1,5 @@
+import { formatLongDateTime } from "@/utils/dates";
+
 const incompleteBlocklist = [gettext("x_no_grade_now"), "N", "CR"];
 
 function normalizeGrade(grade) {
@@ -95,9 +97,24 @@ function validateGrade(grade, incomplete, choices) {
   }
 }
 
+function gradesSubmittedText(submission) {
+  return interpolate(
+    ngettext(
+      "<strong>One</strong> grade submitted to the Registrar by <strong>%(submitted_by)s</strong> on %(submitted_date)s.",
+      "<strong>%(submitted_count)s</strong> grades submitted to the Registrar by <strong>%(submitted_by)s</strong> on %(submitted_date)s.",
+      submission.submitted_count
+    ), {
+      submitted_count: submission.submitted_count,
+      submitted_by: submission.submitted_by,
+      submitted_date: formatLongDateTime(submission.submitted_date),
+    }, true
+  );
+}
+
 export {
   incompleteBlocklist,
   normalizeGrade,
   normalizeDefaultGrade,
   validateGrade,
+  gradesSubmittedText,
 };
