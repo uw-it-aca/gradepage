@@ -5,7 +5,7 @@
 from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.core.files.storage import default_storage
-from course_grader.models import GradeImport, ImportConversion
+from course_grader.models import GradeImport
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import all_viewable_terms
 from course_grader.dao.section import (
@@ -118,8 +118,7 @@ class ImportGrades(GradeFormHandler):
                     secondary_section.section_id != item.section_id):
                 continue
 
-            if (item.date_graded is not None or item.is_auditor or
-                    item.date_withdrawn is not None):
+            if (item.is_auditor or item.date_withdrawn is not None):
                 continue
 
             # Find the grade data for each graderoster item
