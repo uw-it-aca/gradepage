@@ -60,8 +60,8 @@ class ImportGrades(GradeFormHandler):
                 self.section, self.instructor, self.user)
 
         except (InvalidUser, GradingNotPermitted, OverrideNotPermitted) as ex:
-            logger.info("Grading for {} not permitted for {}".format(
-                section_id, UserService().get_original_user()))
+            user = UserService().get_original_user()
+            logger.info(f"Grading for {section_id} not permitted for {user}")
             return self.error_response(401, "{}".format(ex))
         except (SecondaryGradingEnabled, GradingPeriodNotOpen,
                 InvalidTerm) as ex:
@@ -69,7 +69,7 @@ class ImportGrades(GradeFormHandler):
         except InvalidSection as ex:
             return self.error_response(404, "{}".format(ex))
         except DataFailureException as ex:
-            logger.info("GET graderoster error: {}".format(ex))
+            logger.info(f"GET graderoster error: {ex}")
             (status, msg) = self.data_failure_error(ex)
             return self.error_response(status, msg)
 
@@ -99,18 +99,15 @@ class ImportGrades(GradeFormHandler):
         try:
             grade_import = GradeImport.objects.get(pk=import_id)
             put_data = json.loads(request.body)
+            conversion_data = put_data.get("conversion_scale", None)
+            grade_import.save_conversion_data(conversion_data)
 
         except GradeImport.DoesNotExist:
             return self.error_response(404, "Import not found")
         except Exception as ex:
+            logger.error(f"PUT import error for {section_id}: {ex}, "
+                         f"data: {put_data}")
             return self.error_response(400, "Invalid import")
-
-        conversion_data = put_data.get("conversion_scale", None)
-        try:
-            grade_import.save_conversion_data(conversion_data)
-        except Exception as ex:
-            logger.error("PUT import error for {}: {}".format(
-                section_id, ex))
 
         import_data = grade_import.json_data()
         converted_grades = put_data.get("converted_grades", {})
@@ -157,8 +154,8 @@ class ImportGrades(GradeFormHandler):
             source = data.get("source", None)
             source_id = data.get("source_id", None)
         except Exception as ex:
-            logger.error("POST import failed for {}: {}".format(
-                self.section.section_label(), ex))
+            label = self.section.section_label()
+            logger.error(f"POST import failed for {label}: {ex}")
             return self.error_response(400, "Invalid import")
 
         grade_import = GradeImport(
@@ -171,8 +168,8 @@ class ImportGrades(GradeFormHandler):
         try:
             grade_import.grades_for_section(self.section, self.instructor)
         except Exception as ex:
-            logger.error("POST import failed for {}: {}".format(
-                self.section.section_label(), ex))
+            label = self.section.section_label()
+            logger.error(f"POST import failed for {label}: {ex}")
             return self.error_response(500, "{}".format(ex))
 
         return self.response_content(grade_import)
@@ -238,8 +235,9 @@ class UploadGrades(ImportGrades):
             grade_import.grades_for_section(
                 self.section, self.instructor, fileobj=uploaded_file)
         except Exception as ex:
-            logger.error("POST upload {} failed for {}: {}".format(
-                uploaded_file.name, self.section.section_label(), ex))
+            label = self.section.section_label()
+            logger.error(
+                f"POST upload {uploaded_file.name} failed for {label}: {ex}")
             return self.error_response(400, "{}".format(ex))
 
         return self.response_content(grade_import)

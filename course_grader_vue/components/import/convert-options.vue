@@ -31,7 +31,7 @@
         </em>
       </small>
     </p>
-    <p>To select a different file, click <strong>Cancel</strong>.</p>
+    <p>To select a different import option, click <strong>Cancel</strong>.</p>
     <div>
       <BButton variant="primary" @click="saveGrades">Import grades </BButton>
     </div>

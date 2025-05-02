@@ -9,7 +9,7 @@
     <div v-if="appState.gradeImport.grade_count">
       <p>
         <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
-        <span v-html="gradesFoundText"></span>
+        <span v-html="uploadGradesFoundText"></span>
       </p>
 
       <ImportConvertSave :section="section" />
@@ -261,7 +261,7 @@ export default {
         this.errorResponse.data.indexOf("Request Entity Too Large") !== -1
       );
     },
-    gradesFoundText() {
+    uploadGradesFoundText() {
       return interpolate(
         ngettext(
           "<strong>%(grade_count)s</strong> of <strong>%(expected_count)s</strong> grade found in the file <strong>%(file_name)s</strong>",

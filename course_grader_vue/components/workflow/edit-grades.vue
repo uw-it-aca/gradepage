@@ -15,6 +15,26 @@
       <Errors :error-response="errorResponse" />
     </template>
     <template v-else-if="appState.graderoster">
+      <BAlert
+        v-if="appState.graderoster.submissions.length > 0"
+        variant="success"
+        :model-value="true"
+        class="small"
+      >
+        <ul>
+          <li
+            v-for="(submission, index) in appState.graderoster.submissions"
+            :key="index"
+          >
+            <i class="bi bi-check-circle-fill me-1"></i>
+            <span v-if="submission.section_id">
+              Section {{ submission.section_id }}:
+            </span>
+            <span v-html="gradesSubmittedText(submission)"></span>
+          </li>
+        </ul>
+      </BAlert>
+
       <div
         v-if="
           appState.graderoster.is_writing_section ||
@@ -90,6 +110,7 @@ import GradeImportOptions from "@/components/import/source-options.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
 import { updateGraderoster } from "@/utils/data";
+import { gradesSubmittedText } from "@/utils/grade";
 import { BCard, BButton, BPlaceholder } from "bootstrap-vue-next";
 
 export default {
@@ -115,6 +136,7 @@ export default {
       appState,
       gradeStore,
       updateGraderoster,
+      gradesSubmittedText,
     };
   },
   data() {

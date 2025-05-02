@@ -126,6 +126,9 @@
       {{ gradeError }}
     </span>
   </div>
+  <div v-if="hasChangedGrade" class="small text-muted">
+    TODO: {{ student.grade_status }}
+  </div>
 </template>
 
 <script>
@@ -195,6 +198,10 @@ export default {
         this.student,
         true
       );
+    },
+    hasChangedGrade() {
+      return (this.student.date_graded &&
+        this.student.grade_status_code === "220");
     },
   },
   methods: {

@@ -253,7 +253,7 @@ import {
   BDropdownDivider,
 } from "bootstrap-vue-next";
 import { getGraderoster } from "@/utils/data";
-import { formatLongDateTime } from "@/utils/dates";
+import { gradesSubmittedText } from "@/utils/grade";
 import { ref } from "vue";
 
 export default {
@@ -280,9 +280,9 @@ export default {
     const appState = useWorkflowStateStore();
     return {
       appState,
-      formatLongDateTime,
       getGraderoster,
       showSectionOptions,
+      gradesSubmittedText,
     };
   },
   data() {
@@ -328,21 +328,6 @@ export default {
           this.errorResponse = error;
           this.isLoading = false;
         });
-    },
-    gradesSubmittedText: function (submission) {
-      return interpolate(
-        ngettext(
-          "<strong>One</strong> grade submitted to the Registrar by <strong>%(submitted_by)s</strong> on %(submitted_date)s.",
-          "<strong>%(submitted_count)s</strong> grades submitted to the Registrar by <strong>%(submitted_by)s</strong> on %(submitted_date)s.",
-          submission.submitted_count
-        ),
-        {
-          submitted_count: submission.submitted_count,
-          submitted_by: submission.submitted_by,
-          submitted_date: formatLongDateTime(submission.submitted_date),
-        },
-        true
-      );
     },
     showImportConversion: function () {
       let submission = this.appState.graderoster.submissions[0];
