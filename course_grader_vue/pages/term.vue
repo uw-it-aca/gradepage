@@ -4,48 +4,41 @@
     :term-url="isCurrentTermDisplay ? null : currentTerm.url"
   >
     <template #content>
-      <BCard
-        class="shadow-sm rounded-3"
-        header-class="p-3"
-        header-bg-variant="transparent"
-      >
-        <template #header>
-          <div class="fs-6 m-0 fw-bold">{{ selectedTermName }}</div>
-        </template>
-        <template v-if="isLoading">
+
+
+      <template v-if="isLoading">
+        <ul class="list-unstyled">
+          <li v-for="index in 10" :key="index" class="mb-3">
+            <BPlaceholder
+              class="d-block bg-body-secondary"
+              style="height: 60px"
+              animation="glow"
+            />
+          </li>
+        </ul>
+      </template>
+      <template v-else-if="errorResponse">
+        <Errors :error-response="errorResponse" />
+      </template>
+      <template v-else>
+        <template v-if="sections.length > 0">
           <ul class="list-unstyled">
-            <li v-for="index in 10" :key="index" class="mb-3">
-              <BPlaceholder
-                class="d-block bg-body-secondary"
-                style="height: 60px"
-                animation="glow"
-              />
+            <li
+              v-for="section in sections"
+              :key="section.section_id"
+              class="mb-3"
+            >
+              <PrimarySection :section="section"></PrimarySection>
             </li>
           </ul>
         </template>
-        <template v-else-if="errorResponse">
-          <Errors :error-response="errorResponse" />
-        </template>
-        <template v-else>
-          <template v-if="sections.length > 0">
-            <ul class="list-unstyled">
-              <li
-                v-for="section in sections"
-                :key="section.section_id"
-                class="mb-3"
-              >
-                <PrimarySection :section="section"></PrimarySection>
-              </li>
-            </ul>
-          </template>
-          <div v-else>
-            You do not have any classes to grade for
-            <strong>{{ selectedTerm.quarter }} {{ selectedTerm.year }}</strong
-            >. If you believe this to be incorrect, please contact your
-            department's Time Schedule Coordinator.
-          </div>
-        </template>
-      </BCard>
+        <div v-else>
+          You do not have any classes to grade for
+          <strong>{{ selectedTerm.quarter }} {{ selectedTerm.year }}</strong
+          >. If you believe this to be incorrect, please contact your
+          department's Time Schedule Coordinator.
+        </div>
+      </template>
     </template>
   </Layout>
 </template>

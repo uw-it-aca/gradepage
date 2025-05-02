@@ -2,21 +2,21 @@
   <BDropdown
     v-model="showImportOptions"
     size="sm"
-    variant="outline-secondary"
+    variant="subdued-primary"
     no-caret
     class="float-end d-inline-block"
     toggle-class="rounded-2"
   >
     <template #button-content>
-      <i class="bi bi-arrow-return-right me-2 text-body-tertiary"></i>
+      <i class="bi bi-arrow-return-right me-2"></i>
       Import from...
     </template>
     <BDropdownItemButton v-b-modal.modalImportCanvasGrades
-      ><i class="bi bi-journal-check me-2 text-body-tertiary"></i>
+      ><i class="bi bi-journal-check me-2"></i>
       Canvas Gradebook
     </BDropdownItemButton>
     <BDropdownItemButton v-b-modal.modalImportCsvGrades
-      ><i class="bi bi-filetype-csv me-2 text-body-tertiary"></i>
+      ><i class="bi bi-filetype-csv me-2"></i>
       CSV File
     </BDropdownItemButton>
     <BDropdownDivider />

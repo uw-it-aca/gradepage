@@ -100,6 +100,7 @@ export default {
         .then((data) => {
           this.section = data.section;
           document.title = this.section.section_name + " - GradePage";
+          this.pageTitle = this.section.section_name;
           this.loadGraderoster();
         })
         .catch((error) => {
