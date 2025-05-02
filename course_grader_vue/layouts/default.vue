@@ -84,7 +84,7 @@
     </template>
     <template #aside>
       <div class="my-3">
-        <div class="bg-secondary bg-opacity-10 rounded-3 p-3">
+        <div class="bg-body-tertiary rounded-3 p-3">
           <div class="mb-2 text-body">
             <i class="bi bi-exclamation-triangle-fill me-3"></i>
             Grading Period Status

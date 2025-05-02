@@ -91,12 +91,7 @@
             All grades entered. Click Review to continue.
           </span>
         </div>
-        <BButton
-          :disabled="reviewDisabled"
-          variant="primary"
-          @click="reviewGrades"
-          >Review
-        </BButton>
+        <BButton variant="primary" @click="reviewGrades">Review </BButton>
       </div>
     </template>
   </BCard>

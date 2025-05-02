@@ -2,7 +2,7 @@
   <div class="d-flex mt-2">
     <div
       class="d-flex p-1 rounded-3 me-0"
-      :class="[incomplete ? 'bg-body-secondary' : '']"
+      :class="[incomplete ? 'bg-primary-subtle' : '']"
     >
       <!-- incomplete checkbox button -->
       <div class="btn-group btn-group-sm me-1">
@@ -18,7 +18,7 @@
         <label
           :for="`incomplete-${student.item_id}`"
           :title="inputIncompleteTitle"
-          class="btn btn-outline-secondary fw-bold rounded-2"
+          class="btn btn-outline-primary fw-bold rounded-2"
           style="width: 32px"
           ><abbr title="Incomplete" class="text-decoration-none pe-none"
             >I</abbr
@@ -86,7 +86,7 @@
       <label
         :for="`writing-${student.item_id}`"
         :title="inputWritingTitle"
-        class="btn btn-outline-secondary fw-bold rounded-2"
+        class="btn btn-outline-primary fw-bold rounded-2"
         style="width: 32px"
         ><abbr title="Writing" class="text-decoration-none pe-none"
           >W</abbr
@@ -200,9 +200,13 @@ export default {
       );
     },
     hasChangedGrade() {
-      return (this.student.date_graded &&
-        this.student.grade_status_code === "220");
+      return (
+        this.student.date_graded && this.student.grade_status_code === "220"
+      );
     },
+  },
+  created() {
+    this.initializeGrade();
   },
   methods: {
     openMenu(e) {
@@ -237,12 +241,13 @@ export default {
       this.menuOpen = false;
     },
     initializeGrade: function () {
-      let has_saved_grade = (Object.keys(this.student.saved_grade).length > 0),
-          grade = has_saved_grade
-            ? this.student.saved_grade.grade : this.student.grade,
-          no_grade_now = has_saved_grade
-            ? this.student.saved_grade.no_grade_now
-            : this.student.no_grade_now;
+      let has_saved_grade = Object.keys(this.student.saved_grade).length > 0,
+        grade = has_saved_grade
+          ? this.student.saved_grade.grade
+          : this.student.grade,
+        no_grade_now = has_saved_grade
+          ? this.student.saved_grade.no_grade_now
+          : this.student.no_grade_now;
 
       if (this.student.allows_incomplete) {
         this.incomplete = has_saved_grade
@@ -256,8 +261,11 @@ export default {
       }
       if (no_grade_now) {
         this.grade = gettext("x_no_grade_now");
-      } else if (grade === null && !this.incomplete &&
-          this.gradeChoices.includes("N")) {
+      } else if (
+        grade === null &&
+        !this.incomplete &&
+        this.gradeChoices.includes("N")
+      ) {
         this.grade = "N";
       } else if (grade !== null) {
         this.grade = grade;
@@ -306,9 +314,6 @@ export default {
         this.actualChoices
       );
     },
-  },
-  created() {
-    this.initializeGrade();
   },
 };
 </script>
