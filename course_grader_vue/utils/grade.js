@@ -111,10 +111,39 @@ function gradesSubmittedText(submission) {
   );
 }
 
+function hasChangedGrade(student) {
+  return (
+    student.date_graded &&
+    student.grade_status_code === "220" &&
+    Object.keys(student.saved_grade).length > 0 && (
+      student.grade !== student.saved_grade.grade ||
+      student.has_incomplete !== student.saved_grade.is_incomplete ||
+      student.has_writing_credit !== student.saved_grade.is_writing
+    )
+  );
+}
+
+function changedGradeText(student) {
+  var priorGrade;
+  if (student.no_grade_now) {
+    priorGrade = "X (No grade now)";
+  } else if (student.has_incomplete) {
+    priorGrade = "Incomplete (Default " + student.grade + ")";
+  } else {
+    priorGrade = student.grade;
+    if (student.has_writing_credit) {
+      priorGrade += " (W)";
+    }
+  }
+  return "Submitted " + priorGrade + " on " + student.date_graded;
+}
+
 export {
   incompleteBlocklist,
   normalizeGrade,
   normalizeDefaultGrade,
   validateGrade,
   gradesSubmittedText,
+  hasChangedGrade,
+  changedGradeText,
 };

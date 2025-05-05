@@ -32,8 +32,8 @@
         <span class="fs-2 fw-bold">{{ student.saved_grade.grade }}</span>
       </template>
     </template>
-    <div v-if="hasChangedGrade" class="small text-muted">
-      Submitted {{ priorGrade }} on {{ student.date_graded }}
+    <div v-if="hasChangedGrade(student)" class="small text-muted">
+      {{ changedGradeText(student) }}
     </div>
     <div v-if="hasGradeError" class="small text-muted">
       Submitted with error: {{ student.grade_status }}
@@ -43,6 +43,7 @@
 
 <script>
 import { useWorkflowStateStore } from "@/stores/state";
+import { hasChangedGrade, changedGradeText } from "@/utils/grade";
 
 export default {
   name: "GradeReview",
@@ -56,6 +57,8 @@ export default {
     const appState = useWorkflowStateStore();
     return {
       appState,
+      hasChangedGrade,
+      changedGradeText,
     };
   },
   computed: {
@@ -64,21 +67,6 @@ export default {
         this.student.grade_status_code === "" ||
         this.student.grade_status_code === "200" ||
         this.student.grade_status_code === "220") ? false : true;
-    },
-    hasChangedGrade() {
-      return (this.student.date_graded &&
-        this.student.saved_grade.grade !== this.student.grade);
-    },
-    priorGrade() {
-      if (this.student.date_graded) {
-        if (this.student.no_grade_now) {
-          return "X (No grade now)";
-        } else if (this.student.has_incomplete) {
-          return "Incomplete (Default " + this.student.grade + ")";
-        } else {
-          return this.student.grade;
-        }
-      }
     },
   },
 };

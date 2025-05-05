@@ -107,33 +107,31 @@
     </div>
   </div>
 
-  <div v-if="incomplete" class="text-start small mb-3 text-muted">
+  <div v-if="gradeError" role="alert" class="text-danger invalid-grade small">
+    {{ gradeError }}
+  </div>
+  <div v-else-if="incomplete" class="text-start small mb-3 text-muted">
     Student will receive default grade
   </div>
-
-  <div>
-    <span v-if="import_source" class="imported-grade small text-muted">
-      {{ import_source }} grade: {{ import_grade }}
-      <span
-        v-if="is_override_grade"
-        class="override-icon"
-        title="Override grade imported from Canvas Gradebook"
-      >
-        <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
-      </span>
-    </span>
-    <span role="alert" class="text-danger invalid-grade small">
-      {{ gradeError }}
+  <div v-if="importSource" class="imported-grade small text-muted">
+    {{ importSource }} grade: {{ importGrade }}
+    <span
+      v-if="overrideGrade"
+      class="override-icon"
+      title="Override grade imported from Canvas Gradebook"
+    >
+      <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
     </span>
   </div>
-  <div v-if="hasChangedGrade" class="small text-muted">
-    TODO: {{ student.grade_status }}
+  <div v-if="hasChangedGrade(student)" class="small text-muted">
+    {{ changedGradeText(student) }}
   </div>
 </template>
 
 <script>
 import { useGradeStore } from "@/stores/grade";
 import { updateGrade } from "@/utils/data";
+import { hasChangedGrade, changedGradeText } from "@/utils/grade";
 import {
   incompleteBlocklist,
   normalizeGrade,
@@ -157,6 +155,8 @@ export default {
     return {
       gradeStore,
       updateGrade,
+      hasChangedGrade,
+      changedGradeText,
     };
   },
   data() {
@@ -167,10 +167,10 @@ export default {
       writing: false,
       gradeError: "",
       menuOpen: false,
-      inprogress_save: false,
-      import_source: null,
-      import_grade: null,
-      is_override_grade: false,
+      saveInProgress: false,
+      importSource: null,
+      importGrade: null,
+      overrideGrade: false,
     };
   },
   computed: {
@@ -197,11 +197,6 @@ export default {
           : "Writing Credit not allowed for %(student_firstname)s %(student_lastname)s",
         this.student,
         true
-      );
-    },
-    hasChangedGrade() {
-      return (
-        this.student.date_graded && this.student.grade_status_code === "220"
       );
     },
   },
@@ -241,25 +236,25 @@ export default {
       this.menuOpen = false;
     },
     initializeGrade: function () {
-      let has_saved_grade = Object.keys(this.student.saved_grade).length > 0,
+      let hasSavedGrade = Object.keys(this.student.saved_grade).length > 0,
         grade = has_saved_grade
           ? this.student.saved_grade.grade
           : this.student.grade,
-        no_grade_now = has_saved_grade
+        noGradeNow = has_saved_grade
           ? this.student.saved_grade.no_grade_now
           : this.student.no_grade_now;
 
       if (this.student.allows_incomplete) {
-        this.incomplete = has_saved_grade
+        this.incomplete = hasSavedGrade
           ? this.student.saved_grade.is_incomplete
           : this.student.has_incomplete;
       }
       if (this.student.allows_writing_credit) {
-        this.writing = has_saved_grade
+        this.writing = hasSavedGrade
           ? this.student.saved_grade.is_writing
           : this.student.has_writing_credit;
       }
-      if (no_grade_now) {
+      if (noGradeNow) {
         this.grade = gettext("x_no_grade_now");
       } else if (
         grade === null &&
@@ -271,10 +266,10 @@ export default {
         this.grade = grade;
       }
 
-      if (has_saved_grade) {
-        this.import_source = this.student.saved_grade.import_source;
-        this.import_grade = this.student.saved_grade.import_grade;
-        this.is_override_grade = this.student.saved_grade.is_override_grade;
+      if (hasSavedGrade) {
+        this.importSource = this.student.saved_grade.import_source;
+        this.importGrade = this.student.saved_grade.import_grade;
+        this.overrideGrade = this.student.saved_grade.is_override_grade;
       }
 
       this.updateGradeChoices();
@@ -284,8 +279,8 @@ export default {
       this.updateGradeStatus();
 
       // Prevent duplicate PATCH requests
-      if (!this.inprogress_save) {
-        this.inprogress_save = true;
+      if (!this.saveInProgress) {
+        this.saveInProgress = true;
 
         this.updateGrade(
           this.student.grade_url,
@@ -301,7 +296,7 @@ export default {
             this.gradeError = err.error;
           })
           .finally(() => {
-            this.inprogress_save = false;
+            this.saveInProgress = false;
           });
       }
     },
