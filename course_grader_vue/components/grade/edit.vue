@@ -237,10 +237,10 @@ export default {
     },
     initializeGrade: function () {
       let hasSavedGrade = Object.keys(this.student.saved_grade).length > 0,
-        grade = has_saved_grade
+        grade = hasSavedGrade
           ? this.student.saved_grade.grade
           : this.student.grade,
-        noGradeNow = has_saved_grade
+        noGradeNow = hasSavedGrade
           ? this.student.saved_grade.no_grade_now
           : this.student.no_grade_now;
 
