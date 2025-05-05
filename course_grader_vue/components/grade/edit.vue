@@ -279,6 +279,8 @@ export default {
       if (!this.saveInProgress) {  // Prevent duplicate PATCH requests
         this.saveInProgress = true;
 
+        this.updateGradeStatus();
+
         this.updateGrade(
           this.student.grade_url,
           this.gradeStore.gradeData[this.student.student_id]
@@ -287,7 +289,6 @@ export default {
             this.grade = data.grade;
             this.incomplete = data.is_incomplete;
             this.is_writing = data.is_writing;
-            this.updateGradeStatus();
           })
           .catch((err) => {
             this.gradeError = err.error;
