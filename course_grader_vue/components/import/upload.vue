@@ -9,7 +9,7 @@
     <div v-if="appState.gradeImport.grade_count">
       <p>
         <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
-        <span v-html="uploadGradesFoundText"></span>
+        <span v-if="file" v-html="uploadGradesFoundText"></span>
       </p>
 
       <ImportConvertSave :section="section" />
