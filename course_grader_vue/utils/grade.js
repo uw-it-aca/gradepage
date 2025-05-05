@@ -111,19 +111,7 @@ function gradesSubmittedText(submission) {
   );
 }
 
-function hasChangedGrade(student) {
-  return (
-    student.date_graded &&
-    student.grade_status_code === "220" &&
-    Object.keys(student.saved_grade).length > 0 && (
-      student.grade !== student.saved_grade.grade ||
-      student.has_incomplete !== student.saved_grade.is_incomplete ||
-      student.has_writing_credit !== student.saved_grade.is_writing
-    )
-  );
-}
-
-function changedGradeText(student) {
+function priorGradeText(student) {
   var priorGrade;
   if (student.no_grade_now) {
     priorGrade = "X (No grade now)";
@@ -144,6 +132,5 @@ export {
   normalizeDefaultGrade,
   validateGrade,
   gradesSubmittedText,
-  hasChangedGrade,
-  changedGradeText,
+  priorGradeText,
 };

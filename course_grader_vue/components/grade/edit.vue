@@ -124,8 +124,8 @@
         <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
       </span>
     </div>
-    <div v-if="hasChangedGrade(student)" class="small text-muted">
-      {{ changedGradeText(student) }}
+    <div v-if="hasChangedGrade" class="small text-muted">
+      {{ priorGradeText(student) }}
     </div>
   </div>
 </template>
@@ -133,7 +133,7 @@
 <script>
 import { useGradeStore } from "@/stores/grade";
 import { updateGrade } from "@/utils/data";
-import { hasChangedGrade, changedGradeText } from "@/utils/grade";
+import { priorGradeText } from "@/utils/grade";
 import {
   incompleteBlocklist,
   normalizeGrade,
@@ -157,8 +157,7 @@ export default {
     return {
       gradeStore,
       updateGrade,
-      hasChangedGrade,
-      changedGradeText,
+      priorGradeText,
     };
   },
   data() {
@@ -200,6 +199,14 @@ export default {
         this.student,
         true
       );
+    },
+    hasChangedGrade() {
+      return this.student.date_graded &&
+        this.student.grade_status_code === "220" && (
+          this.student.grade !== this.grade ||
+          this.student.has_incomplete !== this.incomplete ||
+          this.student.has_writing_credit !== this.writing
+        );
     },
   },
   created() {
