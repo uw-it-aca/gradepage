@@ -110,21 +110,23 @@
   <div v-if="gradeError" role="alert" class="text-danger invalid-grade small">
     {{ gradeError }}
   </div>
-  <div v-else-if="incomplete" class="text-start small mb-3 text-muted">
-    Student will receive default grade
-  </div>
-  <div v-if="importSource" class="imported-grade small text-muted">
-    {{ importSource }} grade: {{ importGrade }}
-    <span
-      v-if="overrideGrade"
-      class="override-icon"
-      title="Override grade imported from Canvas Gradebook"
-    >
-      <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
-    </span>
-  </div>
-  <div v-if="hasChangedGrade(student)" class="small text-muted">
-    {{ changedGradeText(student) }}
+  <div v-else>
+    <div v-if="incomplete" class="text-start small mb-3 text-muted">
+      Student will receive default grade
+    </div>
+    <div v-if="importSource" class="imported-grade small text-muted">
+      {{ importSource }} grade: {{ importGrade }}
+      <span
+        v-if="overrideGrade"
+        class="override-icon"
+        title="Override grade imported from Canvas Gradebook"
+      >
+        <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
+      </span>
+    </div>
+    <div v-if="hasChangedGrade(student)" class="small text-muted">
+      {{ changedGradeText(student) }}
+    </div>
   </div>
 </template>
 
