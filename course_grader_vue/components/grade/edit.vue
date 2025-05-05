@@ -276,10 +276,7 @@ export default {
       this.updateGradeStatus();
     },
     saveGrade: function () {
-      this.updateGradeStatus();
-
-      // Prevent duplicate PATCH requests
-      if (!this.saveInProgress) {
+      if (!this.saveInProgress) {  // Prevent duplicate PATCH requests
         this.saveInProgress = true;
 
         this.updateGrade(
