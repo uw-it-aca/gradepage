@@ -46,8 +46,6 @@ database:
 
 repo: gradepage
 instance: vue
-namespace:
-  enabled: true
 
 memcached:
   enabled: true
