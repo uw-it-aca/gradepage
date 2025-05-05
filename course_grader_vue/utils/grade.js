@@ -20,6 +20,7 @@ function normalizeDefaultGrade(grade, choices) {
   if (grade === "" || incompleteBlocklist.includes(grade)) {
     return choices.includes("0.0") ? "0.0" : choices.includes("NC") ? "NC" : "";
   }
+  return grade;
 }
 
 function validateGrade(grade, incomplete, choices) {
