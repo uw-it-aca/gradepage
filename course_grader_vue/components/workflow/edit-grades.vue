@@ -87,7 +87,11 @@
         All grades entered. Click Review to continue.
       </span>
     </div>
-    <BButton variant="primary" @click="reviewGrades">Review </BButton>
+    <BButton
+      variant="primary"
+      :disabled="reviewDisabled"
+      @click="reviewGrades"
+    >Review</BButton>
   </div>
 </template>
 
@@ -148,9 +152,7 @@ export default {
       return s.join(", ");
     },
     reviewDisabled() {
-      return this.gradeStore.missing > 0 || this.gradeStore.invalid > 0
-        ? true
-        : false;
+      return this.gradeStore.missing > 0 || this.gradeStore.invalid > 0;
     },
   },
   methods: {
