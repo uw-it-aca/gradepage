@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { saveImportedGrades } from "@/utils/data";
+import { saveImportedGrades, parseError } from "@/utils/data";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useCalculatorStore } from "@/stores/calculator";
 import { BButton } from "bootstrap-vue-next";
@@ -61,6 +61,7 @@ export default {
       appState,
       calculatorStore,
       saveImportedGrades,
+      parseError,
     };
   },
   data() {
@@ -82,7 +83,7 @@ export default {
           this.appState.$reset();
         })
         .catch((error) => {
-          this.errorResponse = error;
+          this.errorResponse = this.parseError(error);
         });
     },
   },
