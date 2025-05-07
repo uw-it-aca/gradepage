@@ -7,9 +7,7 @@
   </div>
   <div v-else-if="appState.gradeImport">
     <div v-if="appState.gradeImport.status_code != 200">
-      There was an error importing grades from Canvas ({{
-        appState.gradeImport.status_code
-      }}).
+      There was an error importing grades from Canvas.
     </div>
     <div v-else-if="appState.gradeImport.grade_count">
       <p v-html="canvasGradesFoundText"></p>
@@ -180,6 +178,7 @@ export default {
         .catch((error) => {
           this.appState.resetGradeImport();
           this.errorResponse = this.parseError(error);
+          console.log(this.errorResponse);
         })
         .finally(() => {
           this.isLoading = false;
