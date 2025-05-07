@@ -31,11 +31,13 @@ class RestDispatchTest(TestCase):
 
     def test_error_response(self):
         response = RESTDispatch.error_response(400, message='Error')
-        self.assertEqual(response.content, b'{"error": "Error"}')
+        self.assertEqual(response.content,
+                         b'{"status": 400, "error": "Error"}')
         self.assertEqual(response.status_code, 400)
 
         response = RESTDispatch.error_response(500, message=Exception('Error'))
-        self.assertEqual(response.content, b'{"error": "Error"}')
+        self.assertEqual(response.content,
+                         b'{"status": 500, "error": "Error"}')
         self.assertEqual(response.status_code, 500)
 
     def test_json_response(self):
