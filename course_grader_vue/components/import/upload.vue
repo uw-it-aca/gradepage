@@ -242,10 +242,12 @@ export default {
       return this.file === null;
     },
     missingHeaderGrade() {
-      return this.errorResponse && this.errorResponse.error === "Missing header: grade";
+      return this.errorResponse &&
+        this.errorResponse.error === "Missing header: grade";
     },
     missingHeaderStudent() {
-      return this.errorResponse && this.errorResponse.error === "Missing header: student";
+      return this.errorResponse &&
+        this.errorResponse.error === "Missing header: student";
     },
     fileLimitExceeded() {
       return this.errorResponse && this.errorResponse.status === 413;
@@ -272,17 +274,15 @@ export default {
       this.file = files[0];
     },
     uploadFile() {
+      this.errorResponse = null;
       this.uploadGrades(this.section.upload_url, this.file)
         .then((data) => {
-          this.errorResponse = null;
           let gradeImport = this.gradeStore.processImport(data.grade_import);
           this.appState.setGradeImport(gradeImport);
         })
         .catch((error) => {
           this.appState.resetGradeImport();
-          console.log(error.message);
           this.errorResponse = this.parseError(error);
-          console.log(this.errorResponse);
         });
     },
   },
