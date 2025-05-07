@@ -90,7 +90,7 @@ export default {
       type: Number,
       required: true,
     },
-    modalOpen: {
+    canvasModalOpen: {
       type: Boolean,
       required: false,
       default: false,
@@ -158,10 +158,10 @@ export default {
   },
   mounted() {
     watch(
-      () => this.modalOpen,
+      () => this.canvasModalOpen,
       (newValue, oldValue) => {
         this.errorResponse = null;
-        if (this.modalOpen) {
+        if (this.canvasModalOpen) {
           this.loadImportedGrades();
         }
       }
@@ -169,6 +169,7 @@ export default {
   },
   methods: {
     loadImportedGrades() {
+      this.isLoading = true;
       this.createImport(this.section.import_url, { source: this.importSource })
         .then((data) => {
           this.errorResponse = null;
