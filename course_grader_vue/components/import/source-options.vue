@@ -41,6 +41,7 @@
     @hidden="hideCanvasModal"
   >
     <CanvasGrades
+      :key="canvasComponentKey"
       :section="section"
       :expected-grade-count="expectedGradeCount"
       :modal-open="modalOpen"
@@ -57,6 +58,7 @@
     @show="showUploadModal"
   >
     <UploadGrades
+      :key="uploadComponentKey"
       :section="section"
       :expected-grade-count="expectedGradeCount"
     />
@@ -107,11 +109,14 @@ export default {
   data() {
     return {
       modalOpen: false,
+      canvasComponentKey : 0,
+      uploadComponentKey: 0,
     };
   },
   methods: {
     showCanvasModal() {
       this.appState.resetGradeImport();
+      this.canvasComponentKey += 1;
       this.modalOpen = true;
     },
     hideCanvasModal() {
@@ -119,6 +124,7 @@ export default {
     },
     showUploadModal() {
       this.appState.resetGradeImport();
+      this.uploadComponentKey += 1;
     },
   },
 };
