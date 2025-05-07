@@ -199,7 +199,7 @@
 
 <script>
 import { useGradeStore } from "@/stores/grade";
-import { uploadGrades } from "@/utils/data";
+import { uploadGrades, parseError } from "@/utils/data";
 import ImportConvertSave from "@/components/import/convert-options.vue";
 import { BButton, BLink } from "bootstrap-vue-next";
 import { useWorkflowStateStore } from "@/stores/state";
@@ -228,6 +228,7 @@ export default {
       appState,
       gradeStore,
       uploadGrades,
+      parseError,
     };
   },
   data() {
@@ -241,25 +242,13 @@ export default {
       return this.file === null;
     },
     missingHeaderGrade() {
-      return (
-        this.errorResponse &&
-        typeof this.errorResponse === "object" &&
-        this.errorResponse.error === "Missing header: grade"
-      );
+      return this.errorResponse && this.errorResponse.error === "Missing header: grade";
     },
     missingHeaderStudent() {
-      return (
-        this.errorResponse &&
-        typeof this.errorResponse === "object" &&
-        this.errorResponse.error === "Missing header: student"
-      );
+      return this.errorResponse && this.errorResponse.error === "Missing header: student";
     },
     fileLimitExceeded() {
-      return (
-        this.errorResponse &&
-        typeof this.errorResponse.data === "string" &&
-        this.errorResponse.data.indexOf("Request Entity Too Large") !== -1
-      );
+      return this.errorResponse && this.errorResponse.status === 413;
     },
     uploadGradesFoundText() {
       return interpolate(
@@ -291,7 +280,9 @@ export default {
         })
         .catch((error) => {
           this.appState.resetGradeImport();
-          this.errorResponse = error;
+          console.log(error.message);
+          this.errorResponse = this.parseError(error);
+          console.log(this.errorResponse);
         });
     },
   },
