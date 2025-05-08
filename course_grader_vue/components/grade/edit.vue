@@ -107,12 +107,12 @@
     </div>
   </div>
 
-  <div v-if="incomplete" class="text-start small mb-3 text-muted">
+  <div v-if="incomplete" class="text-start small">
     Student will receive default grade
   </div>
 
-  <div>
-    <span v-if="import_source" class="imported-grade small text-muted">
+  <div v-if="import_source">
+    <span class="imported-grade small text-muted">
       {{ import_source }} grade: {{ import_grade }}
       <span
         v-if="is_override_grade"

@@ -37,7 +37,7 @@
         appState.graderoster.is_writing_section ||
         appState.graderoster.has_duplicate_codes
       "
-      class="mb-2 pb-2 small text-muted border-bottom"
+      class="mb-2 pb-2 border-bottom"
     >
       <div v-if="appState.graderoster.is_writing_section">
         <strong>Note:</strong>
@@ -49,8 +49,13 @@
           In the list below, duplicate listings of the same student are
           differentiated with a
         </span>
-        Duplicate code
-        <i class="bi bi-circle-fill text-secondary"></i>
+
+        <BBadge
+          variant="secondary"
+          pill
+          class="text-secondary-emphasis bg-secondary-subtle fw-normal"
+          >Duplicate code</BBadge
+        >
       </div>
     </div>
   </template>
@@ -81,7 +86,7 @@
   </ul>
 
   <div class="d-flex mt-4">
-    <div class="flex-fill align-self-center text-end me-2 small">
+    <div class="flex-fill align-self-center text-end me-2">
       <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span>
       <span v-else class="visually-hidden">
         All grades entered. Click Review to continue.
@@ -100,7 +105,7 @@ import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
 import { updateGraderoster } from "@/utils/data";
 import { gradesSubmittedText } from "@/utils/grade";
-import { BCard, BButton, BPlaceholder } from "bootstrap-vue-next";
+import { BBadge, BButton, BPlaceholder } from "bootstrap-vue-next";
 
 export default {
   components: {
@@ -108,7 +113,7 @@ export default {
     GradeImportOptions,
     Student,
     Errors,
-    BCard,
+    BBadge,
     BButton,
     BPlaceholder,
   },

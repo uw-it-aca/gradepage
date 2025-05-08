@@ -49,7 +49,7 @@
 
   <template v-if="!isLoading && !errorResponse">
     <div class="d-flex mt-4">
-      <div class="flex-fill align-self-center text-end me-2 small">
+      <div class="flex-fill align-self-center text-end me-2">
         All grades will be submitted to the Registrar as displayed above.
       </div>
       <div v-if="section" class="text-nowrap">

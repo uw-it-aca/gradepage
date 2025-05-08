@@ -4,8 +4,6 @@
     :term-url="isCurrentTermDisplay ? null : currentTerm.url"
   >
     <template #content>
-
-
       <template v-if="isLoading">
         <ul class="list-unstyled">
           <li v-for="index in 10" :key="index" class="mb-3">

@@ -17,7 +17,7 @@
     <template v-if="student.has_incomplete">
       <span class="visually-hidden">Submitted grade:</span>
       <span class="fs-2 fw-bold">I</span>
-      <div class="small text-muted">
+      <div class="small">
         (Incomplete) Default: {{ student.grade }}
       </div>
     </template>
@@ -25,7 +25,7 @@
       <template v-if="student.no_grade_now">
         <span class="visually-hidden">Submitted grade:</span>
         <span class="fs-2 fw-bold">X</span>
-        <div class="small text-muted">(No grade now)</div>
+        <div class="small">(No grade now)</div>
       </template>
       <template v-else>
         <span class="visually-hidden">Submitted grade:</span>
