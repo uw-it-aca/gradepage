@@ -9,7 +9,7 @@
     <div v-if="appState.gradeImport.grade_count">
       <p>
         <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
-        <span v-html="uploadGradesFoundText"></span>
+        <span v-if="file" v-html="uploadGradesFoundText"></span>
       </p>
 
       <ImportConvertSave :section="section" />
@@ -199,7 +199,7 @@
 
 <script>
 import { useGradeStore } from "@/stores/grade";
-import { uploadGrades } from "@/utils/data";
+import { uploadGrades, parseError } from "@/utils/data";
 import ImportConvertSave from "@/components/import/convert-options.vue";
 import { BButton, BLink } from "bootstrap-vue-next";
 import { useWorkflowStateStore } from "@/stores/state";
@@ -228,6 +228,7 @@ export default {
       appState,
       gradeStore,
       uploadGrades,
+      parseError,
     };
   },
   data() {
@@ -241,25 +242,15 @@ export default {
       return this.file === null;
     },
     missingHeaderGrade() {
-      return (
-        this.errorResponse &&
-        typeof this.errorResponse === "object" &&
-        this.errorResponse.error === "Missing header: grade"
-      );
+      return this.errorResponse &&
+        this.errorResponse.error === "Missing header: grade";
     },
     missingHeaderStudent() {
-      return (
-        this.errorResponse &&
-        typeof this.errorResponse === "object" &&
-        this.errorResponse.error === "Missing header: student"
-      );
+      return this.errorResponse &&
+        this.errorResponse.error === "Missing header: student";
     },
     fileLimitExceeded() {
-      return (
-        this.errorResponse &&
-        typeof this.errorResponse.data === "string" &&
-        this.errorResponse.data.indexOf("Request Entity Too Large") !== -1
-      );
+      return this.errorResponse && this.errorResponse.status === 413;
     },
     uploadGradesFoundText() {
       return interpolate(
@@ -283,15 +274,15 @@ export default {
       this.file = files[0];
     },
     uploadFile() {
+      this.errorResponse = null;
       this.uploadGrades(this.section.upload_url, this.file)
         .then((data) => {
-          this.errorResponse = null;
           let gradeImport = this.gradeStore.processImport(data.grade_import);
           this.appState.setGradeImport(gradeImport);
         })
         .catch((error) => {
           this.appState.resetGradeImport();
-          this.errorResponse = error;
+          this.errorResponse = this.parseError(error);
         });
     },
   },

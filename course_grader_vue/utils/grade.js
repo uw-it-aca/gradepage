@@ -20,6 +20,7 @@ function normalizeDefaultGrade(grade, choices) {
   if (grade === "" || incompleteBlocklist.includes(grade)) {
     return choices.includes("0.0") ? "0.0" : choices.includes("NC") ? "NC" : "";
   }
+  return grade;
 }
 
 function validateGrade(grade, incomplete, choices) {
@@ -111,10 +112,26 @@ function gradesSubmittedText(submission) {
   );
 }
 
+function priorGradeText(student) {
+  var priorGrade;
+  if (student.no_grade_now) {
+    priorGrade = "X (No grade now)";
+  } else if (student.has_incomplete) {
+    priorGrade = "Incomplete (Default " + student.grade + ")";
+  } else {
+    priorGrade = student.grade;
+    if (student.has_writing_credit) {
+      priorGrade += " (W)";
+    }
+  }
+  return "Submitted " + priorGrade + " on " + student.date_graded;
+}
+
 export {
   incompleteBlocklist,
   normalizeGrade,
   normalizeDefaultGrade,
   validateGrade,
   gradesSubmittedText,
+  priorGradeText,
 };

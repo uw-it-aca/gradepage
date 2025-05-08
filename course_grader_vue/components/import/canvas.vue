@@ -7,9 +7,7 @@
   </div>
   <div v-else-if="appState.gradeImport">
     <div v-if="appState.gradeImport.status_code != 200">
-      There was an error importing grades from Canvas ({{
-        appState.gradeImport.status_code
-      }}).
+      There was an error importing grades from Canvas.
     </div>
     <div v-else-if="appState.gradeImport.grade_count">
       <p v-html="canvasGradesFoundText"></p>
@@ -74,7 +72,7 @@ import ImportConvertSave from "@/components/import/convert-options.vue";
 import { BLink } from "bootstrap-vue-next";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
-import { createImport } from "@/utils/data";
+import { createImport, parseError } from "@/utils/data";
 import { watch } from "vue";
 
 export default {
@@ -92,7 +90,7 @@ export default {
       type: Number,
       required: true,
     },
-    modalOpen: {
+    canvasModalOpen: {
       type: Boolean,
       required: false,
       default: false,
@@ -105,6 +103,7 @@ export default {
       appState,
       gradeStore,
       createImport,
+      parseError,
     };
   },
   data() {
@@ -159,10 +158,10 @@ export default {
   },
   mounted() {
     watch(
-      () => this.modalOpen,
+      () => this.canvasModalOpen,
       (newValue, oldValue) => {
         this.errorResponse = null;
-        if (this.modalOpen) {
+        if (this.canvasModalOpen) {
           this.loadImportedGrades();
         }
       }
@@ -170,6 +169,7 @@ export default {
   },
   methods: {
     loadImportedGrades() {
+      this.isLoading = true;
       this.createImport(this.section.import_url, { source: this.importSource })
         .then((data) => {
           this.errorResponse = null;
@@ -178,7 +178,8 @@ export default {
         })
         .catch((error) => {
           this.appState.resetGradeImport();
-          this.errorResponse = error;
+          this.errorResponse = this.parseError(error);
+          console.log(this.errorResponse);
         })
         .finally(() => {
           this.isLoading = false;

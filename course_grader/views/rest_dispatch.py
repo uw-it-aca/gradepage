@@ -20,6 +20,7 @@ class RESTDispatch(View):
 
     @staticmethod
     def error_response(status, message="", content={}):
+        content["status"] = status
         content["error"] = str(message)
         return HttpResponse(json.dumps(content),
                             status=status,

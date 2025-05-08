@@ -107,33 +107,33 @@
     </div>
   </div>
 
-  <div v-if="incomplete" class="text-start small">
-    Student will receive default grade
+  <div v-if="gradeError" role="alert" class="text-danger invalid-grade small">
+    {{ gradeError }}
   </div>
-
-  <div v-if="import_source">
-    <span class="imported-grade small text-muted">
-      {{ import_source }} grade: {{ import_grade }}
+  <div v-else>
+    <div v-if="incomplete" class="text-start small mb-3 text-muted">
+      Student will receive default grade
+    </div>
+    <div v-if="importSource" class="imported-grade small text-muted">
+      {{ importSource }} grade: {{ importGrade }}
       <span
-        v-if="is_override_grade"
+        v-if="overrideGrade"
         class="override-icon"
         title="Override grade imported from Canvas Gradebook"
       >
         <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
       </span>
-    </span>
-    <span role="alert" class="text-danger invalid-grade small">
-      {{ gradeError }}
-    </span>
-  </div>
-  <div v-if="hasChangedGrade" class="small text-muted">
-    TODO: {{ student.grade_status }}
+    </div>
+    <div v-if="hasChangedGrade" class="small text-muted">
+      {{ priorGradeText(student) }}
+    </div>
   </div>
 </template>
 
 <script>
 import { useGradeStore } from "@/stores/grade";
 import { updateGrade } from "@/utils/data";
+import { priorGradeText } from "@/utils/grade";
 import {
   incompleteBlocklist,
   normalizeGrade,
@@ -157,6 +157,7 @@ export default {
     return {
       gradeStore,
       updateGrade,
+      priorGradeText,
     };
   },
   data() {
@@ -167,10 +168,10 @@ export default {
       writing: false,
       gradeError: "",
       menuOpen: false,
-      inprogress_save: false,
-      import_source: null,
-      import_grade: null,
-      is_override_grade: false,
+      saveInProgress: false,
+      importSource: null,
+      importGrade: null,
+      overrideGrade: false,
     };
   },
   computed: {
@@ -201,7 +202,11 @@ export default {
     },
     hasChangedGrade() {
       return (
-        this.student.date_graded && this.student.grade_status_code === "220"
+        this.student.date_graded &&
+        this.student.grade_status_code === "220" &&
+        (this.student.grade !== this.grade ||
+          this.student.has_incomplete !== this.incomplete ||
+          this.student.has_writing_credit !== this.writing)
       );
     },
   },
@@ -241,25 +246,25 @@ export default {
       this.menuOpen = false;
     },
     initializeGrade: function () {
-      let has_saved_grade = Object.keys(this.student.saved_grade).length > 0,
-        grade = has_saved_grade
+      let hasSavedGrade = Object.keys(this.student.saved_grade).length > 0,
+        grade = hasSavedGrade
           ? this.student.saved_grade.grade
           : this.student.grade,
-        no_grade_now = has_saved_grade
+        noGradeNow = hasSavedGrade
           ? this.student.saved_grade.no_grade_now
           : this.student.no_grade_now;
 
       if (this.student.allows_incomplete) {
-        this.incomplete = has_saved_grade
+        this.incomplete = hasSavedGrade
           ? this.student.saved_grade.is_incomplete
           : this.student.has_incomplete;
       }
       if (this.student.allows_writing_credit) {
-        this.writing = has_saved_grade
+        this.writing = hasSavedGrade
           ? this.student.saved_grade.is_writing
           : this.student.has_writing_credit;
       }
-      if (no_grade_now) {
+      if (noGradeNow) {
         this.grade = gettext("x_no_grade_now");
       } else if (
         grade === null &&
@@ -271,21 +276,21 @@ export default {
         this.grade = grade;
       }
 
-      if (has_saved_grade) {
-        this.import_source = this.student.saved_grade.import_source;
-        this.import_grade = this.student.saved_grade.import_grade;
-        this.is_override_grade = this.student.saved_grade.is_override_grade;
+      if (hasSavedGrade) {
+        this.importSource = this.student.saved_grade.import_source;
+        this.importGrade = this.student.saved_grade.import_grade;
+        this.overrideGrade = this.student.saved_grade.is_override_grade;
       }
 
       this.updateGradeChoices();
       this.updateGradeStatus();
     },
     saveGrade: function () {
-      this.updateGradeStatus();
+      if (!this.saveInProgress) {
+        // Prevent duplicate PATCH requests
+        this.saveInProgress = true;
 
-      // Prevent duplicate PATCH requests
-      if (!this.inprogress_save) {
-        this.inprogress_save = true;
+        this.updateGradeStatus();
 
         this.updateGrade(
           this.student.grade_url,
@@ -295,13 +300,12 @@ export default {
             this.grade = data.grade;
             this.incomplete = data.is_incomplete;
             this.is_writing = data.is_writing;
-            this.updateGradeStatus();
           })
           .catch((err) => {
             this.gradeError = err.error;
           })
           .finally(() => {
-            this.inprogress_save = false;
+            this.saveInProgress = false;
           });
       }
     },

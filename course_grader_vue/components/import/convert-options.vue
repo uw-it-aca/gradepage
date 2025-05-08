@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { saveImportedGrades } from "@/utils/data";
+import { saveImportedGrades, parseError } from "@/utils/data";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useCalculatorStore } from "@/stores/calculator";
 import { BButton } from "bootstrap-vue-next";
@@ -61,6 +61,7 @@ export default {
       appState,
       calculatorStore,
       saveImportedGrades,
+      parseError,
     };
   },
   data() {
@@ -75,14 +76,14 @@ export default {
     },
     saveGrades: function () {
       let url = this.section.import_url + "/" + this.appState.gradeImport.id,
-        data = { conversion_scale: null, converted_grades: {} };
+        put_data = { conversion_scale: null, converted_grades: {} };
 
-      this.saveImportedGrades(url, JSON.stringify(data))
+      this.saveImportedGrades(url, put_data)
         .then((data) => {
           this.appState.$reset();
         })
         .catch((error) => {
-          this.errorResponse = error;
+          this.errorResponse = this.parseError(error);
         });
     },
   },

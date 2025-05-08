@@ -92,7 +92,11 @@
         All grades entered. Click Review to continue.
       </span>
     </div>
-    <BButton variant="primary" @click="reviewGrades">Review </BButton>
+    <BButton
+      variant="primary"
+      :disabled="reviewDisabled"
+      @click="reviewGrades"
+    >Review</BButton>
   </div>
 </template>
 
@@ -103,7 +107,7 @@ import Errors from "@/components/errors.vue";
 import GradeImportOptions from "@/components/import/source-options.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
-import { updateGraderoster } from "@/utils/data";
+import { updateGraderoster, parseError } from "@/utils/data";
 import { gradesSubmittedText } from "@/utils/grade";
 import { BBadge, BButton, BPlaceholder } from "bootstrap-vue-next";
 
@@ -131,6 +135,7 @@ export default {
       gradeStore,
       updateGraderoster,
       gradesSubmittedText,
+      parseError,
     };
   },
   data() {
@@ -153,9 +158,7 @@ export default {
       return s.join(", ");
     },
     reviewDisabled() {
-      return this.gradeStore.missing > 0 || this.gradeStore.invalid > 0
-        ? true
-        : false;
+      return this.gradeStore.missing > 0 || this.gradeStore.invalid > 0;
     },
   },
   methods: {
@@ -169,7 +172,7 @@ export default {
           this.appState.reviewGrades();
         })
         .catch((error) => {
-          this.errorResponse = error;
+          this.errorResponse = this.parseError(error);
         });
     },
   },

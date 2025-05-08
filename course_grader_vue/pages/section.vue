@@ -39,7 +39,7 @@ import ConvertImport from "@/components/workflow/convert-import.vue";
 import ReviewConversion from "@/components/workflow/review-conversion.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
-import { getSection, getGraderoster } from "@/utils/data";
+import { getSection, getGraderoster, parseError } from "@/utils/data";
 
 export default {
   name: "SectionPage",
@@ -60,6 +60,7 @@ export default {
       gradeStore,
       getSection,
       getGraderoster,
+      parseError,
     };
   },
   data() {
@@ -85,7 +86,7 @@ export default {
             this.errorResponse = null;
           })
           .catch((error) => {
-            this.errorResponse = error;
+            this.errorResponse = this.parseError(error);
           })
           .finally(() => {
             this.isLoading = false;
@@ -104,7 +105,7 @@ export default {
           this.loadGraderoster();
         })
         .catch((error) => {
-          this.errorResponse = error;
+          this.errorResponse = this.parseError(error);
           this.isLoading = false;
         });
     },
