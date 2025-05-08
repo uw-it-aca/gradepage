@@ -80,7 +80,7 @@
     </li>
   </ul>
 
-  <div class="d-flex">
+  <div class="d-flex mt-4">
     <div class="flex-fill align-self-center text-end me-2 small">
       <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span>
       <span v-else class="visually-hidden">

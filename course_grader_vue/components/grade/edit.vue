@@ -18,7 +18,7 @@
         <label
           :for="`incomplete-${student.item_id}`"
           :title="inputIncompleteTitle"
-          class="btn btn-outline-primary fw-bold rounded-2"
+          class="btn btn-outline-primary bg-primary-hover text-white-hover fw-bold rounded-2"
           style="width: 32px"
           ><abbr title="Incomplete" class="text-decoration-none pe-none"
             >I</abbr
@@ -86,7 +86,7 @@
       <label
         :for="`writing-${student.item_id}`"
         :title="inputWritingTitle"
-        class="btn btn-outline-primary fw-bold rounded-2"
+        class="btn btn-outline-primary bg-primary-hover text-white-hover fw-bold rounded-2"
         style="width: 32px"
         ><abbr title="Writing" class="text-decoration-none pe-none"
           >W</abbr
