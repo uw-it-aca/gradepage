@@ -32,10 +32,7 @@
         <span class="fs-2 fw-bold">{{ student.grade }}</span>
       </template>
     </template>
-    <div v-if="hasChangedGrade" class="small text-muted">
-      TODO: {{ student.grade_status }}
-    </div>
-    <div v-else-if="hasGradeError" class="small text-muted">
+    <div v-if="hasGradeError" class="small text-muted">
       Submitted with error: {{ student.grade_status }}
     </div>
   </template>
@@ -64,10 +61,6 @@ export default {
         this.student.grade_status_code === "" ||
         this.student.grade_status_code === "200" ||
         this.student.grade_status_code === "220") ? false : true;
-    },
-    hasChangedGrade() {
-      return (this.student.date_graded &&
-        this.student.grade_status_code === "220");
     },
   },
 };
