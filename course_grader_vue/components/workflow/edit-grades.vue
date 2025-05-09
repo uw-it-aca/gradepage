@@ -1,4 +1,14 @@
 <template>
+  <BAlert
+    v-if="errorResponse"
+    :model-value="true"
+    variant="danger"
+    class="small"
+    ><i class="bi-exclamation-octagon-fill me-1"></i>Unable to submit because
+    there are
+    <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span></BAlert
+  >
+
   <div v-if="section">
     <GradeImportOptions
       :section="section"
@@ -8,10 +18,9 @@
 
   <SectionHeader :section="section" title="Enter grades for" />
 
-  <template v-if="errorResponse">
-    <Errors :error-response="errorResponse" />
-  </template>
-  <template v-else-if="appState.graderoster">
+  <Errors v-if="errorResponse == 'hide'" :error-response="errorResponse" />
+
+  <template v-if="appState.graderoster">
     <BAlert
       v-if="appState.graderoster.submissions.length > 0"
       variant="success"
@@ -92,11 +101,7 @@
         All grades entered. Click Review to continue.
       </span>
     </div>
-    <BButton
-      variant="primary"
-      :disabled="reviewDisabled"
-      @click="reviewGrades"
-    >Review</BButton>
+    <BButton variant="primary" @click="reviewGrades">Review</BButton>
   </div>
 </template>
 
@@ -109,7 +114,7 @@ import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
 import { updateGraderoster, parseError } from "@/utils/data";
 import { gradesSubmittedText } from "@/utils/grade";
-import { BBadge, BButton, BPlaceholder } from "bootstrap-vue-next";
+import { BAlert, BBadge, BButton, BPlaceholder } from "bootstrap-vue-next";
 
 export default {
   components: {
@@ -117,6 +122,7 @@ export default {
     GradeImportOptions,
     Student,
     Errors,
+    BAlert,
     BBadge,
     BButton,
     BPlaceholder,
