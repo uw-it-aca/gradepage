@@ -1,5 +1,5 @@
 <template>
-  <div class="fs-5 text-muted fw-light">
+  <div class="fs-5  fw-light">
     <span>{{ title }}</span>
   </div>
   <div v-if="section.section_name">

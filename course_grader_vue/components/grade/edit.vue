@@ -111,10 +111,10 @@
     {{ gradeError }}
   </div>
   <div v-else>
-    <div v-if="incomplete" class="text-start small mb-3 text-muted">
+    <div v-if="incomplete" class="text-start small mb-3">
       Student will receive default grade
     </div>
-    <div v-if="importSource" class="imported-grade small text-muted">
+    <div v-if="importSource" class="imported-grade small">
       {{ importSource }} grade: {{ importGrade }}
       <span
         v-if="overrideGrade"
@@ -124,7 +124,7 @@
         <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
       </span>
     </div>
-    <div v-if="hasChangedGrade" class="small text-muted">
+    <div v-if="hasChangedGrade" class="small">
       {{ priorGradeText(student) }}
     </div>
   </div>

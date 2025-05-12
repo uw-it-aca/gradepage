@@ -47,7 +47,7 @@ import PrimarySection from "@/components/section/primary.vue";
 import Errors from "@/components/errors.vue";
 import { useContextStore } from "@/stores/context";
 import { getSections, parseError } from "@/utils/data";
-import { BCard, BPlaceholder } from "bootstrap-vue-next";
+import { BPlaceholder } from "bootstrap-vue-next";
 
 export default {
   name: "TermPage",
@@ -55,7 +55,6 @@ export default {
     Layout,
     PrimarySection,
     Errors,
-    BCard,
     BPlaceholder,
   },
   setup() {
