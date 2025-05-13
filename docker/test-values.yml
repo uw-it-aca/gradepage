@@ -46,6 +46,8 @@ database:
 
 repo: gradepage
 instance: test
+namespace:
+  enabled: true
 
 memcached:
   enabled: true
