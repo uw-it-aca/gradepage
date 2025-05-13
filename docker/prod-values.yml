@@ -53,6 +53,8 @@ database:
 
 repo: gradepage
 instance: prod
+namespace:
+  enabled: true
 
 memcached:
   enabled: true
