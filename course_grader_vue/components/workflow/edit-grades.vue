@@ -1,6 +1,6 @@
 <template>
   <BAlert
-    v-if="errorResponse"
+    v-if="showNotReady && reviewDisabled"
     :model-value="true"
     variant="danger"
     class="small"
@@ -18,7 +18,7 @@
 
   <SectionHeader :section="section" title="Enter grades for" />
 
-  <Errors v-if="errorResponse == 'hide'" :error-response="errorResponse" />
+  <Errors v-if="errorResponse" :error-response="errorResponse" />
 
   <template v-if="appState.graderoster">
     <BAlert
@@ -36,7 +36,9 @@
           <span v-if="submission.section_id">
             Section {{ submission.section_id }}:
           </span>
-          <span v-html="gradesSubmittedText(submission)"></span>
+          <span v-if="gradesSubmittedText(submission)">
+            {{ gradesSubmittedText(submission) }}
+          </span>
         </li>
       </ul>
     </BAlert>
@@ -147,6 +149,7 @@ export default {
   data() {
     return {
       errorResponse: null,
+      showNotReady: false,
     };
   },
   computed: {
@@ -169,17 +172,22 @@ export default {
   },
   methods: {
     reviewGrades: function () {
-      this.updateGraderoster(
-        this.section.graderoster_url,
-        this.gradeStore.grades
-      )
-        .then((data) => {
-          this.appState.setGraderoster(data.graderoster);
-          this.appState.reviewGrades();
-        })
-        .catch((error) => {
-          this.errorResponse = this.parseError(error);
-        });
+      if (!this.reviewDisabled) {
+        this.updateGraderoster(
+          this.section.graderoster_url,
+          this.gradeStore.grades
+        )
+          .then((data) => {
+            this.appState.setGraderoster(data.graderoster);
+            this.appState.reviewGrades();
+          })
+          .catch((error) => {
+            this.errorResponse = this.parseError(error);
+          });
+      } else {
+        // show alert message
+        this.showNotReady = true;
+      }
     },
   },
 };
