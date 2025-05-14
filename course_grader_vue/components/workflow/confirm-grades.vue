@@ -55,10 +55,11 @@
 
   <SectionHeader :section="section" title="Grade Receipt for" />
 
-  <div
+  <BAlert
     v-if="!appState.graderoster.is_submission_confirmation"
-    class="small"
-    role="status"
+    variant="info"
+    :model-value="true"
+    class="small d-flex align-items-center"
   >
     Submitted grade may differ from official final grade.
     <BLink
@@ -67,7 +68,7 @@
       class="d-print-none"
       >More info
     </BLink>
-  </div>
+  </BAlert>
 
   <template v-if="appState.graderoster.is_submission_confirmation">
     <template v-if="appState.graderoster.has_failed_submissions">
@@ -103,7 +104,7 @@
     :model-value="true"
     class="small"
   >
-    <ul>
+    <ul class="list-unstyled">
       <li
         v-for="(submission, index) in appState.graderoster.submissions"
         :key="index"

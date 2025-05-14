@@ -1,6 +1,6 @@
 <template>
   <BAlert
-    v-if="showNotReady && reviewDisabled"
+    v-if="showNotReady && isFormInvalid"
     :model-value="true"
     variant="danger"
     class="small"
@@ -166,13 +166,14 @@ export default {
       }
       return s.join(", ");
     },
-    reviewDisabled() {
+    isFormInvalid() {
       return this.gradeStore.missing > 0 || this.gradeStore.invalid > 0;
     },
   },
   methods: {
     reviewGrades: function () {
-      if (!this.reviewDisabled) {
+      // TODO: rename reviewDisabled to something that makes sense - isFormValid?
+      if (!this.isFormInvalid) {
         this.updateGraderoster(
           this.section.graderoster_url,
           this.gradeStore.grades
