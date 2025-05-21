@@ -199,7 +199,7 @@
 
 <script>
 import { useGradeStore } from "@/stores/grade";
-import { uploadGrades, parseError } from "@/utils/data";
+import { uploadGrades } from "@/utils/data";
 import ImportConvertSave from "@/components/import/convert-options.vue";
 import { BButton, BLink } from "bootstrap-vue-next";
 import { useWorkflowStateStore } from "@/stores/state";
@@ -228,7 +228,6 @@ export default {
       appState,
       gradeStore,
       uploadGrades,
-      parseError,
     };
   },
   data() {
@@ -282,7 +281,7 @@ export default {
         })
         .catch((error) => {
           this.appState.resetGradeImport();
-          this.errorResponse = this.parseError(error);
+          this.errorResponse = error.data;
         });
     },
   },

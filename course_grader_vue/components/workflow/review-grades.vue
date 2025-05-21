@@ -72,7 +72,7 @@ import SectionHeader from "@/components/section/header.vue";
 import Student from "@/components/student.vue";
 import Errors from "@/components/errors.vue";
 import { useWorkflowStateStore } from "@/stores/state";
-import { submitGraderoster, parseError } from "@/utils/data";
+import { submitGraderoster } from "@/utils/data";
 import { BCard, BButton, BPlaceholder } from "bootstrap-vue-next";
 
 export default {
@@ -95,7 +95,6 @@ export default {
     return {
       appState,
       submitGraderoster,
-      parseError,
     };
   },
   data() {
@@ -120,7 +119,7 @@ export default {
           this.appState.setGraderoster(data.graderoster);
         })
         .catch((error) => {
-          this.errorResponse = this.parseError(error);
+          this.errorResponse = error.data;
           this.isLoading = false;
         });
     },

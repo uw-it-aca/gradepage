@@ -1,5 +1,24 @@
 import { useTokenStore } from "@/stores/token";
 
+function parseError(str) {
+  try {
+    return JSON.parse(str);
+  } catch (error) {
+    try {
+      // nginx error html?
+      var parser = new DOMParser(),
+          errorDoc = parser.parseFromString(str, "text/html"),
+          title = errorDoc.title;
+      return {
+        status: parseInt(title.substring(0, title.indexOf(' '))),
+        error: title.substring(title.indexOf(' ') + 1),
+      };
+    } catch (error) {
+      return {status: null, error: str};
+    }
+  }
+}
+
 export async function useCustomFetch(url, options = {}) {
   const tokenStore = useTokenStore();
 
@@ -22,7 +41,7 @@ export async function useCustomFetch(url, options = {}) {
     if (response.ok) {
       return response.text().then(text => {
         try {
-          const json = JSON.parse(text);
+          const json = text.length ? JSON.parse(text) : {};
           return json;
         } catch (error) {
           throw new Error(`Failed to parse response as JSON:, ${error}`);
@@ -36,11 +55,14 @@ export async function useCustomFetch(url, options = {}) {
         return;
       } else {
         return response.text().then(text => {
-          throw new Error(text);
+          const error = new Error("Error")
+          error.data = parseError(text);
+          throw error;
         });
       }
     }
   } catch (error) {
+    error.data = parseError(error.message);
     throw error;
   }
 }

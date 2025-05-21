@@ -99,7 +99,7 @@ export default {
             this.secondaryStatus = data.grading_status;
           })
           .catch((error) => {
-            this.errorStatus = error;
+            this.errorStatus = error.data;
           })
           .finally(() => {
             this.isLoading = false;
