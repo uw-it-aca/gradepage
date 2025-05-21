@@ -46,7 +46,7 @@ import Errors from "@/components/errors.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useCalculatorStore } from "@/stores/calculator";
 import { BButton, BCard } from "bootstrap-vue-next";
-import { saveImportedGrades, parseError } from "@/utils/data";
+import { saveImportedGrades } from "@/utils/data";
 
 export default {
   components: {
@@ -69,7 +69,6 @@ export default {
       appState,
       calculatorStore,
       saveImportedGrades,
-      parseError,
     };
   },
   data() {
@@ -95,7 +94,7 @@ export default {
           this.appState.$reset();
         })
         .catch((error) => {
-          this.errorResponse = this.parseError(error);
+          this.errorResponse = error.data;
           this.isLoading = false;
         });
     },

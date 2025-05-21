@@ -252,7 +252,7 @@ import {
   BDropdownItem,
   BDropdownDivider,
 } from "bootstrap-vue-next";
-import { getGraderoster, parseError } from "@/utils/data";
+import { getGraderoster } from "@/utils/data";
 import { gradesSubmittedText } from "@/utils/grade";
 import { ref } from "vue";
 
@@ -283,7 +283,6 @@ export default {
       getGraderoster,
       showSectionOptions,
       gradesSubmittedText,
-      parseError,
     };
   },
   data() {
@@ -326,7 +325,7 @@ export default {
           this.appState.editGrades();
         })
         .catch((error) => {
-          this.errorResponse = this.parseError(error);
+          this.errorResponse = error.data;
           this.isLoading = false;
         });
     },

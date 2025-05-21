@@ -1,25 +1,6 @@
 import "regenerator-runtime/runtime";
 import { useCustomFetch } from "@/composables/customFetch";
 
-function parseError(errObj) {
-  try {
-    return JSON.parse(errObj.message);
-  } catch (error) {
-    try {
-      // nginx error html?
-      var parser = new DOMParser(),
-          errorDoc = parser.parseFromString(errObj.message, "text/html"),
-          title = errorDoc.title;
-      return {
-        status: parseInt(title.substring(0, title.indexOf(' '))),
-        error: title.substring(title.indexOf(' ') + 1),
-      };
-    } catch (error) {
-      return {status: null, error: errObj.message};
-    }
-  }
-}
-
 async function getSections(url) {
   return useCustomFetch(url);
 }
@@ -112,7 +93,6 @@ async function clearOverride(url) {
 }
 
 export {
-  parseError,
   getSections,
   getSection,
   getSectionStatus,
