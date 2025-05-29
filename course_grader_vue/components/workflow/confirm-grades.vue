@@ -263,7 +263,6 @@ export default {
   components: {
     SectionHeader,
     Student,
-    Errors,
     BAlert,
     BLink,
     BPlaceholder,
