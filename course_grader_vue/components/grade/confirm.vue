@@ -65,14 +65,11 @@ export default {
         ? false
         : true;
     },
-<<<<<<< HEAD
     hasChangedGrade() {
       return (
         this.student.date_graded && this.student.grade_status_code === "220"
       );
     },
-=======
->>>>>>> feature/vue
   },
 };
 </script>
