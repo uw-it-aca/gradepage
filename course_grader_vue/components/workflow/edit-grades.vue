@@ -1,4 +1,14 @@
 <template>
+  <BAlert
+    v-if="showNotReady && isFormInvalid"
+    :model-value="true"
+    variant="danger"
+    class="small"
+    ><i class="bi-exclamation-octagon-fill me-1"></i>Unable to submit because
+    there are
+    <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span></BAlert
+  >
+
   <div v-if="section">
     <GradeImportOptions
       :section="section"
@@ -8,10 +18,9 @@
 
   <SectionHeader :section="section" title="Enter grades for" />
 
-  <template v-if="errorResponse">
-    <Errors :error-response="errorResponse" />
-  </template>
-  <template v-else-if="appState.graderoster">
+  <Errors v-if="errorResponse" :error-response="errorResponse" />
+
+  <template v-if="appState.graderoster">
     <BAlert
       v-if="appState.graderoster.submissions.length > 0"
       variant="success"
@@ -27,7 +36,9 @@
           <span v-if="submission.section_id">
             Section {{ submission.section_id }}:
           </span>
-          <span v-html="gradesSubmittedText(submission)"></span>
+          <span v-if="gradesSubmittedText(submission)">
+            {{ gradesSubmittedText(submission) }}
+          </span>
         </li>
       </ul>
     </BAlert>
@@ -37,7 +48,7 @@
         appState.graderoster.is_writing_section ||
         appState.graderoster.has_duplicate_codes
       "
-      class="mb-2 pb-2 small text-muted border-bottom"
+      class="mb-2 pb-2 border-bottom"
     >
       <div v-if="appState.graderoster.is_writing_section">
         <strong>Note:</strong>
@@ -49,8 +60,13 @@
           In the list below, duplicate listings of the same student are
           differentiated with a
         </span>
-        Duplicate code
-        <i class="bi bi-circle-fill text-secondary"></i>
+
+        <BBadge
+          variant="secondary"
+          pill
+          class="text-secondary-emphasis bg-secondary-subtle fw-normal"
+          >Duplicate code</BBadge
+        >
       </div>
     </div>
   </template>
@@ -80,18 +96,14 @@
     </li>
   </ul>
 
-  <div class="d-flex">
-    <div class="flex-fill align-self-center text-end me-2 small">
+  <div class="d-flex mt-4">
+    <div class="flex-fill align-self-center text-end me-2">
       <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span>
       <span v-else class="visually-hidden">
         All grades entered. Click Review to continue.
       </span>
     </div>
-    <BButton
-      variant="primary"
-      :disabled="reviewDisabled"
-      @click="reviewGrades"
-    >Review</BButton>
+    <BButton variant="primary" @click="reviewGrades">Review</BButton>
   </div>
 </template>
 
@@ -104,7 +116,7 @@ import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
 import { updateGraderoster } from "@/utils/data";
 import { gradesSubmittedText } from "@/utils/grade";
-import { BCard, BButton, BPlaceholder } from "bootstrap-vue-next";
+import { BAlert, BBadge, BButton, BPlaceholder } from "bootstrap-vue-next";
 
 export default {
   components: {
@@ -112,7 +124,8 @@ export default {
     GradeImportOptions,
     Student,
     Errors,
-    BCard,
+    BAlert,
+    BBadge,
     BButton,
     BPlaceholder,
   },
@@ -135,6 +148,7 @@ export default {
   data() {
     return {
       errorResponse: null,
+      showNotReady: false,
     };
   },
   computed: {
@@ -151,23 +165,29 @@ export default {
       }
       return s.join(", ");
     },
-    reviewDisabled() {
+    isFormInvalid() {
       return this.gradeStore.missing > 0 || this.gradeStore.invalid > 0;
     },
   },
   methods: {
     reviewGrades: function () {
-      this.updateGraderoster(
-        this.section.graderoster_url,
-        this.gradeStore.grades
-      )
-        .then((data) => {
-          this.appState.setGraderoster(data.graderoster);
-          this.appState.reviewGrades();
-        })
-        .catch((error) => {
-          this.errorResponse = error.data;
-        });
+      // TODO: rename reviewDisabled to something that makes sense - isFormValid?
+      if (!this.isFormInvalid) {
+        this.updateGraderoster(
+          this.section.graderoster_url,
+          this.gradeStore.grades
+        )
+          .then((data) => {
+            this.appState.setGraderoster(data.graderoster);
+            this.appState.reviewGrades();
+          })
+          .catch((error) => {
+            this.errorResponse = error.data;
+          });
+      } else {
+        // show alert message
+        this.showNotReady = true;
+      }
     },
   },
 };

@@ -14,7 +14,7 @@ $enable-negative-margins: true;
 /*
 $body-bg: #000;
 $body-color: #111;
-$text-muted: orange;
+$: orange;
 
 $danger: #a94442;
 $warning: #f5d300;
@@ -111,7 +111,7 @@ $utilities: (
           (
             // re-merge theme colors
             "body": $body-color,
-            "muted": $text-muted,
+            "muted": $,
             "white": $white,
             "reset": inherit,
             "transparent": transparent,

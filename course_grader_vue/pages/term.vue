@@ -4,8 +4,6 @@
     :term-url="isCurrentTermDisplay ? null : currentTerm.url"
   >
     <template #content>
-
-
       <template v-if="isLoading">
         <ul class="list-unstyled">
           <li v-for="index in 10" :key="index" class="mb-3">
@@ -49,7 +47,7 @@ import PrimarySection from "@/components/section/primary.vue";
 import Errors from "@/components/errors.vue";
 import { useContextStore } from "@/stores/context";
 import { getSections } from "@/utils/data";
-import { BCard, BPlaceholder } from "bootstrap-vue-next";
+import { BPlaceholder } from "bootstrap-vue-next";
 
 export default {
   name: "TermPage",
@@ -57,7 +55,6 @@ export default {
     Layout,
     PrimarySection,
     Errors,
-    BCard,
     BPlaceholder,
   },
   setup() {

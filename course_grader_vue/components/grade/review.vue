@@ -17,7 +17,7 @@
     <template v-if="student.saved_grade.is_incomplete">
       <span class="visually-hidden">Review grade:</span>
       <span class="fs-2 fw-bold">I</span>
-      <div class="small text-muted">
+      <div class="small ">
         Incomplete (Default: {{ student.saved_grade.grade }})
       </div>
     </template>
@@ -25,17 +25,17 @@
       <template v-if="student.saved_grade.no_grade_now">
         <span class="visually-hidden">Review grade:</span>
         <span class="fs-2 fw-bold">X</span>
-        <div class="small text-muted">(No grade now)</div>
+        <div class="small ">(No grade now)</div>
       </template>
       <template v-else>
         <span class="visually-hidden">Review grade:</span>
         <span class="fs-2 fw-bold">{{ student.saved_grade.grade }}</span>
       </template>
     </template>
-    <div v-if="hasGradeError" class="small text-muted">
+    <div v-if="hasGradeError" class="small ">
       Submitted with error: {{ student.grade_status }}
     </div>
-    <div v-else-if="hasChangedGrade" class="small text-muted">
+    <div v-else-if="hasChangedGrade" class="small ">
       {{ priorGradeText(student) }}
     </div>
   </template>

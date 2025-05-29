@@ -17,22 +17,23 @@
     <template v-if="student.has_incomplete">
       <span class="visually-hidden">Submitted grade:</span>
       <span class="fs-2 fw-bold">I</span>
-      <div class="small text-muted">
-        (Incomplete) Default: {{ student.grade }}
-      </div>
+      <div class="small">(Incomplete) Default: {{ student.grade }}</div>
     </template>
     <template v-else>
       <template v-if="student.no_grade_now">
         <span class="visually-hidden">Submitted grade:</span>
         <span class="fs-2 fw-bold">X</span>
-        <div class="small text-muted">(No grade now)</div>
+        <div class="small">(No grade now)</div>
       </template>
       <template v-else>
         <span class="visually-hidden">Submitted grade:</span>
         <span class="fs-2 fw-bold">{{ student.grade }}</span>
       </template>
     </template>
-    <div v-if="hasGradeError" class="small text-muted">
+    <div v-if="hasChangedGrade" class="small">
+      TODO: {{ student.grade_status }}
+    </div>
+    <div v-if="hasGradeError" class="small">
       Submitted with error: {{ student.grade_status }}
     </div>
   </template>
@@ -57,10 +58,17 @@ export default {
   },
   computed: {
     hasGradeError() {
-      return (this.student.grade_status_code === null ||
+      return this.student.grade_status_code === null ||
         this.student.grade_status_code === "" ||
         this.student.grade_status_code === "200" ||
-        this.student.grade_status_code === "220") ? false : true;
+        this.student.grade_status_code === "220"
+        ? false
+        : true;
+    },
+    hasChangedGrade() {
+      return (
+        this.student.date_graded && this.student.grade_status_code === "220"
+      );
     },
   },
 };

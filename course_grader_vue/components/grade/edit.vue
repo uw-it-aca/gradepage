@@ -18,7 +18,7 @@
         <label
           :for="`incomplete-${student.item_id}`"
           :title="inputIncompleteTitle"
-          class="btn btn-outline-primary fw-bold rounded-2"
+          class="btn btn-outline-primary bg-primary-hover text-white-hover fw-bold rounded-2"
           style="width: 32px"
           ><abbr title="Incomplete" class="text-decoration-none pe-none"
             >I</abbr
@@ -86,7 +86,7 @@
       <label
         :for="`writing-${student.item_id}`"
         :title="inputWritingTitle"
-        class="btn btn-outline-primary fw-bold rounded-2"
+        class="btn btn-outline-primary bg-primary-hover text-white-hover fw-bold rounded-2"
         style="width: 32px"
         ><abbr title="Writing" class="text-decoration-none pe-none"
           >W</abbr
@@ -111,10 +111,10 @@
     {{ gradeError }}
   </div>
   <div v-else>
-    <div v-if="incomplete" class="text-start small mb-3 text-muted">
+    <div v-if="incomplete" class="text-start small mb-3">
       Student will receive default grade
     </div>
-    <div v-if="importSource" class="imported-grade small text-muted">
+    <div v-if="importSource" class="imported-grade small">
       {{ importSource }} grade: {{ importGrade }}
       <span
         v-if="overrideGrade"
@@ -124,7 +124,7 @@
         <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
       </span>
     </div>
-    <div v-if="hasChangedGrade" class="small text-muted">
+    <div v-if="hasChangedGrade" class="small">
       {{ priorGradeText(student) }}
     </div>
   </div>
@@ -201,12 +201,13 @@ export default {
       );
     },
     hasChangedGrade() {
-      return this.student.date_graded &&
-        this.student.grade_status_code === "220" && (
-          this.student.grade !== this.grade ||
+      return (
+        this.student.date_graded &&
+        this.student.grade_status_code === "220" &&
+        (this.student.grade !== this.grade ||
           this.student.has_incomplete !== this.incomplete ||
-          this.student.has_writing_credit !== this.writing
-        );
+          this.student.has_writing_credit !== this.writing)
+      );
     },
   },
   created() {
@@ -285,7 +286,8 @@ export default {
       this.updateGradeStatus();
     },
     saveGrade: function () {
-      if (!this.saveInProgress) {  // Prevent duplicate PATCH requests
+      if (!this.saveInProgress) {
+        // Prevent duplicate PATCH requests
         this.saveInProgress = true;
 
         this.updateGradeStatus();

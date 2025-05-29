@@ -4,7 +4,7 @@
       <div class="fs-4 text-uppercase">
         {{ student.student_lastname }}, {{ student.student_firstname }}
       </div>
-      <div class="small text-muted">
+      <div>
         <span class="visually-hidden">Section:</span> {{ student.section_id }},
         <span v-if="student.student_credits">
           <span class="visually-hidden">Student credits:</span>
@@ -14,11 +14,13 @@
         {{ student.student_number }}
         <template v-if="student.duplicate_code">
           <span class="visually-hidden">Duplicate code:</span>
-          <abbr
-            title="Duplicate code"
-            class="badge rounded-pill text-bg-secondary"
-          >
-            {{ student.duplicate_code }}</abbr
+          <BBadge
+            variant="secondary"
+            pill
+            class="text-secondary-emphasis bg-secondary-subtle fw-normal"
+            ><abbr title="Duplicate code">
+              {{ student.duplicate_code }}</abbr
+            ></BBadge
           >
         </template>
       </div>
@@ -26,7 +28,10 @@
     <div v-if="appState.editingGrades && student.grade_url" class="text-end">
       <GradeEdit :student="student" :grade-choices="gradeChoices" />
     </div>
-    <div v-else-if="appState.reviewingGrades && student.grade_url" class="text-end">
+    <div
+      v-else-if="appState.reviewingGrades && student.grade_url"
+      class="text-end"
+    >
       <GradeReview :student="student" />
     </div>
     <div v-else-if="appState.reviewingConversion" class="text-end">

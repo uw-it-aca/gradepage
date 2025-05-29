@@ -4,11 +4,11 @@
   <template v-if="isLoading">
     Please wait, submitting grades to the Registrar...
   </template>
-  <template v-else-if="errorResponse">
-    <Errors :error-response="errorResponse" />
-  </template>
+
+  <Errors v-if="errorResponse" :error-response="errorResponse" />
+
   <template v-else-if="appState.graderoster">
-    <div class="mb-2 pb-2 small text-muted border-bottom">
+    <div class="mb-2 pb-2 border-bottom">
       <div>Please review grades and submit below.</div>
       <div v-if="appState.graderoster.is_writing_section">
         Writing credit automatically given to all students with a passing grade
@@ -19,8 +19,13 @@
           In the list below, duplicate listings of the same student are
           differentiated with a
         </span>
-        Duplicate code
-        <i class="bi bi-circle-fill text-secondary"></i>
+
+        <BBadge
+          variant="secondary"
+          pill
+          class="text-secondary-emphasis bg-secondary-subtle fw-normal"
+          >Duplicate code</BBadge
+        >
       </div>
     </div>
 
@@ -48,8 +53,8 @@
   </template>
 
   <template v-if="!isLoading && !errorResponse">
-    <div class="d-flex">
-      <div class="flex-fill align-self-center text-end me-2 small">
+    <div class="d-flex mt-4">
+      <div class="flex-fill align-self-center text-end me-2">
         All grades will be submitted to the Registrar as displayed above.
       </div>
       <div v-if="section" class="text-nowrap">
@@ -73,14 +78,14 @@ import Student from "@/components/student.vue";
 import Errors from "@/components/errors.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { submitGraderoster } from "@/utils/data";
-import { BCard, BButton, BPlaceholder } from "bootstrap-vue-next";
+import { BButton, BPlaceholder, BBadge } from "bootstrap-vue-next";
 
 export default {
   components: {
     SectionHeader,
     Student,
     Errors,
-    BCard,
+    BBadge,
     BButton,
     BPlaceholder,
   },

@@ -1,5 +1,5 @@
 <template>
-  <div class="fs-5 text-muted fw-light">
+  <div class="fs-5  fw-light">
     <span>{{ title }}</span>
   </div>
   <div v-if="section.section_name">
@@ -11,7 +11,7 @@
         animation="glow"
       />{{ section.section_name }}
     </span>
-    <span class="small"
+    <span
       >SLN
       <BPlaceholder
         v-if="!section.section_sln"

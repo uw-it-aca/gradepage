@@ -9,7 +9,11 @@
       <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
     </template>
 
-    <div v-if="gradingStatusText">{{ gradingStatusText }}</div>
+    <div v-if="gradingStatusText">{{ gradingStatusText }}
+      <span v-if="unsubmittedCount == 0" class="text-success fw-bold fs-4"
+        ><i class="bi bi-check-lg"></i
+      ></span>
+    </div>
     <BPlaceholder
       v-else
       class="bg-body-secondary"
@@ -58,6 +62,7 @@ export default {
       errorStatus: null,
       sectionNameId: "section-name-" + this.section.section_id,
       isLoading: false,
+      unsubmittedCount: null,
     };
   },
   computed: {
@@ -97,6 +102,7 @@ export default {
           .then((data) => {
             // Secondary status overrules the prop
             this.secondaryStatus = data.grading_status;
+            this.unsubmittedCount = this.gradingStatus.unsubmitted_count;
           })
           .catch((error) => {
             this.errorStatus = error.data;
