@@ -34,7 +34,7 @@ securityPolicy:
 
 externalService:
   enabled: true
-  name: vue-gradepage-db-service
+  name: gradepage-db-service
   type: ClusterIP
   serviceAddress: 172.18.1.70
   servicePort: 5432
@@ -46,6 +46,8 @@ database:
 
 repo: gradepage
 instance: vue
+namespace:
+  enabled: true
 
 memcached:
   enabled: true

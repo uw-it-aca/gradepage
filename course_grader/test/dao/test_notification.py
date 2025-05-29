@@ -28,6 +28,17 @@ class NotificationDAOFunctionsTest(TestCase):
         p = graderoster_people(self.graderoster)
         self.assertEqual(len(p), 3)
 
+    def test_graderoster_people_ind_study(self):
+        self.assertEqual(len(self.section.get_instructors()), 1)
+        self.assertEqual(len(graderoster_people(self.graderoster)), 3)
+
+        self.section.is_independent_study = True
+        self.section.meetings[0].instructors.append(
+            PWS().get_person_by_regid('9136CCB8F66711D5BE060004AC494FFE'))
+
+        self.assertEqual(len(self.section.get_instructors()), 2)
+        self.assertEqual(len(graderoster_people(self.graderoster)), 3)
+
     def test_create_recipient_list(self):
         people = graderoster_people(self.graderoster)
         r = create_recipient_list(people)

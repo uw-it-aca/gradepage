@@ -72,7 +72,7 @@ import ImportConvertSave from "@/components/import/convert-options.vue";
 import { BLink } from "bootstrap-vue-next";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
-import { createImport, parseError } from "@/utils/data";
+import { createImport } from "@/utils/data";
 import { watch } from "vue";
 
 export default {
@@ -103,7 +103,6 @@ export default {
       appState,
       gradeStore,
       createImport,
-      parseError,
     };
   },
   data() {
@@ -178,7 +177,7 @@ export default {
         })
         .catch((error) => {
           this.appState.resetGradeImport();
-          this.errorResponse = this.parseError(error);
+          this.errorResponse = error.data;
           console.log(this.errorResponse);
         })
         .finally(() => {

@@ -47,7 +47,7 @@ import Layout from "@/layouts/default.vue";
 import PrimarySection from "@/components/section/primary.vue";
 import Errors from "@/components/errors.vue";
 import { useContextStore } from "@/stores/context";
-import { getSections, parseError } from "@/utils/data";
+import { getSections } from "@/utils/data";
 import { BPlaceholder } from "bootstrap-vue-next";
 
 export default {
@@ -63,7 +63,6 @@ export default {
     return {
       contextStore,
       getSections,
-      parseError,
     };
   },
   data() {
@@ -118,7 +117,7 @@ export default {
           this.sections = data.sections;
         })
         .catch((error) => {
-          this.errorResponse = this.parseError(error);
+          this.errorResponse = error.data;
         })
         .finally(() => {
           this.isLoading = false;

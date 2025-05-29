@@ -105,7 +105,7 @@ export default {
             this.unsubmittedCount = this.gradingStatus.unsubmitted_count;
           })
           .catch((error) => {
-            this.errorStatus = error;
+            this.errorStatus = error.data;
           })
           .finally(() => {
             this.isLoading = false;

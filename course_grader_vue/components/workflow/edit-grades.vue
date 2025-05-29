@@ -114,7 +114,7 @@ import Errors from "@/components/errors.vue";
 import GradeImportOptions from "@/components/import/source-options.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
-import { updateGraderoster, parseError } from "@/utils/data";
+import { updateGraderoster } from "@/utils/data";
 import { gradesSubmittedText } from "@/utils/grade";
 import { BAlert, BBadge, BButton, BPlaceholder } from "bootstrap-vue-next";
 
@@ -143,7 +143,6 @@ export default {
       gradeStore,
       updateGraderoster,
       gradesSubmittedText,
-      parseError,
     };
   },
   data() {
@@ -183,7 +182,7 @@ export default {
             this.appState.reviewGrades();
           })
           .catch((error) => {
-            this.errorResponse = this.parseError(error);
+            this.errorResponse = error.data;
           });
       } else {
         // show alert message

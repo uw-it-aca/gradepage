@@ -90,6 +90,9 @@ def graderoster_people(graderoster):
     people = {graderoster.instructor.uwregid: graderoster.instructor}
 
     for instructor in graderoster.section.get_instructors():
+        if (graderoster.section.is_independent_study and
+                instructor.uwregid != graderoster.instructor.uwregid):
+            continue
         people[instructor.uwregid] = instructor
 
     secondary = getattr(graderoster, "secondary_section", None)
