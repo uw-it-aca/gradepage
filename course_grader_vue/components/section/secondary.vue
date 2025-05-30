@@ -10,11 +10,9 @@
     </template>
 
     <div v-if="gradingStatusText">
-      {{ gradingStatusText }}
+      <p>{{ gradingStatusText }}</p>
 
-      <p>secondary unsub count: {{ unsubmittedCount }}</p>
-
-      <span v-if="unsubmittedCount == 0" class="text-success fw-bold fs-4"
+      <span v-if="gradesAccepted" class="text-success fw-bold fs-4"
         ><i class="bi bi-check-lg"></i
       ></span>
     </div>
@@ -66,31 +64,40 @@ export default {
       errorStatus: null,
       sectionNameId: "section-name-" + this.section.section_id,
       isLoading: false,
-      unsubmittedCount: null,
     };
   },
   computed: {
     gradingStatusText() {
       if (this.section.grading_status) {
+        console.log("secondary.vue, section.grading_status: " + this.section.grading_status);
         return this.section.grading_status;
       } else if (this.errorStatus) {
+        console.log("secondary.vue, errorStatus: " + JSON.stringify(this.errorStatus));
         return this.formatErrorStatus(this.errorStatus);
       } else if (this.secondaryStatus) {
+        console.log("secondary.vue, secondaryStatus: " + JSON.stringify(this.secondaryStatus));
         return this.formatGradingStatus(this.secondaryStatus);
       } else if (this.gradingStatus) {
+        console.log("secondary.vue, gradingStatus: " + JSON.stringify(this.gradingStatus));
         return this.formatGradingStatus(this.gradingStatus);
-      } else {
-        return "";
       }
+      return "";
     },
     routerLinkTitle() {
       if (this.secondaryStatus) {
         return this.formatLinkTitle(this.secondaryStatus);
       } else if (this.gradingStatus) {
         return this.formatLinkTitle(this.gradingStatus);
-      } else {
-        return "";
       }
+      return "";
+    },
+    gradesAccepted() {
+      if (this.secondaryStatus) {
+        return this.secondaryStatus.accepted_date !== null;
+      } else if (this.gradingStatus) {
+        return this.gradingStatus.accepted_date !== null;
+      }
+      return false;
     },
   },
   created() {
@@ -106,12 +113,6 @@ export default {
           .then((data) => {
             // Secondary status overrules the prop
             this.secondaryStatus = data.section.grading_status;
-            console.log(
-              "secondary status loaded..." +
-                JSON.stringify(this.secondaryStatus)
-            );
-            this.unsubmittedCount = this.secondaryStatus.unsubmitted_count;
-            console.log("secondary unsub count:" + this.unsubmittedCount);
           })
           .catch((error) => {
             this.errorStatus = error.data;

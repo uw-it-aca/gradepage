@@ -12,9 +12,7 @@
     <div v-if="gradingStatusText">
       <p>{{ gradingStatusText }}</p>
 
-      <p>primary unsub count: {{ unsubmittedCount }}</p>
-
-      <span v-if="unsubmittedCount == 0" class="text-success fw-bold fs-4"
+      <span v-if="gradesAccepted" class="text-success fw-bold fs-4"
         ><i class="bi bi-check-lg"></i
       ></span>
     </div>
@@ -82,41 +80,32 @@ export default {
       errorStatus: null,
       sectionNameId: "section-name-" + this.section.section_id,
       isLoading: false,
-      unsubmittedCount: null,
-      //acceptedDate: null,
     };
   },
   computed: {
     gradingStatusText() {
       if (this.section.grading_status) {
+        console.log("primary.vue, section.grading_status: " + this.section.grading_status);
         return this.section.grading_status;
       } else if (this.errorStatus) {
+        console.log("primary.vue, errorStatus: " + JSON.stringify(this.errorStatus));
         return this.formatErrorStatus(this.errorStatus);
       } else if (this.gradingStatus) {
+        console.log("primary.vue, gradingStatus: " + JSON.stringify(this.gradingStatus));
         return this.formatGradingStatus(this.gradingStatus);
-      } else {
-        return "";
       }
-    },
-    acceptedDate() {
-      if (this.section.grading_status) {
-        return this.section.grading_status;
-      } else {
-        return null;
-      }
+      return "";
     },
     routerLinkTitle() {
-      if (this.gradingStatus) {
-        return this.formatLinkTitle(this.gradingStatus);
-      } else {
-        return "";
-      }
+      return (this.gradingStatus)
+        ? this.formatLinkTitle(this.gradingStatus) : "";
+    },
+    gradesAccepted() {
+      return (this.gradingStatus)
+        ? this.gradingStatus.accepted_date !== null : false;
     },
   },
   created() {
-    this.loadGradingStatus();
-  },
-  mounted() {
     this.loadGradingStatus();
   },
   methods: {
@@ -126,11 +115,6 @@ export default {
         this.getSectionStatus(this.section.status_url)
           .then((data) => {
             this.gradingStatus = data.grading_status;
-            console.log("primary grading status loaded..." + JSON.stringify(this.gradingStatus));
-            this.unsubmittedCount = this.gradingStatus.unsubmitted_count;
-            console.log("primary unsub count:" + this.unsubmittedCount);
-            //this.unsubmittedCount = data.grading_status.unsubmitted_count;
-            //this.acceptedDate = data.grading_status.acceptedDate;
 
             if (data.grading_status.hasOwnProperty("secondary_sections")) {
               this.secondaryStatus = data.grading_status.secondary_sections;
