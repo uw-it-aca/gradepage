@@ -21,10 +21,12 @@
   <Errors v-if="errorResponse" :error-response="errorResponse" />
 
   <template v-if="appState.graderoster">
-
-    <!-- Already submitted. Edit in progress -->
+    <!-- Previously submitted. Edit in progress -->
     <BAlert
-      v-if="!appState.graderoster.is_submission_confirmation"
+      v-if="
+        appState.graderoster.submissions.length > 0 &&
+        !appState.graderoster.is_submission_confirmation
+      "
       variant="warning"
       :model-value="true"
       class="small d-flex align-items-center"
@@ -50,7 +52,7 @@
           <span v-if="submission.section_id">
             Section {{ submission.section_id }}:
           </span>
-           <span v-html="gradesSubmittedText(submission)"></span>
+          <span v-html="gradesSubmittedText(submission)"></span>
         </li>
       </ul>
     </BAlert>
