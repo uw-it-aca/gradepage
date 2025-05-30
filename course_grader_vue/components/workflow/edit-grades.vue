@@ -1,6 +1,6 @@
 <template>
   <BAlert
-    v-if="showNotReady && isFormInvalid"
+    v-if="!isFormValid"
     :model-value="true"
     variant="danger"
     class="small"
@@ -21,10 +21,11 @@
   <Errors v-if="errorResponse" :error-response="errorResponse" />
 
   <template v-if="appState.graderoster">
+
     <!-- Previously submitted. Edit in progress -->
     <BAlert
       v-if="
-        appState.graderoster.submissions.length > 0 &&
+        appState.graderoster.has_successful_submissions &&
         !appState.graderoster.is_submission_confirmation
       "
       variant="warning"
@@ -38,7 +39,7 @@
     </BAlert>
 
     <BAlert
-      v-if="appState.graderoster.submissions.length > 0"
+      v-if="appState.graderoster.has_successful_submissions"
       variant="success"
       :model-value="true"
       class="small"
@@ -52,7 +53,7 @@
           <span v-if="submission.section_id">
             Section {{ submission.section_id }}:
           </span>
-          <span v-html="gradesSubmittedText(submission)"></span>
+           <span v-html="gradesSubmittedText(submission)"></span>
         </li>
       </ul>
     </BAlert>
@@ -117,7 +118,12 @@
         All grades entered. Click Review to continue.
       </span>
     </div>
-    <BButton variant="outline-primary" class="me-2">Discard</BButton>
+    <BButton
+      v-if="appState.graderoster.has_successful_submissions && gradeStore.saved > 0"
+      variant="outline-primary"
+      @click="discardGrades"
+      class="me-2"
+    >Discard</BButton>
     <BButton variant="primary" @click="reviewGrades">Review</BButton>
   </div>
 </template>
@@ -129,7 +135,7 @@ import Errors from "@/components/errors.vue";
 import GradeImportOptions from "@/components/import/source-options.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
-import { updateGraderoster } from "@/utils/data";
+import { updateGraderoster, clearSavedGrades } from "@/utils/data";
 import { gradesSubmittedText } from "@/utils/grade";
 import { BAlert, BBadge, BButton, BPlaceholder } from "bootstrap-vue-next";
 
@@ -157,13 +163,13 @@ export default {
       appState,
       gradeStore,
       updateGraderoster,
+      clearSavedGrades,
       gradesSubmittedText,
     };
   },
   data() {
     return {
       errorResponse: null,
-      showNotReady: false,
     };
   },
   computed: {
@@ -180,14 +186,13 @@ export default {
       }
       return s.join(", ");
     },
-    isFormInvalid() {
-      return this.gradeStore.missing > 0 || this.gradeStore.invalid > 0;
+    isFormValid() {
+      return this.gradeStore.missing === 0 && this.gradeStore.invalid === 0;
     },
   },
   methods: {
     reviewGrades: function () {
-      // TODO: rename reviewDisabled to something that makes sense - isFormValid?
-      if (!this.isFormInvalid) {
+      if (this.isFormValid) {
         this.updateGraderoster(
           this.section.graderoster_url,
           this.gradeStore.grades
@@ -199,10 +204,16 @@ export default {
           .catch((error) => {
             this.errorResponse = error.data;
           });
-      } else {
-        // show alert message
-        this.showNotReady = true;
       }
+    },
+    discardGrades: function () {
+      this.clearSavedGrades()
+        .then(() => {
+          this.appState.confirmGrades();
+        })
+        .catch((error) => {
+          this.errorResponse = error.data;
+        });
     },
   },
 };

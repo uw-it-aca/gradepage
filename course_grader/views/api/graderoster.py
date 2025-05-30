@@ -110,14 +110,19 @@ class GradeRoster(GradeFormHandler):
 
         try:
             grade_data = json.loads(request.body)
-            grade = self.save_grade(section_id, grade_data)
+
+            # PATCH does not return a full graderoster resource
+            if grade_data.get("clear_grades"):
+                Grade.objects.get_by_section_id_and_person(
+                    section_id, self.user.uwregid).delete()
+                return self.json_response(status=204)
+            else:
+                grade = self.save_grade(section_id, grade_data)
+                return self.json_response(grade.json_data())
         except Exception as ex:
             logger.error(
                 "PATCH grade failed for {}: {}".format(section_id, ex))
             return self.error_response(500)
-
-        # PATCH does not return a full graderoster resource
-        return self.json_response(grade.json_data())
 
     def put(self, request, *args, **kwargs):
         error = self._authorize(request, *args, **kwargs)
