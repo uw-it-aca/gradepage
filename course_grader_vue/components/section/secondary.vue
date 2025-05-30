@@ -10,6 +10,10 @@
     </template>
 
     <div v-if="gradingStatusText">{{ gradingStatusText }}
+
+      <p>unsub count: {{ unsubmittedCount }}</p>
+      <p>secondary status: {{ secondaryStatus }}</p>
+
       <span v-if="unsubmittedCount == 0" class="text-success fw-bold fs-4"
         ><i class="bi bi-check-lg"></i
       ></span>
@@ -102,7 +106,9 @@ export default {
           .then((data) => {
             // Secondary status overrules the prop
             this.secondaryStatus = data.grading_status;
-            this.unsubmittedCount = this.gradingStatus.unsubmitted_count;
+            this.unsubmittedCount = this.secondaryStatus.unsubmitted_count;
+            console.log("unsub count:" + this.unsubmittedCount);
+
           })
           .catch((error) => {
             this.errorStatus = error.data;

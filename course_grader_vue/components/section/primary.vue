@@ -10,7 +10,11 @@
     </template>
 
     <div v-if="gradingStatusText">
-      {{ gradingStatusText }}
+      <p>{{ gradingStatusText }}</p>
+
+      <p>unsub count: {{ unsubmittedCount }}</p>
+      <p>grading status: {{ gradingStatus }}</p>
+
       <span v-if="unsubmittedCount == 0" class="text-success fw-bold fs-4"
         ><i class="bi bi-check-lg"></i
       ></span>
@@ -79,6 +83,7 @@ export default {
       sectionNameId: "section-name-" + this.section.section_id,
       isLoading: false,
       unsubmittedCount: null,
+      //acceptedDate: null,
     };
   },
   computed: {
@@ -93,6 +98,13 @@ export default {
         return "";
       }
     },
+    acceptedDate() {
+      if (this.section.grading_status) {
+        return this.section.grading_status;
+      } else {
+        return null;
+      }
+    },
     routerLinkTitle() {
       if (this.gradingStatus) {
         return this.formatLinkTitle(this.gradingStatus);
@@ -104,6 +116,9 @@ export default {
   created() {
     this.loadGradingStatus();
   },
+  mounted() {
+    this.loadGradingStatus();
+  },
   methods: {
     loadGradingStatus: function () {
       if (this.section.status_url) {
@@ -111,7 +126,11 @@ export default {
         this.getSectionStatus(this.section.status_url)
           .then((data) => {
             this.gradingStatus = data.grading_status;
+            console.log("grading status loaded..." + this.gradingStatus)
             this.unsubmittedCount = this.gradingStatus.unsubmitted_count;
+            console.log("unsub count:" + this.unsubmittedCount);
+            //this.unsubmittedCount = data.grading_status.unsubmitted_count;
+            //this.acceptedDate = data.grading_status.acceptedDate;
 
             if (data.grading_status.hasOwnProperty("secondary_sections")) {
               this.secondaryStatus = data.grading_status.secondary_sections;
