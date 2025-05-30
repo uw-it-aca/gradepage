@@ -12,8 +12,7 @@
     <div v-if="gradingStatusText">
       <p>{{ gradingStatusText }}</p>
 
-      <p>unsub count: {{ unsubmittedCount }}</p>
-      <p>grading status: {{ gradingStatus }}</p>
+      <p>primary unsub count: {{ unsubmittedCount }}</p>
 
       <span v-if="unsubmittedCount == 0" class="text-success fw-bold fs-4"
         ><i class="bi bi-check-lg"></i
@@ -40,6 +39,7 @@
         :section="secondary"
         :grading-status="secondaryStatus[index]"
       ></SecondarySection>
+
     </li>
   </ul>
 </template>
@@ -126,9 +126,9 @@ export default {
         this.getSectionStatus(this.section.status_url)
           .then((data) => {
             this.gradingStatus = data.grading_status;
-            console.log("grading status loaded..." + this.gradingStatus)
+            console.log("primary grading status loaded..." + JSON.stringify(this.gradingStatus));
             this.unsubmittedCount = this.gradingStatus.unsubmitted_count;
-            console.log("unsub count:" + this.unsubmittedCount);
+            console.log("primary unsub count:" + this.unsubmittedCount);
             //this.unsubmittedCount = data.grading_status.unsubmitted_count;
             //this.acceptedDate = data.grading_status.acceptedDate;
 

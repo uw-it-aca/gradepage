@@ -9,10 +9,10 @@
       <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
     </template>
 
-    <div v-if="gradingStatusText">{{ gradingStatusText }}
+    <div v-if="gradingStatusText">
+      {{ gradingStatusText }}
 
-      <p>unsub count: {{ unsubmittedCount }}</p>
-      <p>secondary status: {{ secondaryStatus }}</p>
+      <p>secondary unsub count: {{ unsubmittedCount }}</p>
 
       <span v-if="unsubmittedCount == 0" class="text-success fw-bold fs-4"
         ><i class="bi bi-check-lg"></i
@@ -105,10 +105,13 @@ export default {
         this.getSectionStatus(this.section.status_url)
           .then((data) => {
             // Secondary status overrules the prop
-            this.secondaryStatus = data.grading_status;
+            this.secondaryStatus = data.section.grading_status;
+            console.log(
+              "secondary status loaded..." +
+                JSON.stringify(this.secondaryStatus)
+            );
             this.unsubmittedCount = this.secondaryStatus.unsubmitted_count;
-            console.log("unsub count:" + this.unsubmittedCount);
-
+            console.log("secondary unsub count:" + this.unsubmittedCount);
           })
           .catch((error) => {
             this.errorStatus = error.data;
