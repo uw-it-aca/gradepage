@@ -115,7 +115,13 @@ def graderoster_status_params(graderoster, secondary_section_id=None):
 
     data = {
         "submitted_count": submitted_count,
-        "unsubmitted_count": total_count - submitted_count
+        "unsubmitted_count": total_count - submitted_count,
+        "submitted_date": None,
+        "submitted_by": None,
+        "accepted_date": None,
+        "grade_import": None,
+        "status_code": None,
+        "deadline_warning": False,
     }
 
     section = graderoster.section
