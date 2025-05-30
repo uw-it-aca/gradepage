@@ -55,6 +55,7 @@
 
   <SectionHeader :section="section" title="Grade Receipt for" />
 
+  <!-- Show submitted receipt banner -->
   <BAlert
     v-if="!appState.graderoster.is_submission_confirmation"
     variant="info"
@@ -65,7 +66,7 @@
     <BLink
       href="https://registrar.washington.edu/staff-faculty/grading-resources/"
       target="_blank"
-      class="d-print-none"
+      class="ms-2 d-print-none"
       >More info
     </BLink>
   </BAlert>
@@ -104,7 +105,7 @@
     :model-value="true"
     class="small"
   >
-    <ul class="list-unstyled">
+    <ul class="list-unstyled m-0">
       <li
         v-for="(submission, index) in appState.graderoster.submissions"
         :key="index"

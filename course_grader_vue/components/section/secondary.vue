@@ -9,12 +9,11 @@
       <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
     </template>
 
-    <div v-if="gradingStatusText">
-      <p>{{ gradingStatusText }}</p>
-
-      <span v-if="gradesAccepted" class="text-success fw-bold fs-4"
-        ><i class="bi bi-check-lg"></i
-      ></span>
+    <div v-if="gradingStatusText" class="d-flex">
+      <div>{{ gradingStatusText }}</div>
+      <div v-if="gradesAccepted" class="text-success fw-bold ms-3">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
     </div>
     <BPlaceholder
       v-else
@@ -69,16 +68,26 @@ export default {
   computed: {
     gradingStatusText() {
       if (this.section.grading_status) {
-        console.log("secondary.vue, section.grading_status: " + this.section.grading_status);
+        console.log(
+          "secondary.vue, section.grading_status: " +
+            this.section.grading_status
+        );
         return this.section.grading_status;
       } else if (this.errorStatus) {
-        console.log("secondary.vue, errorStatus: " + JSON.stringify(this.errorStatus));
+        console.log(
+          "secondary.vue, errorStatus: " + JSON.stringify(this.errorStatus)
+        );
         return this.formatErrorStatus(this.errorStatus);
       } else if (this.secondaryStatus) {
-        console.log("secondary.vue, secondaryStatus: " + JSON.stringify(this.secondaryStatus));
+        console.log(
+          "secondary.vue, secondaryStatus: " +
+            JSON.stringify(this.secondaryStatus)
+        );
         return this.formatGradingStatus(this.secondaryStatus);
       } else if (this.gradingStatus) {
-        console.log("secondary.vue, gradingStatus: " + JSON.stringify(this.gradingStatus));
+        console.log(
+          "secondary.vue, gradingStatus: " + JSON.stringify(this.gradingStatus)
+        );
         return this.formatGradingStatus(this.gradingStatus);
       }
       return "";
