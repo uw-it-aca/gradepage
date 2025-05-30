@@ -21,13 +21,27 @@
   <Errors v-if="errorResponse" :error-response="errorResponse" />
 
   <template v-if="appState.graderoster">
+
+    <!-- Already submitted. Edit in progress -->
+    <BAlert
+      v-if="!appState.graderoster.is_submission_confirmation"
+      variant="warning"
+      :model-value="true"
+      class="small d-flex align-items-center"
+    >
+      You are editing grades that have been previously been submitted!
+      <BLink href="#" target="_blank" class="ms-2 d-print-none"
+        >Discard changes
+      </BLink>
+    </BAlert>
+
     <BAlert
       v-if="appState.graderoster.submissions.length > 0"
       variant="success"
       :model-value="true"
       class="small"
     >
-      <ul>
+      <ul class="list-unstyled m-0">
         <li
           v-for="(submission, index) in appState.graderoster.submissions"
           :key="index"
@@ -36,9 +50,7 @@
           <span v-if="submission.section_id">
             Section {{ submission.section_id }}:
           </span>
-          <span v-if="gradesSubmittedText(submission)">
-            {{ gradesSubmittedText(submission) }}
-          </span>
+           <span v-html="gradesSubmittedText(submission)"></span>
         </li>
       </ul>
     </BAlert>
@@ -103,6 +115,7 @@
         All grades entered. Click Review to continue.
       </span>
     </div>
+    <BButton variant="outline-primary" class="me-2">Discard</BButton>
     <BButton variant="primary" @click="reviewGrades">Review</BButton>
   </div>
 </template>
