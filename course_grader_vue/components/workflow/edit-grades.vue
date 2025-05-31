@@ -207,13 +207,15 @@ export default {
       }
     },
     discardGrades: function () {
-      this.clearSavedGrades()
-        .then(() => {
-          this.appState.confirmGrades();
-        })
-        .catch((error) => {
-          this.errorResponse = error.data;
-        });
+      if (confirm("Are you sure you want to discard grade changes?")) {
+        this.clearSavedGrades(this.section.graderoster_url)
+          .then(() => {
+            this.appState.confirmGrades();
+          })
+          .catch((error) => {
+            this.errorResponse = error.data;
+          });
+      }
     },
   },
 };
