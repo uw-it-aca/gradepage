@@ -300,6 +300,7 @@ export default {
             this.grade = data.grade;
             this.incomplete = data.is_incomplete;
             this.is_writing = data.is_writing;
+            this.gradeStore.addSaved(this.student.student_id);
           })
           .catch((err) => {
             this.gradeError = err.error;

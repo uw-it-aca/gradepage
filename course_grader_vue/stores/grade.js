@@ -5,7 +5,11 @@ export const useGradeStore = defineStore("grade", {
   state: () => {
     return {
       name: "Grade",
-      gradeStatus: { missing: new Set(), invalid: new Set() },
+      gradeStatus: {
+        missing: new Set(),
+        invalid: new Set(),
+        saved: new Set()
+      },
       gradeData: {},
       gradeChoices: {},
     };
@@ -16,6 +20,9 @@ export const useGradeStore = defineStore("grade", {
     },
     invalid(state) {
       return this.gradeStatus.invalid.size;
+    },
+    saved(state) {
+      return this.gradeStatus.saved.size;
     },
     grades(state) {
       var key,
@@ -29,6 +36,9 @@ export const useGradeStore = defineStore("grade", {
     },
   },
   actions: {
+    addSaved(studentId) {
+      this.gradeStatus.saved.add(studentId);
+    },
     validate(studentId, grade, incomplete, writing, choices) {
       let error = validateGrade(grade, incomplete, choices);
 

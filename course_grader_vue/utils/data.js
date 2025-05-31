@@ -51,6 +51,16 @@ async function updateGrade(url, data) {
   });
 }
 
+async function clearSavedGrades(url) {
+  return useCustomFetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+    },
+      body: JSON.stringify({ clear_grades: true }),
+  });
+}
+
 async function createImport(url, data) {
   return useCustomFetch(url, {
     method: "POST",
@@ -100,6 +110,7 @@ export {
   updateGraderoster,
   submitGraderoster,
   updateGrade,
+  clearSavedGrades,
   createImport,
   saveImportedGrades,
   uploadGrades,
