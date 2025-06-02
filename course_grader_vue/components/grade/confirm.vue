@@ -30,9 +30,6 @@
         <span class="fs-2 fw-bold">{{ student.grade }}</span>
       </template>
     </template>
-    <div v-if="hasChangedGrade" class="small">
-      TODO: {{ student.grade_status }}
-    </div>
     <div v-if="hasGradeError" class="small">
       Submitted with error: {{ student.grade_status }}
     </div>
