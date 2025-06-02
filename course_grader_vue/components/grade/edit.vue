@@ -20,7 +20,7 @@
         @keydown.down.exact="openMenu"
       />
 
-      <!-- grade input errors -->
+      <!-- grade input validation errors -->
       <div v-if="gradeError" role="alert" class="invalid-feedback">
         {{ gradeError }}
       </div>

@@ -26,8 +26,12 @@ function normalizeDefaultGrade(grade, choices) {
 function validateGrade(grade, incomplete, choices) {
   var is_hypenated, is_cnc, is_hhppf, is_undergrad_numeric, is_grad_numeric;
 
-  if (grade === "" || choices.includes(grade)) {
+  if (choices.includes(grade)) {
     return "";
+  }
+
+  if (grade === "") {
+    return "Grade is required.";
   }
 
   if (incomplete && incompleteBlocklist.includes(grade)) {
