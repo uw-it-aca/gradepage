@@ -1,4 +1,37 @@
 <template>
+  <!-- info: show submitted receipt -->
+  <BAlert
+    v-if="!appState.graderoster.is_submission_confirmation"
+    variant="info"
+    :model-value="true"
+    class="small d-flex align-items-center"
+  >
+    <div>Submitted grade may differ from official final grade.</div>
+
+    <div>
+      <BLink
+        href="https://registrar.washington.edu/staff-faculty/grading-resources/"
+        target="_blank"
+        class="mx-2 d-print-none"
+        >More info
+      </BLink>
+
+      <BLink
+        v-if="appState.graderoster.gradable_student_count > 0"
+        title="Edit Grades and Resubmit"
+        @click.prevent="editGrades()"
+        >Change submitted grades
+      </BLink>
+      <BLink
+        v-else
+        href="https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/"
+        target="_blank"
+        title="Learn how to change submitted grades"
+        >Change submitted grades
+      </BLink>
+    </div>
+  </BAlert>
+
   <!-- grade submission in progress -->
   <BAlert
     v-if="appState.graderoster.has_inprogress_submissions"
@@ -55,22 +88,6 @@
 
   <SectionHeader :section="section" title="Grade Receipt for" />
 
-  <!-- Show submitted receipt banner -->
-  <BAlert
-    v-if="!appState.graderoster.is_submission_confirmation"
-    variant="info"
-    :model-value="true"
-    class="small d-flex align-items-center"
-  >
-    Submitted grade may differ from official final grade.
-    <BLink
-      href="https://registrar.washington.edu/staff-faculty/grading-resources/"
-      target="_blank"
-      class="ms-2 d-print-none"
-      >More info
-    </BLink>
-  </BAlert>
-
   <template v-if="appState.graderoster.is_submission_confirmation">
     <template v-if="appState.graderoster.has_failed_submissions">
       <!-- warning -->
@@ -98,14 +115,13 @@
     </BAlert>
   </template>
 
-  <!-- success -->
-  <BAlert
+  <!-- TODO: inline status -->
+  <div
     v-if="appState.graderoster.submissions.length > 0"
-    variant="success"
     :model-value="true"
     class="small"
   >
-    <ul class="list-unstyled m-0">
+    <ul class="list-unstyled text-success">
       <li
         v-for="(submission, index) in appState.graderoster.submissions"
         :key="index"
@@ -117,22 +133,7 @@
         <span v-html="gradesSubmittedText(submission)"></span>
       </li>
     </ul>
-    <div>
-      <BLink
-        v-if="appState.graderoster.gradable_student_count > 0"
-        title="Edit Grades and Resubmit"
-        @click.prevent="editGrades()"
-        >Change submitted grades
-      </BLink>
-      <BLink
-        v-else
-        href="https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/"
-        target="_blank"
-        title="Learn how to change submitted grades"
-        >Change submitted grades
-      </BLink>
-    </div>
-  </BAlert>
+  </div>
 
   <div
     v-if="

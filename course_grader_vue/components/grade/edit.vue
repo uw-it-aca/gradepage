@@ -9,7 +9,7 @@
         <input
           :id="`incomplete-${student.item_id}`"
           type="checkbox"
-          class="btn-check"
+          class=""
           autocomplete="off"
           :disabled="!student.allows_incomplete"
           :checked="incomplete"
@@ -18,17 +18,14 @@
         <label
           :for="`incomplete-${student.item_id}`"
           :title="inputIncompleteTitle"
-          class="btn btn-outline-primary bg-primary-hover text-white-hover fw-bold rounded-2"
-          style="width: 32px"
-          ><abbr title="Incomplete" class="text-decoration-none pe-none"
-            >I</abbr
-          ></label
+          class=""
+          >Incomplete</label
         >
       </div>
 
       <!-- grade text input - custom bootstrap -->
       <div class="dropdown ms-1">
-        <label :for="`grade-${student.item_id}`" class="visually-hidden"
+        <label :for="`grade-${student.item_id}`" class=""
           >Enter grade
         </label>
         <input
@@ -72,13 +69,23 @@
 
     <!-- writing checkbox button -->
     <div
-      v-if="!student.is_writing_section"
+      v-if="student.is_writing_section"
       class="btn-group btn-group-sm p-1 bg-transparent rounded-3"
     >
       <input
         :id="`writing-${student.item_id}`"
         type="checkbox"
-        class="btn-check"
+        class=""
+        disabled
+        checked
+      />
+      <label>Writing</label>
+    </div>
+    <div v-else class="btn-group btn-group-sm p-1 bg-transparent rounded-3">
+      <input
+        :id="`writing-${student.item_id}`"
+        type="checkbox"
+        class=""
         :disabled="!student.allows_writing_credit"
         :checked="writing"
         @change="writingChanged($event.target.checked)"
@@ -86,24 +93,9 @@
       <label
         :for="`writing-${student.item_id}`"
         :title="inputWritingTitle"
-        class="btn btn-outline-primary bg-primary-hover text-white-hover fw-bold rounded-2"
-        style="width: 32px"
-        ><abbr title="Writing" class="text-decoration-none pe-none"
-          >W</abbr
-        ></label
+        class=""
+        >Writing</label
       >
-    </div>
-    <div
-      v-if="student.is_writing_section"
-      class="btn-group btn-group-sm p-1 bg-transparent rounded-3"
-      aria-hidden="true"
-    >
-      <button
-        class="btn btn-secondary disabled fw-bold rounded-2"
-        style="width: 32px"
-      >
-        <abbr title="Writing" class="text-decoration-none pe-none">W</abbr>
-      </button>
     </div>
   </div>
 
