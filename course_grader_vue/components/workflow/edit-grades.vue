@@ -24,17 +24,14 @@
 
     <!-- Previously submitted. Edit in progress -->
     <BAlert
-      v-if="
-        appState.graderoster.has_successful_submissions &&
-        !appState.graderoster.is_submission_confirmation
-      "
+      v-if="hasSubmittedAndSavedGrades"
       variant="warning"
       :model-value="true"
       class="small d-flex align-items-center"
     >
       You are editing grades that have been previously been submitted!
-      <BLink href="#" target="_blank" class="ms-2 d-print-none"
-        >Discard changes
+      <BLink @click.prevent="discardGrades()" class="ms-2 d-print-none">
+        Discard changes
       </BLink>
     </BAlert>
 
@@ -119,7 +116,7 @@
       </span>
     </div>
     <BButton
-      v-if="appState.graderoster.has_successful_submissions && gradeStore.saved > 0"
+      v-if="hasSubmittedAndSavedGrades"
       variant="outline-primary"
       @click="discardGrades"
       class="me-2"
@@ -189,6 +186,11 @@ export default {
     isFormValid() {
       return this.gradeStore.missing === 0 && this.gradeStore.invalid === 0;
     },
+    hasSubmittedAndSavedGrades() {
+      return this.appState.graderoster.has_successful_submissions && (
+        this.appState.graderoster.has_saved_grades ||
+        this.gradeStore.saved > 0);
+    },
   },
   methods: {
     reviewGrades: function () {
@@ -206,9 +208,12 @@ export default {
     },
     discardGrades: function () {
       if (confirm("Are you sure you want to discard grade changes?")) {
+        this.gradeStore.$reset();
+        this.appState.$reset();
         this.clearSavedGrades(this.section.graderoster_url)
           .then((data) => {
             this.appState.setGraderoster(data.graderoster);
+            this.errorResponse = null;
           })
           .catch((error) => {
             this.errorResponse = error.data;
