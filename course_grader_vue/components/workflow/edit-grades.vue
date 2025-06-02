@@ -193,10 +193,8 @@ export default {
   methods: {
     reviewGrades: function () {
       if (this.isFormValid) {
-        this.updateGraderoster(
-          this.section.graderoster_url,
-          this.gradeStore.grades
-        )
+        let put_data = { grades: this.gradeStore.grades };
+        this.updateGraderoster(this.section.graderoster_url, put_data)
           .then((data) => {
             this.appState.setGraderoster(data.graderoster);
             this.appState.reviewGrades();
@@ -209,8 +207,8 @@ export default {
     discardGrades: function () {
       if (confirm("Are you sure you want to discard grade changes?")) {
         this.clearSavedGrades(this.section.graderoster_url)
-          .then(() => {
-            this.appState.confirmGrades();
+          .then((data) => {
+            this.appState.setGraderoster(data.graderoster);
           })
           .catch((error) => {
             this.errorResponse = error.data;
