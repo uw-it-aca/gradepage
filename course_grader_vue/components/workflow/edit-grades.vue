@@ -1,27 +1,5 @@
 <template>
-  <BAlert
-    v-if="!isFormValid"
-    :model-value="true"
-    variant="danger"
-    class="small"
-    ><i class="bi-exclamation-octagon-fill me-1"></i>Unable to submit because
-    there are
-    <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span></BAlert
-  >
-
-  <div v-if="section">
-    <GradeImportOptions
-      :section="section"
-      :expected-grade-count="appState.graderoster.gradable_student_count"
-    />
-  </div>
-
-  <SectionHeader :section="section" title="Enter grades for" />
-
-  <Errors v-if="errorResponse" :error-response="errorResponse" />
-
   <template v-if="appState.graderoster">
-
     <!-- Previously submitted. Edit in progress -->
     <BAlert
       v-if="hasSubmittedAndSavedGrades"
@@ -34,14 +12,33 @@
         Discard changes
       </BLink>
     </BAlert>
+  </template>
 
-    <BAlert
+  <div v-if="section">
+    <GradeImportOptions
+      :section="section"
+      :expected-grade-count="appState.graderoster.gradable_student_count"
+    />
+  </div>
+
+  <SectionHeader :section="section" title="Enter grades for" />
+
+  <BAlert v-if="!isFormValid" :model-value="true" variant="danger" class="small"
+    ><i class="bi-exclamation-octagon-fill me-1"></i>Unable to submit because
+    there are
+    <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span></BAlert
+  >
+
+  <Errors v-if="errorResponse" :error-response="errorResponse" />
+
+  <template v-if="appState.graderoster">
+    <!-- TODO: inline status -->
+    <div
       v-if="appState.graderoster.has_successful_submissions"
-      variant="success"
       :model-value="true"
       class="small"
     >
-      <ul class="list-unstyled m-0">
+      <ul class="list-unstyled text-success">
         <li
           v-for="(submission, index) in appState.graderoster.submissions"
           :key="index"
@@ -50,10 +47,10 @@
           <span v-if="submission.section_id">
             Section {{ submission.section_id }}:
           </span>
-           <span v-html="gradesSubmittedText(submission)"></span>
+          <span v-html="gradesSubmittedText(submission)"></span>
         </li>
       </ul>
-    </BAlert>
+    </div>
 
     <div
       v-if="
@@ -87,7 +84,7 @@
     <li
       v-for="(student, index) in appState.graderoster.students"
       :key="student.item_id"
-      class="bpt-2 mt-2"
+      class="pt-2 mt-2"
       :class="index != 0 ? 'border-top' : ''"
     >
       <Student
@@ -120,7 +117,8 @@
       variant="outline-primary"
       @click="discardGrades"
       class="me-2"
-    >Discard</BButton>
+      >Discard</BButton
+    >
     <BButton variant="primary" @click="reviewGrades">Review</BButton>
   </div>
 </template>
@@ -187,9 +185,11 @@ export default {
       return this.gradeStore.missing === 0 && this.gradeStore.invalid === 0;
     },
     hasSubmittedAndSavedGrades() {
-      return this.appState.graderoster.has_successful_submissions && (
-        this.appState.graderoster.has_saved_grades ||
-        this.gradeStore.saved > 0);
+      return (
+        this.appState.graderoster.has_successful_submissions &&
+        (this.appState.graderoster.has_saved_grades ||
+          this.gradeStore.saved > 0)
+      );
     },
   },
   methods: {

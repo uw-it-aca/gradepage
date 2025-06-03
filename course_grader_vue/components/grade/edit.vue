@@ -1,131 +1,126 @@
 <template>
-  <div class="d-flex mt-2">
-    <div
-      class="d-flex p-1 rounded-3 me-0"
-      :class="[incomplete ? 'bg-primary-subtle' : '']"
-    >
-      <!-- incomplete checkbox button -->
-      <div class="btn-group btn-group-sm me-1">
-        <input
-          :id="`incomplete-${student.item_id}`"
-          type="checkbox"
-          class="btn-check"
-          autocomplete="off"
-          :disabled="!student.allows_incomplete"
-          :checked="incomplete"
-          @change="incompleteChanged($event.target.checked)"
-        />
-        <label
-          :for="`incomplete-${student.item_id}`"
-          :title="inputIncompleteTitle"
-          class="btn btn-outline-primary bg-primary-hover text-white-hover fw-bold rounded-2"
-          style="width: 32px"
-          ><abbr title="Incomplete" class="text-decoration-none pe-none"
-            >I</abbr
-          ></label
-        >
-      </div>
-
-      <!-- grade text input - custom bootstrap -->
-      <div class="dropdown ms-1">
-        <label :for="`grade-${student.item_id}`" class="visually-hidden"
-          >Enter grade
-        </label>
-        <input
-          :id="`grade-${student.item_id}`"
-          class="form-control form-control-sm rounded-2 dropdown-toggle border-secondary"
-          type="text"
-          autocomplete="off"
-          :value="grade"
-          :placeholder="gradePlaceholder"
-          :aria-controls="`grade-${student.item_id}-menu`"
-          data-bs-toggle="dropdown"
-          @change="gradeChanged($event.target.value)"
-          @keydown.tab.exact="false"
-          @keydown.down.exact="openMenu"
-        />
-        <ul
-          :id="`grade-${student.item_id}-menu`"
-          role="menu"
-          :aria-labelledby="`grade-${student.item_id}`"
-          class="dropdown-menu m-0 small overflow-y-auto"
-          style="max-height: 400px"
-          :class="[menuOpen ? 'show' : '']"
-        >
-          <li
-            v-for="(opt, index) in actualChoices"
-            :key="index"
-            role="presentation"
-          >
-            <button
-              role="menuitem"
-              class="dropdown-item small"
-              type="button"
-              :value="opt"
-              @click="gradeChanged(opt)"
-              v-text="opt"
-            ></button>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- writing checkbox button -->
-    <div
-      v-if="!student.is_writing_section"
-      class="btn-group btn-group-sm p-1 bg-transparent rounded-3"
-    >
+  <div class="d-flex">
+    <!-- grade text input container - custom bootstrap -->
+    <div class="dropdown w-100 me-3">
+      <label :for="`grade-${student.item_id}`" class="form-label"
+        >Enter grade
+      </label>
       <input
-        :id="`writing-${student.item_id}`"
-        type="checkbox"
-        class="btn-check"
-        :disabled="!student.allows_writing_credit"
-        :checked="writing"
-        @change="writingChanged($event.target.checked)"
+        :id="`grade-${student.item_id}`"
+        class="form-control form-control-sm rounded-2 dropdown-toggle"
+        :class="gradeError || gradeEmpty ? 'is-invalid' : ''"
+        type="text"
+        autocomplete="off"
+        :value="grade"
+        :aria-controls="`grade-${student.item_id}-menu`"
+        data-bs-toggle="dropdown"
+        required
+        @change="gradeChanged($event.target.value)"
+        @keydown.tab.exact="false"
+        @keydown.down.exact="openMenu"
       />
-      <label
-        :for="`writing-${student.item_id}`"
-        :title="inputWritingTitle"
-        class="btn btn-outline-primary bg-primary-hover text-white-hover fw-bold rounded-2"
-        style="width: 32px"
-        ><abbr title="Writing" class="text-decoration-none pe-none"
-          >W</abbr
-        ></label
-      >
-    </div>
-    <div
-      v-if="student.is_writing_section"
-      class="btn-group btn-group-sm p-1 bg-transparent rounded-3"
-      aria-hidden="true"
-    >
-      <button
-        class="btn btn-secondary disabled fw-bold rounded-2"
-        style="width: 32px"
-      >
-        <abbr title="Writing" class="text-decoration-none pe-none">W</abbr>
-      </button>
-    </div>
-  </div>
 
-  <div v-if="gradeError" role="alert" class="text-danger invalid-grade small">
-    {{ gradeError }}
-  </div>
-  <div v-else>
-    <div v-if="incomplete" class="text-start small mb-3">
-      Student will receive default grade
-    </div>
-    <div v-if="importSource" class="imported-grade small">
-      {{ importSource }} grade: {{ importGrade }}
-      <span
-        v-if="overrideGrade"
-        class="override-icon"
-        title="Override grade imported from Canvas Gradebook"
+      <!-- grade input validation errors -->
+      <div v-if="gradeError" role="alert" class="invalid-feedback">
+        {{ gradeError }}
+      </div>
+
+      <div v-else>
+        <div v-if="incomplete" class="form-text">
+          Student will receive default grade
+        </div>
+        <div v-if="importSource" class="imported-grade small">
+          {{ importSource }} grade: {{ importGrade }}
+          <span
+            v-if="overrideGrade"
+            class="override-icon"
+            title="Override grade imported from Canvas Gradebook"
+          >
+            <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
+          </span>
+        </div>
+        <div v-if="hasChangedGrade" class="small">
+          {{ priorGradeText(student) }}
+        </div>
+      </div>
+
+      <!-- grade input dropdown -->
+      <ul
+        :id="`grade-${student.item_id}-menu`"
+        role="menu"
+        :aria-labelledby="`grade-${student.item_id}`"
+        class="dropdown-menu m-0 small overflow-y-auto"
+        style="max-height: 400px"
+        :class="[menuOpen ? 'show' : '']"
       >
-        <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
-      </span>
+        <li
+          v-for="(opt, index) in actualChoices"
+          :key="index"
+          role="presentation"
+        >
+          <button
+            role="menuitem"
+            class="dropdown-item small"
+            type="button"
+            :value="opt"
+            @click="gradeChanged(opt)"
+            v-text="opt"
+          ></button>
+        </li>
+      </ul>
     </div>
-    <div v-if="hasChangedGrade" class="small">
-      {{ priorGradeText(student) }}
+
+    <div>
+      <div>
+        <!-- incomplete checkbox button -->
+        <div class="btn-group btn-group-sm">
+          <input
+            :id="`incomplete-${student.item_id}`"
+            type="checkbox"
+            class="me-1"
+            autocomplete="off"
+            :disabled="!student.allows_incomplete"
+            :checked="incomplete"
+            @change="incompleteChanged($event.target.checked)"
+          />
+          <label
+            :for="`incomplete-${student.item_id}`"
+            :title="inputIncompleteTitle"
+            class=""
+            >Incomplete</label
+          >
+        </div>
+      </div>
+
+      <div>
+        <!-- writing checkbox button -->
+        <div v-if="student.is_writing_section" class="btn-group btn-group-sm">
+          <input
+            :id="`writing-${student.item_id}`"
+            type="checkbox"
+            class="me-1"
+            disabled
+            checked
+          />
+          <label>Writing</label>
+        </div>
+        <div v-else class="btn-group btn-group-sm">
+          <input
+            :id="`writing-${student.item_id}`"
+            type="checkbox"
+            class="me-1"
+            :disabled="!student.allows_writing_credit"
+            :checked="writing"
+            @change="writingChanged($event.target.checked)"
+          />
+          <label
+            :for="`writing-${student.item_id}`"
+            :title="inputWritingTitle"
+            class=""
+            >Writing</label
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -167,6 +162,7 @@ export default {
       incomplete: false,
       writing: false,
       gradeError: "",
+      gradeEmpty: false,
       menuOpen: false,
       saveInProgress: false,
       importSource: null,

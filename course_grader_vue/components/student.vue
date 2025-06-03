@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex justify-content-between">
-    <div>
+    <div class="w-50">
       <div class="fs-4 text-uppercase">
         {{ student.student_lastname }}, {{ student.student_firstname }}
       </div>
@@ -25,19 +25,16 @@
         </template>
       </div>
     </div>
-    <div v-if="appState.editingGrades && student.grade_url" class="text-end">
+    <div v-if="appState.editingGrades && student.grade_url" class="w-50">
       <GradeEdit :student="student" :grade-choices="gradeChoices" />
     </div>
-    <div
-      v-else-if="appState.reviewingGrades && student.grade_url"
-      class="text-end"
-    >
+    <div v-else-if="appState.reviewingGrades && student.grade_url" class="">
       <GradeReview :student="student" />
     </div>
-    <div v-else-if="appState.reviewingConversion" class="text-end">
+    <div v-else-if="appState.reviewingConversion" class="">
       <GradeImport :student="student" />
     </div>
-    <div v-else class="text-end">
+    <div v-else class="w-25">
       <GradeConfirm :student="student" />
     </div>
   </div>
