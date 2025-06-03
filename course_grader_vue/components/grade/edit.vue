@@ -52,6 +52,7 @@
         class="dropdown-menu m-0 small overflow-y-auto"
         style="max-height: 400px"
         :class="[menuOpen ? 'show' : '']"
+        @keydown.esc="closeMenu"
       >
         <li
           v-for="(opt, index) in actualChoices"
@@ -63,7 +64,7 @@
             class="dropdown-item small"
             type="button"
             :value="opt"
-            @click="gradeChanged(opt)"
+            @click.prevent="gradeChanged(opt)"
             v-text="opt"
           ></button>
         </li>
@@ -212,6 +213,9 @@ export default {
   methods: {
     openMenu(e) {
       this.menuOpen = true;
+    },
+    closeMenu(e) {
+      this.menuOpen = false;
     },
     updateGradeChoices: function () {
       var valid = [];
