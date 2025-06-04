@@ -53,11 +53,10 @@ async function updateGrade(url, data) {
 
 async function clearSavedGrades(url) {
   return useCustomFetch(url, {
-    method: "PUT",
+    method: "DELETE",
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
     },
-    body: JSON.stringify({ clear_grades: true }),
   });
 }
 
