@@ -64,6 +64,7 @@
             class="dropdown-item small"
             type="button"
             :value="opt"
+            @keydown.enter="gradeChanged(opt)"
             @click.prevent="gradeChanged(opt)"
             v-text="opt"
           ></button>
