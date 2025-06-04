@@ -61,10 +61,10 @@ class GradeRoster(GradeFormHandler):
             if section.is_primary_section and section.allows_secondary_grading:
                 raise SecondaryGradingEnabled()
 
-            if (re.match(r"(PATCH|PUT|POST)", request.method)):
+            if (re.match(r"(PATCH|PUT|POST|DELETE)", request.method)):
                 self.valid_user_override()
 
-            if (re.match(r"(GET|PUT|POST)", request.method)):
+            if (re.match(r"(GET|PUT|POST|DELETE)", request.method)):
                 submitted_graderosters_only = kwargs.get(
                     "submitted_graderosters_only", False)
                 self.graderoster = graderoster_for_section(
@@ -72,21 +72,21 @@ class GradeRoster(GradeFormHandler):
                     submitted_graderosters_only=submitted_graderosters_only)
 
         except (InvalidUser, GradingNotPermitted, OverrideNotPermitted) as ex:
-            logger.info("Grading for {} not permitted for {}".format(
-                section_id, UserService().get_original_user()))
-            return self.error_response(401, "{}".format(ex))
+            user = UserService().get_original_user()
+            logger.info(f"Grading for {section_id} not permitted for {user}")
+            return self.error_response(401, f"{ex}")
         except (SecondaryGradingEnabled, GradingPeriodNotOpen,
                 InvalidTerm, InvalidSection, MissingInstructorParam) as ex:
-            return self.error_response(400, "{}".format(ex))
+            return self.error_response(400, f"{ex}")
         except ReceiptNotFound as ex:
-            return self.error_response(404, "{}".format(ex))
+            return self.error_response(404, f"{ex}")
         except DataFailureException as ex:
-            logger.info("GET graderoster error: {}".format(ex))
+            logger.info(f"GET graderoster error: {ex}")
             (status, msg) = self.data_failure_error(ex)
             return self.error_response(status, msg)
         except Exception as ex:
-            logger.info("GET graderoster error: {}".format(ex))
-            return self.error_response(500, f'{ex.__class__.__name__}: {ex}')
+            logger.info(f"GET graderoster error: {ex}")
+            return self.error_response(500, f"{ex.__class__.__name__}: {ex}")
 
     def get(self, request, *args, **kwargs):
         error = self._authorize(request, *args, **kwargs)
@@ -112,8 +112,7 @@ class GradeRoster(GradeFormHandler):
             grade_data = json.loads(request.body)
             grade = self.save_grade(section_id, grade_data)
         except Exception as ex:
-            logger.error(
-                "PATCH grade failed for {}: {}".format(section_id, ex))
+            logger.error(f"PATCH grade failed for {section_id}: {ex}")
             return self.error_response(500)
 
         # PATCH does not return a full graderoster resource
@@ -126,40 +125,30 @@ class GradeRoster(GradeFormHandler):
 
         section_id = kwargs.get("section_id")
         saved_grades = {}
-        status = 200
-
         try:
-            grade_data = json.loads(request.body)
-
-            if grade_data.get("clear_grades"):
-                Grade.objects.get_by_section_id_and_person(
-                    section_id, self.user.uwregid).delete()
-                logger.info(f"Grades cleared for {section_id}")
-
-            else:
-                for data in grade_data.get("grades"):
-                    grade = self.save_grade(section_id, data)
-                    saved_grades[data["student_id"]] = grade
-
-                secondary_section = getattr(
-                    self.graderoster, "secondary_section", None)
-
-                for item in self.graderoster.items:
-                    if (secondary_section is not None and
-                            secondary_section.section_id != item.section_id):
-                        continue
-
-                    if (item.is_auditor or (item.date_withdrawn is not None)):
-                        continue
-
-                    student_id = item.student_label(separator="-")
-                    if not self.validate_grade(
-                            item, saved_grades.get(student_id, None)):
-                        status = 409
+            for data in json.loads(request.body):
+                grade = self.save_grade(section_id, data)
+                saved_grades[data["student_id"]] = grade
 
         except Exception as ex:
-            logger.error(f"PUT grades failed for {section_id}: {ex}")
+            logger.error(f"PUT grade failed for {section_id}: {ex}")
             return self.error_response(500)
+
+        secondary_section = getattr(self.graderoster, "secondary_section",
+                                    None)
+
+        status = 200
+        for item in self.graderoster.items:
+            if (secondary_section is not None and
+                    secondary_section.section_id != item.section_id):
+                continue
+
+            if (item.is_auditor or item.date_withdrawn is not None):
+                continue
+
+            student_id = item.student_label(separator="-")
+            if not self.validate_grade(item, saved_grades.get(student_id)):
+                status = 409
 
         kwargs["saved_grades"] = saved_grades
         content = self.response_content(**kwargs)
@@ -187,7 +176,7 @@ class GradeRoster(GradeFormHandler):
 
             gradable_count += 1
             student_id = item.student_label(separator="-")
-            saved_grade = saved_grades.get(student_id, None)
+            saved_grade = saved_grades.get(student_id)
             if self.validate_grade(item, saved_grade):
                 item.no_grade_now = saved_grade.no_grade_now
                 item.grade = "" if (
@@ -221,6 +210,25 @@ class GradeRoster(GradeFormHandler):
         content = self.response_content(**kwargs)
         content["graderoster"]["is_submission_confirmation"] = True
         return self.json_response(content, status=status)
+
+    def delete(self, request, *args, **kwargs):
+        error = self._authorize(request, *args, **kwargs)
+        if error is not None:
+            return error
+
+        section_id = kwargs.get("section_id")
+
+        try:
+            Grade.objects.get_by_section_id_and_person(
+                section_id, self.user.uwregid).delete()
+            logger.info(f"Grades cleared for {section_id}")
+        except Exception as ex:
+            logger.error(f"DELETE grades failed for {section_id}: {ex}")
+            return self.error_response(500)
+
+        kwargs["saved_grades"] = {}
+        content = self.response_content(**kwargs)
+        return self.json_response(content)
 
     def validate_grade(self, graderoster_item, saved_grade):
         if saved_grade is None:
