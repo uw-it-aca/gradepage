@@ -9,6 +9,7 @@
     :sign-out-url="context.signout_url"
     :background-class="'bg-body'"
   >
+    <!--
     <template #navigation>
       <ul class="nav flex-column my-3">
         <li class="nav-item mb-1 position-relative">
@@ -63,7 +64,7 @@
           </div>
         </li>
       </ul>
-    </template>
+    </template> -->
     <template #profile>
       <SProfile
         v-if="context.override_user != null"
@@ -81,34 +82,30 @@
       <SProfile v-else :user-netid="context.login_user">
         <a :href="context.signout_url" class="text-white"> Sign out </a>
       </SProfile>
+      <SColorMode></SColorMode>
     </template>
-    <template #aside>
-      <div class="my-3">
-        <div class="bg-body-tertiary rounded-3 p-3">
-          <div class="mb-2 text-body">
-            <i class="bi bi-exclamation-triangle-fill me-3"></i>
-            Grading Period Status
-          </div>
-          <ul class="list-unstyled m-0 text-body small">
-            <li
-              v-for="(message, index) in window.gradepage.messages"
-              :key="index"
-              class="mt-2"
-              v-html="message"
-            ></li>
-          </ul>
-        </div>
-        <SColorMode></SColorMode>
-      </div>
-    </template>
+    <!-- <template #aside></template> -->
     <template #main>
-      <div class="row justify-content-center my-3">
-        <div class="col">
+      <div class="row my-5">
+        <div class="col-9">
           <slot name="title">
-            <h1 class="visually-hidden">{{ pageTitle }}</h1>
+            <h1>{{ pageTitle }}</h1>
           </slot>
           <slot name="content"></slot>
         </div>
+        <aside class="col-3">
+          <div class="bg-body-tertiary rounded-3 p-3">
+            <h2 class="fs-5 ff-encode-sans mb-3">Grading Period Status</h2>
+            <ul class="list-unstyled m-0 text-body">
+              <li
+                v-for="(message, index) in window.gradepage.messages"
+                :key="index"
+                class="mt-2"
+                v-html="message"
+              ></li>
+            </ul>
+          </div>
+        </aside>
       </div>
     </template>
     <template #footer></template>
@@ -145,6 +142,7 @@ export default {
     return {
       appName: "GradePage",
       appRootUrl: "/",
+      selectedRoute: "Spring 2013",
     };
   },
   computed: {
@@ -168,10 +166,8 @@ export default {
     },
     clearUserOverride: function () {
       this.clearOverride(this.context.clear_override_url)
-        .then((data) => {
-        })
-        .catch((error) => {
-        })
+        .then((data) => {})
+        .catch((error) => {})
         .finally(() => {
           window.location.href = this.context.clear_override_url;
         });

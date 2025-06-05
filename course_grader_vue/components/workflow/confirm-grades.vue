@@ -143,25 +143,18 @@
     class="mb-2 pb-2 border-bottom"
   >
     <div v-if="appState.graderoster.is_writing_section">
+      <strong>Note:</strong>
       Writing credit automatically given to all students with a passing grade in
       this course.
     </div>
     <div v-if="appState.graderoster.has_duplicate_codes">
-      <span class="visually-hidden">
-        In the list below, duplicate listings of the same student are
-        differentiated with a
-      </span>
-
-      <BBadge
-        variant="secondary"
-        pill
-        class="text-secondary-emphasis bg-secondary-subtle fw-normal"
-        >Duplicate code</BBadge
-      >
+      <strong>Note:</strong>
+      In the list below, duplicate listings of the same student are
+      differentiated with a Duplicate 'code'.
     </div>
   </div>
 
-  <ul v-if="appState.graderoster.students" class="list-unstyled m-0">
+  <ul v-if="appState.graderoster.students" class="list-unstyled mx-0 my-3">
     <li
       v-for="(student, index) in appState.graderoster.students"
       :key="student.item_id"

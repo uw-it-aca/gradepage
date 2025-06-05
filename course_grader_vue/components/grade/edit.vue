@@ -7,6 +7,7 @@
       </label>
       <input
         :id="`grade-${student.item_id}`"
+        ref="dropdownBtn"
         class="form-control form-control-sm rounded-2 dropdown-toggle"
         :class="gradeError || gradeEmpty ? 'is-invalid' : ''"
         type="text"
@@ -17,8 +18,35 @@
         required
         @change="gradeChanged($event.target.value)"
         @keydown.tab.exact="false"
-        @keydown.down.exact="openMenu"
+        @keydown.down.exact="showDropdown"
+        @keydown.space.exact="showDropdown"
       />
+      <!-- grade input dropdown -->
+      <ul
+        :id="`grade-${student.item_id}-menu`"
+        ref="dropdownMenu"
+        role="menu"
+        :aria-labelledby="`grade-${student.item_id}`"
+        class="dropdown-menu m-0 small overflow-y-auto"
+        style="max-height: 400px"
+        @keydown.esc="hideDropdown"
+      >
+        <li
+          v-for="(opt, index) in actualChoices"
+          :key="index"
+          role="presentation"
+        >
+          <button
+            role="menuitem"
+            class="dropdown-item small"
+            type="button"
+            :value="opt"
+            @keydown.enter="gradeChanged(opt)"
+            @click.prevent="gradeChanged(opt)"
+            v-text="opt"
+          ></button>
+        </li>
+      </ul>
 
       <!-- grade input validation errors -->
       <div v-if="gradeError" role="alert" class="invalid-feedback">
@@ -43,43 +71,16 @@
           {{ priorGradeText(student) }}
         </div>
       </div>
-
-      <!-- grade input dropdown -->
-      <ul
-        :id="`grade-${student.item_id}-menu`"
-        role="menu"
-        :aria-labelledby="`grade-${student.item_id}`"
-        class="dropdown-menu m-0 small overflow-y-auto"
-        style="max-height: 400px"
-        :class="[menuOpen ? 'show' : '']"
-        @keydown.esc="closeMenu"
-      >
-        <li
-          v-for="(opt, index) in actualChoices"
-          :key="index"
-          role="presentation"
-        >
-          <button
-            role="menuitem"
-            class="dropdown-item small"
-            type="button"
-            :value="opt"
-            @keydown.enter="gradeChanged(opt)"
-            @click.prevent="gradeChanged(opt)"
-            v-text="opt"
-          ></button>
-        </li>
-      </ul>
     </div>
 
     <div>
       <div>
         <!-- incomplete checkbox button -->
-        <div class="btn-group btn-group-sm">
+        <div class="form-check">
           <input
             :id="`incomplete-${student.item_id}`"
             type="checkbox"
-            class="me-1"
+            class="form-check-input me-1"
             autocomplete="off"
             :disabled="!student.allows_incomplete"
             :checked="incomplete"
@@ -88,7 +89,7 @@
           <label
             :for="`incomplete-${student.item_id}`"
             :title="inputIncompleteTitle"
-            class=""
+            class="form-check-label"
             >Incomplete</label
           >
         </div>
@@ -96,21 +97,21 @@
 
       <div>
         <!-- writing checkbox button -->
-        <div v-if="student.is_writing_section" class="btn-group btn-group-sm">
+        <div v-if="student.is_writing_section" class="form-check">
           <input
             :id="`writing-${student.item_id}`"
             type="checkbox"
-            class="me-1"
+            class="form-check-input me-1"
             disabled
             checked
           />
-          <label>Writing</label>
+          <label class="form-check-label">Writing</label>
         </div>
-        <div v-else class="btn-group btn-group-sm">
+        <div v-else class="form-check">
           <input
             :id="`writing-${student.item_id}`"
             type="checkbox"
-            class="me-1"
+            class="form-check-input me-1"
             :disabled="!student.allows_writing_credit"
             :checked="writing"
             @change="writingChanged($event.target.checked)"
@@ -118,7 +119,7 @@
           <label
             :for="`writing-${student.item_id}`"
             :title="inputWritingTitle"
-            class=""
+            class="form-check-label"
             >Writing</label
           >
         </div>
@@ -128,6 +129,7 @@
 </template>
 
 <script>
+import { Dropdown } from "bootstrap";
 import { useGradeStore } from "@/stores/grade";
 import { updateGrade } from "@/utils/data";
 import { priorGradeText } from "@/utils/grade";
@@ -165,11 +167,11 @@ export default {
       writing: false,
       gradeError: "",
       gradeEmpty: false,
-      menuOpen: false,
       saveInProgress: false,
       importSource: null,
       importGrade: null,
       overrideGrade: false,
+      dropdownInstance: null,
     };
   },
   computed: {
@@ -211,13 +213,40 @@ export default {
   created() {
     this.initializeGrade();
   },
+  mounted() {
+    // initialize bootstrap dropdowns
+    const dropdownBtn = this.$refs.dropdownBtn;
+
+    if (dropdownBtn) {
+      this.dropdownInstance = new Dropdown(dropdownBtn);
+
+      // Listen for when the dropdown is shown
+      dropdownBtn.addEventListener("shown.bs.dropdown", () => {
+        this.focusFirstItem();
+      });
+    }
+  },
   methods: {
-    openMenu(e) {
-      this.menuOpen = true;
+    showDropdown() {
+      if (this.dropdownInstance) {
+        this.dropdownInstance.show();
+      }
     },
-    closeMenu(e) {
-      this.menuOpen = false;
+    hideDropdown() {
+      if (this.dropdownInstance) {
+        this.dropdownInstance.hide();
+      }
     },
+    focusFirstItem() {
+      const menu = this.$refs.dropdownMenu;
+      if (menu) {
+        const firstItem = menu.querySelector(".dropdown-item");
+        if (firstItem) {
+          firstItem.focus();
+        }
+      }
+    },
+
     updateGradeChoices: function () {
       var valid = [];
       this.gradeChoices.forEach((gc, idx) => {
@@ -244,7 +273,7 @@ export default {
     gradeChanged: function (value) {
       this.grade = normalizeGrade(value);
       this.saveGrade();
-      this.menuOpen = false;
+      this.hideDropdown();
     },
     initializeGrade: function () {
       let hasSavedGrade = Object.keys(this.student.saved_grade).length > 0,
