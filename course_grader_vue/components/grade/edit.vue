@@ -19,31 +19,6 @@
         @keydown.tab.exact="false"
         @keydown.down.exact="openMenu"
       />
-
-      <!-- grade input validation errors -->
-      <div v-if="gradeError" role="alert" class="invalid-feedback">
-        {{ gradeError }}
-      </div>
-
-      <div v-else>
-        <div v-if="incomplete" class="form-text">
-          Student will receive default grade
-        </div>
-        <div v-if="importSource" class="imported-grade small">
-          {{ importSource }} grade: {{ importGrade }}
-          <span
-            v-if="overrideGrade"
-            class="override-icon"
-            title="Override grade imported from Canvas Gradebook"
-          >
-            <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
-          </span>
-        </div>
-        <div v-if="hasChangedGrade" class="small">
-          {{ priorGradeText(student) }}
-        </div>
-      </div>
-
       <!-- grade input dropdown -->
       <ul
         :id="`grade-${student.item_id}-menu`"
@@ -70,16 +45,40 @@
           ></button>
         </li>
       </ul>
+
+      <!-- grade input validation errors -->
+      <div v-if="gradeError" role="alert" class="invalid-feedback">
+        {{ gradeError }}
+      </div>
+
+      <div v-else>
+        <div v-if="incomplete" class="form-text">
+          Student will receive default grade
+        </div>
+        <div v-if="importSource" class="imported-grade small">
+          {{ importSource }} grade: {{ importGrade }}
+          <span
+            v-if="overrideGrade"
+            class="override-icon"
+            title="Override grade imported from Canvas Gradebook"
+          >
+            <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
+          </span>
+        </div>
+        <div v-if="hasChangedGrade" class="small">
+          {{ priorGradeText(student) }}
+        </div>
+      </div>
     </div>
 
     <div>
       <div>
         <!-- incomplete checkbox button -->
-        <div class="btn-group btn-group-sm">
+        <div class="form-check">
           <input
             :id="`incomplete-${student.item_id}`"
             type="checkbox"
-            class="me-1"
+            class="form-check-input me-1"
             autocomplete="off"
             :disabled="!student.allows_incomplete"
             :checked="incomplete"
@@ -88,7 +87,7 @@
           <label
             :for="`incomplete-${student.item_id}`"
             :title="inputIncompleteTitle"
-            class=""
+            class="form-check-label"
             >Incomplete</label
           >
         </div>
@@ -96,21 +95,21 @@
 
       <div>
         <!-- writing checkbox button -->
-        <div v-if="student.is_writing_section" class="btn-group btn-group-sm">
+        <div v-if="student.is_writing_section" class="form-check">
           <input
             :id="`writing-${student.item_id}`"
             type="checkbox"
-            class="me-1"
+            class="form-check-input me-1"
             disabled
             checked
           />
-          <label>Writing</label>
+          <label class="form-check-label">Writing</label>
         </div>
-        <div v-else class="btn-group btn-group-sm">
+        <div v-else class="form-check">
           <input
             :id="`writing-${student.item_id}`"
             type="checkbox"
-            class="me-1"
+            class="form-check-input me-1"
             :disabled="!student.allows_writing_credit"
             :checked="writing"
             @change="writingChanged($event.target.checked)"
@@ -118,7 +117,7 @@
           <label
             :for="`writing-${student.item_id}`"
             :title="inputWritingTitle"
-            class=""
+            class="form-check-label"
             >Writing</label
           >
         </div>

@@ -4,6 +4,25 @@
     :term-url="isCurrentTermDisplay ? null : currentTerm.url"
   >
     <template #content>
+      <div class="w-25 mb-5">
+        <select
+          v-model="selectedTerm.url"
+          aria-label="Select term"
+          class="form-select"
+          @change="selectTerm"
+        >
+          <template v-for="term in contextStore.context.terms" :key="term.id">
+            <option
+              :value="term.url"
+              :title="`Select ${term.quarter} ${term.year}`"
+              :selected="term.is_selected"
+            >
+              {{ term.quarter }} {{ term.year }}
+            </option>
+          </template>
+        </select>
+      </div>
+
       <template v-if="isLoading">
         <ul class="list-unstyled">
           <li v-for="index in 10" :key="index" class="mb-3">
@@ -67,15 +86,16 @@ export default {
   data() {
     return {
       isLoading: true,
+
+      currentTerm: this.contextStore.context.terms[0],
       selectedTerm: null,
+      selectedTermText: this.contextStore.context.page_title,
+      sectionsURL: this.contextStore.context.sections_url,
       errorResponse: null,
       sections: [],
     };
   },
   computed: {
-    currentTerm() {
-      return this.contextStore.context.terms[0];
-    },
     selectedTermName() {
       return this.selectedTerm.quarter + " " + this.selectedTerm.year;
     },
