@@ -167,7 +167,6 @@ export default {
       writing: false,
       gradeError: "",
       gradeEmpty: false,
-      //menuOpen: false,
       saveInProgress: false,
       importSource: null,
       importGrade: null,
@@ -238,7 +237,6 @@ export default {
         this.dropdownInstance.hide();
       }
     },
-
     focusFirstItem() {
       const menu = this.$refs.dropdownMenu;
       if (menu) {
