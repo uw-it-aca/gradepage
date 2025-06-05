@@ -82,7 +82,7 @@
       <SProfile v-else :user-netid="context.login_user">
         <a :href="context.signout_url" class="text-white"> Sign out </a>
       </SProfile>
-       <SColorMode></SColorMode>
+      <SColorMode></SColorMode>
     </template>
     <!-- <template #aside></template> -->
     <template #main>
@@ -105,7 +105,6 @@
               ></li>
             </ul>
           </div>
-
         </aside>
       </div>
     </template>

@@ -34,6 +34,7 @@
           </li>
         </ul>
       </template>
+
       <template v-else-if="errorResponse">
         <Errors :error-response="errorResponse" />
       </template>
