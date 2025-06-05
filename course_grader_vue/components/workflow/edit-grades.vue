@@ -1,4 +1,21 @@
 <template>
+  <BAlert v-if="!isFormValid" :model-value="true" variant="danger" class="small"
+    ><i class="bi-exclamation-octagon-fill me-1"></i>Unable to submit because
+    there are
+    <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span></BAlert
+  >
+
+  <div v-if="section">
+    <GradeImportOptions
+      :section="section"
+      :expected-grade-count="appState.graderoster.gradable_student_count"
+    />
+  </div>
+
+  <SectionHeader :section="section" title="Enter grades for" />
+
+  <Errors v-if="errorResponse" :error-response="errorResponse" />
+
   <template v-if="appState.graderoster">
     <!-- Previously submitted. Edit in progress -->
     <BAlert
@@ -12,33 +29,14 @@
         Discard changes
       </BLink>
     </BAlert>
-  </template>
 
-  <div v-if="section">
-    <GradeImportOptions
-      :section="section"
-      :expected-grade-count="appState.graderoster.gradable_student_count"
-    />
-  </div>
-
-  <SectionHeader :section="section" title="Enter grades for" />
-
-  <BAlert v-if="!isFormValid" :model-value="true" variant="danger" class="small"
-    ><i class="bi-exclamation-octagon-fill me-1"></i>Unable to submit because
-    there are
-    <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span></BAlert
-  >
-
-  <Errors v-if="errorResponse" :error-response="errorResponse" />
-
-  <template v-if="appState.graderoster">
-    <!-- TODO: inline status -->
-    <div
+    <BAlert
       v-if="appState.graderoster.has_successful_submissions"
+      variant="success"
       :model-value="true"
       class="small"
     >
-      <ul class="list-unstyled text-success">
+      <ul class="list-unstyled m-0">
         <li
           v-for="(submission, index) in appState.graderoster.submissions"
           :key="index"
@@ -50,7 +48,7 @@
           <span v-html="gradesSubmittedText(submission)"></span>
         </li>
       </ul>
-    </div>
+    </BAlert>
 
     <div
       v-if="
@@ -65,26 +63,18 @@
         in this course.
       </div>
       <div v-if="appState.graderoster.has_duplicate_codes">
-        <span class="visually-hidden">
-          In the list below, duplicate listings of the same student are
-          differentiated with a
-        </span>
-
-        <BBadge
-          variant="secondary"
-          pill
-          class="text-secondary-emphasis bg-secondary-subtle fw-normal"
-          >Duplicate code</BBadge
-        >
+        <strong>Note:</strong>
+        In the list below, duplicate listings of the same student are
+        differentiated with a Duplicate 'code'.
       </div>
     </div>
   </template>
 
-  <ul v-if="appState.graderoster.students" class="list-unstyled m-0">
+  <ul v-if="appState.graderoster.students" class="list-unstyled mx-0 my-3">
     <li
       v-for="(student, index) in appState.graderoster.students"
       :key="student.item_id"
-      class="pt-2 mt-2"
+      class="bpt-2 mt-2"
       :class="index != 0 ? 'border-top' : ''"
     >
       <Student

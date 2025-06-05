@@ -95,7 +95,7 @@
         </div>
         <aside class="col-3">
           <div class="bg-body-tertiary rounded-3 p-3">
-            <h2 class="fs-4 ff-encode-sans mb-3">Grading Period Status</h2>
+            <h2 class="fs-5 ff-encode-sans mb-3">Grading Period Status</h2>
             <ul class="list-unstyled m-0 text-body">
               <li
                 v-for="(message, index) in window.gradepage.messages"

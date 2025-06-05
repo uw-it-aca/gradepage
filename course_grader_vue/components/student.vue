@@ -13,14 +13,11 @@
         <span class="visually-hidden">Student number:</span>
         {{ student.student_number }}
         <template v-if="student.duplicate_code">
-          <span class="visually-hidden">Duplicate code:</span>
           <BBadge
             variant="secondary"
             pill
             class="text-secondary-emphasis bg-secondary-subtle fw-normal"
-            ><abbr title="Duplicate code">
-              {{ student.duplicate_code }}</abbr
-            ></BBadge
+            >Duplicate {{ student.duplicate_code }}</BBadge
           >
         </template>
       </div>
