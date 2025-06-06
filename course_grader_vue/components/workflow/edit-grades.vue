@@ -70,21 +70,29 @@
     </div>
   </template>
 
-  <ul v-if="appState.graderoster.students" class="list-unstyled mx-0 my-3">
-    <li
-      v-for="(student, index) in appState.graderoster.students"
-      :key="student.item_id"
-      class="bpt-2 mt-2"
-      :class="index != 0 ? 'border-top' : ''"
-    >
-      <Student
-        :student="student"
-        :grade-choices="
-          appState.graderoster.grade_choices[student.grade_choices_index]
-        "
-      />
-    </li>
-  </ul>
+  <table v-if="appState.graderoster.students" class="table table-striped my-5">
+    <thead>
+      <tr>
+        <th scope="col">Student</th>
+        <th scope="col">Section</th>
+        <th scope="col">Credits</th>
+        <th scope="col">Grade</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        v-for="student in appState.graderoster.students"
+        :key="student.item_id"
+      >
+        <Student
+          :student="student"
+          :grade-choices="
+            appState.graderoster.grade_choices[student.grade_choices_index]
+          "
+        />
+      </tr>
+    </tbody>
+  </table>
   <ul v-else-if="!errorResponse" class="list-unstyled m-0">
     <li v-for="index in 8" :key="index" class="border-top pt-2 mt-2">
       <BPlaceholder
