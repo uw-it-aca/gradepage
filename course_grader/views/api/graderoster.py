@@ -126,7 +126,8 @@ class GradeRoster(GradeFormHandler):
         section_id = kwargs.get("section_id")
         saved_grades = {}
         try:
-            for data in json.loads(request.body):
+            grade_data = json.loads(request.body)
+            for data in grade_data.get("grades"):
                 grade = self.save_grade(section_id, data)
                 saved_grades[data["student_id"]] = grade
 
