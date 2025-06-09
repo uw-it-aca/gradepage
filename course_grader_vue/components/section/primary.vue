@@ -1,19 +1,27 @@
 <template>
   <div class="mb-3" :aria-labelledby="sectionNameId">
-    <template v-if="section.section_url">
-      <BLink :href="section.section_url" :title="routerLinkTitle">
+    <div class="d-flex">
+      <template v-if="section.section_url">
+        <BLink :href="section.section_url" :title="routerLinkTitle">
+          <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
+        </BLink>
+      </template>
+      <template v-else>
         <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
-      </BLink>
-    </template>
-    <template v-else>
-      <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
-    </template>
-
-    <div v-if="gradingStatusText" class="d-flex">
-      <div>{{ gradingStatusText }}</div>
-      <div v-if="gradesAccepted" class="text-success fw-bold ms-3">
-        <i class="bi bi-check-circle-fill"></i>
+      </template>
+      <div class="ms-2">
+        <BBadge
+          v-if="gradesAccepted"
+          pill
+          bg-variant="success-subtle"
+          text-variant="success-emphasis"
+          class="fw-semibold me-1"
+          >submitted</BBadge
+        >
       </div>
+    </div>
+    <div v-if="gradingStatusText" class="d-flex">
+      {{ gradingStatusText }}
     </div>
     <BPlaceholder
       v-else
@@ -48,7 +56,10 @@ import {
   formatErrorStatus,
   formatLinkTitle,
 } from "@/utils/section";
-import { BPlaceholder, BLink } from "bootstrap-vue-next";
+import { BPlaceholder, BLink, BBadge } from "bootstrap-vue-next";
+
+import { useWorkflowStateStore } from "@/stores/state";
+import { useGradeStore } from "@/stores/grade";
 
 export default {
   name: "SectionPrimary",
@@ -56,6 +67,7 @@ export default {
     SecondarySection,
     BPlaceholder,
     BLink,
+    BBadge,
   },
   props: {
     section: {
@@ -64,11 +76,16 @@ export default {
     },
   },
   setup() {
+    const appState = useWorkflowStateStore();
+    const gradeStore = useGradeStore();
+
     return {
       getSectionStatus,
       formatGradingStatus,
       formatErrorStatus,
       formatLinkTitle,
+      appState,
+      gradeStore,
     };
   },
   data() {
@@ -107,6 +124,11 @@ export default {
       return this.gradingStatus
         ? this.gradingStatus.accepted_date !== null
         : false;
+    },
+    gradingInProgress() {
+      if (!this.gradesAccepted) {
+        return true;
+      } else return false;
     },
   },
   created() {

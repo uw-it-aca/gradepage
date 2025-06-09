@@ -8,30 +8,24 @@
   <Errors v-if="errorResponse" :error-response="errorResponse" />
 
   <template v-else-if="appState.graderoster">
-    <div class="mb-2 pb-2 border-bottom">
-      <div>Please review grades and submit below.</div>
-      <div v-if="appState.graderoster.is_writing_section">
-        <strong>Note:</strong>
-        Writing credit automatically given to all students with a passing grade
-        in this course.
-      </div>
-      <div v-if="appState.graderoster.has_duplicate_codes">
-        <strong>Note:</strong>
-        In the list below, duplicate listings of the same student are
-        differentiated with a Duplicate 'code'.
-      </div>
-    </div>
-
-    <ul v-if="appState.graderoster.students" class="list-unstyled mx-0 my-3">
-      <li
-        v-for="(student, index) in appState.graderoster.students"
-        :key="student.item_id"
-        class="pt-2 mt-2"
-        :class="index != 0 ? 'border-top' : ''"
-      >
-        <Student :student="student" />
-      </li>
-    </ul>
+    <table v-if="appState.graderoster.students" class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Student</th>
+          <th scope="col">Section</th>
+          <th scope="col">Credits</th>
+          <th scope="col">Grade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="student in appState.graderoster.students"
+          :key="student.item_id"
+        >
+          <Student :student="student" />
+        </tr>
+      </tbody>
+    </table>
   </template>
   <template v-else>
     <ul class="list-unstyled m-0">
@@ -45,22 +39,32 @@
     </ul>
   </template>
 
+  <div v-if="appState.graderoster.is_writing_section">
+    <strong>Writing Section:</strong>
+    Writing credit automatically given to all students with a passing grade in
+    this course.
+  </div>
+  <div v-if="appState.graderoster.has_duplicate_codes">
+    <strong>Note:</strong>
+    Duplicate listings of the same student are differentiated with a Duplicate
+    'code'.
+  </div>
+  <div>
+    <strong>Review:</strong> All grades will be submitted to the Registrar as
+    displayed above.
+  </div>
+
   <template v-if="!isLoading && !errorResponse">
-    <div class="d-flex mt-4">
-      <div class="flex-fill align-self-center text-end me-2">
-        All grades will be submitted to the Registrar as displayed above.
-      </div>
-      <div v-if="section" class="text-nowrap">
-        <BButton
-          :title="reviewBackTitle"
-          variant="outline-primary"
-          @click="editGrades"
-          >Edit</BButton
-        >
-        <BButton variant="primary" class="ms-2" @click="submitGrades"
-          >Submit</BButton
-        >
-      </div>
+    <div v-if="section" class="text-end text-nowrap">
+      <BButton
+        :title="reviewBackTitle"
+        variant="outline-primary"
+        @click="editGrades"
+        >Edit</BButton
+      >
+      <BButton variant="primary" class="ms-2" @click="submitGrades"
+        >Submit</BButton
+      >
     </div>
   </template>
 </template>

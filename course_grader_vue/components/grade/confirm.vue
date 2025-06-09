@@ -15,18 +15,19 @@
       <abbr title="Writing credit">W</abbr>
     </span>
     <template v-if="student.has_incomplete">
-      <span class="visually-hidden">Submitted grade:</span>
-      <span class="fs-2 fw-bold">I</span>
-      <div class="small">(Incomplete) Default: {{ student.grade }}</div>
+      <div class="d-flex">
+        <span class="fs-2 fw-bold">I</span>
+        <div class="small">(Incomplete) Default: {{ student.grade }}</div>
+      </div>
     </template>
     <template v-else>
       <template v-if="student.no_grade_now">
-        <span class="visually-hidden">Submitted grade:</span>
-        <span class="fs-2 fw-bold">X</span>
-        <div class="small">(No grade now)</div>
+        <div class="d-flex">
+          <span class="fs-2 fw-bold">X</span>
+          <div class="small">(No grade now)</div>
+        </div>
       </template>
       <template v-else>
-        <span class="visually-hidden">Submitted grade:</span>
         <span class="fs-2 fw-bold">{{ student.grade }}</span>
       </template>
     </template>

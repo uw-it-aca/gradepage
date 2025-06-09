@@ -2,13 +2,13 @@
   <div class="d-flex">
     <!-- grade text input container - custom bootstrap -->
     <div class="dropdown w-100 me-3">
-      <label :for="`grade-${student.item_id}`" class="form-label"
+      <label :for="`grade-${student.item_id}`" class="form-label visually-hidden"
         >Enter grade
       </label>
       <input
         :id="`grade-${student.item_id}`"
         ref="dropdownBtn"
-        class="form-control form-control-sm rounded-2 dropdown-toggle"
+        class="form-control form-control-sm rounded-2 mt-1 dropdown-toggle"
         :class="gradeError || gradeEmpty ? 'is-invalid' : ''"
         type="text"
         autocomplete="off"

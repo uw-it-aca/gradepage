@@ -1,13 +1,25 @@
 <template>
   <div :aria-labelledby="sectionNameId">
-    <template v-if="section.section_url">
-      <BLink :href="section.section_url" :title="routerLinkTitle">
+    <div class="d-flex">
+      <template v-if="section.section_url">
+        <BLink :href="section.section_url" :title="routerLinkTitle">
+          <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
+        </BLink>
+      </template>
+      <template v-else>
         <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
-      </BLink>
-    </template>
-    <template v-else>
-      <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
-    </template>
+      </template>
+      <div class="ms-2">
+        <BBadge
+          v-if="gradesAccepted"
+          pill
+          bg-variant="success-subtle"
+          text-variant="success-emphasis"
+          class="fw-semibold me-1"
+          >submitted</BBadge
+        >
+      </div>
+    </div>
 
     <div v-if="gradingStatusText" class="d-flex">
       <div>{{ gradingStatusText }}</div>
@@ -31,13 +43,14 @@ import {
   formatErrorStatus,
   formatLinkTitle,
 } from "@/utils/section";
-import { BPlaceholder, BLink } from "bootstrap-vue-next";
+import { BPlaceholder, BBadge, BLink } from "bootstrap-vue-next";
 
 export default {
   name: "SectionSecondary",
   components: {
     BPlaceholder,
     BLink,
+    BBadge,
   },
   props: {
     section: {

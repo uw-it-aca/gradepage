@@ -1,6 +1,8 @@
 <template>
   <td scope="row">
-    <div class="fs-4 text-uppercase">{{ student.student_lastname }}, {{ student.student_firstname }}</div>
+    <div class="fs-4 text-uppercase">
+      {{ student.student_lastname }}, {{ student.student_firstname }}
+    </div>
     <div>
       {{ student.student_number }}
       <template v-if="student.duplicate_code">
@@ -13,23 +15,22 @@
       </template>
     </div>
   </td>
-  <td> {{ student.section_id }}</td>
+  <td>{{ student.section_id }}</td>
   <td>{{ student.student_credits }}</td>
   <td>
-    <div v-if="appState.editingGrades && student.grade_url">
+    <template v-if="appState.editingGrades && student.grade_url">
       <GradeEdit :student="student" :grade-choices="gradeChoices" />
-    </div>
-    <div v-else-if="appState.reviewingGrades && student.grade_url" class="">
+    </template>
+    <template v-else-if="appState.reviewingGrades && student.grade_url">
       <GradeReview :student="student" />
-    </div>
-    <div v-else-if="appState.reviewingConversion" class="">
+    </template>
+    <template v-else-if="appState.reviewingConversion">
       <GradeImport :student="student" />
-    </div>
-    <div v-else class="w-25">
+    </template>
+    <template v-else>
       <GradeConfirm :student="student" />
-    </div>
+    </template>
   </td>
-
 </template>
 
 <script>

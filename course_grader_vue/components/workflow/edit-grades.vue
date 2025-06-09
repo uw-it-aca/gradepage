@@ -12,31 +12,19 @@
     />
   </div>
 
-  <SectionHeader :section="section" title="Enter grades for" />
+  <SectionHeader
+    v-if="hasSubmittedAndSavedGrades"
+    :section="section"
+    title="Updating grades for"
+  />
+  <SectionHeader v-else :section="section" title="Enter grades for" />
 
   <Errors v-if="errorResponse" :error-response="errorResponse" />
 
   <template v-if="appState.graderoster">
-    <!-- Previously submitted. Edit in progress -->
-    <BAlert
-      v-if="hasSubmittedAndSavedGrades"
-      variant="warning"
-      :model-value="true"
-      class="small d-flex align-items-center"
-    >
-      You are editing grades that have been previously been submitted!
-      <BLink @click.prevent="discardGrades()" class="ms-2 d-print-none">
-        Discard changes
-      </BLink>
-    </BAlert>
-
-    <BAlert
-      v-if="appState.graderoster.has_successful_submissions"
-      variant="success"
-      :model-value="true"
-      class="small"
-    >
-      <ul class="list-unstyled m-0">
+    <!-- submission inline status -->
+    <template v-if="appState.graderoster.has_successful_submissions">
+      <ul class="list-unstyled text-success small my-5">
         <li
           v-for="(submission, index) in appState.graderoster.submissions"
           :key="index"
@@ -48,77 +36,69 @@
           <span v-html="gradesSubmittedText(submission)"></span>
         </li>
       </ul>
-    </BAlert>
+    </template>
 
-    <div
-      v-if="
-        appState.graderoster.is_writing_section ||
-        appState.graderoster.has_duplicate_codes
-      "
-      class="mb-2 pb-2 border-bottom"
-    >
-      <div v-if="appState.graderoster.is_writing_section">
-        <strong>Note:</strong>
-        Writing credit automatically given to all students with a passing grade
-        in this course.
-      </div>
-      <div v-if="appState.graderoster.has_duplicate_codes">
-        <strong>Note:</strong>
-        In the list below, duplicate listings of the same student are
-        differentiated with a Duplicate 'code'.
-      </div>
+    <table v-if="appState.graderoster.students" class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Student</th>
+          <th scope="col">Section</th>
+          <th scope="col">Credits</th>
+          <th scope="col">Grade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="student in appState.graderoster.students"
+          :key="student.item_id"
+        >
+          <Student
+            :student="student"
+            :grade-choices="
+              appState.graderoster.grade_choices[student.grade_choices_index]
+            "
+          />
+        </tr>
+      </tbody>
+    </table>
+    <ul v-else-if="!errorResponse" class="list-unstyled m-0">
+      <li v-for="index in 8" :key="index" class="border-top pt-2 mt-2">
+        <BPlaceholder
+          class="d-block bg-body-secondary"
+          style="height: 60px"
+          animation="glow"
+        />
+      </li>
+    </ul>
+
+    <div v-if="appState.graderoster.is_writing_section">
+      <strong>Writing Section:</strong>
+      Writing credit automatically given to all students with a passing grade in
+      this course.
+    </div>
+    <div v-if="appState.graderoster.has_duplicate_codes">
+      <strong>Duplicate:</strong>
+      Student dropped this section, and re-added.
+    </div>
+
+    <div class="text-end me-2">
+      <span v-if="gradesRemainingText" aria-live="polite"
+        >Status: {{ gradesRemainingText }}
+      </span>
+      <span v-else> Status: 0 grades missing</span>
+    </div>
+
+    <div class="text-end mt-4">
+      <BButton
+        v-if="hasSubmittedAndSavedGrades"
+        variant="outline-primary"
+        class="me-2"
+        @click="discardGrades"
+        >Discard</BButton
+      >
+      <BButton variant="primary" @click="reviewGrades">Review</BButton>
     </div>
   </template>
-
-  <table v-if="appState.graderoster.students" class="table table-striped my-5">
-    <thead>
-      <tr>
-        <th scope="col">Student</th>
-        <th scope="col">Section</th>
-        <th scope="col">Credits</th>
-        <th scope="col">Grade</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        v-for="student in appState.graderoster.students"
-        :key="student.item_id"
-      >
-        <Student
-          :student="student"
-          :grade-choices="
-            appState.graderoster.grade_choices[student.grade_choices_index]
-          "
-        />
-      </tr>
-    </tbody>
-  </table>
-  <ul v-else-if="!errorResponse" class="list-unstyled m-0">
-    <li v-for="index in 8" :key="index" class="border-top pt-2 mt-2">
-      <BPlaceholder
-        class="d-block bg-body-secondary"
-        style="height: 60px"
-        animation="glow"
-      />
-    </li>
-  </ul>
-
-  <div class="d-flex mt-4">
-    <div class="flex-fill align-self-center text-end me-2">
-      <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span>
-      <span v-else class="visually-hidden">
-        All grades entered. Click Review to continue.
-      </span>
-    </div>
-    <BButton
-      v-if="hasSubmittedAndSavedGrades"
-      variant="outline-primary"
-      @click="discardGrades"
-      class="me-2"
-      >Discard</BButton
-    >
-    <BButton variant="primary" @click="reviewGrades">Review</BButton>
-  </div>
 </template>
 
 <script>

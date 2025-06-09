@@ -1,37 +1,4 @@
 <template>
-  <!-- info: show submitted receipt -->
-  <BAlert
-    v-if="!appState.graderoster.is_submission_confirmation"
-    variant="info"
-    :model-value="true"
-    class="small d-flex align-items-center"
-  >
-    <div>Submitted grade may differ from official final grade.</div>
-
-    <div>
-      <BLink
-        href="https://registrar.washington.edu/staff-faculty/grading-resources/"
-        target="_blank"
-        class="mx-2 d-print-none"
-        >More info
-      </BLink>
-
-      <BLink
-        v-if="appState.graderoster.gradable_student_count > 0"
-        title="Edit Grades and Resubmit"
-        @click.prevent="editGrades()"
-        >Change submitted grades
-      </BLink>
-      <BLink
-        v-else
-        href="https://itconnect.uw.edu/learn/tools/gradepage/change-submitted-grades/"
-        target="_blank"
-        title="Learn how to change submitted grades"
-        >Change submitted grades
-      </BLink>
-    </div>
-  </BAlert>
-
   <!-- grade submission in progress -->
   <BAlert
     v-if="appState.graderoster.has_inprogress_submissions"
@@ -115,13 +82,9 @@
     </BAlert>
   </template>
 
-  <!-- TODO: inline status -->
-  <div
-    v-if="appState.graderoster.submissions.length > 0"
-    :model-value="true"
-    class="small"
-  >
-    <ul class="list-unstyled text-success">
+  <!-- submission inline status -->
+  <template v-if="appState.graderoster.has_successful_submissions">
+    <ul class="list-unstyled text-success small my-5">
       <li
         v-for="(submission, index) in appState.graderoster.submissions"
         :key="index"
@@ -133,37 +96,26 @@
         <span v-html="gradesSubmittedText(submission)"></span>
       </li>
     </ul>
-  </div>
+  </template>
 
-  <div
-    v-if="
-      appState.graderoster.is_writing_section ||
-      appState.graderoster.has_duplicate_codes
-    "
-    class="mb-2 pb-2 border-bottom"
-  >
-    <div v-if="appState.graderoster.is_writing_section">
-      <strong>Note:</strong>
-      Writing credit automatically given to all students with a passing grade in
-      this course.
-    </div>
-    <div v-if="appState.graderoster.has_duplicate_codes">
-      <strong>Note:</strong>
-      In the list below, duplicate listings of the same student are
-      differentiated with a Duplicate 'code'.
-    </div>
-  </div>
-
-  <ul v-if="appState.graderoster.students" class="list-unstyled mx-0 my-3">
-    <li
-      v-for="(student, index) in appState.graderoster.students"
-      :key="student.item_id"
-      class="pt-2 mt-2"
-      :class="index != 0 ? 'border-top' : ''"
-    >
-      <Student :student="student" />
-    </li>
-  </ul>
+  <table v-if="appState.graderoster.students" class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Student</th>
+        <th scope="col">Section</th>
+        <th scope="col">Credits</th>
+        <th scope="col">Grade</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        v-for="student in appState.graderoster.students"
+        :key="student.item_id"
+      >
+        <Student :student="student" />
+      </tr>
+    </tbody>
+  </table>
   <ul v-else class="list-unstyled m-0">
     <li v-for="index in 8" :key="index" class="border-top pt-2 mt-2">
       <BPlaceholder
@@ -173,6 +125,27 @@
       />
     </li>
   </ul>
+
+  <div v-if="appState.graderoster.is_writing_section">
+    <strong>Note:</strong>
+    Writing credit automatically given to all students with a passing grade in
+    this course.
+  </div>
+  <div v-if="appState.graderoster.has_duplicate_codes">
+    <strong>Note:</strong>
+    Duplicate listings of the same student are differentiated with a Duplicate
+    'code'.
+  </div>
+  <div v-if="!appState.graderoster.is_submission_confirmation">
+    <strong>Grade receipt:</strong> Submitted grade may differ from official
+    final grade.
+    <BLink
+      href="https://registrar.washington.edu/staff-faculty/grading-resources/"
+      target="_blank"
+      class="mx-2 d-print-none"
+      >More info
+    </BLink>
+  </div>
 
   <template v-if="appState.graderoster.has_grade_imports">
     <div v-if="appState.graderoster.grade_import_count > 1">
