@@ -99,7 +99,7 @@
       </SProfile>
       <SColorMode></SColorMode>
     </template>
-    <template #bar>message bar goes here</template>
+    <template #bar> <div class="border">message bar goes here</div> </template>
     <template #main>
       <div class="my-5">
         <slot name="title">
@@ -108,7 +108,7 @@
         <slot name="content"></slot>
       </div>
     </template>
-    <template #aside> resources go here </template>
+    <template #aside><div class="border">resources go here</div> </template>
     <template #footer></template>
   </STopbar>
 </template>
