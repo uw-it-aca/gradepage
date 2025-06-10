@@ -9,6 +9,21 @@
     :sign-out-url="context.signout_url"
     :background-class="'bg-body'"
   >
+    <template #system>
+      <div class="bg-deco-turquoise">
+        <div class="container-xl text-center text-white p-2">
+          <ul class="list-unstyled">
+            <li
+              v-for="(message, index) in window.gradepage.messages"
+              :key="index"
+              class="mt-2"
+              v-html="message"
+            ></li>
+          </ul>
+        </div>
+      </div>
+    </template>
+
     <!--
     <template #navigation>
       <ul class="nav flex-column my-3">
@@ -84,30 +99,16 @@
       </SProfile>
       <SColorMode></SColorMode>
     </template>
-    <!-- <template #aside></template> -->
+    <template #bar> <div class="border">message bar goes here</div> </template>
     <template #main>
-      <div class="row my-5">
-        <div class="col-9">
-          <slot name="title">
-            <h1>{{ pageTitle }}</h1>
-          </slot>
-          <slot name="content"></slot>
-        </div>
-        <aside class="col-3">
-          <div class="bg-body-tertiary rounded-3 p-3">
-            <h2 class="fs-5 ff-encode-sans mb-3">Grading Period Status</h2>
-            <ul class="list-unstyled m-0 text-body">
-              <li
-                v-for="(message, index) in window.gradepage.messages"
-                :key="index"
-                class="mt-2"
-                v-html="message"
-              ></li>
-            </ul>
-          </div>
-        </aside>
+      <div class="my-5">
+        <slot name="title">
+          <h1>{{ pageTitle }}</h1>
+        </slot>
+        <slot name="content"></slot>
       </div>
     </template>
+    <template #aside><div class="border">resources go here</div> </template>
     <template #footer></template>
   </STopbar>
 </template>

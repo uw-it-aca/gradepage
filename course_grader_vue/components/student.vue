@@ -10,7 +10,7 @@
           variant="secondary"
           pill
           class="text-secondary-emphasis bg-secondary-subtle fw-normal"
-          >Duplicate {{ student.duplicate_code }}</BBadge
+          >Duplicate Code: {{ student.duplicate_code }}</BBadge
         >
       </template>
     </div>
