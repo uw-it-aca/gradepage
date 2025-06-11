@@ -1,5 +1,5 @@
 <template>
-  <div class="my-5">
+  <div class="">
     <h1 class="fs-1 fw-bold">{{ title }}</h1>
     <div class="d-flex align-items-end">
       <h2 v-if="section.section_name" class="fs-2 m-0 me-3">
