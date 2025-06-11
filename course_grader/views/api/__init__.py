@@ -91,11 +91,9 @@ def item_is_submitted(item):
 
     # Old receipts do not include date_graded, so also check for the
     # existence of a grade
-    if (item.date_graded is not None or
-            item.grade is not None or item.no_grade_now):
-        return True
-    else:
-        return False
+    return (item.date_graded is not None or
+            item.grade is not None or
+            item.no_grade_now)
 
 
 def graderoster_status_params(graderoster, secondary_section_id=None):
