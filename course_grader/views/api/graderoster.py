@@ -356,7 +356,8 @@ class GradeRoster(GradeFormHandler):
             else:
                 data["ungraded_count"] += 1
 
-            if grading_period_open and not item.is_auditor:
+            if (grading_period_open and not item.is_auditor and
+                    item.date_withdrawn is None):
                 grade_url = url_for_graderoster(section_id)
                 if grade_url:
                     data["gradable_student_count"] += 1

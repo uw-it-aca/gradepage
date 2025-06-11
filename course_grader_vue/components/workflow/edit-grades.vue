@@ -48,12 +48,7 @@
           v-for="student in appState.graderoster.students"
           :key="student.item_id"
         >
-          <Student
-            :student="student"
-            :grade-choices="
-              appState.graderoster.grade_choices[student.grade_choices_index]
-            "
-          />
+          <Student :student="student" />
         </tr>
       </tbody>
     </table>

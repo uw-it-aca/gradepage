@@ -53,18 +53,18 @@ export default {
       type: Object,
       required: true,
     },
-    gradeChoices: {
-      type: Array,
-      default() {
-        return [];
-      },
-    },
   },
   setup() {
     const appState = useWorkflowStateStore();
     return {
       appState,
     };
+  },
+  computed: {
+    gradeChoices() {
+      return this.appState.graderoster.grade_choices[
+        this.student.grade_choices_index];
+    },
   },
 };
 </script>

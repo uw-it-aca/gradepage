@@ -246,7 +246,6 @@ export default {
         }
       }
     },
-
     updateGradeChoices: function () {
       var valid = [];
       this.gradeChoices.forEach((gc, idx) => {

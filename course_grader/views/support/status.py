@@ -57,8 +57,10 @@ def status(request):
             "grading_period_open": get_total_milliseconds(start_date - epoch),
             "data": []
         },
+        "resubmissions": {
+            "data": [],
+        },
         "grade_imports": {
-            "catalyst": [],
             "canvas": [],
             "csv": [],
         }
@@ -74,11 +76,25 @@ def status(request):
             })
         start_date = start_date + timedelta(days=1)
 
-    for index, graderoster in enumerate(graderosters):
-        chart_data["submissions"]["data"].append([
-            get_total_milliseconds(graderoster["submitted_date"] - epoch),
-            index + 1
-        ])
+    submitted_idx = 0
+    resubmitted_idx = 0
+    seen_sections = set()
+    for graderoster in graderosters:
+        section_id = graderoster["section_id"]
+        if (graderoster["secondary_section_id"]):
+            section_id += "/" + graderoster["secondary_section_id"]
+
+        if section_id in seen_sections:
+            resubmitted_idx += 1
+            chart_data["resubmissions"]["data"].append([
+                get_total_milliseconds(graderoster["submitted_date"] - epoch),
+                resubmitted_idx])
+        else:
+            submitted_idx += 1
+            chart_data["submissions"]["data"].append([
+                get_total_milliseconds(graderoster["submitted_date"] - epoch),
+                submitted_idx])
+            seen_sections.add(section_id)
 
     for grade_import in grade_imports:
         chart_data["grade_imports"][grade_import["source"]].append([
@@ -87,7 +103,7 @@ def status(request):
         ])
 
     params = {
-        "graderosters": graderosters,
+        "graderoster_count": len(seen_sections),
         "selected_year": selected_term.year,
         "selected_quarter": selected_term.get_quarter_display(),
         "grading_period_open": grading_period_open,
