@@ -1,7 +1,7 @@
 <template>
   <BCard class="shadow-sm rounded-3" header-class="p-3" header="Default">
     <template #header>
-      <SectionHeader :section="section" title="Convert grades for" />
+      <SectionHeader :section="section" title="Convert Grades" />
     </template>
 
     <h3>Convert Final Score to Grade Points</h3>

@@ -1,7 +1,7 @@
 <template>
   <BCard class="shadow-sm rounded-3" header-class="p-3" header="Default">
     <template #header>
-      <SectionHeader :section="section" title="Review grades for import to" />
+      <SectionHeader :section="section" title="Review Grade Import" />
     </template>
 
     <template v-if="isLoading"> Importing grades... </template>

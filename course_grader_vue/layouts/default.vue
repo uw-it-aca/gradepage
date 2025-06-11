@@ -102,9 +102,6 @@
     <template #bar> <div class="border">message bar goes here</div> </template>
     <template #main>
       <div class="my-5">
-        <slot name="title">
-          <h1>{{ pageTitle }}</h1>
-        </slot>
         <slot name="content"></slot>
       </div>
     </template>

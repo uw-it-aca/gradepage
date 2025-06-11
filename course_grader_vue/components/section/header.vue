@@ -1,17 +1,17 @@
 <template>
   <div class="my-5">
-    <div class="fs-5 fw-light">
-      <span>{{ title }}</span>
-    </div>
+
+  <h1 class="fs-1 fw-bold">{{ title }}</h1>
+
     <div v-if="section.section_name">
-      <span class="fs-2 m-0 me-3">
+      <h2 class="fs-2 m-0 me-3">
         <BPlaceholder
           v-if="!section.section_name"
           class="bg-body-secondary"
           width="15"
           animation="glow"
         />{{ section.section_name }}
-      </span>
+      </h2>
       <span
         >SLN
         <BPlaceholder

@@ -4,6 +4,7 @@
     :term-url="isCurrentTermDisplay ? null : currentTerm.url"
   >
     <template #content>
+      <h1 class="fs-1 fw-bold">{{ selectedTermName }}</h1>
       <div class="w-25 mb-5">
         <select
           v-model="selectedTerm.url"

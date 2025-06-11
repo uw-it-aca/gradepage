@@ -53,7 +53,7 @@
     </BDropdownItem>
   </BDropdown>
 
-  <SectionHeader :section="section" title="Grade Receipt for" />
+  <SectionHeader :section="section" title="Grade Receipt" />
 
   <template v-if="appState.graderoster.is_submission_confirmation">
     <template v-if="appState.graderoster.has_failed_submissions">

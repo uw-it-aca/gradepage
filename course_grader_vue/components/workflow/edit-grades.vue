@@ -9,9 +9,9 @@
   <SectionHeader
     v-if="hasSubmittedAndSavedGrades"
     :section="section"
-    title="Updating grades for"
+    title="Update Grades"
   />
-  <SectionHeader v-else :section="section" title="Enter grades for" />
+  <SectionHeader v-else :section="section" title="Enter Grades" />
 
   <Errors v-if="errorResponse" :error-response="errorResponse" />
 
