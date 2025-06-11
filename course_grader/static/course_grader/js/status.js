@@ -73,8 +73,8 @@ var AdminSupport = {};
                 data: window.gradepage.charts.submissions.data
             },{
                 type: "line",
-                name: "Catalyst Gradebook Imports",
-                data: window.gradepage.charts.grade_imports.catalyst
+                name: "Resubmissions",
+                data: window.gradepage.charts.resubmissions.data
             },{
                 type: "line",
                 name: "Canvas Gradebook Imports",
