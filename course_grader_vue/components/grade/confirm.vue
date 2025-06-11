@@ -17,7 +17,9 @@
     <template v-if="student.has_incomplete">
       <div class="d-flex">
         <span class="fs-2 fw-bold">I</span>
-        <div class="small">(Incomplete) Default: {{ student.grade }}</div>
+        <div class="small">
+          Incomplete (Default: {{ student.grade }})
+        </div>
       </div>
     </template>
     <template v-else>
@@ -38,7 +40,6 @@
 </template>
 
 <script>
-import { useWorkflowStateStore } from "@/stores/state";
 
 export default {
   name: "GradeConfirm",
@@ -49,10 +50,7 @@ export default {
     },
   },
   setup() {
-    const appState = useWorkflowStateStore();
-    return {
-      appState,
-    };
+    return {};
   },
   computed: {
     hasGradeError() {

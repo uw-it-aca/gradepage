@@ -52,12 +52,7 @@
           v-for="student in appState.graderoster.students"
           :key="student.item_id"
         >
-          <Student
-            :student="student"
-            :grade-choices="
-              appState.graderoster.grade_choices[student.grade_choices_index]
-            "
-          />
+          <Student :student="student" />
         </tr>
       </tbody>
     </table>
@@ -77,7 +72,7 @@
       this course.
     </div>
     <div v-if="appState.graderoster.has_duplicate_codes">
-      <strong>Duplicate:</strong>
+      <strong>Duplicate code:</strong>
       Student dropped this section, and re-added.
     </div>
 

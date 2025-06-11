@@ -103,7 +103,7 @@ def status(request):
         ])
 
     params = {
-        "graderosters": graderosters,
+        "graderoster_count": len(seen_sections),
         "selected_year": selected_term.year,
         "selected_quarter": selected_term.get_quarter_display(),
         "grading_period_open": grading_period_open,

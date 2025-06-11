@@ -1,16 +1,5 @@
 <template>
-  <template v-if="student.is_auditor">
-    <span class="text-uppercase fs-5 fw-bold">Auditor</span>
-  </template>
-  <template v-else-if="student.is_withdrawn">
-    <div class="text-uppercase fs-5 fw-bold">
-      <span v-if="student.withdrawn_week">
-        Withdrawn (week {{ student.withdrawn_week }})
-      </span>
-      <span v-else>Withdrawn</span>
-    </div>
-  </template>
-  <template v-else>
+  <template>
     <span v-if="student.saved_grade.is_writing" class="me-2">
       <abbr title="Writing credit">W</abbr>
     </span>
@@ -43,7 +32,6 @@
 </template>
 
 <script>
-import { useWorkflowStateStore } from "@/stores/state";
 import { priorGradeText } from "@/utils/grade";
 
 export default {
@@ -55,9 +43,7 @@ export default {
     },
   },
   setup() {
-    const appState = useWorkflowStateStore();
     return {
-      appState,
       priorGradeText,
     };
   },
