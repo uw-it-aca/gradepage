@@ -141,8 +141,7 @@
   </div>
   <div v-if="appState.graderoster.has_duplicate_codes">
     <strong>Note:</strong>
-    Duplicate listings of the same student are differentiated with a Duplicate
-    'code'.
+    Student dropped this section, and re-added.
   </div>
   <div v-if="!appState.graderoster.is_submission_confirmation">
     <strong>Grade receipt:</strong> Submitted grade may differ from official

@@ -45,9 +45,8 @@
     this course.
   </div>
   <div v-if="appState.graderoster.has_duplicate_codes">
-    <strong>Note:</strong>
-    Duplicate listings of the same student are differentiated with a Duplicate
-    'code'.
+    <strong>Duplicate Code:</strong>
+    Student dropped this section, and re-added.
   </div>
   <div>
     <strong>Review:</strong> All grades will be submitted to the Registrar as
