@@ -1,34 +1,32 @@
 <template>
-  <template>
-    <span v-if="student.saved_grade.is_writing" class="me-2">
-      <abbr title="Writing credit">W</abbr>
-    </span>
-    <template v-if="student.saved_grade.is_incomplete">
+  <span v-if="student.saved_grade.is_writing" class="me-2">
+    <abbr title="Writing credit">W</abbr>
+  </span>
+  <template v-if="student.saved_grade.is_incomplete">
+    <div class="d-flex">
+      <span class="fs-2 fw-bold">I</span>
+      <div class="small">
+        Incomplete (Default: {{ student.saved_grade.grade }})
+      </div>
+    </div>
+  </template>
+  <template v-else>
+    <template v-if="student.saved_grade.no_grade_now">
       <div class="d-flex">
-        <span class="fs-2 fw-bold">I</span>
-        <div class="small">
-          Incomplete (Default: {{ student.saved_grade.grade }})
-        </div>
+        <span class="fs-2 fw-bold">X</span>
+        <div class="small">(No grade now)</div>
       </div>
     </template>
     <template v-else>
-      <template v-if="student.saved_grade.no_grade_now">
-        <div class="d-flex">
-          <span class="fs-2 fw-bold">X</span>
-          <div class="small">(No grade now)</div>
-        </div>
-      </template>
-      <template v-else>
-        <span class="fs-2 fw-bold">{{ student.saved_grade.grade }}</span>
-      </template>
+      <span class="fs-2 fw-bold">{{ student.saved_grade.grade }}</span>
     </template>
-    <div v-if="hasGradeError" class="small">
-      Submitted with error: {{ student.grade_status }}
-    </div>
-    <div v-else-if="hasChangedGrade" class="small">
-      {{ priorGradeText(student) }}
-    </div>
   </template>
+  <div v-if="hasGradeError" class="small">
+    Submitted with error: {{ student.grade_status }}
+  </div>
+  <div v-else-if="hasChangedGrade" class="small">
+    {{ priorGradeText(student) }}
+  </div>
 </template>
 
 <script>
