@@ -2,14 +2,13 @@
   <BDropdown
     v-model="showImportOptions"
     size="sm"
-    variant="subdued-primary"
+    variant="outline-primary"
     no-caret
     class="float-end d-inline-block"
     toggle-class="rounded-2"
   >
     <template #button-content>
-      <i class="bi bi-arrow-return-right me-2"></i>
-      Import from...
+      Import Options<i class="bi bi-chevron-down ms-1"></i>
     </template>
     <BDropdownItemButton v-b-modal.modalImportCanvasGrades
       ><i class="bi bi-journal-check me-2"></i>

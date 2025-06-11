@@ -1,23 +1,19 @@
 <template>
-  <BAlert v-if="!isFormValid" :model-value="true" variant="danger" class="small"
-    ><i class="bi-exclamation-octagon-fill me-1"></i>Unable to submit because
-    there are
-    <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span></BAlert
-  >
-
-  <div v-if="section">
-    <GradeImportOptions
+  <div class="d-flex justify-content-between align-items-end mb-4">
+    <SectionHeader
+      v-if="hasSubmittedAndSavedGrades"
       :section="section"
-      :expected-grade-count="appState.graderoster.gradable_student_count"
+      title="Update Grades"
     />
-  </div>
+    <SectionHeader v-else :section="section" title="Enter Grades" />
 
-  <SectionHeader
-    v-if="hasSubmittedAndSavedGrades"
-    :section="section"
-    title="Updating grades for"
-  />
-  <SectionHeader v-else :section="section" title="Enter grades for" />
+    <template v-if="section">
+      <GradeImportOptions
+        :section="section"
+        :expected-grade-count="appState.graderoster.gradable_student_count"
+      />
+    </template>
+  </div>
 
   <Errors v-if="errorResponse" :error-response="errorResponse" />
 
@@ -66,24 +62,37 @@
       </li>
     </ul>
 
-    <div v-if="appState.graderoster.is_writing_section">
-      <strong>Writing Section:</strong>
-      Writing credit automatically given to all students with a passing grade in
-      this course.
-    </div>
-    <div v-if="appState.graderoster.has_duplicate_codes">
-      <strong>Duplicate code:</strong>
-      Student dropped this section, and re-added.
+    <div class="mb-3 d-flex justify-content-between">
+      <div class="w-75">
+        <div v-if="appState.graderoster.is_writing_section">
+          <strong>Writing Section:</strong>
+          Writing credit automatically given to all students with a passing
+          grade in this course.
+        </div>
+        <div v-if="appState.graderoster.has_duplicate_codes">
+          <strong>Duplicate Code:</strong>
+          Student dropped this section, and re-added.
+        </div>
+      </div>
+      <div class="w-25 text-end">
+        <span v-if="gradesRemainingText" aria-live="polite"
+          >Status: {{ gradesRemainingText }}
+        </span>
+        <span v-else> Status: 0 grades missing</span>
+      </div>
     </div>
 
-    <div class="text-end me-2">
-      <span v-if="gradesRemainingText" aria-live="polite"
-        >Status: {{ gradesRemainingText }}
-      </span>
-      <span v-else> Status: 0 grades missing</span>
-    </div>
+    <BAlert
+      v-if="!isFormValid"
+      :model-value="true"
+      variant="danger"
+      class="small"
+      ><i class="bi-exclamation-octagon-fill me-1"></i>Unable to submit because
+      there are
+      <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span></BAlert
+    >
 
-    <div class="text-end mt-4">
+    <div class="text-end">
       <BButton
         v-if="hasSubmittedAndSavedGrades"
         variant="outline-primary"
@@ -105,7 +114,7 @@ import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
 import { updateGraderoster, clearSavedGrades } from "@/utils/data";
 import { gradesSubmittedText } from "@/utils/grade";
-import { BAlert, BBadge, BButton, BPlaceholder } from "bootstrap-vue-next";
+import { BAlert, BButton, BPlaceholder } from "bootstrap-vue-next";
 
 export default {
   components: {
@@ -114,7 +123,6 @@ export default {
     Student,
     Errors,
     BAlert,
-    BBadge,
     BButton,
     BPlaceholder,
   },
@@ -177,6 +185,8 @@ export default {
           .catch((error) => {
             this.errorResponse = error.data;
           });
+      } else {
+        alert("start validation!");
       }
     },
     discardGrades: function () {

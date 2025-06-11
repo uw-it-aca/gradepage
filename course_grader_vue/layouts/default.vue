@@ -99,16 +99,27 @@
       </SProfile>
       <SColorMode></SColorMode>
     </template>
-    <template #bar> <div class="border">message bar goes here</div> </template>
+    <!--<template #bar> <div class="border">message bar goes here</div> </template> -->
     <template #main>
       <div class="my-5">
-        <slot name="title">
-          <h1>{{ pageTitle }}</h1>
-        </slot>
         <slot name="content"></slot>
       </div>
     </template>
-    <template #aside><div class="border">resources go here</div> </template>
+    <template #aside>
+      <BCard bg-variant="body-tertiary" class="border-0 my-5">
+        <h3 class="fs-4 ff-encode-sans">Helpful Links</h3>
+        <ul class="list-unstyled">
+          <li>
+            <BLink
+              href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
+              target="_blank"
+              >GradePage Help</BLink
+            >
+          </li>
+          <li><BLink href="https://coda.uw.edu">Course Dashboard</BLink></li>
+        </ul>
+      </BCard>
+    </template>
     <template #footer></template>
   </STopbar>
 </template>

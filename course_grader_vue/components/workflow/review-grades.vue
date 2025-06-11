@@ -1,5 +1,5 @@
 <template>
-  <SectionHeader :section="section" title="Review grades for" />
+  <SectionHeader :section="section" title="Review Grades" />
 
   <template v-if="isLoading">
     Please wait, submitting grades to the Registrar...

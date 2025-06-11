@@ -1,5 +1,5 @@
 <template>
-  <!-- grade submission in progress -->
+  <!-- grade submission in progress (not yet accepted) -->
   <BAlert
     v-if="appState.graderoster.has_inprogress_submissions"
     variant="info"
@@ -19,41 +19,6 @@
       </BLink>
     </div>
   </BAlert>
-
-  <BDropdown
-    v-model="showSectionOptions"
-    size="sm"
-    variant="subdued-primary"
-    no-caret
-    class="float-end d-inline-block"
-    toggle-class="rounded-2"
-  >
-    <template #button-content> <i class="bi bi-three-dots"></i></template>
-    <BDropdownItem
-      v-if="appState.graderoster.gradable_student_count > 0"
-      @click.prevent="editGrades()"
-      ><i class="bi bi-pencil me-2 text-body-tertiary"></i>
-      Edit Grades and Resubmit
-    </BDropdownItem>
-    <BDropdownItem :href="section.export_url">
-      <i class="bi bi-download me-2 text-body-tertiary"></i>
-      Download Change of Grade
-    </BDropdownItem>
-    <BDropdownItem href="javascript:window.print()">
-      <i class="bi bi-printer me-2 text-body-tertiary"></i>
-      Print this page
-    </BDropdownItem>
-    <BDropdownDivider />
-    <BDropdownItem
-      href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
-      target="_blank"
-      title="Information on assigning and submitting grades"
-      ><i class="bi bi-question-circle me-2 text-body-tertiary"></i>
-      GradePage Help
-    </BDropdownItem>
-  </BDropdown>
-
-  <SectionHeader :section="section" title="Grade Receipt for" />
 
   <template v-if="appState.graderoster.is_submission_confirmation">
     <template v-if="appState.graderoster.has_failed_submissions">
@@ -81,6 +46,49 @@
       <span>Grade submission successful!</span>
     </BAlert>
   </template>
+
+  <div class="d-flex justify-content-between align-items-end mb-4">
+    <SectionHeader :section="section" title="Grade Receipt" />
+
+    <div>
+      <BButton
+        v-if="appState.graderoster.gradable_student_count > 0"
+        size="sm"
+        variant="outline-primary"
+        class="me-2 rounded-2"
+        @click.prevent="editGrades()"
+        >Update Grades</BButton
+      >
+      <BDropdown
+        v-model="showSectionOptions"
+        size="sm"
+        variant="outline-primary"
+        no-caret
+        class="float-end d-inline-block"
+        toggle-class="rounded-2"
+      >
+        <template #button-content>
+          Options<i class="bi bi-chevron-down ms-1"></i
+        ></template>
+        <BDropdownItem :href="section.export_url">
+          <i class="bi bi-download me-2 text-body-tertiary"></i>
+          Download Change of Grade
+        </BDropdownItem>
+        <BDropdownItem href="javascript:window.print()">
+          <i class="bi bi-printer me-2 text-body-tertiary"></i>
+          Print this page
+        </BDropdownItem>
+        <BDropdownDivider />
+        <BDropdownItem
+          href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
+          target="_blank"
+          title="Information on assigning and submitting grades"
+          ><i class="bi bi-question-circle me-2 text-body-tertiary"></i>
+          GradePage Help
+        </BDropdownItem>
+      </BDropdown>
+    </div>
+  </div>
 
   <!-- submission inline status -->
   <template v-if="appState.graderoster.has_successful_submissions">
@@ -222,6 +230,7 @@ import {
   BDropdown,
   BDropdownItem,
   BDropdownDivider,
+  BButton,
 } from "bootstrap-vue-next";
 import { getGraderoster } from "@/utils/data";
 import { gradesSubmittedText } from "@/utils/grade";
