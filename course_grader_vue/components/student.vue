@@ -1,6 +1,6 @@
 <template>
   <td scope="row">
-    <div class="fs-4 text-uppercase">
+    <div class="fs-4">
       {{ student.student_lastname }}, {{ student.student_firstname }}
     </div>
     <div>
