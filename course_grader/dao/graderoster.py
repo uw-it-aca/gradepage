@@ -69,9 +69,9 @@ def graderoster_for_section(section, instructor, requestor,
         graderoster = GradeRoster.from_xhtml(root, section=section,
                                              instructor=people[instructor_id])
 
-        grade_imp = None
         # If submitted_graderosters_only is False and this graderoster has been
         # submitted, try to find a grade import
+        grade_imp = None
         if (not submitted_graderosters_only and
                 model.submitted_date is not None):
             imp_section_id = "-".join([re.sub(r"[,/]", "-", model.section_id),
@@ -80,7 +80,9 @@ def graderoster_for_section(section, instructor, requestor,
                 grade_imp = GradeImport.objects.get_last_import_by_section_id(
                     imp_section_id)
             except GradeImport.DoesNotExist:
-                pass
+                logger.info(f"GradeImport not found, section_id: "
+                            f"{model.section_id}, secondary_section_id: "
+                            f"{model.secondary_section_id}")
 
         graderoster.submission_id = model.submission_id()
         graderoster.submissions = {

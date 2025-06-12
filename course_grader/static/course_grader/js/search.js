@@ -25,7 +25,7 @@ GradePage.AdminSupport = (function ($) {
         $("table.table").dataTable({
             "searching": false,
             "order": [[ 0, "asc" ]],
-            "paging": true,
+            "paging": false,
             "pageLength": 25,
             "scrollCollapse": true
         });
