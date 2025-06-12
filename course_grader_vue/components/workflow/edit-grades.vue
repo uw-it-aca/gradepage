@@ -14,29 +14,39 @@
     </template>
   </div>
 
-
-
   <Errors v-if="errorResponse" :error-response="errorResponse" />
 
   <template v-if="appState.graderoster">
+
     <!-- submission inline status -->
     <template v-if="appState.graderoster.has_successful_submissions">
-      <ul class="list-unstyled text-success small my-5">
-        <li
-          v-for="(submission, index) in appState.graderoster.submissions"
-          :key="index"
-        >
-          <i class="bi bi-check-circle-fill me-1"></i>
-          <span v-if="submission.section_id">
-            Section {{ submission.section_id }}:
-          </span>
-          <span v-html="gradesSubmittedText(submission)"></span>
-        </li>
-      </ul>
+      <BCard bg-variant="body-tertiary" class="border-0 mb-3">
+        <ul class="list-unstyled text-success small m-0">
+          <li
+            v-for="(submission, index) in appState.graderoster.submissions"
+            :key="index"
+          >
+            <i class="bi bi-check-circle-fill me-1"></i>
+            <span v-if="submission.section_id">
+              Section {{ submission.section_id }}:
+            </span>
+            <span v-html="gradesSubmittedText(submission)"></span>
+          </li>
+        </ul>
+      </BCard>
     </template>
 
+    <BAlert
+      v-if="hasSubmittedAndSavedGrades"
+      :model-value="true"
+      variant="warning"
+      class="small"
+      ><i class="bi-exclamation-octagon-fill me-1"></i>You are making changes to
+      a section has alredy been submitted!</BAlert
+    >
+
     <table v-if="appState.graderoster.students" class="table table-striped">
-      <thead>
+      <thead class="">
         <tr>
           <th scope="col">Student</th>
           <th scope="col">Section</th>
@@ -93,13 +103,6 @@
       there are
       <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span></BAlert
     >
-    <BAlert
-      v-if="hasSubmittedAndSavedGrades"
-      :model-value="true"
-      variant="warning"
-      class="small"
-      ><i class="bi-exclamation-octagon-fill me-1"></i>You are making changes to a section has alredy been submitted!</BAlert
-    >
 
     <div class="text-end">
       <BButton
@@ -123,7 +126,7 @@ import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
 import { updateGraderoster, clearSavedGrades } from "@/utils/data";
 import { gradesSubmittedText } from "@/utils/grade";
-import { BAlert, BButton, BPlaceholder } from "bootstrap-vue-next";
+import { BAlert, BButton, BCard, BPlaceholder } from "bootstrap-vue-next";
 
 export default {
   components: {
@@ -133,6 +136,7 @@ export default {
     Errors,
     BAlert,
     BButton,
+    BCard,
     BPlaceholder,
   },
   props: {

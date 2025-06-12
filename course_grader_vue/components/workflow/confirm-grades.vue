@@ -56,16 +56,21 @@
         size="sm"
         variant="outline-primary"
         class="me-2 rounded-2"
+        @click.prevent="editGrades()"
         >Change Grades</BButton
       >
       <BLink
         v-else
-        class="btn btn-outline-primary btn-sm me-2"
+        class="btn btn-outline-primary btn-sm rounded-2 me-2"
         :href="section.export_url"
         >Download Change of Grade</BLink
       >
-
-      <BDropdown
+      <BLink
+        class="btn btn-outline-primary btn-sm rounded-2"
+        href="javascript:window.print()"
+        >Print</BLink
+      >
+      <!--<BDropdown
         v-model="showSectionOptions"
         size="sm"
         variant="outline-primary"
@@ -76,10 +81,6 @@
         <template #button-content>
           Options<i class="bi bi-chevron-down ms-1"></i
         ></template>
-        <BDropdownItem :href="section.export_url">
-          <i class="bi bi-download me-2 text-body-tertiary"></i>
-          Download Change of Grade
-        </BDropdownItem>
         <BDropdownItem href="javascript:window.print()">
           <i class="bi bi-printer me-2 text-body-tertiary"></i>
           Print this page
@@ -92,24 +93,26 @@
           ><i class="bi bi-question-circle me-2 text-body-tertiary"></i>
           GradePage Help
         </BDropdownItem>
-      </BDropdown>
+      </BDropdown>-->
     </div>
   </div>
 
   <!-- submission inline status -->
   <template v-if="appState.graderoster.has_successful_submissions">
-    <ul class="list-unstyled text-success small my-5">
-      <li
-        v-for="(submission, index) in appState.graderoster.submissions"
-        :key="index"
-      >
-        <i class="bi bi-check-circle-fill me-1"></i>
-        <span v-if="submission.section_id">
-          Section {{ submission.section_id }}:
-        </span>
-        <span v-html="gradesSubmittedText(submission)"></span>
-      </li>
-    </ul>
+    <BCard bg-variant="body-tertiary" class="border-0 mb-3">
+      <ul class="list-unstyled text-success small m-0">
+        <li
+          v-for="(submission, index) in appState.graderoster.submissions"
+          :key="index"
+        >
+          <i class="bi bi-check-circle-fill me-1"></i>
+          <span v-if="submission.section_id">
+            Section {{ submission.section_id }}:
+          </span>
+          <span v-html="gradesSubmittedText(submission)"></span>
+        </li>
+      </ul>
+    </BCard>
   </template>
 
   <table v-if="appState.graderoster.students" class="table table-striped">
@@ -230,6 +233,7 @@ import Errors from "@/components/errors.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import {
   BAlert,
+  BCard,
   BLink,
   BPlaceholder,
   BDropdown,
@@ -246,6 +250,7 @@ export default {
     SectionHeader,
     Student,
     BAlert,
+    BCard,
     BLink,
     BPlaceholder,
     BDropdown,
