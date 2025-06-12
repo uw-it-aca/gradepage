@@ -2,12 +2,9 @@
   <template v-if="student.is_auditor">
     <span class="text-uppercase fs-5 fw-bold">Auditor</span>
   </template>
-  <template v-else-if="student.is_withdrawn">
+  <template v-else-if="student.date_withdrawn">
     <div class="text-uppercase fs-5 fw-bold">
-      <span v-if="student.withdrawn_week">
-        Withdrawn (week {{ student.withdrawn_week }})
-      </span>
-      <span v-else>Withdrawn</span>
+      <span>{{ withdrawnLabel }}</span>
     </div>
   </template>
   <template v-else>
@@ -53,6 +50,11 @@ export default {
     return {};
   },
   computed: {
+    withdrawnLabel() {
+      return this.student.grade !== null
+        ? "Withdrawn " + "(" + this.student.grade + ")"
+        : "Withdrawn";
+    },
     hasGradeError() {
       return this.student.grade_status_code === null ||
         this.student.grade_status_code === "" ||
