@@ -59,10 +59,10 @@
         :title="reviewBackTitle"
         variant="outline-primary"
         @click="editGrades"
-        >Edit</BButton
+        >Edit Grades</BButton
       >
       <BButton variant="primary" class="ms-2" @click="submitGrades"
-        >Submit</BButton
+        >Submit Grades</BButton
       >
     </div>
   </template>

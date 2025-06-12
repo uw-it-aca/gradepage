@@ -12,11 +12,11 @@
     <template #system>
       <div class="bg-deco-turquoise">
         <div class="container-xl text-center text-white p-2">
-          <ul class="list-unstyled">
+          <ul class="list-unstyled m-0">
             <li
               v-for="(message, index) in window.gradepage.messages"
               :key="index"
-              class="mt-2"
+              class="mb-2"
               v-html="message"
             ></li>
           </ul>
@@ -108,7 +108,7 @@
     <template #aside>
       <BCard bg-variant="body-tertiary" class="border-0 my-5">
         <h3 class="fs-4 ff-encode-sans">Helpful Links</h3>
-        <ul class="list-unstyled">
+        <ul class="list-unstyled m-0">
           <li>
             <BLink
               href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
