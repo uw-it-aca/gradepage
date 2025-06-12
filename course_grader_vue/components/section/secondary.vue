@@ -20,17 +20,13 @@
         >
       </div>
     </div>
-
     <div v-if="gradingStatusText" class="d-flex">
-      <div>{{ gradingStatusText }}</div>
-      <div v-if="gradesAccepted" class="text-success fw-bold ms-3">
-        <i class="bi bi-check-circle-fill"></i>
-      </div>
+      {{ gradingStatusText }}
     </div>
     <BPlaceholder
       v-else
       class="bg-body-secondary"
-      style="max-width: 9rem"
+      style="max-width: 200px"
       animation="glow"
     />
   </div>
@@ -123,9 +119,7 @@ export default {
     },
   },
   created() {
-    setTimeout(() => {
-      this.loadGradingStatus();
-    }, 1000);
+    this.loadGradingStatus();
   },
   methods: {
     loadGradingStatus: function () {

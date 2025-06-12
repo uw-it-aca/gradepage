@@ -75,8 +75,9 @@
         </div>
       </div>
       <div class="w-25 text-end">
+        <span class="fw-bold me-1">Status:</span>
         <span v-if="gradesRemainingText" aria-live="polite"
-          >Status: {{ gradesRemainingText }}
+          >{{ gradesRemainingText }}
         </span>
         <span v-else> Status: 0 grades missing</span>
       </div>
