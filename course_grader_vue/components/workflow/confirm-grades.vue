@@ -57,7 +57,7 @@
         variant="outline-primary"
         class="me-2 rounded-2"
         @click.prevent="editGrades()"
-        >Update Grades</BButton
+        >Change Grades</BButton
       >
       <BDropdown
         v-model="showSectionOptions"

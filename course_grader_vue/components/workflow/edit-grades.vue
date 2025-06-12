@@ -1,9 +1,9 @@
 <template>
   <div class="d-flex justify-content-between align-items-end mb-4">
     <SectionHeader
-      v-if="hasSubmittedAndSavedGrades"
+      v-if="appState.graderoster.has_successful_submissions"
       :section="section"
-      title="Update Grades"
+      title="Change Grades"
     />
     <SectionHeader v-else :section="section" title="Enter Grades" />
 
@@ -84,7 +84,7 @@
     </div>
 
     <BAlert
-      v-if="!isFormValid"
+      v-if="showValidationAlert"
       :model-value="true"
       variant="danger"
       class="small"
@@ -99,9 +99,9 @@
         variant="outline-primary"
         class="me-2"
         @click="discardGrades"
-        >Discard</BButton
+        >Discard Changes</BButton
       >
-      <BButton variant="primary" @click="reviewGrades">Review</BButton>
+      <BButton variant="primary" @click="reviewGrades">Review Grades</BButton>
     </div>
   </template>
 </template>
@@ -147,6 +147,7 @@ export default {
   data() {
     return {
       errorResponse: null,
+      showValidationAlert: false,
     };
   },
   computed: {
@@ -187,7 +188,7 @@ export default {
             this.errorResponse = error.data;
           });
       } else {
-        alert("start validation!");
+        this.showValidationAlert = true;
       }
     },
     discardGrades: function () {
