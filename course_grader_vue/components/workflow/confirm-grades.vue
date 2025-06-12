@@ -56,9 +56,15 @@
         size="sm"
         variant="outline-primary"
         class="me-2 rounded-2"
-        @click.prevent="editGrades()"
         >Change Grades</BButton
       >
+      <BLink
+        v-else
+        class="btn btn-outline-primary btn-sm me-2"
+        :href="section.export_url"
+        >Download Change of Grade</BLink
+      >
+
       <BDropdown
         v-model="showSectionOptions"
         size="sm"

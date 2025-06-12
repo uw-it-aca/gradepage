@@ -6,7 +6,6 @@
       title="Change Grades"
     />
     <SectionHeader v-else :section="section" title="Enter Grades" />
-
     <template v-if="section">
       <GradeImportOptions
         :section="section"
@@ -14,6 +13,8 @@
       />
     </template>
   </div>
+
+
 
   <Errors v-if="errorResponse" :error-response="errorResponse" />
 
@@ -91,6 +92,13 @@
       ><i class="bi-exclamation-octagon-fill me-1"></i>Unable to submit because
       there are
       <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span></BAlert
+    >
+    <BAlert
+      v-if="hasSubmittedAndSavedGrades"
+      :model-value="true"
+      variant="warning"
+      class="small"
+      ><i class="bi-exclamation-octagon-fill me-1"></i>You are making changes to a section has alredy been submitted!</BAlert
     >
 
     <div class="text-end">
