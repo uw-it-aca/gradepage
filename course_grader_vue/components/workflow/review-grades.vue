@@ -1,9 +1,16 @@
 <template>
-  <SectionHeader :section="section" title="Review Grades" />
-
   <template v-if="isLoading">
-    Please wait, submitting grades to the Registrar...
+    <!-- success -->
+    <BAlert variant="success" :model-value="true" class="small">
+      <span
+        class="spinner-border spinner-border-sm me-1"
+        aria-hidden="true"
+      ></span>
+      Please wait, submitting grades to the Registrar
+    </BAlert>
   </template>
+
+  <SectionHeader :section="section" title="Review Grades" />
 
   <Errors v-if="errorResponse" :error-response="errorResponse" />
 
@@ -74,7 +81,7 @@ import Student from "@/components/student.vue";
 import Errors from "@/components/errors.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { submitGraderoster } from "@/utils/data";
-import { BButton, BPlaceholder, BBadge } from "bootstrap-vue-next";
+import { BButton, BPlaceholder, BBadge, BAlert } from "bootstrap-vue-next";
 
 export default {
   components: {
@@ -82,6 +89,7 @@ export default {
     Student,
     Errors,
     BBadge,
+    BAlert,
     BButton,
     BPlaceholder,
   },
@@ -115,14 +123,17 @@ export default {
     },
     submitGrades: function () {
       this.isLoading = true;
-      this.submitGraderoster(this.section.graderoster_url, {})
-        .then((data) => {
-          this.appState.setGraderoster(data.graderoster);
-        })
-        .catch((error) => {
-          this.errorResponse = error.data;
-          this.isLoading = false;
-        });
+
+      setTimeout(() => {
+        this.submitGraderoster(this.section.graderoster_url, {})
+          .then((data) => {
+            this.appState.setGraderoster(data.graderoster);
+          })
+          .catch((error) => {
+            this.errorResponse = error.data;
+            this.isLoading = false;
+          });
+      }, 5000);
     },
   },
 };
