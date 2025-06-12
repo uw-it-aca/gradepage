@@ -75,7 +75,7 @@ export const useGradeStore = defineStore("grade", {
       for (const student of data.students) {
         if (
           !student.is_auditor &&
-          !student.is_withdrawn &&
+          student.date_withdrawn === null &&
           student.imported_grade !== null &&
           student.imported_grade !== ""
         ) {

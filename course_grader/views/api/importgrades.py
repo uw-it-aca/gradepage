@@ -206,7 +206,7 @@ class ImportGrades(GradeFormHandler):
                 grade["student_reg_id"] = item.student_uwregid
                 grade["student_number"] = item.student_number
                 grade["is_auditor"] = item.is_auditor
-                grade["is_withdrawn"] = item.date_withdrawn is not None
+                grade["date_withdrawn"] = item.date_withdrawn
                 return_data["students"].append(grade)
 
         return self.json_response({"grade_import": return_data})

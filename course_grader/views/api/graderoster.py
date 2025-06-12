@@ -326,7 +326,6 @@ class GradeRoster(GradeFormHandler):
             has_incomplete = item.has_incomplete
             has_writing_credit = item.has_writing_credit
             date_graded = None
-            withdrawn_week = None
             saved_grade_data = {}
 
             if item.duplicate_code is not None:
@@ -347,13 +346,7 @@ class GradeRoster(GradeFormHandler):
                         data["has_failed_submissions"] = True
                         data["failed_submission_count"] += 1
 
-            elif item.date_withdrawn:
-                if grade is not None:
-                    m = re.match(r"^W(?P<week>[\d])$", grade)
-                    if m is not None and m.group("week"):
-                        withdrawn_week = m.group("week")
-                    grade = ""
-            else:
+            elif item.date_withdrawn is None and not item.is_auditor:
                 data["ungraded_count"] += 1
 
             if (grading_period_open and not item.is_auditor and
@@ -394,8 +387,7 @@ class GradeRoster(GradeFormHandler):
                 "student_credits": item.student_credits,
                 "section_id": item.section_id,
                 "is_auditor": item.is_auditor,
-                "is_withdrawn": item.date_withdrawn is not None,
-                "withdrawn_week": withdrawn_week,
+                "date_withdrawn": item.date_withdrawn,
                 "is_submitted": is_submitted,
                 "date_graded": date_graded,
                 "allows_incomplete": True,
@@ -464,11 +456,8 @@ class GradeRosterExport(GradeRoster):
             saved_grade = ""
             if student.get("is_auditor"):
                 grade = "Auditor"
-            elif student.get("is_withdrawn"):
-                grade = "Withdrawn"
-                if student.get("withdrawn_week"):
-                    grade = "Withdrawn week {}".format(
-                        student.get("withdrawn_week"))
+            elif student.get("date_withdrawn"):
+                grade = "Withdrawn ({})".format(student.get("grade", ""))
             else:
                 grade = student.get("grade", "")
                 if student.get("no_grade_now"):
