@@ -52,7 +52,7 @@ export default {
   computed: {
     withdrawnLabel() {
       return this.student.grade !== null
-        ? "Withdrawn " + "(" + this.student.grade + ")";
+        ? "Withdrawn " + "(" + this.student.grade + ")"
         : "Withdrawn";
     },
     hasGradeError() {
