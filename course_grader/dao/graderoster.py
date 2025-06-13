@@ -85,15 +85,11 @@ def graderoster_for_section(section, instructor, requestor,
                     re.sub(r"[,/]", "-", model.secondary_section_id),
                     model.instructor_id])
 
-            try:
-                grade_imp = GradeImport.objects.get_last_import_by_section_id(
-                    imp_section_id, imp_secondary_section_id)
+            grade_imp = GradeImport.objects.get_last_import_by_section_id(
+                imp_section_id, imp_secondary_section_id)
+            if grade_imp:
                 logger.info(f"GradeImport FOUND, section_id: "
                             f"{grade_imp.section_id}")
-            except GradeImport.DoesNotExist:
-                logger.info(f"GradeImport not found, section_id: "
-                            f"{model.section_id}, secondary_section_id: "
-                            f"{model.secondary_section_id}")
 
         graderoster.submission_id = model.submission_id()
         graderoster.submissions = {
