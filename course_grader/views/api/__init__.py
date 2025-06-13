@@ -96,7 +96,9 @@ def item_is_submitted(item):
             item.no_grade_now)
 
 
-def graderoster_status_params(graderoster, secondary_section_id=None):
+def graderoster_status_params(graderoster,
+                              secondary_section_id=None,
+                              include_grade_imports=False):
     total_count = 0
     submitted_count = 0
     for item in graderoster.items:
@@ -132,14 +134,15 @@ def graderoster_status_params(graderoster, secondary_section_id=None):
             submitted_date = submission["submitted_date"]
             submitted_by = submission["submitted_by"]
             accepted_date = submission["accepted_date"]
-            grade_import = submission["grade_import"]
             data["status_code"] = submission["status_code"]
             data["submitted_date"] = submitted_date.isoformat()
             data["accepted_date"] = accepted_date.isoformat() if (
                 accepted_date is not None) else None
             data["submitted_by"] = person_display_name(submitted_by)
-            data["grade_import"] = grade_import.json_data() if (
-                grade_import is not None) else None
+            if include_grade_imports:
+                grade_import = submission["grade_import"]
+                data["grade_import"] = grade_import.json_data() if (
+                    grade_import is not None) else None
 
     if (is_grading_period_open(section) and data["unsubmitted_count"]):
         data["deadline_warning"] = submission_deadline_warning(section.term)
