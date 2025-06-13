@@ -74,19 +74,22 @@ def graderoster_for_section(section, instructor, requestor,
         grade_imp = None
         if (not submitted_graderosters_only and
                 model.submitted_date is not None):
-            mod_section_id = model.secondary_section_id if (
-                model.secondary_section_id is not None) else model.section_id
 
-            imp_section_id = "-".join([re.sub(r"[,/]", "-", mod_section_id),
-                                       model.instructor_id])
-            try:
-                grade_imp = GradeImport.objects.get_last_import_by_section_id(
-                    imp_section_id)
-                logger.info(f"GradeImport FOUND, section_id: {imp_section_id}")
-            except GradeImport.DoesNotExist:
-                logger.info(f"GradeImport not found, section_id: "
-                            f"{model.section_id}, secondary_section_id: "
-                            f"{model.secondary_section_id}")
+            imp_section_id = "-".join([
+                re.sub(r"[,/]", "-", model.section_id),
+                model.instructor_id])
+
+            imp_secondary_section_id = None
+            if model.secondary_section_id is not None:
+                imp_secondary_section_id = "-".join([
+                    re.sub(r"[,/]", "-", model.secondary_section_id),
+                    model.instructor_id])
+
+            grade_imp = GradeImport.objects.get_last_import_by_section_id(
+                imp_section_id, imp_secondary_section_id)
+            if grade_imp:
+                logger.info(f"GradeImport FOUND, section_id: "
+                            f"{grade_imp.section_id}")
 
         graderoster.submission_id = model.submission_id()
         graderoster.submissions = {
