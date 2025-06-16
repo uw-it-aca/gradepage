@@ -69,11 +69,11 @@ var AdminSupport = {};
             },
             series: [{
                 type: "area",
-                name: "Submissions",
+                name: "Submitted Sections",
                 data: window.gradepage.charts.submissions.data
             },{
                 type: "line",
-                name: "Resubmissions",
+                name: "Resubmitted Sections",
                 data: window.gradepage.charts.resubmissions.data
             },{
                 type: "line",

@@ -76,6 +76,12 @@ class SubmittedGradeRosterManager(models.Manager):
                 "term_id", flat=True
             ).distinct()
 
+    def get_by_search(self, *args, **kwargs):
+        return super().get_queryset().filter(*args, **kwargs).order_by(
+                F("section_id").asc(),
+                F("secondary_section_id").asc(nulls_first=True),
+                F("submitted_date").desc()
+            ).defer("document")
 
 class SubmittedGradeRoster(models.Model):
     """Represents a submitted graderoster document."""
@@ -314,6 +320,12 @@ class GradeImportManager(models.Manager):
     def get_all_terms(self):
         return super().get_queryset().values_list(
             "term_id", flat=True).distinct()
+
+    def get_by_search(self, *args, **kwargs):
+        return super().get_queryset().filter(*args, **kwargs).order_by(
+                F("section_id").asc(),
+                F("imported_date").desc()
+            )
 
 
 class GradeImport(models.Model):
