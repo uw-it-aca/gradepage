@@ -83,6 +83,7 @@ class SubmittedGradeRosterManager(models.Manager):
                 F("submitted_date").desc()
             ).defer("document")
 
+
 class SubmittedGradeRoster(models.Model):
     """Represents a submitted graderoster document."""
 
