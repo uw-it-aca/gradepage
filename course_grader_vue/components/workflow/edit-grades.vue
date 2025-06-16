@@ -42,7 +42,7 @@
       variant="warning"
       class="small"
       ><i class="bi-exclamation-octagon-fill me-1"></i>You are making changes to
-      a section has alredy been submitted!</BAlert
+      a section that has been previously submitted.</BAlert
     >
 
     <table v-if="appState.graderoster.students" class="table table-striped">
@@ -76,13 +76,10 @@
     <div class="mb-3 d-flex justify-content-between">
       <div class="w-75">
         <div v-if="appState.graderoster.is_writing_section">
-          <strong>Writing Section:</strong>
-          Writing credit automatically given to all students with a passing
-          grade in this course.
+          <strong>Writing Section:</strong> {{ writingSectionText }}
         </div>
         <div v-if="appState.graderoster.has_duplicate_codes">
-          <strong>Duplicate Code:</strong>
-          Student dropped this section, and re-added.
+          <strong>Duplicate Code:</strong> {{ duplicateCodeText }}
         </div>
       </div>
       <div class="w-25 text-end">
@@ -125,7 +122,7 @@ import GradeImportOptions from "@/components/import/source-options.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
 import { updateGraderoster, clearSavedGrades } from "@/utils/data";
-import { gradesSubmittedText } from "@/utils/grade";
+import { gradesSubmittedText, duplicateCodeText, writingSectionText } from "@/utils/grade";
 import { BAlert, BButton, BCard, BPlaceholder } from "bootstrap-vue-next";
 
 export default {
@@ -154,6 +151,8 @@ export default {
       updateGraderoster,
       clearSavedGrades,
       gradesSubmittedText,
+      duplicateCodeText,
+      writingSectionText,
     };
   },
   data() {
