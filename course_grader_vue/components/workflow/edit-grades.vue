@@ -76,10 +76,10 @@
     <div class="mb-3 d-flex justify-content-between">
       <div class="w-75">
         <div v-if="appState.graderoster.is_writing_section">
-          <strong>Writing Section:</strong> {{ writingSectionText }}
+          <strong>Writing Section:</strong> {{ writingSectionText() }}
         </div>
         <div v-if="appState.graderoster.has_duplicate_codes">
-          <strong>Duplicate Code:</strong> {{ duplicateCodeText }}
+          <strong>Duplicate Code:</strong> {{ duplicateCodeText() }}
         </div>
       </div>
       <div class="w-25 text-end">
