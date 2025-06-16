@@ -144,13 +144,10 @@
   </ul>
 
   <div v-if="appState.graderoster.is_writing_section">
-    <strong>Note:</strong>
-    Writing credit automatically given to all students with a passing grade in
-    this course.
+    <strong>Writing Section:</strong> {{ writingSectionText }}
   </div>
   <div v-if="appState.graderoster.has_duplicate_codes">
-    <strong>Note:</strong>
-    Student dropped this section, and re-added.
+    <strong>Duplicate Code:</strong> {{ duplicateCodeText }}
   </div>
   <div v-if="!appState.graderoster.is_submission_confirmation">
     <strong>Grade receipt:</strong> Submitted grade may differ from official
@@ -242,7 +239,7 @@ import {
   BButton,
 } from "bootstrap-vue-next";
 import { getGraderoster } from "@/utils/data";
-import { gradesSubmittedText } from "@/utils/grade";
+import { gradesSubmittedText, duplicateCodeText, writingSectionText } from "@/utils/grade";
 import { ref } from "vue";
 
 export default {
@@ -271,6 +268,8 @@ export default {
       getGraderoster,
       showSectionOptions,
       gradesSubmittedText,
+      duplicateCodeText,
+      writingSectionText,
     };
   },
   data() {

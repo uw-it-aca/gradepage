@@ -40,13 +40,10 @@
   </template>
 
   <div v-if="appState.graderoster.is_writing_section">
-    <strong>Writing Section:</strong>
-    Writing credit automatically given to all students with a passing grade in
-    this course.
+    <strong>Writing Section:</strong> {{ writingSectionText }}
   </div>
   <div v-if="appState.graderoster.has_duplicate_codes">
-    <strong>Duplicate Code:</strong>
-    Student dropped this section, and re-added.
+    <strong>Duplicate Code:</strong> {{ duplicateCodeText }}
   </div>
   <div>
     <strong>Review:</strong> All grades will be submitted to the Registrar as
@@ -74,6 +71,7 @@ import Student from "@/components/student.vue";
 import Errors from "@/components/errors.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { submitGraderoster } from "@/utils/data";
+import { duplicateCodeText, writingSectionText } from "@/utils/grade";
 import { BButton, BPlaceholder, BBadge } from "bootstrap-vue-next";
 
 export default {
@@ -96,6 +94,8 @@ export default {
     return {
       appState,
       submitGraderoster,
+      duplicateCodeText,
+      writingSectionText,
     };
   },
   data() {
