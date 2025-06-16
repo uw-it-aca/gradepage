@@ -40,10 +40,10 @@
   </template>
 
   <div v-if="appState.graderoster.is_writing_section">
-    <strong>Writing Section:</strong> {{ writingSectionText }}
+    <strong>Writing Section:</strong> {{ writingSectionText() }}
   </div>
   <div v-if="appState.graderoster.has_duplicate_codes">
-    <strong>Duplicate Code:</strong> {{ duplicateCodeText }}
+    <strong>Duplicate Code:</strong> {{ duplicateCodeText() }}
   </div>
   <div>
     <strong>Review:</strong> All grades will be submitted to the Registrar as
