@@ -7,14 +7,14 @@ function parseError(str) {
     try {
       // nginx error html?
       var parser = new DOMParser(),
-          errorDoc = parser.parseFromString(str, "text/html"),
-          title = errorDoc.title;
+        errorDoc = parser.parseFromString(str, "text/html"),
+        title = errorDoc.title;
       return {
-        status: parseInt(title.substring(0, title.indexOf(' '))),
-        error: title.substring(title.indexOf(' ') + 1),
+        status: parseInt(title.substring(0, title.indexOf(" "))),
+        error: title.substring(title.indexOf(" ") + 1),
       };
     } catch (error) {
-      return {status: null, error: str};
+      return { status: null, error: str };
     }
   }
 }
@@ -39,7 +39,7 @@ export async function useCustomFetch(url, options = {}) {
     const response = await fetch(url, options);
 
     if (response.ok) {
-      return response.text().then(text => {
+      return response.text().then((text) => {
         try {
           const json = text.length ? JSON.parse(text) : {};
           return json;
@@ -54,8 +54,8 @@ export async function useCustomFetch(url, options = {}) {
         );
         return;
       } else {
-        return response.text().then(text => {
-          const error = new Error("Error")
+        return response.text().then((text) => {
+          const error = new Error("Error");
           error.data = parseError(text);
           throw error;
         });

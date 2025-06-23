@@ -1,9 +1,19 @@
 <template>
-  <div class="d-flex justify-content-between align-items-end mb-4">
+  <Errors v-if="errorResponse" :error-response="errorResponse" />
+
+  <h1 class="fs-1 fw-bold">
+    <template v-if="appState.graderoster.has_successful_submissions"
+      >Change Grades</template
+    >
+    <template v-else>Enter Grades</template>
+  </h1>
+
+  <div class="d-flex justify-content-between align-items-start mb-4">
     <SectionHeader
       v-if="appState.graderoster.has_successful_submissions"
       :section="section"
       title="Change Grades"
+      :status="appState.graderoster.has_successful_submissions"
     />
     <SectionHeader v-else :section="section" title="Enter Grades" />
     <template v-if="section">
@@ -14,39 +24,75 @@
     </template>
   </div>
 
-  <Errors v-if="errorResponse" :error-response="errorResponse" />
-
   <template v-if="appState.graderoster">
-
     <!-- submission inline status -->
     <template v-if="appState.graderoster.has_successful_submissions">
-      <BCard bg-variant="body-tertiary" class="border-0 mb-3">
-        <ul class="list-unstyled text-success small m-0">
+      <BCard bg-variant="body-tertiary" class="border-0 mb-4">
+        <div v-if="hasSubmittedAndSavedGrades" class="border-bottom mb-2 pb-2">
+          <span class="fw-bold"
+            ><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i
+            >Resubmit to make any changes official.</span
+          >
+          Otherwise, the most recent grade submission will stand.
+        </div>
+        <!-- check if secondary section -->
+        <div class="d-flex justify-content-between">
+          <div>
+            <div class="fw-bold ms-4">Course sections submitted: x of x</div>
+            <div class="fst-italic small ms-4">
+              Submitted grades may differ from official final grade.
+              <BLink
+                to="https://registrar.washington.edu/staff-faculty/grading-resources/"
+                >Learn why</BLink
+              >.
+            </div>
+          </div>
+          <div>
+            <BButton v-b-toggle.collapse-1 variant="quiet-primary" size="sm"
+              >Show sections</BButton
+            >
+          </div>
+        </div>
+        <BCollapse id="collapse-1">
+          <ul class="list-unstyled mt-2 ms-4">
+            <li
+              v-for="(submission, index) in appState.graderoster.submissions"
+              :key="index"
+            >
+              <i class="bi bi-check-circle-fill text-success me-2"></i>
+              <span v-if="submission.section_id">
+                Section {{ submission.section_id }}:
+              </span>
+              <span v-html="gradesSubmittedText(submission)"></span>
+            </li>
+          </ul>
+        </BCollapse>
+
+        <!-- else primary -->
+        <ul class="list-unstyled m-0">
           <li
             v-for="(submission, index) in appState.graderoster.submissions"
             :key="index"
           >
-            <i class="bi bi-check-circle-fill me-1"></i>
+            <i class="bi bi-check-circle-fill text-success me-2"></i>
             <span v-if="submission.section_id">
               Section {{ submission.section_id }}:
             </span>
             <span v-html="gradesSubmittedText(submission)"></span>
           </li>
         </ul>
+        <div class="fst-italic small ms-4">
+          Submitted grades may differ from official final grade.
+          <BLink
+            to="https://registrar.washington.edu/staff-faculty/grading-resources/"
+            >Learn why</BLink
+          >.
+        </div>
       </BCard>
     </template>
 
-    <BAlert
-      v-if="hasSubmittedAndSavedGrades"
-      :model-value="true"
-      variant="warning"
-      class="small"
-      ><i class="bi-exclamation-octagon-fill me-1"></i>You are making changes to
-      a section has alredy been submitted!</BAlert
-    >
-
     <table v-if="appState.graderoster.students" class="table table-striped">
-      <thead class="">
+      <thead class="table-body-secondary">
         <tr>
           <th scope="col">Student</th>
           <th scope="col">Section</th>
@@ -63,26 +109,14 @@
         </tr>
       </tbody>
     </table>
-    <ul v-else-if="!errorResponse" class="list-unstyled m-0">
-      <li v-for="index in 8" :key="index" class="border-top pt-2 mt-2">
-        <BPlaceholder
-          class="d-block bg-body-secondary"
-          style="height: 60px"
-          animation="glow"
-        />
-      </li>
-    </ul>
+    <div v-else-if="!errorResponse">Loading something....</div>
 
-    <div class="mb-3 d-flex justify-content-between">
+    <div class="d-flex justify-content-between mb-4">
       <div class="w-75">
         <div v-if="appState.graderoster.is_writing_section">
           <strong>Writing Section:</strong>
           Writing credit automatically given to all students with a passing
           grade in this course.
-        </div>
-        <div v-if="appState.graderoster.has_duplicate_codes">
-          <strong>Duplicate Code:</strong>
-          Student dropped this section, and re-added.
         </div>
       </div>
       <div class="w-25 text-end">
@@ -90,12 +124,12 @@
         <span v-if="gradesRemainingText" aria-live="polite"
           >{{ gradesRemainingText }}
         </span>
-        <span v-else> Status: 0 grades missing</span>
+        <span v-else>0 grades missing</span>
       </div>
     </div>
 
     <BAlert
-      v-if="showValidationAlert"
+      v-if="showValidationAlert && !isFormValid"
       :model-value="true"
       variant="danger"
       class="small"
@@ -121,11 +155,13 @@
 import SectionHeader from "@/components/section/header.vue";
 import Student from "@/components/student.vue";
 import Errors from "@/components/errors.vue";
+import Links from "@/components/links.vue";
 import GradeImportOptions from "@/components/import/source-options.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
 import { updateGraderoster, clearSavedGrades } from "@/utils/data";
 import { gradesSubmittedText } from "@/utils/grade";
+import { alignTop } from "@/utils/section";
 import { BAlert, BButton, BCard, BPlaceholder } from "bootstrap-vue-next";
 
 export default {
@@ -134,6 +170,7 @@ export default {
     GradeImportOptions,
     Student,
     Errors,
+    Links,
     BAlert,
     BButton,
     BCard,
@@ -154,6 +191,7 @@ export default {
       updateGraderoster,
       clearSavedGrades,
       gradesSubmittedText,
+      alignTop,
     };
   },
   data() {

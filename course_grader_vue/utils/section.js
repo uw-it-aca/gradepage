@@ -36,7 +36,7 @@ function formatGradingStatus(data) {
               data.submitted_count
             ) + submitted_date_str;
         } else if (data.status_code !== "200") {
-          "There was an error submitting grades"
+          ("There was an error submitting grades");
         } else {
           base = ngettext(
             "%(submitted_count)s grade submission in progress",
@@ -67,4 +67,32 @@ function formatErrorStatus(error) {
   return error.error ? error.error : gettext("Error retrieving grading status");
 }
 
-export { formatLinkTitle, formatGradingStatus, formatErrorStatus };
+function alignTop() {
+  console.log("alignTop called...");
+
+  const reference = document.getElementById("referenceDiv");
+  const target = document.getElementById("targetDiv");
+
+  if (!reference) {
+    console.warn("Reference div not found");
+    return;
+  } else if (!target) {
+    console.warn("Target div not found");
+    return;
+  }
+
+  //const referenceTop = reference.getBoundingClientRect().top + window.scrollY;
+  //target.style.position = "absolute"; // or 'relative' depending on layout
+  //target.style.top = `${referenceTop}px`;
+
+  const referenceTop = reference.getBoundingClientRect().top + window.scrollY;
+  const targetTop = target.getBoundingClientRect().top + window.scrollY;
+  const offset = referenceTop - targetTop; // Apply margin offset to align target with reference
+
+  //console.log("targetTop.." + targetTop);
+  //console.log("referenceTop.." + referenceTop);
+  //console.log("offset.." + offset);
+  target.style.marginTop = `${offset}px`;
+}
+
+export { formatLinkTitle, formatGradingStatus, formatErrorStatus, alignTop };

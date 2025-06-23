@@ -20,15 +20,10 @@
         >
       </div>
     </div>
-    <div v-if="gradingStatusText" class="d-flex">
-      {{ gradingStatusText }}
-    </div>
-    <BPlaceholder
-      v-else
-      class="bg-body-secondary"
-      style="max-width: 200px"
-      animation="glow"
-    />
+    <div v-if="isLoading">Loading secondary grading status text...</div>
+    <template v-else>
+      <div v-if="gradingStatusText" class="d-flex">{{ gradingStatusText }}</div>
+    </template>
   </div>
 </template>
 
@@ -125,17 +120,20 @@ export default {
     loadGradingStatus: function () {
       if (this.section.status_url) {
         this.isLoading = true;
-        this.getSectionStatus(this.section.status_url)
-          .then((data) => {
-            // Secondary status overrules the prop
-            this.secondaryStatus = data.section.grading_status;
-          })
-          .catch((error) => {
-            this.errorStatus = error.data;
-          })
-          .finally(() => {
-            this.isLoading = false;
-          });
+
+        setTimeout(() => {
+          this.getSectionStatus(this.section.status_url)
+            .then((data) => {
+              // Secondary status overrules the prop
+              this.secondaryStatus = data.section.grading_status;
+            })
+            .catch((error) => {
+              this.errorStatus = error.data;
+            })
+            .finally(() => {
+              this.isLoading = false;
+            });
+        }, 2000);
       }
     },
   },

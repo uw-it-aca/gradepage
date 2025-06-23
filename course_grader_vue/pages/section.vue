@@ -4,7 +4,7 @@
       <div v-if="errorResponse">
         <Errors :error-response="errorResponse" />
       </div>
-      <div v-else-if="isLoading">Loading...</div>
+      <div v-else-if="isLoading">Loading grade roster state...</div>
       <div v-else>
         <template v-if="appState.editingGrades">
           <EditGrades :section="section" />
@@ -60,6 +60,7 @@ export default {
       gradeStore,
       getSection,
       getGraderoster,
+
     };
   },
   data() {
@@ -77,19 +78,24 @@ export default {
     loadGraderoster: function () {
       if (this.section.graderoster_url) {
         this.isLoading = true;
+
         this.gradeStore.$reset();
         this.appState.$reset();
-        this.getGraderoster(this.section.graderoster_url)
-          .then((data) => {
-            this.appState.setGraderoster(data.graderoster);
-            this.errorResponse = null;
-          })
-          .catch((error) => {
-            this.errorResponse = error.data;
-          })
-          .finally(() => {
-            this.isLoading = false;
-          });
+
+        setTimeout(() => {
+          this.getGraderoster(this.section.graderoster_url)
+            .then((data) => {
+              this.appState.setGraderoster(data.graderoster);
+              this.errorResponse = null;
+            })
+            .catch((error) => {
+              this.errorResponse = error.data;
+            })
+            .finally(() => {
+              this.isLoading = false;
+              console.log("done loading grade roster...");
+            });
+        }, 2000);
       } else {
         this.isLoading = false;
       }

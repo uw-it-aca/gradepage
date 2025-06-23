@@ -20,15 +20,11 @@
         >
       </div>
     </div>
-    <div v-if="gradingStatusText" class="d-flex">
-      {{ gradingStatusText }}
-    </div>
-    <BPlaceholder
-      v-else
-      class="bg-body-secondary"
-      style="max-width: 200px"
-      animation="glow"
-    />
+
+    <div v-if="isLoading">Loading primary grading status text...</div>
+    <template v-else>
+      <div v-if="gradingStatusText" class="d-flex">{{ gradingStatusText }}</div>
+    </template>
   </div>
 
   <ul
@@ -138,20 +134,23 @@ export default {
     loadGradingStatus: function () {
       if (this.section.status_url) {
         this.isLoading = true;
-        this.getSectionStatus(this.section.status_url)
-          .then((data) => {
-            this.gradingStatus = data.grading_status;
 
-            if (data.grading_status.hasOwnProperty("secondary_sections")) {
-              this.secondaryStatus = data.grading_status.secondary_sections;
-            }
-          })
-          .catch((error) => {
-            this.errorStatus = error.data;
-          })
-          .finally(() => {
-            this.isLoading = false;
-          });
+        setTimeout(() => {
+          this.getSectionStatus(this.section.status_url)
+            .then((data) => {
+              this.gradingStatus = data.grading_status;
+
+              if (data.grading_status.hasOwnProperty("secondary_sections")) {
+                this.secondaryStatus = data.grading_status.secondary_sections;
+              }
+            })
+            .catch((error) => {
+              this.errorStatus = error.data;
+            })
+            .finally(() => {
+              this.isLoading = false;
+            });
+        }, 2000);
       }
     },
   },

@@ -10,8 +10,8 @@
     :background-class="'bg-body'"
   >
     <template #system>
-      <div class="bg-deco-turquoise">
-        <div class="container-xl text-center text-white p-2">
+      <div class="bg-info-subtle">
+        <div class="container-xl text-center text-info-emphasis p-2">
           <ul class="list-unstyled m-0">
             <li
               v-for="(message, index) in window.gradepage.messages"
@@ -99,27 +99,55 @@
       </SProfile>
       <SColorMode></SColorMode>
     </template>
-    <!--<template #bar> <div class="border">message bar goes here</div> </template> -->
+    <!--<template #bar> <div class="border">message bar goes here</div> </template>-->
     <template #main>
-      <div class="my-5">
-        <slot name="content"></slot>
+      <div class="row">
+        <div class="col text-end mt-3">
+          <ul class="list-inline list-unstyled m-0">
+            <li class="list-inline-item me-3">
+              <BLink
+                href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
+                class="link-quiet-primary"
+                target="_blank"
+              >
+                <i class="bi bi-question-circle me-1"></i>GradePage Help</BLink
+              >
+            </li>
+            <li class="list-inline-item">
+              <BLink
+                href="https://coda.uw.edu"
+                class="link-quiet-primary"
+                target="_blank"
+                ><i class="bi bi-box-arrow-in-up-right me-1"></i>Course
+                Dashboard</BLink
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row my-5">
+        <div class="col">
+          <slot name="content"></slot>
+        </div>
       </div>
     </template>
-    <template #aside>
-      <BCard bg-variant="body-tertiary" class="border-0 my-5">
-        <h3 class="fs-4 ff-encode-sans">Helpful Links</h3>
-        <ul class="list-unstyled m-0">
-          <li>
-            <BLink
-              href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
-              target="_blank"
-              >GradePage Help</BLink
-            >
-          </li>
-          <li><BLink href="https://coda.uw.edu">Course Dashboard</BLink></li>
-        </ul>
-      </BCard>
-    </template>
+    <!--<template #aside>
+      <div id="targetDiv">
+        <BCard bg-variant="body-tertiary" class="border-0 mt-5">
+          <h3 class="fs-4 ff-encode-sans">Helpful Links</h3>
+          <ul class="list-unstyled m-0">
+            <li>
+              <BLink
+                href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
+                target="_blank"
+                >GradePage Help</BLink
+              >
+            </li>
+            <li><BLink href="https://coda.uw.edu">Course Dashboard</BLink></li>
+          </ul>
+        </BCard>
+      </div>
+    </template>-->
     <template #footer></template>
   </STopbar>
 </template>

@@ -1,6 +1,5 @@
 <template>
-  <div class="">
-    <h1 class="fs-1 fw-bold">{{ title }}</h1>
+  <div id="referenceDiv">
     <div class="d-flex align-items-end">
       <h2 v-if="section.section_name" class="fs-2 m-0 me-3">
         <BPlaceholder
@@ -17,6 +16,14 @@
           width="5"
           animation="glow"
         />{{ section.section_sln }}</span
+      >
+      <BBadge
+        v-if="status"
+        pill
+        bg-variant="success-subtle"
+        text-variant="success-emphasis"
+        class="fw-semibold ms-2 mb-1"
+        >submitted</BBadge
       >
     </div>
   </div>
@@ -38,6 +45,10 @@ export default {
     title: {
       type: String,
       required: true,
+    },
+    status: {
+      type: Boolean,
+      required: false,
     },
   },
 };
