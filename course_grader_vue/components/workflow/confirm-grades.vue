@@ -128,6 +128,18 @@
       </div>
     </BCard>
   </template>
+  <!-- No submissions, grading period closed -->
+  <template v-else-if="!appState.graderoster.submissions.length && !appState.graderoster.gradable_student_count">
+    <BCard bg-variant="body-tertiary" class="border-0 mb-4">
+      <div class="d-flex justify-content-between">
+        <div>
+          <div class="fw-bold ms-4">
+            No grades were submitted for this section.
+          </div>
+        </div>
+      </div>
+    </BCard>
+  </template>
 
   <table v-if="appState.graderoster.students" class="table table-striped">
     <thead class="table-body-secondary">
