@@ -7,11 +7,15 @@
       {{ student.student_number }}
       <template v-if="student.duplicate_code">
         <BBadge
+          :id="student.student_number"
           variant="secondary"
           pill
           class="text-secondary-emphasis bg-secondary-subtle fw-normal"
           >Duplicate Code: {{ student.duplicate_code }}</BBadge
         >
+        <BPopover :target="student.student_number">
+          <span class="fw-bold">Duplicate Code:</span> Student dropped this section, and re-added.
+        </BPopover>
       </template>
     </div>
   </td>
@@ -63,7 +67,8 @@ export default {
   computed: {
     gradeChoices() {
       return this.appState.graderoster.grade_choices[
-        this.student.grade_choices_index];
+        this.student.grade_choices_index
+      ];
     },
   },
 };

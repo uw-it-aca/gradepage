@@ -4,7 +4,7 @@
     size="sm"
     variant="outline-primary"
     no-caret
-    class="float-end d-inline-block"
+    class=""
     toggle-class="rounded-2"
   >
     <template #button-content>

@@ -5,7 +5,8 @@
   >
     <template #content>
       <h1 class="fs-1 fw-bold">{{ selectedTermName }}</h1>
-      <div class="w-25 mb-5">
+
+      <div id="referenceDiv" class="w-25 mb-3">
         <select
           v-model="selectedTerm.url"
           aria-label="Select term"
@@ -24,18 +25,7 @@
         </select>
       </div>
 
-      <template v-if="isLoading">
-        <ul class="list-unstyled">
-          <li v-for="index in 10" :key="index" class="mb-3">
-            <BPlaceholder
-              class="d-block bg-body-secondary"
-              style="height: 60px"
-              animation="glow"
-            />
-          </li>
-        </ul>
-      </template>
-
+      <template v-if="isLoading"> Loading section list... </template>
       <template v-else-if="errorResponse">
         <Errors :error-response="errorResponse" />
       </template>
@@ -133,16 +123,18 @@ export default {
     },
 
     loadSectionsForTerm: function () {
-      this.getSections(this.selectedTerm.sections_url)
-        .then((data) => {
-          this.sections = data.sections;
-        })
-        .catch((error) => {
-          this.errorResponse = error.data;
-        })
-        .finally(() => {
-          this.isLoading = false;
-        });
+      setTimeout(() => {
+        this.getSections(this.selectedTerm.sections_url)
+          .then((data) => {
+            this.sections = data.sections;
+          })
+          .catch((error) => {
+            this.errorResponse = error.data;
+          })
+          .finally(() => {
+            this.isLoading = false;
+          });
+      }, 2000);
     },
   },
 };

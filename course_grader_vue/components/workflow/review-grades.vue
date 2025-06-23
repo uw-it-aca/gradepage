@@ -1,15 +1,28 @@
 <template>
-  <SectionHeader :section="section" title="Review Grades" />
-
-  <template v-if="isLoading">
-    Please wait, submitting grades to the Registrar...
-  </template>
-
   <Errors v-if="errorResponse" :error-response="errorResponse" />
 
-  <template v-else-if="appState.graderoster">
+  <template v-if="isLoading">
+    <!-- please wait.. submitting -->
+    <BAlert variant="success" :model-value="true" class="small">
+      <span
+        class="spinner-border spinner-border-sm me-1"
+        aria-hidden="true"
+      ></span>
+      Please wait, submitting grades to the Registrar
+    </BAlert>
+  </template>
+
+  <h1 class="fs-1 fw-bold">
+    <template v-if="isLoading">Submit Grades</template>
+    <template v-else> Review Grades</template>
+  </h1>
+
+  <div class="mb-4">
+    <SectionHeader :section="section" title="Review Grades" />
+  </div>
+  <template v-if="appState.graderoster">
     <table v-if="appState.graderoster.students" class="table table-striped">
-      <thead>
+      <thead class="table-body-secondary">
         <tr>
           <th scope="col">Student</th>
           <th scope="col">Section</th>
@@ -27,27 +40,17 @@
       </tbody>
     </table>
   </template>
-  <template v-else>
-    <ul class="list-unstyled m-0">
-      <li v-for="index in 8" :key="index" class="border-top pt-2 mt-2">
-        <BPlaceholder
-          class="d-block bg-body-secondary"
-          style="height: 60px"
-          animation="glow"
-        />
-      </li>
-    </ul>
-  </template>
 
-  <div v-if="appState.graderoster.is_writing_section">
-    <strong>Writing Section:</strong> {{ writingSectionText() }}
-  </div>
-  <div v-if="appState.graderoster.has_duplicate_codes">
-    <strong>Duplicate Code:</strong> {{ duplicateCodeText() }}
-  </div>
-  <div>
-    <strong>Review:</strong> All grades will be submitted to the Registrar as
-    displayed above.
+  <div class="mb-4">
+    <div>
+      <strong>Review:</strong> All grades will be submitted to the Registrar as
+      displayed above.
+    </div>
+    <div v-if="appState.graderoster.is_writing_section">
+      <strong>Writing Section:</strong>
+      Writing credit automatically given to all students with a passing grade in
+      this course.
+    </div>
   </div>
 
   <template v-if="!isLoading && !errorResponse">
@@ -69,17 +72,19 @@
 import SectionHeader from "@/components/section/header.vue";
 import Student from "@/components/student.vue";
 import Errors from "@/components/errors.vue";
+import Links from "@/components/links.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { submitGraderoster } from "@/utils/data";
-import { duplicateCodeText, writingSectionText } from "@/utils/grade";
-import { BButton, BPlaceholder, BBadge } from "bootstrap-vue-next";
+import { BButton, BPlaceholder, BBadge, BAlert } from "bootstrap-vue-next";
 
 export default {
   components: {
     SectionHeader,
     Student,
     Errors,
+    Links,
     BBadge,
+    BAlert,
     BButton,
     BPlaceholder,
   },
@@ -115,14 +120,17 @@ export default {
     },
     submitGrades: function () {
       this.isLoading = true;
-      this.submitGraderoster(this.section.graderoster_url, {})
-        .then((data) => {
-          this.appState.setGraderoster(data.graderoster);
-        })
-        .catch((error) => {
-          this.errorResponse = error.data;
-          this.isLoading = false;
-        });
+
+      setTimeout(() => {
+        this.submitGraderoster(this.section.graderoster_url, {})
+          .then((data) => {
+            this.appState.setGraderoster(data.graderoster);
+          })
+          .catch((error) => {
+            this.errorResponse = error.data;
+            this.isLoading = false;
+          });
+      }, 2000);
     },
   },
 };
