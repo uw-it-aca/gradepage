@@ -114,9 +114,7 @@
     <div class="d-flex justify-content-between mb-4">
       <div class="w-75">
         <div v-if="appState.graderoster.is_writing_section">
-          <strong>Writing Section:</strong>
-          Writing credit automatically given to all students with a passing
-          grade in this course.
+          <strong>Writing Section:</strong> {{ writingSectionText() }}
         </div>
       </div>
       <div class="w-25 text-end">
@@ -160,8 +158,11 @@ import GradeImportOptions from "@/components/import/source-options.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
 import { updateGraderoster, clearSavedGrades } from "@/utils/data";
-import { gradesSubmittedText } from "@/utils/grade";
-import { alignTop } from "@/utils/section";
+import {
+  gradesSubmittedText,
+  duplicateCodeText,
+  writingSectionText,
+} from "@/utils/grade";
 import { BAlert, BButton, BCard, BPlaceholder } from "bootstrap-vue-next";
 
 export default {
@@ -191,7 +192,8 @@ export default {
       updateGraderoster,
       clearSavedGrades,
       gradesSubmittedText,
-      alignTop,
+      duplicateCodeText,
+      writingSectionText,
     };
   },
   data() {

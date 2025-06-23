@@ -99,6 +99,8 @@ export default {
     return {
       appState,
       submitGraderoster,
+      duplicateCodeText,
+      writingSectionText,
     };
   },
   data() {

@@ -127,6 +127,14 @@ function priorGradeText(student) {
   return "Submitted " + priorGrade + " on " + student.date_graded;
 }
 
+function duplicateCodeText() {
+  return gettext("Student dropped this section, and re-added.");
+}
+
+function writingSectionText() {
+  return gettext("Writing credit automatically given to all students with a passing grade in this course.");
+}
+
 export {
   incompleteBlocklist,
   normalizeGrade,
@@ -134,4 +142,6 @@ export {
   validateGrade,
   gradesSubmittedText,
   priorGradeText,
+  duplicateCodeText,
+  writingSectionText,
 };

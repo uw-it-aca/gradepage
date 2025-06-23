@@ -149,10 +149,23 @@
   </table>
 
   <div v-if="appState.graderoster.is_writing_section">
-    <strong>Note:</strong>
-    Writing credit automatically given to all students with a passing grade in
-    this course.
+    <strong>Writing Section:</strong> {{ writingSectionText() }}
   </div>
+  <<<<<<< HEAD =======
+  <div v-if="appState.graderoster.has_duplicate_codes">
+    <strong>Duplicate Code:</strong> {{ duplicateCodeText() }}
+  </div>
+  <div v-if="!appState.graderoster.is_submission_confirmation">
+    <strong>Grade receipt:</strong> Submitted grade may differ from official
+    final grade.
+    <BLink
+      href="https://registrar.washington.edu/staff-faculty/grading-resources/"
+      target="_blank"
+      class="mx-2 d-print-none"
+      >More info
+    </BLink>
+  </div>
+  >>>>>>> feature/vue
 
   <template v-if="appState.graderoster.has_grade_imports">
     <div v-if="appState.graderoster.grade_import_count > 1">
@@ -234,8 +247,11 @@ import {
   BButton,
 } from "bootstrap-vue-next";
 import { getGraderoster } from "@/utils/data";
-import { gradesSubmittedText } from "@/utils/grade";
-import { alignTop } from "@/utils/section";
+import {
+  gradesSubmittedText,
+  duplicateCodeText,
+  writingSectionText,
+} from "@/utils/grade";
 import { ref } from "vue";
 
 export default {
@@ -265,7 +281,8 @@ export default {
       getGraderoster,
       showSectionOptions,
       gradesSubmittedText,
-      alignTop,
+      duplicateCodeText,
+      writingSectionText,
     };
   },
   data() {

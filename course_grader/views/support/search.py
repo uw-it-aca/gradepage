@@ -86,10 +86,8 @@ def grade_imports(request):
     if len(params["errors"]):
         return render(request, template, params)
 
-    grade_imports = GradeImport.objects.filter(*args, **kwargs)
-
     people = {}
-    for grade_import in grade_imports:
+    for grade_import in GradeImport.objects.get_by_search(*args, **kwargs):
         data = grade_import.json_data()
 
         (year, quarter, curriculum_abbr, course_number, section_id,
@@ -197,12 +195,10 @@ def graderosters(request):
     if len(params["errors"]):
         return render(request, template, params)
 
-    graderosters = SubmittedGradeRoster.objects.filter(
-        *args, **kwargs).defer("document")
-
     submitted_dates = {}
     people = {}
-    for graderoster in graderosters:
+    for graderoster in SubmittedGradeRoster.objects.get_by_search(
+            *args, **kwargs):
         if graderoster.secondary_section_id is not None:
             sid = graderoster.secondary_section_id
         else:

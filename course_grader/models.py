@@ -20,7 +20,7 @@ logger = getLogger(__name__)
 
 class SubmittedGradeRosterManager(models.Manager):
     def get_by_section(self, section, instructor, secondary_section=None):
-        kwargs = {'section_id': section.section_label()}
+        kwargs = {"section_id": section.section_label()}
         if secondary_section is not None:
             args = (
                 Q(secondary_section_id=secondary_section.section_label()) |
@@ -29,13 +29,11 @@ class SubmittedGradeRosterManager(models.Manager):
         else:
             args = ()
             if section.is_independent_study:
-                kwargs['instructor_id'] = instructor.uwregid
+                kwargs["instructor_id"] = instructor.uwregid
 
-        models = super().get_queryset().filter(
-                *args, **kwargs
-            ).order_by(
-                F('secondary_section_id').asc(),
-                F('submitted_date').desc()
+        models = super().get_queryset().filter(*args, **kwargs).order_by(
+                F("secondary_section_id").asc(nulls_first=True),
+                F("submitted_date").desc()
             )
 
         seen_rosters = set()
@@ -48,13 +46,14 @@ class SubmittedGradeRosterManager(models.Manager):
                 seen_rosters.add(sid)
         return latest_rosters
 
-    # TODO: Deprecate this method??
+    # TODO: Only the latest submission...
     def resubmit_failed(self):
+        return
         compare_dt = datetime.now(timezone.utc) - timedelta(minutes=10)
         fails = super().get_queryset().filter(
             Q(status_code__isnull=False) | Q(submitted_date__lt=compare_dt),
             accepted_date__isnull=True
-        ).order_by('submitted_date')
+        ).order_by("submitted_date")
 
         for roster in fails:
             roster.submit()
@@ -63,19 +62,26 @@ class SubmittedGradeRosterManager(models.Manager):
         return super().get_queryset().filter(
                 term_id=term.term_label()
             ).order_by(
-                'submitted_date'
+                F("submitted_date").asc()
             ).values(
-                'section_id',
-                'secondary_section_id',
-                'submitted_date',
-                'submitted_by',
-                'status_code',
+                "section_id",
+                "secondary_section_id",
+                "submitted_date",
+                "submitted_by",
+                "status_code",
             )
 
     def get_all_terms(self):
         return super().get_queryset().values_list(
-                'term_id', flat=True
+                "term_id", flat=True
             ).distinct()
+
+    def get_by_search(self, *args, **kwargs):
+        return super().get_queryset().filter(*args, **kwargs).order_by(
+                F("section_id").asc(),
+                F("secondary_section_id").asc(nulls_first=True),
+                F("submitted_date").desc()
+            ).defer("document")
 
 
 class SubmittedGradeRoster(models.Model):
@@ -256,7 +262,7 @@ class ImportConversion(models.Model):
                 )
         grade_scale.sort(key=lambda x: x.get("min_percentage"), reverse=True)
 
-        grades = [x['grade'] for x in grade_scale]
+        grades = [x["grade"] for x in grade_scale]
         ic.scale = GradingScale().is_any_scale(grades)
         if not ic.scale:
             raise InvalidGradingScale()
@@ -272,53 +278,55 @@ class ImportConversion(models.Model):
 
 
 class GradeImportManager(models.Manager):
-    def get_last_import_by_section_id(self, section_id):
-        return (
-            super()
-            .get_queryset()
-            .filter(
-                section_id=section_id,
-                accepted_date__isnull=False,
-                status_code='200',
+    def get_last_import_by_section_id(self, section_id,
+                                      secondary_section_id=None):
+        args = ()
+        kwargs = {"accepted_date__isnull": False, "status_code": "200"}
+        if secondary_section_id is not None:
+            args = (
+                Q(section_id=section_id) | Q(section_id=secondary_section_id),
             )
-            .order_by('-imported_date')[0:1]
-            .get()
-        )
+        else:
+            kwargs["section_id"] = section_id
+
+        return super().get_queryset().filter(*args, **kwargs).order_by(
+            F("imported_date").desc()).first()
 
     def get_imports_by_person(self, person):
-        return (
-            super()
-            .get_queryset()
-            .filter(
+        return super().get_queryset().filter(
                 imported_by=person.uwregid,
                 accepted_date__isnull=False,
-                status_code='200',
+                status_code="200",
+            ).order_by(
+                F("section_id").asc(),
+                F("imported_date").desc()
             )
-            .order_by('section_id', '-imported_date')
-        )
 
     def get_import_sources_by_term(self, term):
-        return (
-            super()
-            .get_queryset()
-            .filter(
+        return super().get_queryset().filter(
                 term_id=term.term_label(),
                 accepted_date__isnull=False,
-                status_code='200',
+                status_code="200",
+            ).order_by(
+                F("imported_date").asc()
+            ).values(
+                "section_id", "imported_date", "source"
             )
-            .order_by('imported_date')
-            .values('section_id', 'imported_date', 'source')
-        )
 
     def clear_prior_imports_for_section(self, grade_import):
         super().get_queryset().filter(
-            section_id=grade_import.section_id
-        ).exclude(pk=grade_import.pk).delete()
+                section_id=grade_import.section_id
+            ).exclude(pk=grade_import.pk).delete()
 
     def get_all_terms(self):
-        return (
-            super().get_queryset().values_list('term_id', flat=True).distinct()
-        )
+        return super().get_queryset().values_list(
+            "term_id", flat=True).distinct()
+
+    def get_by_search(self, *args, **kwargs):
+        return super().get_queryset().filter(*args, **kwargs).order_by(
+                F("section_id").asc(),
+                F("imported_date").desc()
+            )
 
 
 class GradeImport(models.Model):
