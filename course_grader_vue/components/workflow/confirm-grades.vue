@@ -151,10 +151,7 @@
   <div v-if="appState.graderoster.is_writing_section">
     <strong>Writing Section:</strong> {{ writingSectionText() }}
   </div>
-  <<<<<<< HEAD =======
-  <div v-if="appState.graderoster.has_duplicate_codes">
-    <strong>Duplicate Code:</strong> {{ duplicateCodeText() }}
-  </div>
+
   <div v-if="!appState.graderoster.is_submission_confirmation">
     <strong>Grade receipt:</strong> Submitted grade may differ from official
     final grade.
@@ -165,7 +162,6 @@
       >More info
     </BLink>
   </div>
-  >>>>>>> feature/vue
 
   <template v-if="appState.graderoster.has_grade_imports">
     <div v-if="appState.graderoster.grade_import_count > 1">
