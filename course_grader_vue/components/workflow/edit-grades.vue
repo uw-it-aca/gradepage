@@ -153,7 +153,6 @@
 import SectionHeader from "@/components/section/header.vue";
 import Student from "@/components/student.vue";
 import Errors from "@/components/errors.vue";
-import Links from "@/components/links.vue";
 import GradeImportOptions from "@/components/import/source-options.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
@@ -171,7 +170,6 @@ export default {
     GradeImportOptions,
     Student,
     Errors,
-    Links,
     BAlert,
     BButton,
     BCard,

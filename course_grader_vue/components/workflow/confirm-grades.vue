@@ -236,7 +236,6 @@
 import SectionHeader from "@/components/section/header.vue";
 import Student from "@/components/student.vue";
 import Errors from "@/components/errors.vue";
-import Links from "@/components/links.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import {
   BAlert,
@@ -260,7 +259,6 @@ export default {
   components: {
     SectionHeader,
     Student,
-    Links,
     BAlert,
     BCard,
     BLink,

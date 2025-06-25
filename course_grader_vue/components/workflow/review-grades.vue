@@ -71,7 +71,6 @@
 import SectionHeader from "@/components/section/header.vue";
 import Student from "@/components/student.vue";
 import Errors from "@/components/errors.vue";
-import Links from "@/components/links.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { submitGraderoster } from "@/utils/data";
 import { BButton, BPlaceholder, BBadge, BAlert } from "bootstrap-vue-next";
@@ -82,7 +81,6 @@ export default {
     SectionHeader,
     Student,
     Errors,
-    Links,
     BBadge,
     BAlert,
     BButton,
