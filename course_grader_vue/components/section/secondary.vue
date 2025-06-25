@@ -22,7 +22,24 @@
     </div>
     <div v-if="isLoading">Loading secondary grading status text...</div>
     <template v-else>
-      <div v-if="gradingStatusText" class="d-flex">{{ gradingStatusText }}</div>
+      <div
+        v-if="gradingStatusText"
+        class="d-flex"
+        :class="!gradesAccepted ? 'fw-bold text-body' : 'text-secondary'"
+      >
+        {{ gradingStatusText }}
+      </div>
+
+      <!-- TODO: replace gradesAccepted. check if section has saved/unsubmitted changes -->
+      <div v-if="gradesAccepted" class="mt-2 border border-warning">
+        <div class="fw-bold">
+          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>Resubmit to make any changes official.
+        </div>
+        <div class="text-secondary small">
+          Otherwise, the most recent grade submission on xxxxxxxxxx will stand.
+        </div>
+      </div>
+
     </template>
   </div>
 </template>

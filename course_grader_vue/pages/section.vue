@@ -60,7 +60,6 @@ export default {
       gradeStore,
       getSection,
       getGraderoster,
-
     };
   },
   data() {

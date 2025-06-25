@@ -46,10 +46,9 @@
       <strong>Review:</strong> All grades will be submitted to the Registrar as
       displayed above.
     </div>
+
     <div v-if="appState.graderoster.is_writing_section">
-      <strong>Writing Section:</strong>
-      Writing credit automatically given to all students with a passing grade in
-      this course.
+      <strong>Writing Section:</strong> {{ writingSectionText() }}
     </div>
   </div>
 
@@ -72,17 +71,16 @@
 import SectionHeader from "@/components/section/header.vue";
 import Student from "@/components/student.vue";
 import Errors from "@/components/errors.vue";
-import Links from "@/components/links.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { submitGraderoster } from "@/utils/data";
 import { BButton, BPlaceholder, BBadge, BAlert } from "bootstrap-vue-next";
+import { writingSectionText } from "@/utils/grade";
 
 export default {
   components: {
     SectionHeader,
     Student,
     Errors,
-    Links,
     BBadge,
     BAlert,
     BButton,
@@ -99,7 +97,7 @@ export default {
     return {
       appState,
       submitGraderoster,
-      duplicateCodeText,
+      // duplicateCodeText,
       writingSectionText,
     };
   },

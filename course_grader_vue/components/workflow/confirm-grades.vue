@@ -129,7 +129,12 @@
     </BCard>
   </template>
   <!-- No submissions, grading period closed -->
-  <template v-else-if="!appState.graderoster.submissions.length && !appState.graderoster.gradable_student_count">
+  <template
+    v-else-if="
+      !appState.graderoster.submissions.length &&
+      !appState.graderoster.gradable_student_count
+    "
+  >
     <BCard bg-variant="body-tertiary" class="border-0 mb-4">
       <div class="d-flex justify-content-between">
         <div>
@@ -162,17 +167,6 @@
 
   <div v-if="appState.graderoster.is_writing_section">
     <strong>Writing Section:</strong> {{ writingSectionText() }}
-  </div>
-
-  <div v-if="!appState.graderoster.is_submission_confirmation">
-    <strong>Grade receipt:</strong> Submitted grade may differ from official
-    final grade.
-    <BLink
-      href="https://registrar.washington.edu/staff-faculty/grading-resources/"
-      target="_blank"
-      class="mx-2 d-print-none"
-      >More info
-    </BLink>
   </div>
 
   <template v-if="appState.graderoster.has_grade_imports">
@@ -242,7 +236,6 @@
 import SectionHeader from "@/components/section/header.vue";
 import Student from "@/components/student.vue";
 import Errors from "@/components/errors.vue";
-import Links from "@/components/links.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import {
   BAlert,
@@ -257,7 +250,7 @@ import {
 import { getGraderoster } from "@/utils/data";
 import {
   gradesSubmittedText,
-  duplicateCodeText,
+  // duplicateCodeText,
   writingSectionText,
 } from "@/utils/grade";
 import { ref } from "vue";
@@ -266,7 +259,6 @@ export default {
   components: {
     SectionHeader,
     Student,
-    Links,
     BAlert,
     BCard,
     BLink,
@@ -289,7 +281,7 @@ export default {
       getGraderoster,
       showSectionOptions,
       gradesSubmittedText,
-      duplicateCodeText,
+      // duplicateCodeText,
       writingSectionText,
     };
   },

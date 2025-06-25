@@ -23,63 +23,7 @@
         </div>
       </div>
     </template>
-
-    <!--
-    <template #navigation>
-      <ul class="nav flex-column my-3">
-        <li class="nav-item mb-1 position-relative">
-          <BLink
-            class="d-flex justify-content-between nav-link rounded-3 text-body chevron bg-secondary-hover bg-opacity-10-hover"
-            :class="
-              matchedTerm(currentTerm.id) ? 'bg-secondary bg-opacity-10' : ''
-            "
-            :href="'/term/' + currentTerm.id"
-          >
-            <span
-              ><i class="bi bi-house-door-fill me-3"></i
-              >{{ currentTerm.quarter }} {{ currentTerm.year }}</span
-            >
-          </BLink>
-        </li>
-        <li class="nav-item mb-1 position-relative">
-          <BLink
-            id="gettingStartedHeading"
-            class="d-flex justify-content-between nav-link rounded-3 text-body chevron bg-secondary-hover bg-opacity-10-hover"
-            data-bs-toggle="collapse"
-            data-bs-target="#gettingStartedCollapse"
-            :aria-expanded="matchedTerm(currentTerm.id) ? false : true"
-            aria-controls="gettingStartedCollapse"
-          >
-            <span><i class="bi bi-calendar3 me-3"></i>Previous terms</span>
-            <i class="bi bi-chevron-right" aria-hidden="true"></i>
-          </BLink>
-          <div
-            id="gettingStartedCollapse"
-            class="collapse"
-            :class="matchedTerm(currentTerm.id) ? '' : 'show'"
-            aria-labelledby="gettingStartedHeading"
-          >
-            <ul class="nav flex-column small mt-1">
-              <li
-                v-for="(term, index) in contextStore.context.terms"
-                :key="index"
-                class="nav-item mb-1"
-              >
-                <BLink
-                  v-if="index != 0"
-                  class="ps-4 nav-link rounded-3 text-body fw-lighter bg-secondary-hover bg-opacity-10-hover"
-                  :class="
-                    matchedTerm(term.id) ? 'bg-secondary bg-opacity-10' : ''
-                  "
-                  :href="term.url"
-                  >{{ term.quarter }} {{ term.year }}</BLink
-                >
-              </li>
-            </ul>
-          </div>
-        </li>
-      </ul>
-    </template> -->
+    <!--<template #navigation>navigation goes here</template>-->
     <template #profile>
       <SProfile
         v-if="context.override_user != null"
@@ -101,8 +45,48 @@
     </template>
     <!--<template #bar> <div class="border">message bar goes here</div> </template>-->
     <template #main>
+      <div class="row mb-3">
+        <div class="col">
+          <ul class="list-inline m-0">
+            <li class="list-inline-item py-2 me-4">
+              <BLink
+                class=""
+                :class="matchedTerm(currentTerm.id) ? 'bg-opacity-10' : ''"
+                :href="'/term/' + currentTerm.id"
+              >
+                <span
+                  ><i class="bi bi-house-door-fill me-2"></i
+                  >{{ currentTerm.quarter }} {{ currentTerm.year }}</span
+                >
+              </BLink>
+            </li>
+            <li class="list-inline-item py-2">
+              <BDropdown variant="link-primary border-0 p-0" class="m-0">
+                <template #button-content>
+                  <i class="bi bi-calendar3 me-2"></i>Previous Terms
+                </template>
+                <template
+                  v-for="(term, index) in contextStore.context.terms"
+                  :key="index"
+                >
+                  <BDropdownItem v-if="index != 0"
+                    ><BLink
+                      class=""
+                      :class="matchedTerm(term.id) ? 'bg-opacity-10' : ''"
+                      :href="term.url"
+                      >{{ term.quarter }} {{ term.year }}</BLink
+                    ></BDropdownItem
+                  >
+                </template>
+              </BDropdown>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+
       <div class="row">
-        <div class="col text-end mt-3">
+        <div class="col d-flex justify-content-between">
           <ul class="list-inline list-unstyled m-0">
             <li class="list-inline-item me-3">
               <BLink
@@ -131,23 +115,7 @@
         </div>
       </div>
     </template>
-    <!--<template #aside>
-      <div id="targetDiv">
-        <BCard bg-variant="body-tertiary" class="border-0 mt-5">
-          <h3 class="fs-4 ff-encode-sans">Helpful Links</h3>
-          <ul class="list-unstyled m-0">
-            <li>
-              <BLink
-                href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
-                target="_blank"
-                >GradePage Help</BLink
-              >
-            </li>
-            <li><BLink href="https://coda.uw.edu">Course Dashboard</BLink></li>
-          </ul>
-        </BCard>
-      </div>
-    </template>-->
+    <!--<template #aside></template>-->
     <template #footer></template>
   </STopbar>
 </template>
@@ -155,12 +123,12 @@
 <script>
 import { useContextStore } from "@/stores/context";
 import { clearOverride } from "@/utils/data";
-import { BLink } from "bootstrap-vue-next";
+import { BLink, BDropdown, BDropdownItem, BButton } from "bootstrap-vue-next";
 import { STopbar, SProfile, SColorMode } from "solstice-vue";
 
 export default {
   name: "GradepageApp",
-  components: { BLink, STopbar, SProfile, SColorMode },
+  components: { BLink, BButton, STopbar, SProfile, SColorMode },
   props: {
     pageTitle: {
       type: String,
@@ -173,6 +141,7 @@ export default {
   },
   setup() {
     const contextStore = useContextStore();
+
     return {
       contextStore,
       clearOverride,
@@ -183,6 +152,7 @@ export default {
       appName: "GradePage",
       appRootUrl: "/",
       selectedRoute: "Spring 2013",
+      blah: false,
     };
   },
   computed: {
@@ -211,6 +181,10 @@ export default {
         .finally(() => {
           window.location.href = this.context.clear_override_url;
         });
+    },
+    toggleDropdown() {
+      console.log("lsakjdfa");
+      this.blah = !this.blah;
     },
   },
 };

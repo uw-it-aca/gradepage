@@ -68,32 +68,4 @@ function formatErrorStatus(error) {
   return error.error ? error.error : gettext("Error retrieving grading status");
 }
 
-function alignTop() {
-  console.log("alignTop called...");
-
-  const reference = document.getElementById("referenceDiv");
-  const target = document.getElementById("targetDiv");
-
-  if (!reference) {
-    console.warn("Reference div not found");
-    return;
-  } else if (!target) {
-    console.warn("Target div not found");
-    return;
-  }
-
-  //const referenceTop = reference.getBoundingClientRect().top + window.scrollY;
-  //target.style.position = "absolute"; // or 'relative' depending on layout
-  //target.style.top = `${referenceTop}px`;
-
-  const referenceTop = reference.getBoundingClientRect().top + window.scrollY;
-  const targetTop = target.getBoundingClientRect().top + window.scrollY;
-  const offset = referenceTop - targetTop; // Apply margin offset to align target with reference
-
-  //console.log("targetTop.." + targetTop);
-  //console.log("referenceTop.." + referenceTop);
-  //console.log("offset.." + offset);
-  target.style.marginTop = `${offset}px`;
-}
-
-export { formatLinkTitle, formatGradingStatus, formatErrorStatus, alignTop };
+export { formatLinkTitle, formatGradingStatus, formatErrorStatus };

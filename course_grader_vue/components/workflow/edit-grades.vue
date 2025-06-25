@@ -153,14 +153,13 @@
 import SectionHeader from "@/components/section/header.vue";
 import Student from "@/components/student.vue";
 import Errors from "@/components/errors.vue";
-import Links from "@/components/links.vue";
 import GradeImportOptions from "@/components/import/source-options.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
 import { updateGraderoster, clearSavedGrades } from "@/utils/data";
 import {
   gradesSubmittedText,
-  duplicateCodeText,
+  //duplicateCodeText,
   writingSectionText,
 } from "@/utils/grade";
 import { BAlert, BButton, BCard, BPlaceholder } from "bootstrap-vue-next";
@@ -171,7 +170,6 @@ export default {
     GradeImportOptions,
     Student,
     Errors,
-    Links,
     BAlert,
     BButton,
     BCard,
@@ -192,7 +190,7 @@ export default {
       updateGraderoster,
       clearSavedGrades,
       gradesSubmittedText,
-      duplicateCodeText,
+      //duplicateCodeText,
       writingSectionText,
     };
   },

@@ -4,26 +4,7 @@
     :term-url="isCurrentTermDisplay ? null : currentTerm.url"
   >
     <template #content>
-      <h1 class="fs-1 fw-bold">{{ selectedTermName }}</h1>
-
-      <div id="referenceDiv" class="w-25 mb-3">
-        <select
-          v-model="selectedTerm.url"
-          aria-label="Select term"
-          class="form-select"
-          @change="selectTerm"
-        >
-          <template v-for="term in contextStore.context.terms" :key="term.id">
-            <option
-              :value="term.url"
-              :title="`Select ${term.quarter} ${term.year}`"
-              :selected="term.is_selected"
-            >
-              {{ term.quarter }} {{ term.year }}
-            </option>
-          </template>
-        </select>
-      </div>
+      <h1 class="fs-1 fw-bold mb-4">{{ selectedTermName }}</h1>
 
       <template v-if="isLoading"> Loading section list... </template>
       <template v-else-if="errorResponse">
@@ -33,9 +14,10 @@
         <template v-if="sections.length > 0">
           <ul class="list-unstyled">
             <li
-              v-for="section in sections"
+              v-for="(section, index) in sections"
               :key="section.section_id"
-              class="mb-3"
+              class="border-bottom"
+              :class="index == 0 ? 'pb-4 pt-0' : 'py-4'"
             >
               <PrimarySection :section="section"></PrimarySection>
             </li>
