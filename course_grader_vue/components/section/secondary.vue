@@ -25,7 +25,7 @@
       <div
         v-if="gradingStatusText"
         class="d-flex"
-        :class="!gradesAccepted ? 'fw-bold text-body' : 'text-secondary'"
+        :class="!gradesAccepted ? 'text-body' : 'text-secondary'"
       >
         {{ gradingStatusText }}
       </div>
