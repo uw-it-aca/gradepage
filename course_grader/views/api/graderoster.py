@@ -568,6 +568,10 @@ class GradeRosterStatus(GradeFormHandler):
         else:
             data.update(graderoster_status_params(self.graderoster))
 
+        if not self.submitted_graderosters_only:
+            data["saved_count"] = Grade.objects.get_by_section_id_and_person(
+                section_id, self.user.uwregid).count()
+
         return self.json_response({"grading_status": data})
 
     def secondary_section_status(self, section_url):
@@ -592,5 +596,7 @@ class GradeRosterStatus(GradeFormHandler):
             data["status_url"] = url_for_grading_status(section_id)
         else:
             data["status_url"] = None
+            data["saved_count"] = Grade.objects.get_by_section_id_and_person(
+                section_id, self.user.uwregid).count()
 
         return data

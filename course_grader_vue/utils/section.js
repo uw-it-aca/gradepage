@@ -16,26 +16,37 @@ function formatLinkTitle(data) {
 
 function formatGradingStatus(data) {
   var base;
+
   if (data.grading_status) {
     return data.grading_status;
-  } else if (data.unsubmitted_count && data.grading_period_open) {
-    base = ngettext(
-      "%(unsubmitted_count)s grade to submit",
-      "%(unsubmitted_count)s grades to submit",
-      data.unsubmitted_count
-    );
-  } else {
-    if (data.submitted_count) {
-      if (data.submitted_date) {
-        if (data.accepted_date) {
-          let submitted_date_str = formatLongDateTime(data.submitted_date);
-          base =
-            ngettext(
-              "%(submitted_count)s grade submitted on ",
-              "%(submitted_count)s grades submitted on ",
-              data.submitted_count
-            ) + submitted_date_str;
-        } else if (data.status_code !== "200") {
+  }
+
+  if (data.unsubmitted_count) {
+    if (data.grading_period_open) {
+      base = ngettext(
+        "%(unsubmitted_count)s grade to submit",
+        "%(unsubmitted_count)s grades to submit",
+        data.unsubmitted_count
+      );
+    } else {
+      base = ngettext(
+        "%(unsubmitted_count)s grade not submitted",
+        "%(unsubmitted_count)s grades not submitted",
+        data.unsubmitted_count
+      );
+    }
+  } else if (data.submitted_count) {
+    if (data.submitted_date) {
+      if (data.accepted_date) {
+        let submitted_date_str = formatLongDateTime(data.submitted_date);
+        base =
+          ngettext(
+            "%(submitted_count)s grade submitted on ",
+            "%(submitted_count)s grades submitted on ",
+            data.submitted_count
+          ) + submitted_date_str;
+      } else {
+        if (data.status_code !== "200") {
           return gettext("There was an error submitting grades");
         } else {
           base = ngettext(
@@ -44,18 +55,16 @@ function formatGradingStatus(data) {
             data.submitted_count
           );
         }
-      } else {
-        base = ngettext(
-          "%(submitted_count)s grade submitted",
-          "%(submitted_count)s grades submitted",
-          data.submitted_count
-        );
       }
     } else {
-      if (!data.grading_period_open) {
-        return gettext("No submission information");
-      }
+      base = ngettext(
+        "%(submitted_count)s grade submitted",
+        "%(submitted_count)s grades submitted",
+        data.submitted_count
+      );
     }
+  } else if (!data.grading_period_open) {
+    return gettext("No submission information");
   }
 
   if (base !== undefined) {
