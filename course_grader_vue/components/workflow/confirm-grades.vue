@@ -169,17 +169,6 @@
     <strong>Writing Section:</strong> {{ writingSectionText() }}
   </div>
 
-  <div v-if="!appState.graderoster.is_submission_confirmation">
-    <strong>Grade receipt:</strong> Submitted grade may differ from official
-    final grade.
-    <BLink
-      href="https://registrar.washington.edu/staff-faculty/grading-resources/"
-      target="_blank"
-      class="mx-2 d-print-none"
-      >More info
-    </BLink>
-  </div>
-
   <template v-if="appState.graderoster.has_grade_imports">
     <div v-if="appState.graderoster.grade_import_count > 1">
       Grades calculated using grade conversion scales.
