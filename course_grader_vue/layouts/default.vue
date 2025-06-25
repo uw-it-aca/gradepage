@@ -24,9 +24,8 @@
       </div>
     </template>
 
-    <!--
-    <template #navigation>
-      <ul class="nav flex-column my-3">
+    <!--<template #navigation>
+     <ul class="nav flex-column my-3">
         <li class="nav-item mb-1 position-relative">
           <BLink
             class="d-flex justify-content-between nav-link rounded-3 text-body chevron bg-secondary-hover bg-opacity-10-hover"
@@ -79,7 +78,7 @@
           </div>
         </li>
       </ul>
-    </template> -->
+    </template>-->
     <template #profile>
       <SProfile
         v-if="context.override_user != null"
@@ -102,7 +101,45 @@
     <!--<template #bar> <div class="border">message bar goes here</div> </template>-->
     <template #main>
       <div class="row">
-        <div class="col text-end mt-3">
+        <div class="col">
+          <ul class="nav my-3">
+            <li class="nav-item">
+              <BLink
+                class=""
+                :class="matchedTerm(currentTerm.id) ? 'bg-opacity-10' : ''"
+                :href="'/term/' + currentTerm.id"
+              >
+                <span
+                  ><i class="bi bi-house-door-fill me-3"></i
+                  >{{ currentTerm.quarter }} {{ currentTerm.year }}</span
+                >
+              </BLink>
+            </li>
+            <li class="nav-item">
+              <BDropdown variant="secondary-quiet" class="m-0">
+                <template #button-content>
+                  <i class="bi bi-calendar3 me-3"></i>Previous Terms
+                </template>
+                <template
+                  v-for="(term, index) in contextStore.context.terms"
+                  :key="index"
+                >
+                  <BDropdownItem v-if="index != 0"
+                    ><BLink
+                      class=""
+                      :class="matchedTerm(term.id) ? 'bg-opacity-10' : ''"
+                      :href="term.url"
+                      >{{ term.quarter }} {{ term.year }}</BLink
+                    ></BDropdownItem
+                  >
+                </template>
+              </BDropdown>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col d-flex justify-content-between mt-3">
           <ul class="list-inline list-unstyled m-0">
             <li class="list-inline-item me-3">
               <BLink
@@ -155,12 +192,12 @@
 <script>
 import { useContextStore } from "@/stores/context";
 import { clearOverride } from "@/utils/data";
-import { BLink } from "bootstrap-vue-next";
+import { BLink, BDropdown, BDropdownItem, BButton } from "bootstrap-vue-next";
 import { STopbar, SProfile, SColorMode } from "solstice-vue";
 
 export default {
   name: "GradepageApp",
-  components: { BLink, STopbar, SProfile, SColorMode },
+  components: { BLink, BButton, STopbar, SProfile, SColorMode },
   props: {
     pageTitle: {
       type: String,
@@ -173,6 +210,7 @@ export default {
   },
   setup() {
     const contextStore = useContextStore();
+
     return {
       contextStore,
       clearOverride,
@@ -183,6 +221,7 @@ export default {
       appName: "GradePage",
       appRootUrl: "/",
       selectedRoute: "Spring 2013",
+      blah: false,
     };
   },
   computed: {
@@ -211,6 +250,10 @@ export default {
         .finally(() => {
           window.location.href = this.context.clear_override_url;
         });
+    },
+    toggleDropdown() {
+      console.log("lsakjdfa");
+      this.blah = !this.blah;
     },
   },
 };
