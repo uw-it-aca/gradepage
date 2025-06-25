@@ -23,62 +23,7 @@
         </div>
       </div>
     </template>
-
-    <!--<template #navigation>
-     <ul class="nav flex-column my-3">
-        <li class="nav-item mb-1 position-relative">
-          <BLink
-            class="d-flex justify-content-between nav-link rounded-3 text-body chevron bg-secondary-hover bg-opacity-10-hover"
-            :class="
-              matchedTerm(currentTerm.id) ? 'bg-secondary bg-opacity-10' : ''
-            "
-            :href="'/term/' + currentTerm.id"
-          >
-            <span
-              ><i class="bi bi-house-door-fill me-3"></i
-              >{{ currentTerm.quarter }} {{ currentTerm.year }}</span
-            >
-          </BLink>
-        </li>
-        <li class="nav-item mb-1 position-relative">
-          <BLink
-            id="gettingStartedHeading"
-            class="d-flex justify-content-between nav-link rounded-3 text-body chevron bg-secondary-hover bg-opacity-10-hover"
-            data-bs-toggle="collapse"
-            data-bs-target="#gettingStartedCollapse"
-            :aria-expanded="matchedTerm(currentTerm.id) ? false : true"
-            aria-controls="gettingStartedCollapse"
-          >
-            <span><i class="bi bi-calendar3 me-3"></i>Previous terms</span>
-            <i class="bi bi-chevron-right" aria-hidden="true"></i>
-          </BLink>
-          <div
-            id="gettingStartedCollapse"
-            class="collapse"
-            :class="matchedTerm(currentTerm.id) ? '' : 'show'"
-            aria-labelledby="gettingStartedHeading"
-          >
-            <ul class="nav flex-column small mt-1">
-              <li
-                v-for="(term, index) in contextStore.context.terms"
-                :key="index"
-                class="nav-item mb-1"
-              >
-                <BLink
-                  v-if="index != 0"
-                  class="ps-4 nav-link rounded-3 text-body fw-lighter bg-secondary-hover bg-opacity-10-hover"
-                  :class="
-                    matchedTerm(term.id) ? 'bg-secondary bg-opacity-10' : ''
-                  "
-                  :href="term.url"
-                  >{{ term.quarter }} {{ term.year }}</BLink
-                >
-              </li>
-            </ul>
-          </div>
-        </li>
-      </ul>
-    </template>-->
+    <!--<template #navigation>navigation goes here</template>-->
     <template #profile>
       <SProfile
         v-if="context.override_user != null"
@@ -139,7 +84,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col d-flex justify-content-between mt-3">
+        <div class="col d-flex justify-content-between">
           <ul class="list-inline list-unstyled m-0">
             <li class="list-inline-item me-3">
               <BLink

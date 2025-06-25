@@ -129,7 +129,12 @@
     </BCard>
   </template>
   <!-- No submissions, grading period closed -->
-  <template v-else-if="!appState.graderoster.submissions.length && !appState.graderoster.gradable_student_count">
+  <template
+    v-else-if="
+      !appState.graderoster.submissions.length &&
+      !appState.graderoster.gradable_student_count
+    "
+  >
     <BCard bg-variant="body-tertiary" class="border-0 mb-4">
       <div class="d-flex justify-content-between">
         <div>
@@ -257,7 +262,7 @@ import {
 import { getGraderoster } from "@/utils/data";
 import {
   gradesSubmittedText,
-  duplicateCodeText,
+  // duplicateCodeText,
   writingSectionText,
 } from "@/utils/grade";
 import { ref } from "vue";
@@ -289,7 +294,7 @@ export default {
       getGraderoster,
       showSectionOptions,
       gradesSubmittedText,
-      duplicateCodeText,
+      // duplicateCodeText,
       writingSectionText,
     };
   },

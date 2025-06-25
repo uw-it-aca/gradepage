@@ -6,7 +6,6 @@
     <template #content>
       <h1 class="fs-1 fw-bold">{{ selectedTermName }}</h1>
 
-
       <template v-if="isLoading"> Loading section list... </template>
       <template v-else-if="errorResponse">
         <Errors :error-response="errorResponse" />
