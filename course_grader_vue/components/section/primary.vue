@@ -24,20 +24,19 @@
     <div v-if="isLoading">Loading primary grading status text...</div>
     <template v-else>
       <div
-        v-if="gradingStatusText"
         class="d-flex"
         :class="!gradesAccepted ? 'text-body' : 'text-secondary'"
         v-html="gradingStatusText"
       ></div>
 
-      <!-- TODO: replace gradesAccepted. check if section has saved/unsubmitted changes -->
-      <div v-if="gradesAccepted" class="mt-2 border border-warning">
+      <div v-if="savedGradeWarning" class="mt-2 border border-warning">
         <div class="fw-bold">
           <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i
           >Resubmit to make any changes official.
         </div>
         <div class="text-secondary small">
-          Otherwise, the most recent grade submission on xxxxxxxxxx will stand.
+          Otherwise, the most recent grade submission on
+          {{ formatLongDateTime(gradingStatus.submitted_date) }} will stand.
         </div>
       </div>
     </template>
@@ -63,13 +62,13 @@
 <script>
 import SecondarySection from "@/components/section/secondary.vue";
 import { getSectionStatus } from "@/utils/data";
+import { formatLongDateTime } from "@/utils/dates";
 import {
   formatGradingStatus,
   formatErrorStatus,
   formatLinkTitle,
 } from "@/utils/section";
 import { BPlaceholder, BLink, BBadge } from "bootstrap-vue-next";
-
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
 
@@ -96,6 +95,7 @@ export default {
       formatGradingStatus,
       formatErrorStatus,
       formatLinkTitle,
+      formatLongDateTime,
       appState,
       gradeStore,
     };
@@ -137,10 +137,15 @@ export default {
         ? this.gradingStatus.accepted_date !== null
         : false;
     },
-    gradingInProgress() {
-      if (!this.gradesAccepted) {
-        return true;
-      } else return false;
+    savedGradeWarning() {
+      if (this.gradingStatus) {
+        return (
+          this.gradingStatus.grading_period_open &&
+          this.gradingStatus.accepted_date !== null &&
+          this.gradingStatus.saved_count > 0
+        )
+      }
+      return false;
     },
   },
   created() {
