@@ -4,7 +4,7 @@
     :term-url="isCurrentTermDisplay ? null : currentTerm.url"
   >
     <template #content>
-      <h1 class="fs-1 fw-bold">{{ selectedTermName }}</h1>
+      <h1 class="fs-1 fw-bold mb-4">{{ selectedTermName }}</h1>
 
       <template v-if="isLoading"> Loading section list... </template>
       <template v-else-if="errorResponse">
@@ -16,7 +16,7 @@
             <li
               v-for="section in sections"
               :key="section.section_id"
-              class="mb-3"
+              class="py-4 border-bottom"
             >
               <PrimarySection :section="section"></PrimarySection>
             </li>

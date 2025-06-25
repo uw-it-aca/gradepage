@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-3" :aria-labelledby="sectionNameId">
+  <div class="" :aria-labelledby="sectionNameId">
     <div class="d-flex">
       <template v-if="section.section_url">
         <BLink :href="section.section_url" :title="routerLinkTitle">
@@ -29,12 +29,12 @@
 
   <ul
     v-if="section.secondary_sections && section.secondary_sections.length"
-    class="list-unstyled ms-4"
+    class="list-unstyled ms-5"
   >
     <li
       v-for="(secondary, index) in section.secondary_sections"
       :key="secondary.section_id"
-      class="mb-3"
+      class="py-4"
     >
       <SecondarySection
         :section="secondary"
