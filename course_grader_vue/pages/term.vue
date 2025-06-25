@@ -6,24 +6,6 @@
     <template #content>
       <h1 class="fs-1 fw-bold">{{ selectedTermName }}</h1>
 
-      <div id="referenceDiv" class="w-25 mb-3">
-        <select
-          v-model="selectedTerm.url"
-          aria-label="Select term"
-          class="form-select"
-          @change="selectTerm"
-        >
-          <template v-for="term in contextStore.context.terms" :key="term.id">
-            <option
-              :value="term.url"
-              :title="`Select ${term.quarter} ${term.year}`"
-              :selected="term.is_selected"
-            >
-              {{ term.quarter }} {{ term.year }}
-            </option>
-          </template>
-        </select>
-      </div>
 
       <template v-if="isLoading"> Loading section list... </template>
       <template v-else-if="errorResponse">

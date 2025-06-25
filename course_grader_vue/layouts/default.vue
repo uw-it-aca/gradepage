@@ -102,7 +102,7 @@
     <template #main>
       <div class="row">
         <div class="col">
-          <ul class="nav my-3">
+          <ul class="nav my-0">
             <li class="nav-item">
               <BLink
                 class=""
@@ -168,23 +168,7 @@
         </div>
       </div>
     </template>
-    <!--<template #aside>
-      <div id="targetDiv">
-        <BCard bg-variant="body-tertiary" class="border-0 mt-5">
-          <h3 class="fs-4 ff-encode-sans">Helpful Links</h3>
-          <ul class="list-unstyled m-0">
-            <li>
-              <BLink
-                href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
-                target="_blank"
-                >GradePage Help</BLink
-              >
-            </li>
-            <li><BLink href="https://coda.uw.edu">Course Dashboard</BLink></li>
-          </ul>
-        </BCard>
-      </div>
-    </template>-->
+    <!--<template #aside></template>-->
     <template #footer></template>
   </STopbar>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <div id="referenceDiv">
+  <div>
     <div class="d-flex align-items-end">
       <h2 v-if="section.section_name" class="fs-2 m-0 me-3">
         <BPlaceholder
