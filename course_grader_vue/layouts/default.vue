@@ -45,25 +45,25 @@
     </template>
     <!--<template #bar> <div class="border">message bar goes here</div> </template>-->
     <template #main>
-      <div class="row">
+      <div class="row mb-3">
         <div class="col">
-          <ul class="nav my-0">
-            <li class="nav-item">
+          <ul class="list-inline m-0">
+            <li class="list-inline-item py-2 me-4">
               <BLink
                 class=""
                 :class="matchedTerm(currentTerm.id) ? 'bg-opacity-10' : ''"
                 :href="'/term/' + currentTerm.id"
               >
                 <span
-                  ><i class="bi bi-house-door-fill me-3"></i
+                  ><i class="bi bi-house-door-fill me-2"></i
                   >{{ currentTerm.quarter }} {{ currentTerm.year }}</span
                 >
               </BLink>
             </li>
-            <li class="nav-item">
-              <BDropdown variant="secondary-quiet" class="m-0">
+            <li class="list-inline-item py-2">
+              <BDropdown variant="link-primary border-0 p-0" class="m-0">
                 <template #button-content>
-                  <i class="bi bi-calendar3 me-3"></i>Previous Terms
+                  <i class="bi bi-calendar3 me-2"></i>Previous Terms
                 </template>
                 <template
                   v-for="(term, index) in contextStore.context.terms"
@@ -83,6 +83,8 @@
           </ul>
         </div>
       </div>
+
+
       <div class="row">
         <div class="col d-flex justify-content-between">
           <ul class="list-inline list-unstyled m-0">
