@@ -14,9 +14,10 @@
         <template v-if="sections.length > 0">
           <ul class="list-unstyled">
             <li
-              v-for="section in sections"
+              v-for="(section, index) in sections"
               :key="section.section_id"
-              class="py-4 border-bottom"
+              class="border-bottom"
+              :class="index == 0 ? 'pb-4 pt-0' : 'py-4'"
             >
               <PrimarySection :section="section"></PrimarySection>
             </li>
