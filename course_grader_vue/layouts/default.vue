@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <!-- layout.vue: this is where you override the layout -->
-  <STopbar
+  <STopbarNeo
     :app-name="appName"
     :app-root-url="appRootUrl"
     :page-title="pageTitle"
@@ -9,22 +9,7 @@
     :sign-out-url="context.signout_url"
     :background-class="'bg-body'"
   >
-    <template #system>
-      <div class="bg-info-subtle">
-        <div class="container-xl text-center text-info-emphasis p-2">
-          <ul class="list-unstyled m-0">
-            <li
-              v-for="(message, index) in window.gradepage.messages"
-              :key="index"
-              class="mb-2"
-              v-html="message"
-            ></li>
-          </ul>
-        </div>
-      </div>
-    </template>
-    <!--<template #navigation>navigation goes here</template>-->
-    <template #profile>
+    <template #settings>
       <SProfile
         v-if="context.override_user != null"
         :user-netid="context.login_user"
@@ -43,50 +28,69 @@
       </SProfile>
       <SColorMode></SColorMode>
     </template>
-    <!--<template #bar> <div class="border">message bar goes here</div> </template>-->
-    <template #main>
-      <div class="row mb-3">
+
+    <template #navigation>
+      <ul class="navbar-nav text-white me-auto mb-2 mb-xl-0">
+        <li class="nav-item">
+          <BLink
+            class="nav-link text-white"
+            :class="matchedTerm(currentTerm.id) ? 'active' : ''"
+            :href="'/term/' + currentTerm.id"
+          >
+            {{ currentTerm.quarter }} {{ currentTerm.year }}
+          </BLink>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle text-white"
+            :class="!matchedTerm(currentTerm.id) ? 'active' : ''"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Previous Terms
+          </a>
+          <ul class="dropdown-menu">
+            <template
+              v-for="(term, index) in contextStore.context.terms"
+              :key="index"
+            >
+              <li>
+                <BDropdownItem v-if="index != 0"
+                  ><BLink
+                    class=""
+                    :class="matchedTerm(term.id) ? 'bg-opacity-10' : ''"
+                    :href="term.url"
+                    >{{ term.quarter }} {{ term.year }}</BLink
+                  ></BDropdownItem
+                >
+              </li>
+            </template>
+          </ul>
+        </li>
+      </ul>
+    </template>
+
+    <!-- TODO: hide system messages if empty -->
+    <template v-if="window.gradepage.messages" #system>
+      <div class="row">
         <div class="col">
-          <ul class="list-inline m-0">
-            <li class="list-inline-item py-2 me-4">
-              <BLink
-                class=""
-                :class="matchedTerm(currentTerm.id) ? 'bg-opacity-10' : ''"
-                :href="'/term/' + currentTerm.id"
-              >
-                <span
-                  ><i class="bi bi-house-door-fill me-2"></i
-                  >{{ currentTerm.quarter }} {{ currentTerm.year }}</span
-                >
-              </BLink>
-            </li>
-            <li class="list-inline-item py-2">
-              <BDropdown variant="link-primary border-0 p-0" class="m-0">
-                <template #button-content>
-                  <i class="bi bi-calendar3 me-2"></i>Previous Terms
-                </template>
-                <template
-                  v-for="(term, index) in contextStore.context.terms"
-                  :key="index"
-                >
-                  <BDropdownItem v-if="index != 0"
-                    ><BLink
-                      class=""
-                      :class="matchedTerm(term.id) ? 'bg-opacity-10' : ''"
-                      :href="term.url"
-                      >{{ term.quarter }} {{ term.year }}</BLink
-                    ></BDropdownItem
-                  >
-                </template>
-              </BDropdown>
-            </li>
+          <ul class="list-unstyled py-2 m-0 text-center text-info-emphasis">
+            <li
+              v-for="(message, index) in window.gradepage.messages"
+              :key="index"
+              class="mb-2"
+              v-html="message"
+            ></li>
           </ul>
         </div>
       </div>
+    </template>
 
-
-      <div class="row">
-        <div class="col d-flex justify-content-between">
+    <template #main>
+      <div class="row mt-2">
+        <div class="col d-flex justify-content-end">
           <ul class="list-inline list-unstyled m-0">
             <li class="list-inline-item me-3">
               <BLink
@@ -115,20 +119,19 @@
         </div>
       </div>
     </template>
-    <!--<template #aside></template>-->
     <template #footer></template>
-  </STopbar>
+  </STopbarNeo>
 </template>
 
 <script>
 import { useContextStore } from "@/stores/context";
 import { clearOverride } from "@/utils/data";
 import { BLink, BDropdown, BDropdownItem, BButton } from "bootstrap-vue-next";
-import { STopbar, SProfile, SColorMode } from "solstice-vue";
+import { STopbarNeo, SProfile, SColorMode } from "solstice-vue";
 
 export default {
   name: "GradepageApp",
-  components: { BLink, BButton, STopbar, SProfile, SColorMode },
+  components: { BLink, BButton, STopbarNeo, SProfile, SColorMode },
   props: {
     pageTitle: {
       type: String,
