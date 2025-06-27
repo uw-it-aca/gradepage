@@ -143,7 +143,7 @@ export default {
           this.gradingStatus.grading_period_open &&
           this.gradingStatus.accepted_date !== null &&
           this.gradingStatus.saved_count > 0
-        )
+        );
       }
       return false;
     },
