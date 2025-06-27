@@ -116,28 +116,33 @@ export default {
       return "";
     },
     routerLinkTitle() {
-      if (this.secondaryStatus) {
-        return this.formatLinkTitle(this.secondaryStatus);
-      } else if (this.gradingStatus) {
-        return this.formatLinkTitle(this.gradingStatus);
+      let status = (this.secondaryStatus !== null)
+        ? this.secondaryStatus : this.gradingStatus;
+
+      if (status) {
+        return this.formatLinkTitle(status);
       }
       return "";
     },
     gradesAccepted() {
-      if (this.secondaryStatus) {
-        return this.secondaryStatus.accepted_date !== null;
-      } else if (this.gradingStatus) {
-        return this.gradingStatus.accepted_date !== null;
+      let status = (this.secondaryStatus !== null)
+        ? this.secondaryStatus : this.gradingStatus;
+
+      if (status) {
+        return status.accepted_date !== null;
       }
       return false;
     },
     savedGradeWarning() {
-      if (this.secondaryStatus) {
+      let status = (this.secondaryStatus !== null)
+        ? this.secondaryStatus : this.gradingStatus;
+
+      if (status) {
         return (
-          this.secondaryStatusStatus.grading_period_open &&
-          this.secondaryStatus.accepted_date !== null &&
-          this.secondaryStatus.saved_count > 0
-        )
+          status.grading_period_open &&
+          status.accepted_date !== null &&
+          status.saved_count > 0
+        );
       }
       return false;
     },
