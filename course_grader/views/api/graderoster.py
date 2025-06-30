@@ -266,6 +266,8 @@ class GradeRoster(GradeFormHandler):
 
         data = {"section_id": section_id,
                 "section_name": section_display_name(self.section),
+                "is_primary_section": self.section.is_primary_section,
+                "linked_section_count": len(self.section.linked_section_urls),
                 "students": [],
                 "import_choices": [],
                 "grade_choices": [],

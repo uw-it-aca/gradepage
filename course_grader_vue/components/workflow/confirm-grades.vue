@@ -1,4 +1,6 @@
 <template>
+  <Errors v-if="errorResponse" :error-response="errorResponse" />
+
   <!-- grade submission in progress (not yet accepted) -->
   <BAlert
     v-if="appState.graderoster.has_inprogress_submissions"
@@ -70,81 +72,10 @@
   </div>
 
   <!-- submission inline status -->
-  <template v-if="appState.graderoster.has_successful_submissions">
-    <BCard bg-variant="body-tertiary" class="border-0 mb-4">
-      <!-- check if secondary section -->
-      <div class="d-flex justify-content-between">
-        <div>
-          <div class="fw-bold ms-4">Course sections submitted. 4 of 6</div>
-          <div class="fst-italic small ms-4">
-            Submitted grades may differ from official final grade.
-            <BLink
-              to="https://registrar.washington.edu/staff-faculty/grading-resources/"
-              >Learn why</BLink
-            >.
-          </div>
-        </div>
-        <div>
-          <BButton v-b-toggle.collapse-1 variant="quiet-primary" size="sm"
-            >Show sections</BButton
-          >
-        </div>
-      </div>
-      <BCollapse id="collapse-1">
-        <ul class="list-unstyled mt-2 ms-4">
-          <li
-            v-for="(submission, index) in appState.graderoster.submissions"
-            :key="index"
-          >
-            <i class="bi bi-check-circle-fill text-success me-2"></i>
-            <span v-if="submission.section_id"
-              >Section {{ submission.section_id }}:
-            </span>
-            <span v-html="gradesSubmittedText(submission)"></span>
-          </li>
-        </ul>
-      </BCollapse>
-
-      <!-- else primary -->
-
-      <ul class="list-unstyled m-0">
-        <li
-          v-for="(submission, index) in appState.graderoster.submissions"
-          :key="index"
-        >
-          <i class="bi bi-check-circle-fill text-success me-2"></i>
-          <span v-if="submission.section_id"
-            >Section {{ submission.section_id }}:
-          </span>
-          <span v-html="gradesSubmittedText(submission)"></span>
-        </li>
-      </ul>
-      <div class="fst-italic small ms-4">
-        Submitted grades may differ from official final grade.
-        <BLink
-          to="https://registrar.washington.edu/staff-faculty/grading-resources/"
-          >Learn why</BLink
-        >.
-      </div>
-    </BCard>
-  </template>
-  <!-- No submissions, grading period closed -->
-  <template
-    v-else-if="
-      !appState.graderoster.submissions.length &&
-      !appState.graderoster.gradable_student_count
-    "
-  >
-    <BCard bg-variant="body-tertiary" class="border-0 mb-4">
-      <div class="d-flex justify-content-between">
-        <div>
-          <div class="fw-bold ms-4">
-            No grades were submitted for this section.
-          </div>
-        </div>
-      </div>
-    </BCard>
-  </template>
+  <SectionGradingStatus
+    v-if="appState.graderoster"
+    :graderoster="appState.graderoster"
+  />
 
   <table v-if="appState.graderoster.students" class="table table-striped">
     <thead class="table-body-secondary">
@@ -234,18 +165,17 @@
 
 <script>
 import SectionHeader from "@/components/section/header.vue";
+import SectionGradingStatus from "@/components/section/grading-status.vue";
 import Student from "@/components/student.vue";
 import Errors from "@/components/errors.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import {
   BAlert,
-  BCard,
   BLink,
-  BPlaceholder,
+  BButton,
   BDropdown,
   BDropdownItem,
   BDropdownDivider,
-  BButton,
 } from "bootstrap-vue-next";
 import { getGraderoster } from "@/utils/data";
 import {
@@ -258,11 +188,11 @@ import { ref } from "vue";
 export default {
   components: {
     SectionHeader,
+    SectionGradingStatus,
     Student,
     BAlert,
-    BCard,
     BLink,
-    BPlaceholder,
+    BButton,
     BDropdown,
     BDropdownItem,
     BDropdownDivider,
