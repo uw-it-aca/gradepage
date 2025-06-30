@@ -28,7 +28,7 @@
   <SectionGradingStatus
     v-if="appState.graderoster"
     :graderoster="appState.graderoster"
-    :saved-grades="hasSubmittedAndSavedGrades"
+    :saved-grade-warning="hasSubmittedAndSavedGrades"
   />
 
   <template v-if="appState.graderoster">

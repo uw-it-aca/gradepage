@@ -1,7 +1,7 @@
 <template>
   <template v-if="graderoster.has_successful_submissions">
     <BCard bg-variant="body-tertiary" class="border-0 mb-4">
-      <div v-if="savedGrades" class="border-bottom mb-2 pb-2">
+      <div v-if="savedGradeWarning" class="border-bottom mb-2 pb-2">
         <span class="fw-bold">
           <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
           Resubmit to make any changes official.
@@ -110,7 +110,7 @@ export default {
       type: Object,
       required: true,
     },
-    savedGrades: {
+    savedGradeWarning: {
       type: Boolean,
       required: false,
       default: false,
