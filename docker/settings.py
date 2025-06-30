@@ -16,6 +16,7 @@ INSTALLED_APPS.remove('django.contrib.staticfiles')
 
 MIDDLEWARE += [
     'userservice.user.UserServiceMiddleware',
+    'course_grader.log.UserLoggingMiddleware',
 ]
 
 TEMPLATES[0]['OPTIONS']['context_processors'] += [
@@ -94,7 +95,9 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'filters': {
-        'add_user': {'()': 'course_grader.log.UserFilter'},
+        'add_user': {
+            '()': 'course_grader.log.UserFilter',
+        },
         'stdout_stream': {
             '()': 'django.utils.log.CallbackFilter',
             'callback': lambda record: record.levelno < logging.WARNING,
@@ -106,12 +109,12 @@ LOGGING = {
     },
     'formatters': {
         'course_grader': {
-            'format': '%(levelname)-4s %(asctime)s %(user)s %(actas)s %(message)s [%(name)s]',
-            'datefmt': '[%Y-%m-%d %H:%M:%S]',
+            'format': '%(levelname)-4s %(user)s %(actas)s %(asctime)s %(message)s [%(name)s]',
+            'datefmt': '[%d/%b/%Y:%H:%M:%S %z]',
         },
         'restclients_timing': {
-            'format': '%(levelname)-4s restclients_timing %(module)s %(asctime)s %(message)s [%(name)s]',
-            'datefmt': '[%Y-%m-%d %H:%M:%S]',
+            'format': '%(levelname)-4s restclients_timing %(asctime)s %(module)s %(message)s [%(name)s]',
+            'datefmt': '[%d/%b/%Y:%H:%M:%S %z]',
         },
     },
     'handlers': {
@@ -143,8 +146,8 @@ LOGGING = {
             'propagate': False,
         },
         'django.request': {
-            'handlers': ['stderr'],
-            'level': 'ERROR',
+            'handlers': ['stdout', 'stderr'],
+            'level': 'INFO',
             'propagate': True,
         },
         'course_grader': {
