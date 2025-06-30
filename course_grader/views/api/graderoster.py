@@ -335,11 +335,12 @@ class GradeRoster(GradeFormHandler):
                     grade = ""
 
                 if item.date_graded is not None:
+                    data["has_successful_submissions"] = True
                     date = datetime.strptime(item.date_graded, "%Y-%m-%d")
                     date_graded = date.strftime("%m/%d/%Y")
 
                 if item.status_code is not None:
-                    if item.status_code == "200" or item.status_code == "220":
+                    if item.status_code.startswith("2"): # 2xx status
                         data["has_successful_submissions"] = True
                     else:
                         data["has_failed_submissions"] = True
