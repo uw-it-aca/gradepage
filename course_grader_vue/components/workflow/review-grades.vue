@@ -73,7 +73,7 @@ import Student from "@/components/student.vue";
 import Errors from "@/components/errors.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { submitGraderoster } from "@/utils/data";
-import { BButton, BPlaceholder, BBadge, BAlert } from "bootstrap-vue-next";
+import { BButton, BAlert } from "bootstrap-vue-next";
 import { writingSectionText } from "@/utils/grade";
 
 export default {
@@ -81,10 +81,8 @@ export default {
     SectionHeader,
     Student,
     Errors,
-    BBadge,
     BAlert,
     BButton,
-    BPlaceholder,
   },
   props: {
     section: {
