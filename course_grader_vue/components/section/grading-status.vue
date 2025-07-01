@@ -74,9 +74,7 @@
     <BCard bg-variant="body-tertiary" class="border-0 mb-4">
       <div class="d-flex justify-content-between">
         <div>
-          <div class="fw-bold ms-4">
-            Grades submitted outside of GradePage.
-          </div>
+          <div v-html="unknownSubmissionText" class="fw-bold ms-4"></div>
         </div>
       </div>
     </BCard>
@@ -130,6 +128,15 @@ export default {
   },
   data() {
     return {};
+  },
+  computed: {
+    unknownSubmissionText() {
+      return interpolate(ngettext(
+        "One grade submitted outside of GradePage.",
+        "%(graded_count)s grades submitted outside of GradePage.",
+        this.graderoster.graded_count
+      ), this.graderoster, true);
+    },
   },
 };
 </script>
