@@ -1,5 +1,5 @@
 <template>
-  <template v-if="graderoster.has_successful_submissions">
+  <template v-if="graderoster.submissions.length">
     <BCard bg-variant="body-tertiary" class="border-0 mb-4">
       <div v-if="savedGradeWarning" class="border-bottom mb-2 pb-2">
         <span class="fw-bold">
@@ -54,9 +54,6 @@
         <ul class="list-unstyled m-0">
           <li>
             <i class="bi bi-check-circle-fill text-success me-2"></i>
-            <span v-if="graderoster.submissions[0].section_id"
-              >Section {{ graderoster.submissions[0].section_id }}:
-            </span>
             <span
               v-html="gradesSubmittedText(graderoster.submissions[0])">
             </span>
@@ -72,10 +69,20 @@
       </div>
     </BCard>
   </template>
-  <!-- No submissions, grading period closed -->
-  <template v-else-if=
-    "!graderoster.submissions.length && !graderoster.gradable_student_count"
-  >
+  <!-- Grades submitted outside of GradePage -->
+  <template v-else-if="graderoster.has_successful_submissions">
+    <BCard bg-variant="body-tertiary" class="border-0 mb-4">
+      <div class="d-flex justify-content-between">
+        <div>
+          <div class="fw-bold ms-4">
+            Grades submitted outside of GradePage.
+          </div>
+        </div>
+      </div>
+    </BCard>
+  </template>
+  <!-- No submitted grades, and grading period closed -->
+  <template v-else-if="!graderoster.gradable_student_count">
     <BCard bg-variant="body-tertiary" class="border-0 mb-4">
       <div class="d-flex justify-content-between">
         <div>
