@@ -280,6 +280,7 @@ class GradeRoster(GradeFormHandler):
                 "has_inprogress_submissions": False,
                 "has_saved_grades": False,
                 "gradable_student_count": 0,
+                "graded_count": 0,
                 "ungraded_count": 0,
                 "has_grade_imports": False,
                 "grade_import_count": 0}
@@ -335,6 +336,7 @@ class GradeRoster(GradeFormHandler):
                     grade = ""
 
                 if item.date_graded is not None:
+                    data["graded_count"] += 1
                     data["has_successful_submissions"] = True
                     date = datetime.strptime(item.date_graded, "%Y-%m-%d")
                     date_graded = date.strftime("%m/%d/%Y")
