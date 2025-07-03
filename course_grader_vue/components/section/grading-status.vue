@@ -3,14 +3,15 @@
     <BCard bg-variant="body-tertiary" class="border-0 mb-4">
       <div v-if="savedGradeWarning" class="border-bottom mb-2 pb-2">
         <span class="fw-bold">
-          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
-          Resubmit to make any changes official.
+          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i
+          >Resubmit to make any changes official.
         </span>
         Otherwise, the most recent grade submission will stand.
       </div>
-      <div v-if="
-        graderoster.is_primary_section &&
-        graderoster.linked_section_count > 1"
+      <div
+        v-if="
+          graderoster.is_primary_section && graderoster.linked_section_count > 1
+        "
       >
         <!-- primary section with more than one linked section -->
         <div class="d-flex justify-content-between">
@@ -57,8 +58,7 @@
             <span v-if="graderoster.submissions[0].section_id"
               >Section {{ graderoster.submissions[0].section_id }}:
             </span>
-            <span
-              v-html="gradesSubmittedText(graderoster.submissions[0])">
+            <span v-html="gradesSubmittedText(graderoster.submissions[0])">
             </span>
           </li>
         </ul>
@@ -73,8 +73,10 @@
     </BCard>
   </template>
   <!-- No submissions, grading period closed -->
-  <template v-else-if=
-    "!graderoster.submissions.length && !graderoster.gradable_student_count"
+  <template
+    v-else-if="
+      !graderoster.submissions.length && !graderoster.gradable_student_count
+    "
   >
     <BCard bg-variant="body-tertiary" class="border-0 mb-4">
       <div class="d-flex justify-content-between">
@@ -89,12 +91,7 @@
 </template>
 
 <script>
-import {
-  BCard,
-  BLink,
-  BButton,
-  BCollapse,
-} from "bootstrap-vue-next";
+import { BCard, BLink, BButton, BCollapse } from "bootstrap-vue-next";
 import { gradesSubmittedText } from "@/utils/grade";
 
 export default {

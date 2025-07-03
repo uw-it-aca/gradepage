@@ -17,7 +17,7 @@
     <template v-else> Review Grades</template>
   </h1>
 
-  <div class="mb-4">
+  <div class="mb-5">
     <SectionHeader :section="section" title="Review Grades" />
   </div>
   <template v-if="appState.graderoster">
@@ -41,7 +41,7 @@
     </table>
   </template>
 
-  <div class="mb-4">
+  <div class="mb-5">
     <div>
       <strong>Review:</strong> All grades will be submitted to the Registrar as
       displayed above.

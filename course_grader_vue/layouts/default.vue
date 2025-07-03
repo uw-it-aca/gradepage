@@ -31,9 +31,9 @@
 
     <template #navigation>
       <ul class="navbar-nav text-white me-auto mb-2 mb-xl-0">
-        <li class="nav-item">
+        <li class="nav-item me-4">
           <BLink
-            class="nav-link text-white"
+            class="nav-link text-white px-0"
             :class="matchedTerm(currentTerm.id) ? 'active' : ''"
             :href="'/term/' + currentTerm.id"
           >
@@ -42,7 +42,7 @@
         </li>
         <li class="nav-item dropdown">
           <a
-            class="nav-link dropdown-toggle text-white"
+            class="nav-link dropdown-toggle text-white px-0"
             :class="!matchedTerm(currentTerm.id) ? 'active' : ''"
             href="#"
             role="button"
