@@ -130,9 +130,8 @@ class SubmittedGradeRoster(models.Model):
         self.document = graderoster.xhtml()
         self.save()
 
-        # Delete saved grades for this section and submitter
-        Grade.objects.get_by_section_id_and_person(
-            grades_section_id, self.submitted_by).delete()
+        # Delete any saved grades for this section
+        Grade.objects.delete_by_section_id(grades_section_id)
 
         notify_grade_submitters(graderoster, self.submitted_by)
 
@@ -141,6 +140,10 @@ class GradeManager(models.Manager):
     def get_by_section_id_and_person(self, section_id, person_id):
         return super().get_queryset().filter(
             section_id=section_id, modified_by=person_id)
+
+    def delete_by_section_id(self, section_id):
+        super().get_queryset().filter(section_id=section_id).delete()
+        logger.info("Deleted saved grades for {section_id}")
 
 
 class Grade(models.Model):
