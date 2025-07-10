@@ -120,10 +120,11 @@ class SubmittedGradeRoster(models.Model):
         except Exception as ex:
             logger.error(
                 f"PUT graderoster failed: {ex}, Section: {self.section_id}, "
-                f"Instructor: {self.instructor_id}")
+                f"Instructor: {self.instructor_id}, "
+                f"Submitter: {self.submitted_by}")
             self.status_code = getattr(ex, "status", 500)
             self.save()
-            return
+            raise
 
         self.status_code = 200
         self.accepted_date = datetime.now(timezone.utc)
