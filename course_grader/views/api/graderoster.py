@@ -201,7 +201,13 @@ class GradeRoster(GradeFormHandler):
                 model.secondary_section_id = secondary_section.section_label()
 
             model.save()
-            model.submit(section_id)
+            try:
+                model.submit(section_id)
+            except DataFailureException as ex:
+                (status, msg) = self.data_failure_error(ex)
+                return self.error_response(status, msg)
+            except Exception as ex:
+                return self.error_response(500, ex)
 
             self.graderoster = graderoster_for_section(
                 self.section, self.instructor, self.user)
