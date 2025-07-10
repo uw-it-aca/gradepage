@@ -22,7 +22,9 @@ lifecycle:
   preStop:
     enabled: true
 autoscaling:
-  enabled: false
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
 replicaCount: 1
 affinity:
    podsSpanNodes: true
