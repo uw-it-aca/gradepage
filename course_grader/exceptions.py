@@ -53,6 +53,11 @@ class SecondaryGradingEnabled(Exception):
                 "must be submitted separately for each secondary section.")
 
 
+class NoGradableStudents(Exception):
+    def __str__(self):
+        return "No gradable students for this section."
+
+
 class GradingNotPermitted(Exception):
     def __init__(self, section, person):
         self.section = section

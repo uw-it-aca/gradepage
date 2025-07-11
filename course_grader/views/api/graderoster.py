@@ -570,8 +570,11 @@ class GradeRosterStatus(GradeFormHandler):
             data.update(graderoster_status_params(self.graderoster))
             data["secondary_sections"] = []
             for linked_url in section.linked_section_urls:
-                secondary_data = self.secondary_section_status(linked_url)
-                data["secondary_sections"].append(secondary_data)
+                try:
+                    secondary_data = self.secondary_section_status(linked_url)
+                    data["secondary_sections"].append(secondary_data)
+                except NoGradableStudents:
+                    pass
         elif (not section.is_primary_section and
                 not section.allows_secondary_grading):
             data.update(graderoster_status_params(

@@ -10,7 +10,7 @@ from course_grader.dao.term import (
     submission_deadline_warning, is_grading_period_open)
 from course_grader.views.rest_dispatch import RESTDispatch
 from course_grader.models import Grade
-from course_grader.exceptions import OverrideNotPermitted
+from course_grader.exceptions import OverrideNotPermitted, NoGradableStudents
 from logging import getLogger
 
 logger = getLogger(__name__)
@@ -112,6 +112,9 @@ def graderoster_status_params(graderoster,
         total_count += 1
         if item_is_submitted(item):
             submitted_count += 1
+
+    if total_count == 0:
+        raise NoGradableStudents()
 
     data = {
         "submitted_count": submitted_count,
