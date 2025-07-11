@@ -15,17 +15,29 @@ ingress:
     nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256"
     nginx.ingress.kubernetes.io/client-body-buffer-size: "16K"
     nginx.ingress.kubernetes.io/proxy-body-size: "2M"
-    nginx.ingress.kubernetes.io/limit-rps: "10"
+    nginx.ingress.kubernetes.io/limit-connections: "10"
+    nginx.ingress.kubernetes.io/limit-rps: "20"
+    nginx.ingress.kubernetes.io/limit-req-status-code: "429"
+    nginx.ingress.kubernetes.io/limit-conn-status-code: "429"
+    nginx.ingress.kubernetes.io/limit-burst-multiplier: "10"
 
 lifecycle:
   enabled: true
   preStop:
     enabled: true
+
 autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 5
-replicaCount: 1
+targetAverageUtilization: 100
+resources:
+  limits:
+    cpu: "500m"
+    memory: "1.0Gi"
+  requests:
+    cpu: "50m"
+    memory: "256Mi"
 affinity:
    podsSpanNodes: true
 
