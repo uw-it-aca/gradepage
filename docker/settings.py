@@ -146,8 +146,8 @@ LOGGING = {
             'propagate': False,
         },
         'django.request': {
-            'handlers': ['stdout', 'stderr'],
-            'level': 'INFO',
+            'handlers': ['stderr'],
+            'level': 'ERROR',
             'propagate': True,
         },
         'course_grader': {

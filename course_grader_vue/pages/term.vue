@@ -19,7 +19,10 @@
               class="border-bottom"
               :class="index == 0 ? 'pb-4 pt-0' : 'py-4'"
             >
-              <PrimarySection :section="section"></PrimarySection>
+              <PrimarySection
+                :section="section"
+                :timeout="index * base_timeout"
+              ></PrimarySection>
             </li>
           </ul>
         </template>
@@ -60,13 +63,13 @@ export default {
   data() {
     return {
       isLoading: true,
-
       currentTerm: this.contextStore.context.terms[0],
       selectedTerm: null,
       selectedTermText: this.contextStore.context.page_title,
       sectionsURL: this.contextStore.context.sections_url,
       errorResponse: null,
       sections: [],
+      base_timeout: 250,
     };
   },
   computed: {
