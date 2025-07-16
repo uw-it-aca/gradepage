@@ -144,7 +144,7 @@ class GradeManager(models.Manager):
 
     def delete_by_section_id(self, section_id):
         super().get_queryset().filter(section_id=section_id).delete()
-        logger.info("Deleted saved grades for {section_id}")
+        logger.info(f"Deleted saved grades for {section_id}")
 
 
 class Grade(models.Model):
