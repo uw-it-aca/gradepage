@@ -273,7 +273,7 @@ class GradeRoster(GradeFormHandler):
         data = {"section_id": section_id,
                 "section_name": section_display_name(self.section),
                 "is_primary_section": self.section.is_primary_section,
-                "linked_section_count": len(self.section.linked_section_urls),
+                "linked_section_count": 0,
                 "students": [],
                 "import_choices": [],
                 "grade_choices": [],
@@ -315,6 +315,7 @@ class GradeRoster(GradeFormHandler):
                     data["import_choices"].append({"value": choice[0],
                                                    "label": choice[1]})
 
+        linked_section_ids = set()
         grade_lookup = {}
         for item in sorted_students(self.graderoster.items):
             if (secondary_section is not None and
@@ -333,6 +334,9 @@ class GradeRoster(GradeFormHandler):
             has_writing_credit = item.has_writing_credit
             date_graded = None
             saved_grade_data = {}
+
+            if data["is_primary_section"] and item.section_id != section_id:
+                linked_section_ids.add(item.section_id)
 
             if item.duplicate_code is not None:
                 data["has_duplicate_codes"] = True
@@ -414,6 +418,7 @@ class GradeRoster(GradeFormHandler):
             }
             data["students"].append(student_data)
 
+        data["linked_section_count"] = len(linked_section_ids)
         return {"graderoster": data}
 
 
