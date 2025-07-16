@@ -17,8 +17,10 @@
           <div>
             <div class="fw-bold ms-4">
               Course sections submitted.
+              <!--
               {{ graderoster.submissions.length }} of
               {{ graderoster.linked_section_count }}
+              -->
             </div>
             <div class="fst-italic small ms-4">
               Submitted grades may differ from official final grade.
