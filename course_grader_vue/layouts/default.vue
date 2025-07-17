@@ -26,12 +26,12 @@
       <SProfile v-else :user-netid="context.login_user">
         <a :href="context.signout_url" class="text-white"> Sign out </a>
       </SProfile>
-      <SColorMode></SColorMode>
+      <SColorMode />
     </template>
 
     <template #navigation>
       <ul class="navbar-nav text-white me-auto mb-2 mb-xl-0">
-        <li class="nav-item me-4">
+        <li class="nav-item me-5">
           <BLink
             class="nav-link text-white px-0"
             :class="matchedTerm(currentTerm.id) ? 'active' : ''"
@@ -76,7 +76,9 @@
     <template v-if="window.gradepage.messages" #system>
       <div class="row">
         <div class="col">
-          <ul class="list-unstyled py-2 m-0 text-center text-info-emphasis">
+          <ul
+            class="list-unstyled py-2 m-0 text-center text-info-emphasis small"
+          >
             <li
               v-for="(message, index) in window.gradepage.messages"
               :key="index"
