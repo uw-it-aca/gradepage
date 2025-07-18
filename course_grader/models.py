@@ -44,11 +44,11 @@ class SubmittedGradeRosterManager(models.Manager):
             if sid not in seen_rosters:
                 latest_rosters.append(sgr)
                 seen_rosters.add(sid)
+        latest_rosters.sort(key=lambda x: x.submitted_date)
         return latest_rosters
 
-    # TODO: Only the latest submission...
     def resubmit_failed(self):
-        return
+        return  # TODO: Only the latest submission
         compare_dt = datetime.now(timezone.utc) - timedelta(minutes=10)
         fails = super().get_queryset().filter(
             Q(status_code__isnull=False) | Q(submitted_date__lt=compare_dt),
