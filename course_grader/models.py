@@ -45,7 +45,7 @@ class SubmittedGradeRosterManager(models.Manager):
                 latest_rosters.append(sgr)
                 seen_rosters.add(sid)
             # Nothing after the latest primary section submission
-            if secondary_section is not None && not sgr.secondary_section_id:
+            if secondary_section is not None and not sgr.secondary_section_id:
                 break
         return latest_rosters
 
