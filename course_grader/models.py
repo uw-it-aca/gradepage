@@ -44,7 +44,9 @@ class SubmittedGradeRosterManager(models.Manager):
             if sid not in seen_rosters:
                 latest_rosters.append(sgr)
                 seen_rosters.add(sid)
-        latest_rosters.sort(key=lambda x: x.submitted_date)
+            # Nothing after the latest primary section submission
+            if secondary_section is not None && not sgr.secondary_section_id:
+                break
         return latest_rosters
 
     def resubmit_failed(self):
