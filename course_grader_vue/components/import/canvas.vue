@@ -29,8 +29,9 @@
           <span v-html="overrideGradesFoundText"></span>
           <BLink
             target="_blank"
+            rel="noopener"
             title="Learn more about importing grade overrides on IT Connect"
-            href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/new-gradebook/final-grade-override/"
+            :href="finalGradeOverrideURL"
             >Learn more </BLink
           >.
         </p>
@@ -49,8 +50,9 @@
         </span>
         <BLink
           target="_blank"
+          rel="noopener"
           title="Learn more about Canvas grade posting on IT Connect"
-          href="https://itconnect.uw.edu/learn/tools/canvas/canvas-help-for-instructors/assignments-grading/new-gradebook/posting-policy/"
+          :href="gradePostingPolicyURL"
           >Learn more </BLink
         >.
       </div>
@@ -110,6 +112,8 @@ export default {
       importSource: "canvas",
       errorResponse: null,
       isLoading: true,
+      finalGradeOverrideURL: "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034568",
+      gradePostingPolicyURL: "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034569",
     };
   },
   computed: {
