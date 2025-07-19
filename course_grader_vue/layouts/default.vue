@@ -94,7 +94,7 @@
           <ul class="list-inline list-unstyled m-0">
             <li class="list-inline-item me-3">
               <BLink
-                href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
+                :href="helpURL"
                 class="link-quiet-primary"
                 target="_blank"
               >
@@ -103,7 +103,7 @@
             </li>
             <li class="list-inline-item">
               <BLink
-                href="https://coda.uw.edu"
+                :href="codaURL"
                 class="link-quiet-primary"
                 target="_blank"
                 ><i class="bi bi-box-arrow-in-up-right me-1"></i>Course
@@ -155,7 +155,8 @@ export default {
       appName: "GradePage",
       appRootUrl: "/",
       selectedRoute: "Spring 2013",
-      blah: false,
+      helpURL: "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034603",
+      codaURL: "https://coda.uw.edu",
     };
   },
   computed: {
@@ -184,10 +185,6 @@ export default {
         .finally(() => {
           window.location.href = this.context.clear_override_url;
         });
-    },
-    toggleDropdown() {
-      console.log("lsakjdfa");
-      this.blah = !this.blah;
     },
   },
 };

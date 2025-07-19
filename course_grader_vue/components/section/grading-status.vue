@@ -24,10 +24,7 @@
             </div>
             <div class="fst-italic small ms-4">
               Submitted grades may differ from official final grade.
-              <BLink
-                to="https://registrar.washington.edu/staff-faculty/grading-resources/"
-                >Learn why</BLink
-              >.
+              <BLink :href="gradingResourcesURL">Learn why</BLink>.
             </div>
           </div>
           <div>
@@ -63,10 +60,7 @@
         </ul>
         <div class="fst-italic small ms-4">
           Submitted grades may differ from official final grade.
-          <BLink
-            to="https://registrar.washington.edu/staff-faculty/grading-resources/"
-            >Learn why</BLink
-          >.
+          <BLink :href="gradingResourcesURL">Learn why</BLink>.
         </div>
       </div>
     </BCard>
@@ -129,7 +123,9 @@ export default {
     };
   },
   data() {
-    return {};
+    return {
+      gradingResourcesURL: "https://registrar.washington.edu/staff-faculty/grading-resources/",
+    };
   },
   computed: {
     unknownSubmissionText() {

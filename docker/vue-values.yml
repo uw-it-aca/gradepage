@@ -22,11 +22,11 @@ lifecycle:
   enabled: true
   preStop:
     enabled: true
-
 autoscaling:
   enabled: true
   minReplicas: 1
-  maxReplicas: 5
+  maxReplicas: 3
+
 targetAverageUtilization: 100
 resources:
   limits:
@@ -94,7 +94,7 @@ environmentVariables:
   - name: CANVAS_ENV
     value: EVAL
   - name: CANVAS_TIMEOUT
-    value: "10"
+    value: "20"
 
   - name: AUTH
     value: SAML
