@@ -74,7 +74,7 @@ class OverrideNotPermitted(Exception):
 
 class GradesNotSubmitted(Exception):
     def __str__(self):
-        return "No grades were submitted"
+        return "No grades were submitted or changed"
 
 
 class InvalidCSV(Exception):

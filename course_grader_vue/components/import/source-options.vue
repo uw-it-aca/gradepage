@@ -20,8 +20,9 @@
     </BDropdownItemButton>
     <BDropdownDivider />
     <BDropdownItem
-      href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
+      :href="importHelpURL"
       target="_blank"
+      rel="noopener"
       title="Information on assigning and submitting grades"
     >
       <i class="bi bi-question-circle me-2 text-body-tertiary"></i>
@@ -108,6 +109,7 @@ export default {
     return {
       canvasModalOpen: false,
       uploadComponentKey: 0,
+      importHelpURL: "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034603",
     };
   },
   methods: {

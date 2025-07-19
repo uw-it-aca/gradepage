@@ -24,7 +24,11 @@
             </div>
             <div class="fst-italic small ms-4">
               Submitted grades may differ from official final grade.
-              <BLink :href="gradingResourcesURL">Learn why</BLink>.
+              <BLink
+                :href="gradingResourcesURL"
+                target="_blank"
+                rel="noopener"
+              >Learn why</BLink>.
             </div>
           </div>
           <div>
@@ -60,7 +64,11 @@
         </ul>
         <div class="fst-italic small ms-4">
           Submitted grades may differ from official final grade.
-          <BLink :href="gradingResourcesURL">Learn why</BLink>.
+          <BLink
+            :href="gradingResourcesURL"
+            target="_blank"
+            rel="noopener"
+          >Learn why</BLink>.
         </div>
       </div>
     </BCard>

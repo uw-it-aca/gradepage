@@ -19,7 +19,7 @@ logger = getLogger(__name__)
 def create_recipient_list(people):
     recipients = []
     for person in people.values():
-        recipients.append("{}@uw.edu".format(person.uwnetid))
+        recipients.append(f"{person.uwnetid}@uw.edu")
     return recipients
 
 
@@ -43,20 +43,20 @@ def create_message(graderoster, submitter):
                 error_count += 1
 
     if success_count > 0 and error_count > 0:
-        subject = "Failed grade submission attempt for {}".format(section_name)
+        subject = f"Failed grade submission attempt for {section_name}"
         text_template = "email/partial.txt"
         html_template = "email/partial.html"
     elif success_count == 0 and error_count > 0:
-        subject = "Failed grade submission attempt for {}".format(section_name)
+        subject = f"Failed grade submission attempt for {section_name}"
         text_template = "email/failure.txt"
         html_template = "email/failure.html"
     elif success_count > 0 and error_count == 0:
         if success_count == 1:
-            subject = "{} submitted {} grade for {}".format(
-                submitter_name, apnumber(success_count), section_name)
+            subject = (f"{submitter_name} submitted {apnumber(success_count)} "
+                       f"grade for {section_name}")
         else:
-            subject = "{} submitted {} grades for {}".format(
-                submitter_name, apnumber(success_count), section_name)
+            subject = (f"{submitter_name} submitted {apnumber(success_count)} "
+                       f"grades for {section_name}")
         text_template = "email/success.txt"
         html_template = "email/success.html"
     else:
@@ -71,8 +71,7 @@ def create_message(graderoster, submitter):
         "failure_count": error_count,
         "section_name": section_name,
         "gradepage_url": gradepage_host,
-        "section_url": "{host}/section/{section_id}".format(
-            host=gradepage_host, section_id=section_id),
+        "section_url": f"{gradepage_host}/section/{section_id}",
         "grading_window_open": is_grading_period_open(section),
         "cog_form_url": getattr(settings, "COG_FORM_URL", ""),
     }
@@ -114,7 +113,12 @@ def notify_grade_submitters(graderoster, submitter_regid):
     else:
         submitter = person_from_regid(submitter_regid)
 
-    (subject, text_body, html_body) = create_message(graderoster, submitter)
+    try:
+        subject, text_body, html_body = create_message(graderoster, submitter)
+    except GradesNotSubmitted as ex:
+        logger.info(f"Submission email not sent: {ex}")
+        return
+
     sender = getattr(settings, "EMAIL_NOREPLY_ADDRESS")
     recipients = create_recipient_list(people)
 
@@ -130,8 +134,8 @@ def notify_grade_submitters(graderoster, submitter_regid):
         message.send()
         log_message = "Submission email sent"
     except Exception as ex:
-        log_message = "Submission email failed: {}".format(ex)
+        log_message = f"Submission email failed: {ex}"
 
     for recipient in recipients:
-        logger.info("{}, To: {}, Section: {}, Status: {}".format(
-            log_message, recipient, section_id, subject))
+        logger.info(f"{log_message}, To: {recipient}, Section: {section_id}, "
+                    f"Status: {subject}")

@@ -49,18 +49,20 @@
       An imported CSV file can contain final grades or percentages. You will be
       prompted to convert percentages during the import process.
       <BLink
-        href="https://itconnect.uw.edu/learn/tools/gradepage/import-convert-csv/#convert"
+        :href="percentageConvertURL"
         title="Learn about converting percentages on IT Connect"
         target="_blank"
+        rel="noopener"
         >Learn more
       </BLink>
     </p>
 
     <p>
       <BLink
-        href="https://itconnect.uw.edu/learn/tools/gradepage/import-convert-csv/"
+        :href="importConvertURL"
         title="Learn about importing a CSV file on IT Connect"
         target="_blank"
+        rel="noopener"
       >
         Learn more about formatting and importing a CSV file for GradePage.
       </BLink>
@@ -110,9 +112,10 @@
           <li>Select a different file for import.</li>
           <li>
             <BLink
-              href="https://itconnect.uw.edu/learn/tools/gradepage/import-convert-csv/#format"
+              :href="csvFormatUrl"
               title="Learn about importing a CSV file on IT Connect"
               target="_blank"
+              rel="noopener"
               >Learn more about formatting and importing a CSV file for
               GradePage.</BLink
             >
@@ -150,9 +153,10 @@
       </div>
       <p>
         <BLink
-          href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
+          :href="importHelpURL"
           title="Learn about other options to submit grades on IT Connect"
           target="_blank"
+          rel="noopener"
           >See other options for submitting grades.</BLink
         >
       </p>
@@ -180,9 +184,10 @@
         </ul>
         <p>
           <BLink
-            href="https://itconnect.uw.edu/learn/tools/gradepage/assign-submit-grades/"
+            :href="importHelpURL"
             title="Learn about other options to submit grades on IT Connect"
             target="_blank"
+            rel="noopener"
           ></BLink
           >See other options for submitting grades.
         </p>
@@ -234,6 +239,10 @@ export default {
     return {
       file: null,
       errorResponse: null,
+      importHelpURL: "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034603",
+      importConvertURL: "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034606",
+      percentageConvertURL: "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034606#convert",
+      csvFormatUrl: "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034606#format_gen",
     };
   },
   computed: {
