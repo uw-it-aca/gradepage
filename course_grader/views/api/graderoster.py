@@ -201,7 +201,13 @@ class GradeRoster(GradeFormHandler):
                 model.secondary_section_id = secondary_section.section_label()
 
             model.save()
-            model.submit(section_id)
+            try:
+                model.submit(section_id)
+            except DataFailureException as ex:
+                (status, msg) = self.data_failure_error(ex)
+                return self.error_response(status, msg)
+            except Exception as ex:
+                return self.error_response(500, ex)
 
             self.graderoster = graderoster_for_section(
                 self.section, self.instructor, self.user)
@@ -267,7 +273,7 @@ class GradeRoster(GradeFormHandler):
         data = {"section_id": section_id,
                 "section_name": section_display_name(self.section),
                 "is_primary_section": self.section.is_primary_section,
-                "linked_section_count": len(self.section.linked_section_urls),
+                "linked_section_count": 0,
                 "students": [],
                 "import_choices": [],
                 "grade_choices": [],
@@ -280,6 +286,7 @@ class GradeRoster(GradeFormHandler):
                 "has_inprogress_submissions": False,
                 "has_saved_grades": False,
                 "gradable_student_count": 0,
+                "graded_count": 0,
                 "ungraded_count": 0,
                 "has_grade_imports": False,
                 "grade_import_count": 0}
@@ -308,6 +315,7 @@ class GradeRoster(GradeFormHandler):
                     data["import_choices"].append({"value": choice[0],
                                                    "label": choice[1]})
 
+        linked_section_ids = set()
         grade_lookup = {}
         for item in sorted_students(self.graderoster.items):
             if (secondary_section is not None and
@@ -327,6 +335,9 @@ class GradeRoster(GradeFormHandler):
             date_graded = None
             saved_grade_data = {}
 
+            if data["is_primary_section"] and item.section_id != section_id:
+                linked_section_ids.add(item.section_id)
+
             if item.duplicate_code is not None:
                 data["has_duplicate_codes"] = True
 
@@ -335,6 +346,7 @@ class GradeRoster(GradeFormHandler):
                     grade = ""
 
                 if item.date_graded is not None:
+                    data["graded_count"] += 1
                     data["has_successful_submissions"] = True
                     date = datetime.strptime(item.date_graded, "%Y-%m-%d")
                     date_graded = date.strftime("%m/%d/%Y")
@@ -406,6 +418,7 @@ class GradeRoster(GradeFormHandler):
             }
             data["students"].append(student_data)
 
+        data["linked_section_count"] = len(linked_section_ids)
         return {"graderoster": data}
 
 
@@ -562,8 +575,11 @@ class GradeRosterStatus(GradeFormHandler):
             data.update(graderoster_status_params(self.graderoster))
             data["secondary_sections"] = []
             for linked_url in section.linked_section_urls:
-                secondary_data = self.secondary_section_status(linked_url)
-                data["secondary_sections"].append(secondary_data)
+                try:
+                    secondary_data = self.secondary_section_status(linked_url)
+                    data["secondary_sections"].append(secondary_data)
+                except NoGradableStudents:
+                    pass
         elif (not section.is_primary_section and
                 not section.allows_secondary_grading):
             data.update(graderoster_status_params(

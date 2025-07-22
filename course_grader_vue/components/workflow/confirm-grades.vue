@@ -190,6 +190,7 @@ export default {
     SectionHeader,
     SectionGradingStatus,
     Student,
+    Errors,
     BAlert,
     BLink,
     BButton,

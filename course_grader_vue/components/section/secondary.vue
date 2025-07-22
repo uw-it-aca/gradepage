@@ -70,6 +70,10 @@ export default {
       type: Object,
       default: undefined,
     },
+    timeout: {
+      type: Number,
+      required: true,
+    },
   },
   setup() {
     return {
@@ -85,32 +89,32 @@ export default {
       secondaryStatus: null,
       errorStatus: null,
       sectionNameId: "section-name-" + this.section.section_id,
-      isLoading: false,
+      isLoading: true,
     };
   },
   computed: {
     gradingStatusText() {
       if (this.section.grading_status) {
-        console.log(
-          "secondary.vue, section.grading_status: " +
-            this.section.grading_status
-        );
+        //console.debug(
+        //  "secondary.vue, section.grading_status: " +
+        //    this.section.grading_status
+        //);
         return this.section.grading_status;
       } else if (this.errorStatus) {
-        console.log(
-          "secondary.vue, errorStatus: " + JSON.stringify(this.errorStatus)
-        );
+        //console.debug(
+        //  "secondary.vue, errorStatus: " + JSON.stringify(this.errorStatus)
+        //);
         return this.formatErrorStatus(this.errorStatus);
       } else if (this.secondaryStatus) {
-        console.log(
-          "secondary.vue, secondaryStatus: " +
-            JSON.stringify(this.secondaryStatus)
-        );
+        //console.debug(
+        //  "secondary.vue, secondaryStatus: " +
+        //    JSON.stringify(this.secondaryStatus)
+        //);
         return this.formatGradingStatus(this.secondaryStatus);
       } else if (this.gradingStatus) {
-        console.log(
-          "secondary.vue, gradingStatus: " + JSON.stringify(this.gradingStatus)
-        );
+        //console.debug(
+        //  "secondary.vue, gradingStatus: " + JSON.stringify(this.gradingStatus)
+        //);
         return this.formatGradingStatus(this.gradingStatus);
       }
       return "";
@@ -148,27 +152,24 @@ export default {
     },
   },
   created() {
-    this.loadGradingStatus();
+    setTimeout(() => {
+      this.loadGradingStatus();
+    }, this.timeout);
   },
   methods: {
     loadGradingStatus: function () {
       if (this.section.status_url) {
         this.isLoading = true;
-
-        setTimeout(() => {
-          this.getSectionStatus(this.section.status_url)
-            .then((data) => {
-              // Secondary status overrules the prop
-              this.secondaryStatus = data.section.grading_status;
-            })
-            .catch((error) => {
-              this.errorStatus = error.data;
-            })
-            .finally(() => {
-              this.isLoading = false;
-            });
-        }, 2000);
+        this.getSectionStatus(this.section.status_url)
+          .then((data) => {
+            // Secondary status overrules the prop
+            this.secondaryStatus = data.section.grading_status;
+          })
+          .catch((error) => {
+            this.errorStatus = error.data;
+          });
       }
+      this.isLoading = false;
     },
   },
 };

@@ -44,11 +44,13 @@ class SubmittedGradeRosterManager(models.Manager):
             if sid not in seen_rosters:
                 latest_rosters.append(sgr)
                 seen_rosters.add(sid)
+            # Nothing after the latest primary section submission
+            if not sgr.secondary_section_id:
+                break
         return latest_rosters
 
-    # TODO: Only the latest submission...
     def resubmit_failed(self):
-        return
+        return  # TODO: Only the latest submission
         compare_dt = datetime.now(timezone.utc) - timedelta(minutes=10)
         fails = super().get_queryset().filter(
             Q(status_code__isnull=False) | Q(submitted_date__lt=compare_dt),
@@ -120,19 +122,19 @@ class SubmittedGradeRoster(models.Model):
         except Exception as ex:
             logger.error(
                 f"PUT graderoster failed: {ex}, Section: {self.section_id}, "
-                f"Instructor: {self.instructor_id}")
+                f"Instructor: {self.instructor_id}, "
+                f"Submitter: {self.submitted_by}")
             self.status_code = getattr(ex, "status", 500)
             self.save()
-            return
+            raise
 
         self.status_code = 200
         self.accepted_date = datetime.now(timezone.utc)
         self.document = graderoster.xhtml()
         self.save()
 
-        # Delete saved grades for this section and submitter
-        Grade.objects.get_by_section_id_and_person(
-            grades_section_id, self.submitted_by).delete()
+        # Delete any saved grades for this section
+        Grade.objects.delete_by_section_id(grades_section_id)
 
         notify_grade_submitters(graderoster, self.submitted_by)
 
@@ -141,6 +143,10 @@ class GradeManager(models.Manager):
     def get_by_section_id_and_person(self, section_id, person_id):
         return super().get_queryset().filter(
             section_id=section_id, modified_by=person_id)
+
+    def delete_by_section_id(self, section_id):
+        super().get_queryset().filter(section_id=section_id).delete()
+        logger.info(f"Deleted saved grades for {section_id}")
 
 
 class Grade(models.Model):

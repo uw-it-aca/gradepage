@@ -73,7 +73,7 @@ class ExceptionsTest(TestCase):
         try:
             raise GradesNotSubmitted()
         except GradesNotSubmitted as ex:
-            self.assertEqual(str(ex), "No grades were submitted")
+            self.assertEqual(str(ex), "No grades were submitted or changed")
 
     def test_InvalidCSV(self):
         try:
