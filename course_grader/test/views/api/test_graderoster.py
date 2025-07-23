@@ -34,10 +34,11 @@ class GradeRosterExportTest(TestCase):
 
         self.assertEqual(response.content, (
             b',,,\nStudent Grade Change List,,,\nINSTRUCTIONS:,,,\nComplete '
-            b'this spreadsheet and upload the file using the UW Registrar\'s '
-            b'Online Change of Grade Request Form.,,,\nhttps://apps.registrar.'
-            b'washington.edu/grade-change/pages/change.php,,,\nDO NOT EMAIL '
-            b'this spreadsheet with student grade information.,,,\n,,,\n'
+            b'this spreadsheet and upload the file using the Office of the '
+            b'University Registrar\'s Online Change of Grade Request Form.'
+            b',,,\nhttps://apps.registrar.washington.edu/grade-change/pages/'
+            b'change.php,,,\nDO NOT EMAIL this spreadsheet with student '
+            b'grade information.,,,\n,,,\n'
             b'INSTRUCTOR NAME AND EMAIL:,,,\n"Jamesy McJamesy",javerage@uw.edu'
             b',,\n,,,\nCOURSE PREFIX AND NUMBER (AND SECTION):,,,\n"TRAIN 101 '
             b'A",,,\n,,,\nQUARTER AND YEAR:,,,\nSpring 2013,,,\n,,,\n,,,\n,,,'
