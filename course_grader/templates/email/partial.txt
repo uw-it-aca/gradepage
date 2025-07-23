@@ -1,13 +1,15 @@
 {% load humanize %}
 {% if submitted_count == 1 %}
-{{ submitted_by }} submitted a grade for one student to the Registrar on {{ submitted_date }}.  This grade has been successfully processed and will be available to the student via MyUW.{% else %}{{ submitted_by }} submitted grades for {{ submitted_count|apnumber }} students to the Registrar on {{ submitted_date }}.  These grades have been successfully processed and will be available to the students via MyUW.{% endif %}
+{{ submitted_by }} submitted a grade for one student to the Office of the University Registrar on {{ submitted_date }}.  This grade has been successfully processed and will be available to the student via MyUW.{% else %}{{ submitted_by }} submitted grades for {{ submitted_count|apnumber }} students to the Office of the University Registrar on {{ submitted_date }}.  These grades have been successfully processed and will be available to the students via MyUW.{% endif %}
 
 However, {% if failure_count == 1 %}one grade{% else %}{{ failure_count|apnumber }} grades{% endif %} failed to be submitted successfully.  For more information, see the grade submission receipt: {{ section_url }}
 
-No changes can be made through GradePage.  To change submitted grades, use the Change of Grade form: {{ cog_form_url }}
-
 {% if grading_window_open %}
-To submit more grades for a different class, return to GradePage: {{ gradepage_url }}
+To change submitted grades, return to the grade submission receipt: {{ section_url }}
+
+To submit grades for a different class, return to GradePage: {{ gradepage_url }}
 
 All grades must be submitted by {{ grade_submission_deadline }}.
+{% else %}
+To change submitted grades, use the Change of Grade form: {{ cog_form_url }}
 {% endif %}
