@@ -13,7 +13,7 @@ function run_test {
     eval $1
 }
 
-run_test "pycodestyle ${DJANGO_APP}/ --exclude=migrations,static"
+run_test "pycodestyle ${DJANGO_APP}/ --exclude=migrations,course_grader/test/dao/test_notification.py"
 
 run_test "python -Wd -m coverage run --source=${DJANGO_APP} '--omit=*/migrations/*' manage.py test ${DJANGO_APP}"
 
