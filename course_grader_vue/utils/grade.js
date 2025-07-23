@@ -101,8 +101,8 @@ function validateGrade(grade, incomplete, choices) {
 function gradesSubmittedText(submission) {
   return interpolate(
     ngettext(
-      "<strong>One grade submitted</strong> to the Registrar by <strong>%(submitted_by)s</strong> on %(submitted_date)s.",
-      "<strong>%(submitted_count)s grades submitted</strong> to the Registrar by <strong>%(submitted_by)s</strong> on %(submitted_date)s.",
+      "<strong>One grade submitted</strong> by <strong>%(submitted_by)s</strong> on %(submitted_date)s.",
+      "<strong>%(submitted_count)s grades submitted</strong> by <strong>%(submitted_by)s</strong> on %(submitted_date)s.",
       submission.submitted_count
     ), {
       submitted_count: submission.submitted_count,
