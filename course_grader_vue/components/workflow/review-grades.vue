@@ -8,7 +8,7 @@
         class="spinner-border spinner-border-sm me-1"
         aria-hidden="true"
       ></span>
-      Please wait, submitting grades to the Registrar
+      Grade submission in progress!
     </BAlert>
   </template>
 
@@ -43,8 +43,9 @@
 
   <div class="mb-5">
     <div>
-      <strong>Review:</strong> All grades will be submitted to the Registrar as
-      displayed above.
+      <strong>Review:</strong>
+      All grades will be submitted to the Office of the University Registrar
+      as displayed above.
     </div>
 
     <div v-if="appState.graderoster.is_writing_section">

@@ -1,11 +1,15 @@
 {% load humanize %}
 {% if submitted_count == 1 %}
-{{ submitted_by }} unsuccessfully submitted a grade for one student to the Registrar on {{ submitted_date }}.  There was a problem processing this grade and it has not been submitted.{% else %}{{ submitted_by }} unsuccessfully submitted grades for {{ submitted_count|apnumber }} students to the Registrar on {{ submitted_date }}.  There was a problem processing these grades and they have not been submitted.{% endif %}
+{{ submitted_by }} unsuccessfully submitted a grade for one student to the Office of the University Registrar on {{ submitted_date }}.  There was a problem processing this grade and it has not been submitted.{% else %}{{ submitted_by }} unsuccessfully submitted grades for {{ submitted_count|apnumber }} students to the Office of the University Registrar on {{ submitted_date }}.  There was a problem processing these grades and they have not been submitted.{% endif %}
 
-No changes can be made through GradePage.  To change submitted grades, use the Change of Grade form: {{ cog_form_url }}
+For more information, view the grade submission receipt: {{ section_url }}
 
 {% if grading_window_open %}
+To change submitted grades, return to the grade submission receipt: {{ section_url }}
+
 To submit more grades for a different class, return to GradePage: {{ gradepage_url }}
 
 All grades must be submitted by {{ grade_submission_deadline }}.
+{% else %}
+To change submitted grades, use the Change of Grade form: {{ cog_form_url }}
 {% endif %}

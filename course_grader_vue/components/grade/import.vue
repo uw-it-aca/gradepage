@@ -1,19 +1,9 @@
 <template>
   <div>
     <!-- TODO: what is this? -->
-    <template v-if="student.is_override_grade">
-      <span
-        class="fa-stack"
-        title="Override grade imported from Canvas Gradebook"
-      >
-        <i class="fas fa-circle fa-stack-2x" aria-hidden="true"></i>
-        <i
-          class="fas fa-marker fa-flip-horizontal fa-stack-1x fa-inverse"
-          aria-hidden="true"
-        ></i>
-      </span>
-    </template>
-
+    <div v-if="student.is_override_grade" class="small">
+      Override grade imported from Canvas Gradebook
+    </div>
     <div class="d-flex align-items-center">
       <div class="border fs-2 text-center" style="width: 100px">
         {{ student.imported_grade }}%

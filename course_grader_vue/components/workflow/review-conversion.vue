@@ -1,20 +1,29 @@
 <template>
   <Errors v-if="errorResponse" :error-response="errorResponse" />
 
-  <h1 class="fs-1 fw-bold">Review Import</h1>
+  <template v-if="isLoading">
+    <BAlert variant="success" :model-value="true" class="small">
+      <span
+        class="spinner-border spinner-border-sm me-1"
+        aria-hidden="true"
+      ></span>
+      Importing grades...
+    </BAlert>
+  </template>
 
-  <div class="mb-5">
-    <SectionHeader :section="section" title="Review Grade Import" />
+  <h1 class="fs-1 fw-bold">Review Grade Conversion</h1>
+
+  <div class="mb-4">
+    <SectionHeader :section="section" title="Review Grade Conversion" />
   </div>
-
   <template v-if="appState.gradeImport">
-    <table v-if="appState.gradeImport.students" class="table table-striped">
+    <table v-if="appState.graderoster.students" class="table table-striped">
       <thead class="table-body-secondary">
         <tr>
           <th scope="col">Student</th>
           <th scope="col">Section</th>
-          <th scope="col">Credits</th>
-          <th scope="col">Grade</th>
+          <th scope="col">Imported Percentage</th>
+          <th scope="col">Converted Grade</th>
         </tr>
       </thead>
       <tbody>
@@ -26,21 +35,22 @@
         </tr>
       </tbody>
     </table>
-    <div v-else>Importing grades...</div>
   </template>
 
-  <div v-if="!isLoading && !errorResponse" class="text-end">
-    <BButton variant="outline-primary" @click="editConversion"
-      >Back to calculator</BButton
-    >
-    <BButton
-      variant="primary"
-      title="Import grades to GradePage"
-      class="ms-2"
-      @click="saveGrades"
-      >Import Grades</BButton
-    >
-  </div>
+  <template v-if="!isLoading && !errorResponse">
+    <div class="text-nowrap">
+      <BButton variant="outline-primary" @click="editConversion"
+        >Back to calculator</BButton
+      >
+      <BButton
+        variant="primary"
+        title="Import grades to GradePage"
+        class="ms-2"
+        @click="saveGrades"
+        >Import Grades</BButton
+      >
+    </div>
+  </template>
 </template>
 
 <script>

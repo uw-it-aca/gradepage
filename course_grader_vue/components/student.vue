@@ -21,7 +21,14 @@
     </div>
   </td>
   <td valign="middle">{{ student.section_id }}</td>
-  <td valign="middle">{{ student.student_credits }}</td>
+  <td valign="middle">
+    <span v-if="appState.reviewingConversion">
+      {{ student.imported_grade }}%
+    </span>
+    <span v-else>
+      {{ student.student_credits }}
+    </span>
+  </td>
   <td>
     <template v-if="appState.editingGrades && student.grade_url">
       <GradeEdit :student="student" :grade-choices="gradeChoices" />

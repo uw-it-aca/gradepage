@@ -10,7 +10,7 @@
   >
     <i class="bi bi-exclamation-circle-fill me-1"></i>
     Grade submission in progress. You will receive an email once grades are
-    submitted to Registrar.
+    submitted to the Office of the University Registrar.
   </BAlert>
 
   <template v-if="appState.graderoster.is_submission_confirmation">

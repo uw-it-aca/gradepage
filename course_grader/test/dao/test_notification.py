@@ -56,26 +56,25 @@ class NotificationDAOFunctionsTest(TestCase):
 
         self.assertEqual(
             subject, 'Bill Teacher submitted four grades for CSS 161 A')
-        self.assertEqual(text, (
-            '\nBill Teacher submitted grades for four students to the '
-            'Registrar on August 27 at  5:01 PM UTC.  These grades have '
-            'been successfully processed and will be available to the '
-            'students via MyUW.\n\nTo view or print a copy of this grade '
-            'submission for your records, go to: https://localhost/section/'
-            '2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE\n\n'
-            'No changes can be made through GradePage.  To change submitted '
-            'grades use the Change of Grade form: https://test.edu/cog.php'
-            '\n\n\n'))
-        self.assertEqual(html, (
-            '\n<p>Bill Teacher submitted grades for four students to the '
-            'Registrar on August 27 at  5:01 PM UTC.  These grades have '
-            'been successfully processed and will be available to the '
-            'students via MyUW.\n</p>\n\n<a href="https://localhost/section/'
-            '2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE">View '
-            'or print a copy of this grade submission for your records.</a>'
-            '\n\n<p>No changes can be made through GradePage.  To change '
-            'submitted grades, use the <a href="https://test.edu/cog.php">'
-            'Change of Grade form</a>.</p>\n\n\n'))
+        self.assertEqual(text, """
+Bill Teacher submitted grades for four students to the Office of the University Registrar on August 27 at  5:01 PM UTC.  These grades have been successfully processed and will be available to the students via MyUW.
+
+To view or print a copy of this grade submission for your records, go to: https://localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE
+
+
+To change submitted grades, use the Change of Grade form: https://test.edu/cog.php
+
+""")
+        self.assertEqual(html, """
+<p>Bill Teacher submitted grades for four students to the Office of the University Registrar on August 27 at  5:01 PM UTC.  These grades have been successfully processed and will be available to the students via MyUW.
+</p>
+
+<p><a href="https://localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE">View or print a copy of this grade submission for your records.</a></p>
+
+
+<p>To change submitted grades, use the <a href="https://test.edu/cog.php">Change of Grade</a> form.</p>
+
+""")
 
     def test_create_message_failure(self):
         for item in self.graderoster.items:
@@ -85,23 +84,24 @@ class NotificationDAOFunctionsTest(TestCase):
 
         self.assertEqual(
             subject, 'Failed grade submission attempt for CSS 161 A')
-        self.assertEqual(text, (
-            '\nBill Teacher unsuccessfully submitted grades for four '
-            'students to the Registrar on August 27 at  5:01 PM UTC.  There '
-            'was a problem processing these grades and they have not been '
-            'submitted.\n\nNo changes can be made through GradePage.  To '
-            'change submitted grades, use the Change of Grade form: '
-            'https://test.edu/cog.php\n\n\n'))
-        self.assertEqual(html, (
-            '\n<p>Bill Teacher unsuccessfully submitted grades for four '
-            'students to the Registrar on August 27 at  5:01 PM UTC.  There '
-            'was a problem processing these grades and they have not been '
-            'submitted.  For more information, see the <a href="https://'
-            'localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE000'
-            '4AC494FFE">grade submission receipt</a>.</p>\n\n<p>No changes '
-            'can be made through GradePage.  To change submitted grades, '
-            'use the <a href="https://test.edu/cog.php">'
-            'Change of Grade form</a>.</p>\n\n\n'))
+        self.assertEqual(text, """
+Bill Teacher unsuccessfully submitted grades for four students to the Office of the University Registrar on August 27 at  5:01 PM UTC.  There was a problem processing these grades and they have not been submitted.
+
+For more information, view the grade submission receipt: https://localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE
+
+
+To change submitted grades, use the Change of Grade form: https://test.edu/cog.php
+
+""")
+        self.assertEqual(html, """
+<p>Bill Teacher unsuccessfully submitted grades for four students to the Office of the University Registrar on August 27 at  5:01 PM UTC.  There was a problem processing these grades and they have not been submitted.</p>
+
+<p>For more information, see the <a href="https://localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE">grade submission receipt</a>.</p>
+
+
+<p>To change submitted grades, use the <a href="https://test.edu/cog.php">Change of Grade</a> form.</p>
+
+""")
 
     def test_create_message_partial(self):
         for item in self.graderoster.items:
@@ -112,24 +112,22 @@ class NotificationDAOFunctionsTest(TestCase):
 
         self.assertEqual(
             subject, 'Failed grade submission attempt for CSS 161 A')
-        self.assertEqual(text, (
-            '\nBill Teacher submitted grades for four students to the '
-            'Registrar on August 27 at  5:01 PM UTC.  These grades have '
-            'been successfully processed and will be available to the '
-            'students via MyUW.\n\nHowever, one grade failed to be submitted '
-            'successfully.  For more information, see the grade submission '
-            'receipt: https://localhost/section/2013-summer-CSS-161-A-FBB38FE'
-            '46A7C11D5A4AE0004AC494FFE\n\nNo changes can be made through '
-            'GradePage.  To change submitted grades, use the Change of Grade '
-            'form: https://test.edu/cog.php\n\n\n'))
-        self.assertEqual(html, (
-            '\n<p>Bill Teacher submitted grades for four students to the '
-            'Registrar on August 27 at  5:01 PM UTC.  These grades have '
-            'been successfully processed and will be available to the '
-            'students via MyUW.\n</p>\n\n<p>However, one grade failed to be '
-            'submitted successfully.  For more information, see the <a '
-            'href="https://localhost/section/2013-summer-CSS-161-A-FBB38FE4'
-            '6A7C11D5A4AE0004AC494FFE">grade submission receipt</a>.</p>\n\n'
-            '<p>No changes can be made through GradePage.  To change '
-            'submitted grades, use the <a href="https://test.edu/cog.php">'
-            'Change of Grade form</a>.</p>\n\n\n'))
+        self.assertEqual(text, """
+Bill Teacher submitted grades for four students to the Office of the University Registrar on August 27 at  5:01 PM UTC.  These grades have been successfully processed and will be available to the students via MyUW.
+
+However, one grade failed to be submitted successfully.  For more information, see the grade submission receipt: https://localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE
+
+
+To change submitted grades, use the Change of Grade form: https://test.edu/cog.php
+
+""")
+        self.assertEqual(html, """
+<p>Bill Teacher submitted grades for four students to the Office of the University Registrar on August 27 at  5:01 PM UTC.  These grades have been successfully processed and will be available to the students via MyUW.
+</p>
+
+<p>However, one grade failed to be submitted successfully.  For more information, see the <a href="https://localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE">grade submission receipt</a>.</p>
+
+
+<p>To change submitted grades, use the <a href="https://test.edu/cog.php">Change of Grade</a> form.</p>
+
+""")

@@ -1,14 +1,14 @@
 {% load humanize %}
 <p>{% if submitted_count == 1 %}
-{{ submitted_by }} submitted a grade for one student to the Registrar on {{ submitted_date }}.  This grade has been successfully processed and will be available to the student via MyUW.{% else %}{{ submitted_by }} submitted grades for {{ submitted_count|apnumber }} students to the Registrar on {{ submitted_date }}.  These grades have been successfully processed and will be available to the students via MyUW.
+{{ submitted_by }} submitted a grade for one student to the Office of the University Registrar on {{ submitted_date }}.  This grade has been successfully processed and will be available to the student via MyUW.{% else %}{{ submitted_by }} submitted grades for {{ submitted_count|apnumber }} students to the Office of the University Registrar on {{ submitted_date }}.  These grades have been successfully processed and will be available to the students via MyUW.
 {% endif %}</p>
 
 <p>However, {% if failure_count == 1 %}one grade{% else %}{{ failure_count|apnumber }} grades{% endif %} failed to be submitted successfully.  For more information, see the <a href="{{ section_url }}">grade submission receipt</a>.</p>
 
-<p>No changes can be made through GradePage.  To change submitted grades, use the <a href="{{ cog_form_url }}">Change of Grade form</a>.</p>
-
 {% if grading_window_open %}
-<p>To submit more grades for a different class, return to <a href="{{ gradepage_url }}">GradePage</a>.</p>
-
+<p>To change submitted grades, return to the <a href="{{ section_url }}">grade submission receipt</a>.</p>
+<p>To submit grades for a different class, return to <a href="{{ gradepage_url }}">GradePage</a>.</p>
 <p>All grades must be submitted by <strong>{{ grade_submission_deadline }}</strong>.</p>
+{% else %}
+<p>To change submitted grades, use the <a href="{{ cog_form_url }}">Change of Grade</a> form.</p>
 {% endif %}
