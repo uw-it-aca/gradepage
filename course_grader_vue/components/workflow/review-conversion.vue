@@ -1,42 +1,46 @@
 <template>
-  <BCard class="shadow-sm rounded-3" header-class="p-3" header="Default">
-    <template #header>
-      <SectionHeader :section="section" title="Review Grade Import" />
-    </template>
+  <Errors v-if="errorResponse" :error-response="errorResponse" />
 
-    <template v-if="isLoading"> Importing grades... </template>
-    <template v-else-if="errorResponse">
-      <Errors :error-response="errorResponse" />
-    </template>
-    <template v-else-if="appState.gradeImport.students">
-      <ul class="list-unstyled m-0">
-        <li
+  <h1 class="fs-1 fw-bold">Review Import</h1>
+
+  <div class="mb-5">
+    <SectionHeader :section="section" title="Review Grade Import" />
+  </div>
+
+  <template v-if="appState.gradeImport">
+    <table v-if="appState.gradeImport.students" class="table table-striped">
+      <thead class="table-body-secondary">
+        <tr>
+          <th scope="col">Student</th>
+          <th scope="col">Section</th>
+          <th scope="col">Credits</th>
+          <th scope="col">Grade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
           v-for="student in appState.gradeImport.students"
           :key="student.item_id"
-          class="border-top pt-2 mt-2"
         >
           <Student :student="student" />
-        </li>
-      </ul>
-    </template>
+        </tr>
+      </tbody>
+    </table>
+    <div v-else>Importing grades...</div>
+  </template>
 
-    <template v-if="!isLoading && !errorResponse" #footer>
-      <div class="d-flex">
-        <div class="text-nowrap">
-          <BButton variant="outline-primary" @click="editConversion"
-            >Back to calculator</BButton
-          >
-          <BButton
-            variant="primary"
-            title="Import grades to GradePage"
-            class="ms-2"
-            @click="saveGrades"
-            >Import Grades</BButton
-          >
-        </div>
-      </div>
-    </template>
-  </BCard>
+  <div v-if="!isLoading && !errorResponse" class="text-end">
+    <BButton variant="outline-primary" @click="editConversion"
+      >Back to calculator</BButton
+    >
+    <BButton
+      variant="primary"
+      title="Import grades to GradePage"
+      class="ms-2"
+      @click="saveGrades"
+      >Import Grades</BButton
+    >
+  </div>
 </template>
 
 <script>
@@ -45,7 +49,7 @@ import Student from "@/components/student.vue";
 import Errors from "@/components/errors.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useCalculatorStore } from "@/stores/calculator";
-import { BButton, BCard } from "bootstrap-vue-next";
+import { BButton } from "bootstrap-vue-next";
 import { saveImportedGrades } from "@/utils/data";
 
 export default {
@@ -54,7 +58,6 @@ export default {
     Student,
     Errors,
     BButton,
-    BCard,
   },
   props: {
     section: {

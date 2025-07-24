@@ -1,24 +1,30 @@
 <template>
-  <span v-if="student.saved_grade.is_writing" class="me-2">
-    <abbr title="Writing credit">W</abbr>
-  </span>
   <template v-if="student.saved_grade.is_incomplete">
-    <div class="d-flex">
-      <span class="fs-2 fw-bold">I</span>
-      <div class="small">
-        Incomplete (Default: {{ student.saved_grade.grade }})
+    <div class="d-flex align-items-center">
+      <div class="border fs-2 fw-bold me-2 text-center" style="width:50px;">I</div>
+      <div>
+        <div>Incomplete (Default: {{ student.saved_grade.grade }})</div>
+        <div v-if="student.saved_grade.is_writing">Writing</div>
       </div>
     </div>
   </template>
   <template v-else>
     <template v-if="student.saved_grade.no_grade_now">
-      <div class="d-flex">
-        <span class="fs-2 fw-bold">X</span>
-        <div class="small">(No grade now)</div>
+      <div class="d-flex align-items-center">
+        <div class="border fs-2 fw-bold me-2 text-center" style="width:50px;">X</div>
+        <div>
+          <div>(No grade now)</div>
+          <div v-if="student.saved_grade.is_writing">Writing</div>
+        </div>
       </div>
     </template>
     <template v-else>
-      <span class="fs-2 fw-bold">{{ student.saved_grade.grade }}</span>
+      <div class="d-flex align-items-center">
+        <div class="border fs-2 fw-bold me-2 text-center" style="width:50px;">{{ student.saved_grade.grade }}</div>
+        <div>
+          <div v-if="student.saved_grade.is_writing">Writing</div>
+        </div>
+      </div>
     </template>
   </template>
   <div v-if="hasGradeError" class="small">
