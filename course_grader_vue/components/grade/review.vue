@@ -1,28 +1,44 @@
 <template>
   <template v-if="student.saved_grade.is_incomplete">
     <div class="d-flex align-items-center">
-      <div class="border fs-2 fw-bold me-2 text-center" style="width:50px;">I</div>
+      <div class="border fs-2 fw-bold me-2 text-center" style="width: 50px">
+        I
+      </div>
       <div>
         <div>Incomplete (Default: {{ student.saved_grade.grade }})</div>
-        <div v-if="student.saved_grade.is_writing">Writing</div>
+        <div
+          v-if="student.saved_grade.is_writing || student.is_writing_section"
+        >
+          Writing
+        </div>
       </div>
     </div>
   </template>
   <template v-else>
     <template v-if="student.saved_grade.no_grade_now">
       <div class="d-flex align-items-center">
-        <div class="border fs-2 fw-bold me-2 text-center" style="width:50px;">X</div>
+        <div class="border fs-2 fw-bold me-2 text-center" style="width: 50px">
+          X
+        </div>
         <div>
-          <div>(No grade now)</div>
-          <div v-if="student.saved_grade.is_writing">Writing</div>
+          <div>(No grade now xx)</div>
+          <div
+            v-if="student.saved_grade.is_writing || student.is_writing_section"
+          >
+            Writing
+          </div>
         </div>
       </div>
     </template>
     <template v-else>
       <div class="d-flex align-items-center">
-        <div class="border fs-2 fw-bold me-2 text-center" style="width:50px;">{{ student.saved_grade.grade }}</div>
-        <div>
-          <div v-if="student.saved_grade.is_writing">Writing</div>
+        <div class="border fs-2 fw-bold me-2 text-center" style="width: 50px">
+          {{ student.saved_grade.grade }}
+        </div>
+        <div
+          v-if="student.saved_grade.is_writing || student.is_writing_section"
+        >
+          Writing
         </div>
       </div>
     </template>

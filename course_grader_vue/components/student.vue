@@ -22,12 +22,12 @@
   </td>
   <td valign="middle">{{ student.section_id }}</td>
   <td valign="middle">
-    <span v-if="appState.reviewingConversion">
+    <template v-if="appState.reviewingConversion">
       {{ student.imported_grade }}%
-    </span>
-    <span v-else>
+    </template>
+    <template v-else>
       {{ student.student_credits }}
-    </span>
+    </template>
   </td>
   <td>
     <template v-if="appState.editingGrades && student.grade_url">
