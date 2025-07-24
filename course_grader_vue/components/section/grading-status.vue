@@ -73,8 +73,9 @@
   <template v-else-if="graderoster.has_successful_submissions">
     <BCard bg-variant="body-tertiary" class="border-0 mb-4">
       <div class="d-flex justify-content-between">
-        <div>
-          <div v-html="unknownSubmissionText" class="fw-bold ms-4"></div>
+        <div class="fw-bold">
+          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i
+          ><span v-html="unknownSubmissionText"></span>
         </div>
       </div>
     </BCard>
@@ -83,10 +84,9 @@
   <template v-else-if="!graderoster.gradable_student_count">
     <BCard bg-variant="body-tertiary" class="border-0 mb-4">
       <div class="d-flex justify-content-between">
-        <div>
-          <div class="fw-bold ms-4">
-            No grades were submitted for this section.
-          </div>
+        <div class="fw-bold">
+          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+          No grades were submitted for this section.
         </div>
       </div>
     </BCard>

@@ -38,7 +38,7 @@
   </template>
 
   <template v-if="!isLoading && !errorResponse">
-    <div class="text-nowrap">
+    <div class="text-end text-nowrap">
       <BButton variant="outline-primary" @click="editConversion"
         >Back to calculator</BButton
       >
