@@ -6,110 +6,74 @@
       <BDropdown
         id="import-scale-selector"
         size="sm"
-        no-caret
+        text="Choose Grade Scale"
         variant="outline-primary"
         class=""
         toggle-class="rounded-2"
       >
-        <template #button-content>
-          Choose Grade Scale<i class="bi bi-chevron-down ms-1"></i>
-        </template>
-        <BDropdownItem
+        <BDropdownItemButton
           v-for="(scale, index) in calculatorStore.availableScales"
           :key="index"
           :value="scale"
           @click.prevent="calculatorStore.setScale(scale)"
           >{{ gettext("conversion_scale_" + scale) }}
-        </BDropdownItem>
+        </BDropdownItemButton>
       </BDropdown>
     </div>
   </div>
 
-  <h3 class="fs-3">Convert Final Score to Grade Points</h3>
-  <h3>{{ gettext("conversion_scale_" + calculatorStore.selectedScale) }}</h3>
+  <h3>
+    Grade Scale:
+    {{ gettext("conversion_scale_" + calculatorStore.selectedScale) }}
+  </h3>
+  <p>Convert Final Score to Grade Points</p>
 
-  <div class="row">
-    <!--<div class="col-6">
-      <div class="mb-3">
-        <label for="import-scale-selector" class="d-block"
-          >Choose your grade scale:</label
-        >
-        <BDropdown
-          id="import-scale-selector"
-          size="sm"
-          no-caret
-          variant="outline-primary"
-          class=""
-          toggle-class="rounded-2"
-        >
-          <template #button-content>
-            {{ gettext("conversion_scale_" + calculatorStore.selectedScale)
-            }}<i class="bi bi-chevron-down ms-1"></i>
-          </template>
-          <BDropdownItem
-            v-for="(scale, index) in calculatorStore.availableScales"
-            :key="index"
-            :value="scale"
-            @click.prevent="calculatorStore.setScale(scale)"
-            >{{ gettext("conversion_scale_" + scale) }}
-          </BDropdownItem>
-        </BDropdown>
-      </div>
-    </div>-->
+  <div v-if="courseGradingSchemes.length" class="mb-4">
+    <label for="course-scale-select" class="d-block">
+      Convert grades using a Canvas grading scheme:
+    </label>
+    <BDropdown
+      id="course-scale-select"
+      size="sm"
+      variant="outline-primary rounded-2"
+      class="d-inline-block"
+      text=" Use the Canvas grading scheme from your course"
+    >
+      <BDropdownItemButton
+        v-for="(scheme, index) in courseGradingSchemes"
+        :key="index"
+        :value="scheme"
+        @click.prevent="courseGradingSchemeSelected(scheme)"
+        >{{ scheme.course_name }}&nbsp;({{ scheme.grading_scheme_name }})
+      </BDropdownItemButton>
+    </BDropdown>
+  </div>
 
-    <div class="col-6">
-      <div v-if="courseGradingSchemes.length" class="mb-4">
-        <label for="course-scale-select" class="d-block">
-          Convert grades using a Canvas grading scheme:
-        </label>
-        <BDropdown
-          id="course-scale-select"
-          size="sm"
-          variant="outline-primary rounded-2"
-          class="d-inline-block"
+  <div v-if="previousScales && previousScales.terms.length" class="mb-4">
+    <label for="previous-scale-select" class="d-block">
+      Convert grades using a scale that you have used before:
+    </label>
+    <BDropdown
+      id="previous-scale-select"
+      size="sm"
+      variant="outline-primary rounded-2"
+      class="d-inline-block"
+      text="Use one of your previous conversion scales"
+    >
+      <BDropdownGroup
+        v-for="(term, index1) in previousScales.terms"
+        :key="index1"
+        :header="term.quarter + ' ' + term.year"
+      >
+        <BDropdownItemButton
+          v-for="(scale, index2) in term.conversion_scales"
+          :key="index2"
+          :value="scale"
+          @click.prevent="previousScaleSelected(scale)"
+          >{{ scale.section }}</BDropdownItemButton
         >
-          <template #button-content>
-            Use the Canvas grading scheme from your course
-          </template>
-          <BDropdownItem
-            v-for="(scheme, index) in courseGradingSchemes"
-            :key="index"
-            :value="scheme"
-            @click.prevent="courseGradingSchemeSelected(scheme)"
-            >{{ scheme.course_name }}&nbsp;({{ scheme.grading_scheme_name }})
-          </BDropdownItem>
-        </BDropdown>
-      </div>
-
-      <div v-if="previousScales && previousScales.terms.length" class="mb-4">
-        <label for="previous-scale-select" class="d-block">
-          Convert grades using a scale that you have used before:
-        </label>
-        <BDropdown
-          id="previous-scale-select"
-          size="sm"
-          variant="outline-primary rounded-2"
-          class="d-inline-block"
-        >
-          <template #button-content>
-            Use one of your previous conversion scales
-          </template>
-          <BDropdownGroup
-            v-for="(term, index1) in previousScales.terms"
-            :key="index1"
-            :header="term.quarter + ' ' + term.year"
-          >
-            <BDropdownItem
-              v-for="(scale, index2) in term.conversion_scales"
-              :key="index2"
-              :value="scale"
-              @click.prevent="previousScaleSelected(scale)"
-              >{{ scale.section }}</BDropdownItem
-            >
-          </BDropdownGroup>
-        </BDropdown>
-      </div>
-    </div>
+      </BDropdownGroup>
+    </BDropdown>
   </div>
 
   <GradeConversionCalculator />
@@ -154,8 +118,8 @@ import {
   BButton,
   BLink,
   BDropdown,
-  BDropdownItem,
   BDropdownGroup,
+  BDropdownItemButton,
 } from "bootstrap-vue-next";
 
 export default {
@@ -163,11 +127,9 @@ export default {
     SectionHeader,
     GradeConversionCalculator,
     BAlert,
-    BCard,
     BButton,
-    BLink,
     BDropdown,
-    BDropdownItem,
+    BDropdownItemButton,
     BDropdownGroup,
   },
   props: {
