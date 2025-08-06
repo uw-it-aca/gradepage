@@ -100,11 +100,11 @@
     <strong>Writing Section:</strong> {{ writingSectionText() }}
   </div>
 
-  <template v-if="appState.graderoster.has_grade_imports">
-    <div v-if="appState.graderoster.grade_import_count > 1">
+  <template v-if="appState.graderoster.has_import_conversions">
+    <div v-if="appState.graderoster.import_conversion_count > 1">
       Grades calculated using grade conversion scales.
       <label class="visually-hidden">
-        Select grade conversion scale to view:
+        Select a grade conversion scale to view:
       </label>
       <BDropdown
         v-model="importConversion"
@@ -115,9 +115,9 @@
         toggle-class="rounded-2"
       >
         <template #button-content> View Scale </template>
-        <template v-if="submission.grade_import.import_conversion">
+        <template>
           <BDropdownItem
-            v-for="(submission, index) in appState.graderoster.submissions"
+            v-for="(submission, index) in submissionsWithImportConversions"
             :key="index"
             :value="submission.grade_import.import_conversion"
           >
@@ -127,7 +127,7 @@
         </template>
       </BDropdown>
     </div>
-    <div v-else-if="!importConversion">
+    <div v-else>
       Grades calculated using a grade conversion scale.
       <BLink
         title="Show the grade conversion scale that was used"
@@ -180,7 +180,6 @@ import {
 import { getGraderoster } from "@/utils/data";
 import {
   gradesSubmittedText,
-  // duplicateCodeText,
   writingSectionText,
 } from "@/utils/grade";
 import { ref } from "vue";
@@ -212,7 +211,6 @@ export default {
       getGraderoster,
       showSectionOptions,
       gradesSubmittedText,
-      // duplicateCodeText,
       writingSectionText,
     };
   },
@@ -246,6 +244,16 @@ export default {
         true
       );
     },
+    submissionsWithImportConversions() {
+      let conversions = [];
+      for (const submission of this.appState.graderoster.submissions) {
+        if (submission.grade_import !== null &&
+            submission.grade_import.import_conversion !== null) {
+          conversions.push(submission);
+        }
+      }
+      return conversions;
+    },
   },
   methods: {
     editGrades: function () {
@@ -261,10 +269,8 @@ export default {
         });
     },
     showImportConversion: function () {
-      let submission = this.appState.graderoster.submissions[0];
-      if (submission && submission.grade_import) {
-        this.importConversion = submission.grade_import.import_conversion;
-      }
+      let submissions = this,submissionsWithImportConversions();
+      this.importConversion = submission[0].grade_import.import_conversion;
     },
     hideImportConversion: function () {
       this.importConversion = null;
