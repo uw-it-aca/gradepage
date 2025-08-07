@@ -100,8 +100,8 @@
     <strong>Writing Section:</strong> {{ writingSectionText() }}
   </div>
 
-  <template v-if="appState.graderoster.has_import_conversions">
-    <div v-if="appState.graderoster.import_conversion_count > 1">
+  <template v-if="submissionsWithImportConversions.length">
+    <div v-if="submissionsWithImportConversions.length > 1">
       Grades calculated using grade conversion scales.
       <label class="visually-hidden">
         Select a grade conversion scale to view:
