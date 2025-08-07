@@ -269,7 +269,7 @@ export default {
         });
     },
     showImportConversion: function () {
-      let submissions = this.submissionsWithImportConversions();
+      let submissions = this.submissionsWithImportConversions;
       this.importConversion = submission[0].grade_import.import_conversion;
     },
     hideImportConversion: function () {
