@@ -245,14 +245,14 @@ export default {
       );
     },
     submissionsWithImportConversions() {
-      let conversions = [];
+      let submissions = [];
       for (const submission of this.appState.graderoster.submissions) {
         if (submission.grade_import !== null &&
             submission.grade_import.import_conversion !== null) {
-          conversions.push(submission);
+          submissions.push(submission);
         }
       }
-      return conversions;
+      return submissions;
     },
   },
   methods: {
@@ -270,7 +270,7 @@ export default {
     },
     showImportConversion: function () {
       let submissions = this.submissionsWithImportConversions;
-      this.importConversion = submission[0].grade_import.import_conversion;
+      this.importConversion = submissions[0].grade_import.import_conversion;
     },
     hideImportConversion: function () {
       this.importConversion = null;
