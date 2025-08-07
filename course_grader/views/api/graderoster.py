@@ -287,9 +287,7 @@ class GradeRoster(GradeFormHandler):
                 "has_saved_grades": False,
                 "gradable_student_count": 0,
                 "graded_count": 0,
-                "ungraded_count": 0,
-                "has_import_conversions": False,
-                "import_conversion_count": 0}
+                "ungraded_count": 0}
 
         secondary_section = getattr(self.graderoster, "secondary_section",
                                     None)
@@ -304,10 +302,6 @@ class GradeRoster(GradeFormHandler):
             if (submission_status["accepted_date"] is None and
                     submission_status["status_code"] == "200"):
                 data["has_inprogress_submissions"] = True
-            if submission_status.get("grade_import", {}).get(
-                    "import_conversion") is not None:
-                data["has_import_conversions"] = True
-                data["import_conversion_count"] += 1
             data["submissions"].append(submission_status)
 
         if grading_period_open:
