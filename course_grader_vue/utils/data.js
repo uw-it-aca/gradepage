@@ -17,8 +17,8 @@ async function getGraderoster(url) {
   return useCustomFetch(url);
 }
 
-async function getConversionScales(url) {
-  return useCustomFetch(url);
+async function getConversionScales(scale) {
+  return useCustomFetch("/api/v1/conversion_scales/" + scale);
 }
 
 async function updateGraderoster(url, data) {
