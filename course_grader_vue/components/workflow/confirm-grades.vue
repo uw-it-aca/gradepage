@@ -100,11 +100,11 @@
     <strong>Writing Section:</strong> {{ writingSectionText() }}
   </div>
 
-  <template v-if="appState.graderoster.has_grade_imports">
-    <div v-if="appState.graderoster.grade_import_count > 1">
+  <template v-if="submissionsWithImportConversions.length">
+    <div v-if="submissionsWithImportConversions.length > 1">
       Grades calculated using grade conversion scales.
       <label class="visually-hidden">
-        Select grade conversion scale to view:
+        Select a grade conversion scale to view:
       </label>
       <BDropdown
         v-model="importConversion"
@@ -115,9 +115,9 @@
         toggle-class="rounded-2"
       >
         <template #button-content> View Scale </template>
-        <template v-if="submission.grade_import.import_conversion">
+        <template>
           <BDropdownItem
-            v-for="(submission, index) in appState.graderoster.submissions"
+            v-for="(submission, index) in submissionsWithImportConversions"
             :key="index"
             :value="submission.grade_import.import_conversion"
           >
@@ -127,7 +127,7 @@
         </template>
       </BDropdown>
     </div>
-    <div v-else-if="!importConversion">
+    <div v-else>
       Grades calculated using a grade conversion scale.
       <BLink
         title="Show the grade conversion scale that was used"
@@ -139,19 +139,18 @@
     <div v-if="importConversion">
       <h2 class="visually-hidden">Grade Conversion Scale</h2>
       <ol>
-        <li v-for="(row, index) in importConversion.grade_scale" :key="index">
-          <span v-if="index === importConversion.grade_scale.length - 1">
-            <span
-              >&lt; <span>{{ row.min_percentage }}&percnt;</span> &equals;
-            </span>
-            <span>{{ importConversion.lowest_valid_grade }}</span>
+        <li v-for="(row, index) in importConversionRows" :key="index">
+          <span
+            >&ge; <span>{{ row.min_percentage }}&percnt;</span> &equals;
           </span>
-          <span v-else>
-            <span
-              >&ge; <span>{{ row.min_percentage }}&percnt;</span> &equals;
-            </span>
-            <span>{{ row.grade }}</span>
+          <span>{{ row.grade }}</span>
+        </li>
+        <li>
+          <span>&lt; <span>{{
+              importConversionRows[importConversionRows.length - 1].min_percentage
+            }}&percnt;</span> &equals;
           </span>
+          <span>{{ importConversion.lowest_valid_grade }}</span>
         </li>
       </ol>
       <BLink
@@ -180,7 +179,6 @@ import {
 import { getGraderoster } from "@/utils/data";
 import {
   gradesSubmittedText,
-  // duplicateCodeText,
   writingSectionText,
 } from "@/utils/grade";
 import { ref } from "vue";
@@ -212,7 +210,6 @@ export default {
       getGraderoster,
       showSectionOptions,
       gradesSubmittedText,
-      // duplicateCodeText,
       writingSectionText,
     };
   },
@@ -246,6 +243,22 @@ export default {
         true
       );
     },
+    submissionsWithImportConversions() {
+      let submissions = [];
+      for (const submission of this.appState.graderoster.submissions) {
+        if (submission.grade_import !== null &&
+            submission.grade_import.import_conversion !== null) {
+          submissions.push(submission);
+        }
+      }
+      return submissions;
+    },
+    importConversionRows() {
+      if (this.importConversion !== null) {
+        return this.importConversion.grade_scale.filter(
+           row => row.min_percentage !== null);
+      }
+    },
   },
   methods: {
     editGrades: function () {
@@ -261,10 +274,8 @@ export default {
         });
     },
     showImportConversion: function () {
-      let submission = this.appState.graderoster.submissions[0];
-      if (submission && submission.grade_import) {
-        this.importConversion = submission.grade_import.import_conversion;
-      }
+      let submissions = this.submissionsWithImportConversions;
+      this.importConversion = submissions[0].grade_import.import_conversion;
     },
     hideImportConversion: function () {
       this.importConversion = null;

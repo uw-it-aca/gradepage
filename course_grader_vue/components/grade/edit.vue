@@ -302,7 +302,7 @@ export default {
       ) {
         this.grade = "N";
       } else if (grade !== null) {
-        this.grade = grade;
+        this.grade = normalizeGrade(grade);
       }
 
       if (hasSavedGrade) {

@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { getConversionScales } from "@/utils/data";
 import { toRaw } from "vue";
 
 const UG_GRADE_SCALE = [
@@ -84,7 +83,6 @@ export const useCalculatorStore = defineStore("calculator", {
         hpf: HPF_GRADE_SCALE,
       },
       defaultCalculatorValues: { ug: ["4.0", "0.7"], gr: ["4.0", "1.7"] },
-      _previousScales: { ug: {}, gr: {}, cnc: {}, pf: {}, hpf: {} },
       selectedScale: "ug",
       calculatorValues: [],
       scaleValues: [],
@@ -100,25 +98,6 @@ export const useCalculatorStore = defineStore("calculator", {
     lowestValidGrade(state) {
       let gradeScale = this.gradeScales[this.selectedScale];
       return gradeScale[gradeScale.length - 1];
-    },
-    previousScales(state) {
-      let scale = this.selectedScale,
-        url = "/api/v1/conversion_scales/" + scale;
-      if (
-        !Object.prototype.hasOwnProperty.call(
-          this._previousScales[scale],
-          "data"
-        )
-      ) {
-        getConversionScales(url)
-          .then((data) => {
-            this._previousScales[scale].data = data;
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-      return this._previousScales[scale].data;
     },
     conversionData(state) {
       return {
@@ -291,6 +270,7 @@ export const useCalculatorStore = defineStore("calculator", {
     },
     calculateScale() {
       var currCalcGrade,
+        lowestCalcGrade,
         currCalcPos = 0,
         matchedPos = null;
 
@@ -300,7 +280,7 @@ export const useCalculatorStore = defineStore("calculator", {
 
       currCalcGrade = this.calculatorValues[currCalcPos].grade;
       this.scaleValues.forEach((sv, idx) => {
-        var currPercentage, prevPercentage, stepValue, stepPercentage, i;
+        var currPercentage, prevPercentage, stepValue, stepPercentage;
 
         if (sv.grade === currCalcGrade) {
           if (matchedPos !== null) {
@@ -314,7 +294,7 @@ export const useCalculatorStore = defineStore("calculator", {
             );
             stepValue = (currPercentage - prevPercentage) / (idx - matchedPos);
 
-            for (i = matchedPos; i <= idx; i++) {
+            for (let i = matchedPos; i <= idx; i++) {
               stepPercentage = prevPercentage + stepValue * (i - matchedPos);
               stepPercentage = Math.round(stepPercentage * 10) / 10;
               this.scaleValues[i].minPercentage = stepPercentage.toString();
@@ -327,6 +307,17 @@ export const useCalculatorStore = defineStore("calculator", {
           }
         }
       });
+
+      // Remove any rows with empty percentages below the lowest calculator
+      // grade, except for the last (0.0) row
+      lowestCalcGrade = this.calculatorValues[this.calculatorValues.length - 1].grade;
+      for (let i = this.scaleValues.length - 2; i >= 0; i--) {
+        if (this.scaleValues[i].grade === lowestCalcGrade) {
+          break;
+        } else if (this.scaleValues[i].minPercentage === "") {
+          this.scaleValues.splice(i, 1);
+        }
+      }
     },
     validateScaleValues() {
       var errorCount = 0,

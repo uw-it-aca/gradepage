@@ -108,10 +108,12 @@
 </template>
 
 <script>
+import { watch } from 'vue';
 import SectionHeader from "@/components/section/header.vue";
 import GradeConversionCalculator from "@/components/convert/calculator.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useCalculatorStore } from "@/stores/calculator";
+import { getConversionScales } from "@/utils/data";
 import {
   BAlert,
   BCard,
@@ -144,17 +146,17 @@ export default {
     return {
       appState,
       calculatorStore,
+      getConversionScales,
     };
   },
   data() {
     return {
       scaleErrorCount: 0,
+      previousScales: null,
+      errorResponse: null,
     };
   },
   computed: {
-    previousScales() {
-      return this.calculatorStore.previousScales;
-    },
     courseGradingSchemes() {
       return this.appState.gradeImport.course_grading_schemes;
     },
@@ -171,6 +173,16 @@ export default {
     },
   },
   methods: {
+    loadPreviousScales: function (scale) {
+      this.getConversionScales(scale)
+        .then((data) => {
+          this.errorResponse = null;
+          this.previousScales = data;
+        })
+        .catch((error) => {
+          this.errorResponse = error.data;
+        });
+    },
     courseGradingSchemeSelected: function (scheme) {
       this.calculatorStore.initializeCalculator(scheme);
     },
@@ -190,6 +202,14 @@ export default {
         this.appState.reviewConversion();
       }
     },
+  },
+  mounted() {
+    watch(
+      () => this.calculatorStore.selectedScale, (newValue, oldValue) => {
+        this.loadPreviousScales(newValue);
+      }
+    );
+    this.loadPreviousScales(this.calculatorStore.selectedScale);
   },
 };
 </script>
