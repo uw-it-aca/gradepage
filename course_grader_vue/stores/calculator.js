@@ -291,6 +291,7 @@ export const useCalculatorStore = defineStore("calculator", {
     },
     calculateScale() {
       var currCalcGrade,
+        lowestCalcGrade,
         currCalcPos = 0,
         matchedPos = null;
 
@@ -300,7 +301,7 @@ export const useCalculatorStore = defineStore("calculator", {
 
       currCalcGrade = this.calculatorValues[currCalcPos].grade;
       this.scaleValues.forEach((sv, idx) => {
-        var currPercentage, prevPercentage, stepValue, stepPercentage, i;
+        var currPercentage, prevPercentage, stepValue, stepPercentage;
 
         if (sv.grade === currCalcGrade) {
           if (matchedPos !== null) {
@@ -314,7 +315,7 @@ export const useCalculatorStore = defineStore("calculator", {
             );
             stepValue = (currPercentage - prevPercentage) / (idx - matchedPos);
 
-            for (i = matchedPos; i <= idx; i++) {
+            for (let i = matchedPos; i <= idx; i++) {
               stepPercentage = prevPercentage + stepValue * (i - matchedPos);
               stepPercentage = Math.round(stepPercentage * 10) / 10;
               this.scaleValues[i].minPercentage = stepPercentage.toString();
@@ -327,6 +328,17 @@ export const useCalculatorStore = defineStore("calculator", {
           }
         }
       });
+
+      // Remove any rows with empty percentages below the lowest calculator
+      // grade, except for the last (0.0) row
+      lowestCalcGrade = this.calculatorValues[this.calculatorValues.length - 1].grade;
+      for (let i = this.scaleValues.length - 2; i >= 0; i--) {
+        if (this.scaleValues[i].grade === lowestCalcGrade) {
+          break;
+        } else if (this.scaleValues[i].minPercentage === "") {
+          this.scaleValues.splice(i, 1);
+        }
+      }
     },
     validateScaleValues() {
       var errorCount = 0,
