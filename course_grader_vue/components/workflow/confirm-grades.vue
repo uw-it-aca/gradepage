@@ -140,18 +140,18 @@
       <h2 class="visually-hidden">Grade Conversion Scale</h2>
       <ol>
         <li v-for="(row, index) in importConversion.grade_scale" :key="index">
-          <span v-if="index === importConversion.grade_scale.length - 1">
-            <span
-              >&lt; <span>{{ row.min_percentage }}&percnt;</span> &equals;
-            </span>
-            <span>{{ importConversion.lowest_valid_grade }}</span>
+          <span
+            >&ge; <span>{{ row.min_percentage }}&percnt;</span> &equals;
           </span>
-          <span v-else>
-            <span
-              >&ge; <span>{{ row.min_percentage }}&percnt;</span> &equals;
-            </span>
-            <span>{{ row.grade }}</span>
+          <span>{{ row.grade }}</span>
+        </li>
+        <li>
+          <span>&lt; <span>{{
+              importConversion.grade_scale[
+                importConversion.grade_scale.length - 1].min_percentage
+            }}&percnt;</span> &equals;
           </span>
+          <span>{{ importConversion.lowest_valid_grade }}</span>
         </li>
       </ol>
       <BLink
