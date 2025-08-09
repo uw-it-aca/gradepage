@@ -100,82 +100,17 @@
     <strong>Writing Section:</strong> {{ writingSectionText() }}
   </div>
 
-  <template v-if="submissionsWithImportConversions.length">
-    <div v-if="submissionsWithImportConversions.length > 1">
-      Grades calculated using grade conversion scales.
-      <label class="visually-hidden">
-        Select a grade conversion scale to view:
-      </label>
-      <BDropdown
-        v-model="importConversion"
-        size="sm"
-        variant="outline-secondary"
-        no-caret
-        class="float-end d-inline-block"
-        toggle-class="rounded-2"
-      >
-        <template #button-content> View Scale </template>
-        <template>
-          <BDropdownItem
-            v-for="(submission, index) in submissionsWithImportConversions"
-            :key="index"
-            :value="submission.grade_import.import_conversion"
-          >
-            <i class="me-2 text-body-tertiary"></i>
-            Section {{ submission.section_id }}
-          </BDropdownItem>
-        </template>
-      </BDropdown>
-    </div>
-    <div v-else>
-      Grades calculated using a grade conversion scale.
-      <BLink
-        title="Show the grade conversion scale that was used"
-        @click.prevent="showImportConversion()"
-        >View scale
-      </BLink>
-    </div>
-
-    <div v-if="importConversion">
-      <h2 class="visually-hidden">Grade Conversion Scale</h2>
-      <ol>
-        <li v-for="(row, index) in importConversionRows" :key="index">
-          <span
-            >&ge; <span>{{ row.min_percentage }}&percnt;</span> &equals;
-          </span>
-          <span>{{ row.grade }}</span>
-        </li>
-        <li>
-          <span>&lt; <span>{{
-              importConversionRows[importConversionRows.length - 1].min_percentage
-            }}&percnt;</span> &equals;
-          </span>
-          <span>{{ importConversion.lowest_valid_grade }}</span>
-        </li>
-      </ol>
-      <BLink
-        title="Hide grade conversion scale"
-        @click.prevent="hideImportConversion()"
-        >Hide scale
-      </BLink>
-    </div>
-  </template>
+  <ImportConversions :submissions="appState.graderoster.submissions" />
 </template>
 
 <script>
 import SectionHeader from "@/components/section/header.vue";
 import SectionGradingStatus from "@/components/section/grading-status.vue";
+import ImportConversions from "@/components/section/import-conversion.vue";
 import Student from "@/components/student.vue";
 import Errors from "@/components/errors.vue";
 import { useWorkflowStateStore } from "@/stores/state";
-import {
-  BAlert,
-  BLink,
-  BButton,
-  BDropdown,
-  BDropdownItem,
-  BDropdownDivider,
-} from "bootstrap-vue-next";
+import { BAlert, BLink, BButton } from "bootstrap-vue-next";
 import { getGraderoster } from "@/utils/data";
 import {
   gradesSubmittedText,
@@ -187,14 +122,12 @@ export default {
   components: {
     SectionHeader,
     SectionGradingStatus,
+    ImportConversions,
     Student,
     Errors,
     BAlert,
     BLink,
     BButton,
-    BDropdown,
-    BDropdownItem,
-    BDropdownDivider,
   },
   props: {
     section: {
@@ -217,7 +150,6 @@ export default {
     return {
       isLoading: false,
       errorResponse: null,
-      importConversion: null,
     };
   },
   computed: {
@@ -243,22 +175,6 @@ export default {
         true
       );
     },
-    submissionsWithImportConversions() {
-      let submissions = [];
-      for (const submission of this.appState.graderoster.submissions) {
-        if (submission.grade_import !== null &&
-            submission.grade_import.import_conversion !== null) {
-          submissions.push(submission);
-        }
-      }
-      return submissions;
-    },
-    importConversionRows() {
-      if (this.importConversion !== null) {
-        return this.importConversion.grade_scale.filter(
-           row => row.min_percentage !== null);
-      }
-    },
   },
   methods: {
     editGrades: function () {
@@ -272,13 +188,6 @@ export default {
           this.errorResponse = error.data;
           this.isLoading = false;
         });
-    },
-    showImportConversion: function () {
-      let submissions = this.submissionsWithImportConversions;
-      this.importConversion = submissions[0].grade_import.import_conversion;
-    },
-    hideImportConversion: function () {
-      this.importConversion = null;
     },
   },
 };
