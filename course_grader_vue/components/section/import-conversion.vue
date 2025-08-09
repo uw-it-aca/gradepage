@@ -36,21 +36,28 @@
     </div>
     <div v-if="selectedImportConversion">
       <h2 class="visually-hidden">Grade Conversion Scale</h2>
-      <ol>
-        <li v-for="(row, index) in importConversionRows" :key="index">
-          <span
-            >&ge; <span>{{ row.min_percentage }}&percnt;</span> &equals;
-          </span>
-          <span>{{ row.grade }}</span>
-        </li>
-        <li>
-          <span>&lt; <span>{{
-              importConversionRows[importConversionRows.length - 1].min_percentage
-            }}&percnt;</span> &equals;
-          </span>
-          <span>{{ selectedImportConversion.lowest_valid_grade }}</span>
-        </li>
-      </ol>
+      <table class="table table-striped">
+        <thead class="table-body-secondary">
+          <tr>
+            <th scope="col">Minimum Percentage</th>
+            <th scope="col">Grade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, index) in importConversionRows" :key="index">
+            <td>&ge; {{ row.min_percentage }}&percnt;</td>
+            <td>{{ row.grade }}</td>
+          </tr>
+          <tr>
+            <td>
+              &lt; {{
+                importConversionRows[importConversionRows.length - 1].min_percentage
+              }}&percnt;
+            </td>
+            <td>{{ selectedImportConversion.lowest_valid_grade }}</td>
+          </tr>
+        </tbody>
+      </table>
       <BLink
         title="Hide grade conversion scale"
         @click.prevent="hideImportConversion()"
