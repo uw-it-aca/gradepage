@@ -26,7 +26,7 @@
       <SProfile v-else :user-netid="context.login_user">
         <a :href="context.signout_url" class="text-white"> Sign out </a>
       </SProfile>
-      <SColorMode />
+      <SColorMode color-class="text-white" class="ms-2" />
     </template>
 
     <template #navigation>
@@ -130,12 +130,18 @@
 <script>
 import { useContextStore } from "@/stores/context";
 import { clearOverride } from "@/utils/data";
-import { BLink, BDropdown, BDropdownItem, BButton } from "bootstrap-vue-next";
+import { BLink, BDropdownItem } from "bootstrap-vue-next";
 import { STopbarNeo, SProfile, SColorMode } from "solstice-vue";
 
 export default {
   name: "GradepageApp",
-  components: { BLink, BButton, STopbarNeo, SProfile, SColorMode },
+  components: {
+    BLink,
+    BDropdownItem,
+    STopbarNeo,
+    SProfile,
+    SColorMode,
+  },
   props: {
     pageTitle: {
       type: String,
@@ -159,7 +165,8 @@ export default {
       appName: "GradePage",
       appRootUrl: "/",
       selectedRoute: "Spring 2013",
-      helpURL: "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034603",
+      helpURL:
+        "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034603",
       codaURL: "https://coda.uw.edu",
     };
   },
