@@ -22,7 +22,7 @@
         <tr>
           <th scope="col">Student</th>
           <th scope="col">Section</th>
-          <th scope="col">Imported Percentage</th>
+          <th scope="col"></th>
           <th scope="col">Converted Grade</th>
         </tr>
       </thead>

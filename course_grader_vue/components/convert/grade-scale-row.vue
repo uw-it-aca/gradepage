@@ -1,18 +1,18 @@
 <template>
   <tr :class="highlightRow ? 'table-primary' : ''">
-    <td>
-      <div v-if="last">
-        <span>{{ gradeScaleLimitText }}</span>
-        <span> {{ lastMinPercentage }} </span>
-      </div>
-
-      <div v-else>
+    <td v-if="last" class="py-3">{{ gradeScaleLimitText }}</td>
+    <td v-else>
+      <div>
         <label
           :for="`min-percentage-${index}`"
           class="form-label visually-hidden"
           >Enter grade</label
         >
         <div class="input-group has-validation">
+          <span
+            :id="`ge-addon2-${index}`"
+            class="input-group-text"
+          >&ge;</span>
           <input
             :id="`min-percentage-${index}`"
             type="text"
@@ -25,7 +25,10 @@
             aria-describedby="percent-addon2"
             @change="minPercentageChanged($event.target.value)"
           />
-          <span id="percent-addon2" class="input-group-text">&percnt;</span>
+          <span
+            :id="`percent-addon2-${index}`"
+            class="input-group-text"
+          >&percnt;</span>
           <span class="invalid-feedback">
             {{ rowData.minPercentageError }}
           </span>
@@ -76,14 +79,15 @@ export default {
       ].minPercentage;
     },
     gradeScaleLimitText() {
-      return interpolate(
-        "Any final grade below a %(min_percentage)s% will result in a %(grade)s.",
-        {
-          min_percentage: this.lastMinPercentage,
-          grade: this.rowData.grade,
-        },
-        true
-      );
+      if (this.lastMinPercentage) {
+        return interpolate(
+          "Final grades below %(min_percentage)s%",
+          {
+            min_percentage: this.lastMinPercentage,
+          },
+          true
+        );
+      }
     },
     gradeScaleTitle() {
       return interpolate(
