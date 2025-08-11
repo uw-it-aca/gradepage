@@ -94,18 +94,13 @@
           <strong>Apply</strong>. The calculator fills in the rest of the grade
           point scale.
         </p>
-
-        <p>
-          Set at least two Percentage to Grade Point conversion points and click
-          <strong>Apply</strong> to create the full Grade Scale below.
-        </p>
       </div>
-
-      <div v-if="calculatorStore.isFixedScale">
+      <div v-else>
         <span>
           {{ gettext("calculator_min_" + calculatorStore.selectedScale) }}
         </span>
       </div>
+
     </div>
     <div class="col-6">
       <div
