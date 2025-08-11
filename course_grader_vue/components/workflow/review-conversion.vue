@@ -11,7 +11,7 @@
     </BAlert>
   </template>
 
-  <h1 class="fs-1 fw-bold">Review Grade Conversion</h1>
+  <h1 class="fs-1 fw-bold">Review Conversion</h1>
 
   <div class="mb-4">
     <SectionHeader :section="section" title="Review Grade Conversion" />
@@ -38,10 +38,8 @@
   </template>
 
   <template v-if="!isLoading && !errorResponse">
-    <div class="text-nowrap">
-      <BButton
-        variant="outline-primary"
-        @click="editConversion"
+    <div class="text-end text-nowrap">
+      <BButton variant="outline-primary" @click="editConversion"
         >Back to calculator</BButton
       >
       <BButton
@@ -61,7 +59,7 @@ import Student from "@/components/student.vue";
 import Errors from "@/components/errors.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useCalculatorStore } from "@/stores/calculator";
-import { BButton, BCard } from "bootstrap-vue-next";
+import { BButton } from "bootstrap-vue-next";
 import { saveImportedGrades } from "@/utils/data";
 
 export default {
@@ -70,7 +68,6 @@ export default {
     Student,
     Errors,
     BButton,
-    BCard,
   },
   props: {
     section: {

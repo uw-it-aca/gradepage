@@ -1,21 +1,23 @@
 <template>
-  <div :class="highlightRow ? 'bg-primary-subtle' : ''">
-    <div class="d-flex justify-content-between">
-      <div class="me-3">
-        <span v-if="last">&lt;</span>
-        <span v-else>&ge;</span>
-      </div>
-
+  <tr :class="highlightRow ? 'table-primary' : ''">
+    <td>
       <div v-if="last">
-        <span class="visually-hidden">{{ gradeScaleLimitText }}</span>
+        <span>{{ gradeScaleLimitText }}</span>
         <span> {{ lastMinPercentage }} </span>
       </div>
+
       <div v-else>
-        <div class="input-group mb-3">
+        <label
+          :for="`min-percentage-${index}`"
+          class="form-label visually-hidden"
+          >Enter grade</label
+        >
+        <div class="input-group has-validation">
           <input
             :id="`min-percentage-${index}`"
             type="text"
             class="form-control"
+            :class="rowData.minPercentageError !== '' ? 'is-invalid' : ''"
             name="min-percentage"
             :value="rowData.minPercentage"
             :title="gradeScaleTitle"
@@ -24,18 +26,15 @@
             @change="minPercentageChanged($event.target.value)"
           />
           <span id="percent-addon2" class="input-group-text">&percnt;</span>
-        </div>
-        <label for="`min-percentage-${index}`">
-          <span role="alert" class="text-danger invalid-grade small">
+          <span class="invalid-feedback">
             {{ rowData.minPercentageError }}
           </span>
-        </label>
+        </div>
       </div>
-
-      <div aria-hidden="true" class="mx-3">&equals;</div>
-      <div aria-hidden="true" class="w-50 text-center">{{ rowData.grade }}</div>
-    </div>
-  </div>
+    </td>
+    <td class="p-3">&equals;</td>
+    <td class="py-3">{{ rowData.grade }}</td>
+  </tr>
 </template>
 
 <script>

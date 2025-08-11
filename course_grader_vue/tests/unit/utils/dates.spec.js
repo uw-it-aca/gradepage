@@ -1,4 +1,4 @@
-import { formatLongDateTime, formatShortDate } from "utils/dates";
+import { formatLongDateTime } from "@/utils/dates";
 
 test("", () => {
   expect(formatLongDateTime("")).toBe("");

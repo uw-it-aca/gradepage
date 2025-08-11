@@ -15,7 +15,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./app_name_vue", import.meta.url)),
+      "@": fileURLToPath(new URL("./course_grader_vue", import.meta.url)),
     },
   },
 });

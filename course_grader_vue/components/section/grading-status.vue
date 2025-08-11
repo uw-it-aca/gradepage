@@ -3,14 +3,15 @@
     <BCard bg-variant="body-tertiary" class="border-0 mb-4">
       <div v-if="savedGradeWarning" class="border-bottom mb-2 pb-2">
         <span class="fw-bold">
-          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
-          Resubmit to make any changes official.
+          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i
+          >Resubmit to make any changes official.
         </span>
         Otherwise, the most recent grade submission will stand.
       </div>
-      <div v-if="
-        graderoster.is_primary_section &&
-        graderoster.linked_section_count > 1"
+      <div
+        v-if="
+          graderoster.is_primary_section && graderoster.linked_section_count > 1
+        "
       >
         <!-- primary section with more than one linked section -->
         <div class="d-flex justify-content-between">
@@ -24,11 +25,9 @@
             </div>
             <div class="fst-italic small ms-4">
               Submitted grades may differ from official final grade.
-              <BLink
-                :href="gradingResourcesURL"
-                target="_blank"
-                rel="noopener"
-              >Learn why</BLink>.
+              <BLink :href="gradingResourcesURL" target="_blank" rel="noopener"
+                >Learn why</BLink
+              >.
             </div>
           </div>
           <div>
@@ -57,18 +56,15 @@
         <ul class="list-unstyled m-0">
           <li>
             <i class="bi bi-check-circle-fill text-success me-2"></i>
-            <span
-              v-html="gradesSubmittedText(graderoster.submissions[0])">
+            <span v-html="gradesSubmittedText(graderoster.submissions[0])">
             </span>
           </li>
         </ul>
         <div class="fst-italic small ms-4">
           Submitted grades may differ from official final grade.
-          <BLink
-            :href="gradingResourcesURL"
-            target="_blank"
-            rel="noopener"
-          >Learn why</BLink>.
+          <BLink :href="gradingResourcesURL" target="_blank" rel="noopener"
+            >Learn why</BLink
+          >.
         </div>
       </div>
     </BCard>
@@ -77,8 +73,9 @@
   <template v-else-if="graderoster.has_successful_submissions">
     <BCard bg-variant="body-tertiary" class="border-0 mb-4">
       <div class="d-flex justify-content-between">
-        <div>
-          <div v-html="unknownSubmissionText" class="fw-bold ms-4"></div>
+        <div class="fw-bold">
+          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i
+          ><span v-html="unknownSubmissionText"></span>
         </div>
       </div>
     </BCard>
@@ -87,10 +84,9 @@
   <template v-else-if="!graderoster.gradable_student_count">
     <BCard bg-variant="body-tertiary" class="border-0 mb-4">
       <div class="d-flex justify-content-between">
-        <div>
-          <div class="fw-bold ms-4">
-            No grades were submitted for this section.
-          </div>
+        <div class="fw-bold">
+          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+          No grades were submitted for this section.
         </div>
       </div>
     </BCard>
@@ -98,12 +94,7 @@
 </template>
 
 <script>
-import {
-  BCard,
-  BLink,
-  BButton,
-  BCollapse,
-} from "bootstrap-vue-next";
+import { BCard, BLink, BButton, BCollapse } from "bootstrap-vue-next";
 import { gradesSubmittedText } from "@/utils/grade";
 
 export default {
@@ -132,16 +123,21 @@ export default {
   },
   data() {
     return {
-      gradingResourcesURL: "https://registrar.washington.edu/staff-faculty/grading-resources/",
+      gradingResourcesURL:
+        "https://registrar.washington.edu/staff-faculty/grading-resources/",
     };
   },
   computed: {
     unknownSubmissionText() {
-      return interpolate(ngettext(
-        "One grade submitted outside of GradePage.",
-        "%(graded_count)s grades submitted outside of GradePage.",
-        this.graderoster.graded_count
-      ), this.graderoster, true);
+      return interpolate(
+        ngettext(
+          "One grade submitted outside of GradePage.",
+          "%(graded_count)s grades submitted outside of GradePage.",
+          this.graderoster.graded_count
+        ),
+        this.graderoster,
+        true
+      );
     },
   },
 };

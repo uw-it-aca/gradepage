@@ -42,7 +42,7 @@
 
   <h1 class="fs-1 fw-bold">Grade Receipt</h1>
 
-  <div class="d-flex justify-content-between align-items-start mb-4">
+  <div class="d-flex justify-content-between align-items-end mb-4">
     <SectionHeader
       :section="section"
       title="Grade Receipt"

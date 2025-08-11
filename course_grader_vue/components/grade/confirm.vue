@@ -1,33 +1,54 @@
 <template>
   <template v-if="student.is_auditor">
-    <span class="text-uppercase fs-5 fw-bold">Auditor</span>
+    <div class="d-flex align-items-center">
+      <div class="border fs-2 fw-bold me-2 text-center">Auditor</div>
+      <div>
+        <div>&nbsp;</div>
+      </div>
+    </div>
   </template>
   <template v-else-if="student.date_withdrawn">
-    <div class="text-uppercase fs-5 fw-bold">
-      <span>{{ withdrawnLabel }}</span>
+    <div class="d-flex align-items-center">
+      <div class="border fs-2 fw-bold me-2 text-center">
+        {{ withdrawnLabel }}
+      </div>
+      <div>
+        <div>&nbsp;</div>
+      </div>
     </div>
   </template>
   <template v-else>
-    <span v-if="student.has_writing_credit" class="me-2">
-      <abbr title="Writing credit">W</abbr>
-    </span>
     <template v-if="student.has_incomplete">
-      <div class="d-flex">
-        <span class="fs-2 fw-bold">I</span>
-        <div class="small">
-          Incomplete (Default: {{ student.grade }})
+      <div class="d-flex align-items-center">
+        <div class="border fs-2 fw-bold me-2 text-center" style="width: 50px">
+          I
+        </div>
+        <div>
+          <div>Incomplete (Default: {{ student.grade }})</div>
+          <div v-if="student.has_writing_credit">Writing</div>
         </div>
       </div>
     </template>
     <template v-else>
       <template v-if="student.no_grade_now">
-        <div class="d-flex">
-          <span class="fs-2 fw-bold">X</span>
-          <div class="small">(No grade now)</div>
+        <div class="d-flex align-items-center">
+          <div class="border fs-2 fw-bold me-2 text-center" style="width: 50px">
+            X
+          </div>
+          <div>
+            <div>(No grade now)</div>
+          </div>
         </div>
       </template>
       <template v-else>
-        <span class="fs-2 fw-bold">{{ student.grade }}</span>
+        <div class="d-flex align-items-center">
+          <div class="border fs-2 fw-bold me-2 text-center" style="width: 50px">
+            {{ student.grade }}
+          </div>
+          <div>
+            <div v-if="student.has_writing_credit">Writing</div>
+          </div>
+        </div>
       </template>
     </template>
     <div v-if="hasGradeError" class="small">
@@ -37,7 +58,6 @@
 </template>
 
 <script>
-
 export default {
   name: "GradeConfirm",
   props: {

@@ -1,16 +1,19 @@
 <template>
-  <div>
-    <label for="import-scale-selector" class="visually-hidden">
-      Choose your grade scale:
-    </label>
+  <!--<div class="mb-3">
+    <label for="import-scale-selector" class="me-2"
+      >Choose your grade scale:</label
+    >
     <BDropdown
       id="import-scale-selector"
       size="sm"
-      variant="outline-secondary"
+      no-caret
+      variant="outline-primary rounded-2"
       class="d-inline-block"
+      toggle-class="rounded-2"
     >
       <template #button-content>
-        {{ gettext("conversion_scale_" + calculatorStore.selectedScale) }}
+        {{ gettext("conversion_scale_" + calculatorStore.selectedScale)
+        }}<i class="bi bi-chevron-down ms-1"></i>
       </template>
       <BDropdownItem
         v-for="(scale, index) in calculatorStore.availableScales"
@@ -20,98 +23,127 @@
         >{{ gettext("conversion_scale_" + scale) }}
       </BDropdownItem>
     </BDropdown>
-  </div>
+  </div>-->
 
-  <div class="col-7 bg-body-tertiary p-3">
-    <div v-if="!calculatorStore.isFixedScale">
-      <h4 id="grade_conversion_header">Grade conversion calculator</h4>
-      <p>
-        Set at least two Percentage to Grade Point conversion points and click
-        <strong>Apply</strong> to create the full Grade Scale below.
-      </p>
+  <div class="row">
+    <div class="col-6">
+      <div v-if="!calculatorStore.isFixedScale">
+        <div class="d-flex justify-content-between">
+          <h4 id="grade_conversion_header">Conversion calculator</h4>
+          <div class="text-end">
+            <BButton
+              title="Reset the grade conversion calculator"
+              size="sm"
+              variant="outline-primary rounded-2"
+              @click.prevent="calculatorStore.resetCalculatorValues()"
+              >Reset</BButton
+            >
 
-      <div class="d-flex justify-content-between">
-        <div class="fw-bold">Final Score</div>
-        <div class="fw-bold">Grade Point</div>
+            <BButton
+              title="Create grade scale"
+              size="sm"
+              variant="outline-primary rounded-2 ms-2"
+              @click="calculatorStore.calculateScale()"
+            >
+              Apply to Grade Scale
+            </BButton>
+          </div>
+        </div>
+        <table class="table">
+          <thead class="table-body-secondary">
+            <tr>
+              <th scope="col" class="w-50">Final Score (percentage)</th>
+              <th scope="col"></th>
+              <th scope="col" class="w-50">Grade Point</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template v-for="(data, index) in calculatorValues" :key="index">
+              <template v-if="0 < index && index < calculatorValues.length">
+                <tr>
+                  <td class="text-center small">
+                    <BLink
+                      title="Add a row to the conversion table. Leave unused rows blank."
+                      tabindex="0"
+                      class="link-quiet-primary"
+                      @click.prevent="calculatorStore.addCalculatorRow(index)"
+                      >+ Add a row</BLink
+                    >
+                  </td>
+                  <td>&nbsp;</td>
+                  <td class="text-center">
+                    <i class="bi bi-three-dots-vertical"></i>
+                  </td>
+                </tr>
+              </template>
+
+              <CalculatorRow
+                :row-data="data"
+                :first="index === 0"
+                :last="index === calculatorValues.length - 1"
+                :index="index"
+              />
+            </template>
+          </tbody>
+        </table>
+
+        <p>
+          To use the conversion calculator, enter minimum percentages and
+          equivalent class grades in two or more rows in the calculator, and
+          click
+          <strong>Apply</strong>. The calculator fills in the rest of the grade
+          point scale.
+        </p>
+
+        <p>
+          Set at least two Percentage to Grade Point conversion points and click
+          <strong>Apply</strong> to create the full Grade Scale below.
+        </p>
       </div>
 
-      <ol class="list-unstyled">
-        <li v-for="(data, index) in calculatorValues" :key="index">
-          <template v-if="0 < index && index < calculatorValues.length">
-            <div class="d-flex my-3">
-              <div class="w-50 text-center">
-                <BLink
-                  title="Add a row to the conversion table. Leave unused rows blank."
-                  tabindex="0"
-                  @click.prevent="calculatorStore.addCalculatorRow(index)"
-                  >+ Add a row</BLink
-                >
-              </div>
-              <div class="w-50 text-center">
-                <i class="bi bi-three-dots-vertical"></i>
-              </div>
-            </div>
-          </template>
-
-          <CalculatorRow
-            :row-data="data"
-            :first="index === 0"
-            :last="index === calculatorValues.length - 1"
-            :index="index"
-          />
-        </li>
-      </ol>
-
-      <div class="my-5">
+      <div v-if="calculatorStore.isFixedScale">
         <span>
-          <BLink
-            title="Reset the grade conversion calculator"
-            @click.prevent="calculatorStore.resetCalculatorValues()"
-            >Reset</BLink
-          >
-        </span>
-        <span>
-          <BButton
-            title="Create grade scale"
-            @click="calculatorStore.calculateScale()"
-          >
-            <i class="fa fa-angle-double-down fa-lg"></i> Apply
-          </BButton>
+          {{ gettext("calculator_min_" + calculatorStore.selectedScale) }}
         </span>
       </div>
     </div>
+    <div class="col-6">
+      <div
+        id="conversion_grade_scale_container"
+        class="mb-5"
+        aria-labelledby="grade_scale_header"
+      >
+        <div class="d-flex justify-content-between">
+          <h4 id="grade_scale_header" class="">Grade Scale:</h4>
+          <span>
+            <BButton
+              variant="outline-primary rounded-2"
+              size="sm"
+              @click.prevent="calculatorStore.resetScaleValues()"
+              >Clear scale</BButton
+            >
+          </span>
+        </div>
 
-    <div v-if="calculatorStore.isFixedScale">
-      <span>
-        {{ gettext("calculator_min_" + calculatorStore.selectedScale) }}
-      </span>
-    </div>
-
-    <div
-      id="conversion_grade_scale_container"
-      aria-labelledby="grade_scale_header"
-    >
-      <h4 id="grade_scale_header" class="visually-hidden">Grade Scale:</h4>
-
-      <div class="d-flex justify-content-between">
-        <div class="fw-bold">Minimum score for class grade</div>
-        <div class="fw-bold">Grade Point</div>
+        <table class="table">
+          <thead class="table-body-secondary">
+            <tr>
+              <th scope="col" class="w-50">Minimum score</th>
+              <th scope="col"></th>
+              <th scope="col" class="w-50">Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template v-for="(data, index) in scaleValues" :key="index">
+              <GradeScaleRow
+                :row-data="data"
+                :last="index === scaleValues.length - 1"
+                :index="index"
+              />
+            </template>
+          </tbody>
+        </table>
       </div>
-
-      <ol aria-label="Review and adjust Grade Scale:" class="list-unstyled">
-        <li v-for="(data, index) in scaleValues" :key="index">
-          <GradeScaleRow
-            :row-data="data"
-            :last="index === scaleValues.length - 1"
-            :index="index"
-          />
-        </li>
-      </ol>
-      <span>
-        <BButton @click.prevent="calculatorStore.resetScaleValues()"
-          >Clear scale</BButton
-        >
-      </span>
     </div>
   </div>
 </template>

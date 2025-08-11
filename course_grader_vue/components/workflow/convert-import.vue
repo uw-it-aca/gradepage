@@ -1,88 +1,110 @@
 <template>
-  <BCard class="shadow-sm rounded-3" header-class="p-3" header="Default">
-    <template #header>
-      <SectionHeader :section="section" title="Convert Grades" />
-    </template>
-
-    <h3>Convert Final Score to Grade Points</h3>
-    <p>
-      To use the conversion calculator, enter minimum percentages and equivalent
-      class grades in two or more rows in the calculator, and click
-      <strong>Apply</strong>. The calculator fills in the rest of the grade
-      point scale.
-    </p>
-
-    <div v-if="courseGradingSchemes.length">
-      <label for="course-scale-select" class="visually-hidden">
-        Convert grades using a Canvas grading scheme:
-      </label>
+  <h1 class="fs-1 fw-bold">Import Grades</h1>
+  <div class="d-flex justify-content-between align-items-end mb-5">
+    <SectionHeader :section="section" title="Convert Grades" />
+    <div>
       <BDropdown
-        id="course-scale-select"
+        id="import-scale-selector"
         size="sm"
-        variant="outline-secondary"
-        class="d-inline-block"
+        text="Choose Grade Scale"
+        variant="outline-primary"
+        class=""
+        toggle-class="rounded-2"
       >
-        <template #button-content>
-          Use the Canvas grading scheme from your course
-        </template>
-        <BDropdownItem
-          v-for="(scheme, index) in courseGradingSchemes"
+        <BDropdownItemButton
+          v-for="(scale, index) in calculatorStore.availableScales"
           :key="index"
-          :value="scheme"
-          @click.prevent="courseGradingSchemeSelected(scheme)"
-          >{{ scheme.course_name }}&nbsp;({{ scheme.grading_scheme_name }})
-        </BDropdownItem>
+          :value="scale"
+          @click.prevent="calculatorStore.setScale(scale)"
+          >{{ gettext("conversion_scale_" + scale) }}
+        </BDropdownItemButton>
       </BDropdown>
     </div>
+  </div>
 
-    <div v-if="previousScales && previousScales.terms.length">
-      <label for="previous-scale-select" class="visually-hidden">
-        Convert grades using a scale that you have used before:
-      </label>
-      <BDropdown
-        id="previous-scale-select"
-        size="sm"
-        variant="outline-secondary"
-        class="d-inline-block"
+  <h3>
+    Grade Scale:
+    {{ gettext("conversion_scale_" + calculatorStore.selectedScale) }}
+  </h3>
+  <p>Convert Final Score to Grade Points</p>
+
+  <div v-if="courseGradingSchemes.length" class="mb-4">
+    <label for="course-scale-select" class="d-block">
+      Convert grades using a Canvas grading scheme:
+    </label>
+    <BDropdown
+      id="course-scale-select"
+      size="sm"
+      variant="outline-primary rounded-2"
+      class="d-inline-block"
+      text=" Use the Canvas grading scheme from your course"
+    >
+      <BDropdownItemButton
+        v-for="(scheme, index) in courseGradingSchemes"
+        :key="index"
+        :value="scheme"
+        @click.prevent="courseGradingSchemeSelected(scheme)"
+        >{{ scheme.course_name }}&nbsp;({{ scheme.grading_scheme_name }})
+      </BDropdownItemButton>
+    </BDropdown>
+  </div>
+
+  <div v-if="previousScales && previousScales.terms.length" class="mb-4">
+    <label for="previous-scale-select" class="d-block">
+      Convert grades using a scale that you have used before:
+    </label>
+    <BDropdown
+      id="previous-scale-select"
+      size="sm"
+      variant="outline-primary rounded-2"
+      class="d-inline-block"
+      text="Use one of your previous conversion scales"
+    >
+      <BDropdownGroup
+        v-for="(term, index1) in previousScales.terms"
+        :key="index1"
+        :header="term.quarter + ' ' + term.year"
       >
-        <template #button-content>
-          Use one of your previous conversion scales
-        </template>
-        <BDropdownGroup
-          v-for="(term, index1) in previousScales.terms"
-          :key="index1"
-          :header="term.quarter + ' ' + term.year"
+        <BDropdownItemButton
+          v-for="(scale, index2) in term.conversion_scales"
+          :key="index2"
+          :value="scale"
+          @click.prevent="previousScaleSelected(scale)"
+          >{{ scale.section }}</BDropdownItemButton
         >
-          <BDropdownItem
-            v-for="(scale, index2) in term.conversion_scales"
-            :key="index2"
-            :value="scale"
-            @click.prevent="previousScaleSelected(scale)"
-            >{{ scale.section }}</BDropdownItem
-          >
-        </BDropdownGroup>
-      </BDropdown>
-    </div>
+      </BDropdownGroup>
+    </BDropdown>
+  </div>
 
-    <GradeConversionCalculator />
+  <GradeConversionCalculator />
 
-    <template #footer>
-      <BLink title="Cancel" @click="cancelConversion">Cancel </BLink>
-      <BButton
-        variant="primary"
-        title="Review converted grades"
-        @click="reviewConversion"
-        >Review converted grades &gt;&gt;
-      </BButton>
-      <span
+  <div class="row justify-content-end">
+    <div class="col-6">
+      <BAlert
         v-if="scaleErrorCount"
-        role="alert"
-        class="text-danger invalid-grade small"
+        :model-value="true"
+        variant="danger"
+        class="small"
+        ><i class="bi-exclamation-octagon-fill me-1"></i>Unable to submit
+        because there are {{ scaleErrorText }}</BAlert
       >
-        <strong>{{ scaleErrorText }}</strong> (see above)
-      </span>
-    </template>
-  </BCard>
+
+      <div class="text-end">
+        <BButton
+          variant="outline-primary me-2"
+          title="Cancel"
+          @click="cancelConversion"
+          >Cancel
+        </BButton>
+        <BButton
+          variant="primary"
+          title="Review converted grades"
+          @click="reviewConversion"
+          >Review converted grades
+        </BButton>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -93,23 +115,23 @@ import { useWorkflowStateStore } from "@/stores/state";
 import { useCalculatorStore } from "@/stores/calculator";
 import { getConversionScales } from "@/utils/data";
 import {
+  BAlert,
   BCard,
   BButton,
   BLink,
   BDropdown,
-  BDropdownItem,
   BDropdownGroup,
+  BDropdownItemButton,
 } from "bootstrap-vue-next";
 
 export default {
   components: {
     SectionHeader,
     GradeConversionCalculator,
-    BCard,
+    BAlert,
     BButton,
-    BLink,
     BDropdown,
-    BDropdownItem,
+    BDropdownItemButton,
     BDropdownGroup,
   },
   props: {

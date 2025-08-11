@@ -1,6 +1,6 @@
 <template>
   <div :aria-labelledby="sectionNameId">
-    <div class="d-flex">
+    <div class="d-flex align-items-center">
       <template v-if="section.section_url">
         <BLink :href="section.section_url" :title="routerLinkTitle">
           <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
@@ -29,7 +29,7 @@
         {{ gradingStatusText }}
       </div>
 
-      <div v-if="savedGradeWarning" class="mt-2 border border-warning">
+      <div v-if="savedGradeWarning" class="mt-2">
         <div class="fw-bold">
           <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i
           >Resubmit to make any changes official.

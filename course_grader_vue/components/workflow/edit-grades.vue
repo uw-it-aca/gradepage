@@ -8,7 +8,7 @@
     <template v-else>Enter Grades</template>
   </h1>
 
-  <div class="d-flex justify-content-between align-items-start mb-4">
+  <div class="d-flex justify-content-between align-items-end mb-5">
     <SectionHeader
       v-if="appState.graderoster.has_successful_submissions"
       :section="section"
@@ -52,7 +52,7 @@
     </table>
     <div v-else-if="!errorResponse">Loading roster...</div>
 
-    <div class="d-flex justify-content-between mb-4">
+    <div class="d-flex justify-content-between mb-5">
       <div class="w-75">
         <div v-if="appState.graderoster.is_writing_section">
           <strong>Writing Section:</strong> {{ writingSectionText() }}

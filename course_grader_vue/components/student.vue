@@ -14,19 +14,20 @@
           >Duplicate Code: {{ student.duplicate_code }}</BBadge
         >
         <BPopover :target="student.student_number">
-          <span class="fw-bold">Duplicate Code:</span> Student dropped this section, and re-added.
+          <span class="fw-bold">Duplicate Code:</span> Student dropped this
+          section, and re-added.
         </BPopover>
       </template>
     </div>
   </td>
-  <td>{{ student.section_id }}</td>
-  <td>
-    <span v-if="appState.reviewingConversion">
+  <td valign="middle">{{ student.section_id }}</td>
+  <td valign="middle">
+    <template v-if="appState.reviewingConversion">
       {{ student.imported_grade }}%
-    </span>
-    <span v-else>
+    </template>
+    <template v-else>
       {{ student.student_credits }}
-    </span>
+    </template>
   </td>
   <td>
     <template v-if="appState.editingGrades && student.grade_url">

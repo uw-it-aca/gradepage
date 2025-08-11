@@ -26,14 +26,14 @@
       <SProfile v-else :user-netid="context.login_user">
         <a :href="context.signout_url" class="text-white"> Sign out </a>
       </SProfile>
-      <SColorMode></SColorMode>
+      <SColorMode color-class="text-white" class="ms-2" />
     </template>
 
     <template #navigation>
       <ul class="navbar-nav text-white me-auto mb-2 mb-xl-0">
-        <li class="nav-item">
+        <li class="nav-item me-5">
           <BLink
-            class="nav-link text-white"
+            class="nav-link text-white px-0"
             :class="matchedTerm(currentTerm.id) ? 'active' : ''"
             :href="'/term/' + currentTerm.id"
           >
@@ -42,7 +42,7 @@
         </li>
         <li class="nav-item dropdown">
           <a
-            class="nav-link dropdown-toggle text-white"
+            class="nav-link dropdown-toggle text-white px-0"
             :class="!matchedTerm(currentTerm.id) ? 'active' : ''"
             href="#"
             role="button"
@@ -76,7 +76,9 @@
     <template v-if="window.gradepage.messages" #system>
       <div class="row">
         <div class="col">
-          <ul class="list-unstyled py-2 m-0 text-center text-info-emphasis">
+          <ul
+            class="list-unstyled py-2 m-0 text-center text-info-emphasis small"
+          >
             <li
               v-for="(message, index) in window.gradepage.messages"
               :key="index"
@@ -128,12 +130,18 @@
 <script>
 import { useContextStore } from "@/stores/context";
 import { clearOverride } from "@/utils/data";
-import { BLink, BDropdown, BDropdownItem, BButton } from "bootstrap-vue-next";
+import { BLink, BDropdownItem } from "bootstrap-vue-next";
 import { STopbarNeo, SProfile, SColorMode } from "solstice-vue";
 
 export default {
   name: "GradepageApp",
-  components: { BLink, BButton, STopbarNeo, SProfile, SColorMode },
+  components: {
+    BLink,
+    BDropdownItem,
+    STopbarNeo,
+    SProfile,
+    SColorMode,
+  },
   props: {
     pageTitle: {
       type: String,
@@ -157,7 +165,8 @@ export default {
       appName: "GradePage",
       appRootUrl: "/",
       selectedRoute: "Spring 2013",
-      helpURL: "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034603",
+      helpURL:
+        "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034603",
       codaURL: "https://coda.uw.edu",
     };
   },

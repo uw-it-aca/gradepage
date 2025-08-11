@@ -3,13 +3,10 @@
     v-model="showImportOptions"
     size="sm"
     variant="outline-primary"
-    no-caret
+    text="Import Options"
     class=""
     toggle-class="rounded-2"
   >
-    <template #button-content>
-      Import Options<i class="bi bi-chevron-down ms-1"></i>
-    </template>
     <BDropdownItemButton v-b-modal.modalImportCanvasGrades
       ><i class="bi bi-journal-check me-2"></i>
       Canvas Gradebook
@@ -109,7 +106,8 @@ export default {
     return {
       canvasModalOpen: false,
       uploadComponentKey: 0,
-      importHelpURL: "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034603",
+      importHelpURL:
+        "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034603",
     };
   },
   methods: {

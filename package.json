@@ -2,7 +2,7 @@
   "name": "gradepage",
   "type": "module",
   "version": "1.0.0",
-  "description": "official grading app",
+  "description": "UW application that supports online grade submission",
   "scripts": {
     "build": "vite build",
     "watch": "vite build --watch --mode development",
@@ -16,7 +16,7 @@
     "type": "git",
     "url": "git+https://github.com/uw-it-aca/gradepage.git"
   },
-  "author": "University of Washington IT - T&LS",
+  "author": "UW-IT Student & Educational Technology Services",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/uw-it-aca/gradepage/issues"
@@ -32,8 +32,8 @@
     "jquery": "^3.7.1",
     "pinia": "^3.0.3",
     "regenerator-runtime": "^0.14.1",
-    "solstice-theme": "github:uw-it-aca/solstice-theme#develop",
-    "solstice-vue": "github:uw-it-aca/solstice-vue#develop",
+    "solstice-theme": "github:uw-it-aca/solstice-theme#1.0.6",
+    "solstice-vue": "github:uw-it-aca/solstice-vue#1.1.4",
     "vue": "^3.5.18",
     "vue-gtag-next": "^1.14.0",
     "vue-router": "^4.5.1",
