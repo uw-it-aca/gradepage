@@ -42,10 +42,6 @@ export default {
       type: Object,
       required: true,
     },
-    title: {
-      type: String,
-      required: true,
-    },
     status: {
       type: Boolean,
       required: false,

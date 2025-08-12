@@ -1,7 +1,7 @@
 <template>
-  <h1 class="fs-1 fw-bold">Import Grades</h1>
+  <h1 class="fs-1 fw-bold">Convert Grades</h1>
   <div class="d-flex justify-content-between align-items-end mb-5">
-    <SectionHeader :section="section" title="Convert Grades" />
+    <SectionHeader :section="section" />
     <div>
       <BDropdown
         id="import-scale-selector"

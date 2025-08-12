@@ -11,10 +11,10 @@
     </BAlert>
   </template>
 
-  <h1 class="fs-1 fw-bold">Review Conversion</h1>
+  <h1 class="fs-1 fw-bold">Review Imported Grades</h1>
 
   <div class="mb-4">
-    <SectionHeader :section="section" title="Review Grade Conversion" />
+    <SectionHeader :section="section" />
   </div>
   <template v-if="appState.gradeImport">
     <table v-if="appState.graderoster.students" class="table table-striped">
@@ -49,6 +49,9 @@
         @click="saveGrades"
         >Import Grades</BButton
       >
+      <div style="margin-top:10px">
+        Individual student grades can be adjusted in next step.
+      </div>
     </div>
   </template>
 </template>
