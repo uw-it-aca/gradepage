@@ -10,12 +10,9 @@
 
   <div class="d-flex justify-content-between align-items-end mb-5">
     <SectionHeader
-      v-if="appState.graderoster.has_successful_submissions"
       :section="section"
-      title="Change Grades"
       :status="appState.graderoster.has_successful_submissions"
     />
-    <SectionHeader v-else :section="section" title="Enter Grades" />
     <template v-if="section">
       <GradeImportOptions
         :section="section"

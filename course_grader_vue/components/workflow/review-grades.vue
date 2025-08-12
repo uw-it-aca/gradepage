@@ -14,11 +14,11 @@
 
   <h1 class="fs-1 fw-bold">
     <template v-if="isLoading">Submit Grades</template>
-    <template v-else> Review Grades</template>
+    <template v-else>Review Grades</template>
   </h1>
 
   <div class="mb-5">
-    <SectionHeader :section="section" title="Review Grades" />
+    <SectionHeader :section="section" />
   </div>
   <template v-if="appState.graderoster">
     <table v-if="appState.graderoster.students" class="table table-striped">

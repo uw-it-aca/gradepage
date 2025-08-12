@@ -45,7 +45,6 @@
   <div class="d-flex justify-content-between align-items-end mb-4">
     <SectionHeader
       :section="section"
-      title="Grade Receipt"
       :status="appState.graderoster.has_successful_submissions"
     />
     <div>

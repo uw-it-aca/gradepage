@@ -67,7 +67,7 @@ msgid "conversion_scale_cnc"
 msgstr "Credit/No Credit Scale"
 
 msgid "conversion_scale_pf"
-msgstr "School of Medicine Pass/No Pass"
+msgstr "School of Medicine Pass/No Pass Scale"
 
 msgid "conversion_scale_hpf"
 msgstr "Honors/High Pass/Pass/Fail Scale"

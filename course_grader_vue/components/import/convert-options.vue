@@ -10,7 +10,7 @@
       The Office of the University Registrar requires submitted grades to
       follow official formatting.
     </p>
-    <p>Please select a format to use:</p>
+    <p>Please select a scale to use:</p>
 
     <BButton
       v-for="(scale, index) in calculatorStore.availableScales"
