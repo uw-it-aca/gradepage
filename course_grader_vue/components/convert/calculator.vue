@@ -109,7 +109,7 @@
         aria-labelledby="grade_scale_header"
       >
         <div class="d-flex justify-content-between">
-          <h4 id="grade_scale_header" class="">Grade Scale:</h4>
+          <h4 id="grade_scale_header" class="">Grade Scale</h4>
           <span>
             <BButton
               variant="outline-primary rounded-2"

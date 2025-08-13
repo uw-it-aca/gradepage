@@ -96,6 +96,7 @@ import GradeImportOptions from "@/components/import/source-options.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
 import { updateGraderoster, clearSavedGrades } from "@/utils/data";
+import { scrollToTop } from "@/utils/section";
 import {
   writingSectionText,
 } from "@/utils/grade";
@@ -126,6 +127,7 @@ export default {
       updateGraderoster,
       clearSavedGrades,
       writingSectionText,
+      scrollToTop,
     };
   },
   data() {
@@ -162,6 +164,7 @@ export default {
   methods: {
     reviewGrades: function () {
       if (this.isFormValid) {
+        this.scrollToTop();
         let put_data = { grades: this.gradeStore.grades };
         this.updateGraderoster(this.section.graderoster_url, put_data)
           .then((data) => {
