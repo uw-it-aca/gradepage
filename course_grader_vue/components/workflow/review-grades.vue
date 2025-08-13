@@ -44,8 +44,8 @@
   <div class="mb-5">
     <div>
       <strong>Review:</strong>
-      All grades will be submitted to the Office of the University Registrar
-      as displayed above.
+      All grades will be submitted to the Office of the University Registrar as
+      displayed above.
     </div>
 
     <div v-if="appState.graderoster.is_writing_section">
@@ -115,8 +115,15 @@ export default {
     editGrades: function () {
       this.appState.editGrades();
     },
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth", // smooth scrolling
+      });
+    },
     submitGrades: function () {
       this.isLoading = true;
+      this.scrollToTop();
 
       setTimeout(() => {
         this.submitGraderoster(this.section.graderoster_url, {})
