@@ -109,7 +109,9 @@
         aria-labelledby="grade_scale_header"
       >
         <div class="d-flex justify-content-between">
-          <h4 id="grade_scale_header" class="">Grade Scale</h4>
+          <h4 id="grade_scale_header" class="">
+            {{ gettext("conversion_scale_" + calculatorStore.selectedScale) }}
+          </h4>
           <span>
             <BButton
               variant="outline-primary rounded-2"

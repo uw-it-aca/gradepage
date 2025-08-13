@@ -22,10 +22,6 @@
     </div>
   </div>
 
-  <h3>
-    Grade Scale:
-    {{ gettext("conversion_scale_" + calculatorStore.selectedScale) }}
-  </h3>
   <p>Convert Final Score to Grade Points</p>
 
   <div v-if="courseGradingSchemes.length" class="mb-4">
@@ -185,6 +181,7 @@ export default {
     },
     courseGradingSchemeSelected: function (scheme) {
       this.calculatorStore.initializeCalculator(scheme);
+      this.calculatorStore.resetCalculatorValues();
     },
     previousScaleSelected: function (scale) {
       this.calculatorStore.initializeCalculator(scale);
