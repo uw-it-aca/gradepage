@@ -129,17 +129,19 @@ export const useCalculatorStore = defineStore("calculator", {
     },
     initializeCalculator(data) {
       if (data) {
-        this.calculatorValues = data.calculator_values.map((cv) => ({
+        this.calculatorValues = data.calculator_values.map(cv => {
           grade: cv.grade,
           percentage: cv.percentage,
           gradeError: "",
           percentageError: "",
-        }));
-        this.scaleValues = data.grade_scale.map((gs) => ({
-          grade: gs.grade,
-          minPercentage: gs.min_percentage,
-          minPercentageError: "",
-        }));
+        });
+        this.scaleValues = data.grade_scale
+          .filter(gs => gs.min_percentage !== null)
+          .map(gs => {
+            grade: gs.grade,
+            minPercentage: gs.min_percentage,
+            minPercentageError: "",
+          });
         this.scaleValues.push({
           grade: data.lowest_valid_grade.toString(),
           minPercentage: "",

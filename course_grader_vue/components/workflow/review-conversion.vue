@@ -11,7 +11,7 @@
     </BAlert>
   </template>
 
-  <h1 class="fs-1 fw-bold">Review Imported Grades</h1>
+  <h1 class="fs-1 fw-bold">Review Converted Grades</h1>
 
   <div class="mb-4">
     <SectionHeader :section="section" />
