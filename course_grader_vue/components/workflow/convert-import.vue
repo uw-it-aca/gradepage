@@ -180,8 +180,7 @@ export default {
         });
     },
     courseGradingSchemeSelected: function (scheme) {
-      this.calculatorStore.initializeCalculator(scheme);
-      this.calculatorStore.resetCalculatorValues();
+      this.calculatorStore.setScale(scheme.scale, scheme);
     },
     previousScaleSelected: function (scale) {
       this.calculatorStore.initializeCalculator(scale);
