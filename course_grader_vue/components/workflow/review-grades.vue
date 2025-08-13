@@ -76,6 +76,7 @@ import { useWorkflowStateStore } from "@/stores/state";
 import { submitGraderoster } from "@/utils/data";
 import { BButton, BAlert } from "bootstrap-vue-next";
 import { writingSectionText } from "@/utils/grade";
+import { scrollToTop } from "@/utils/section";
 
 export default {
   components: {
@@ -96,8 +97,8 @@ export default {
     return {
       appState,
       submitGraderoster,
-      // duplicateCodeText,
       writingSectionText,
+      scrollToTop,
     };
   },
   data() {
@@ -114,12 +115,6 @@ export default {
   methods: {
     editGrades: function () {
       this.appState.editGrades();
-    },
-    scrollToTop() {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth", // smooth scrolling
-      });
     },
     submitGrades: function () {
       this.isLoading = true;

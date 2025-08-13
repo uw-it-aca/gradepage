@@ -77,4 +77,16 @@ function formatErrorStatus(error) {
   return error.error ? error.error : gettext("Error retrieving grading status");
 }
 
-export { formatLinkTitle, formatGradingStatus, formatErrorStatus };
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // smooth scrolling
+  });
+}
+
+export {
+  formatLinkTitle,
+  formatGradingStatus,
+  formatErrorStatus,
+  scrollToTop,
+};
