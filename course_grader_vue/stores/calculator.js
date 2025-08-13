@@ -121,20 +121,24 @@ export const useCalculatorStore = defineStore("calculator", {
     validScale(scale) {
       return VALID_SCALES.includes(scale) ? true : false;
     },
-    setScale(scale) {
+    setScale(scale, data) {
       if (this.validScale(scale)) {
         this.selectedScale = scale;
-        this.initializeCalculator();
+        this.initializeCalculator(data);
       }
     },
     initializeCalculator(data) {
       if (data) {
-        this.calculatorValues = data.calculator_values.map(cv => ({
-          grade: cv.grade,
-          percentage: cv.percentage,
-          gradeError: "",
-          percentageError: "",
-        }));
+        if (data.calculator_values.length) {
+          this.calculatorValues = data.calculator_values.map(cv => ({
+            grade: cv.grade,
+            percentage: cv.percentage,
+            gradeError: "",
+            percentageError: "",
+          }));
+        } else {
+          this.resetCalculatorValues();
+        }
         this.scaleValues = data.grade_scale
           .filter(gs => gs.min_percentage !== null)
           .map(gs => ({
