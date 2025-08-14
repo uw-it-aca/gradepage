@@ -26,7 +26,8 @@
   </div>-->
 
   <div class="row">
-    <div class="col-6">
+    <div class="col-9">
+      <!-- TODO: design better calcutor layout -->
       <div v-if="!calculatorStore.isFixedScale">
         <div class="d-flex justify-content-between">
           <h4 id="grade_conversion_header">Conversion calculator</h4>
@@ -101,8 +102,6 @@
         </span>
       </div>
 
-    </div>
-    <div class="col-6">
       <div
         id="conversion_grade_scale_container"
         class="mb-5"
@@ -141,6 +140,7 @@
           </tbody>
         </table>
       </div>
+      <!-- END: calculator layout -->
     </div>
   </div>
 </template>
@@ -149,7 +149,7 @@
 import { useCalculatorStore } from "@/stores/calculator";
 import CalculatorRow from "@/components/convert/calculator-row.vue";
 import GradeScaleRow from "@/components/convert/grade-scale-row.vue";
-import { BLink, BButton, BDropdown, BDropdownItem } from "bootstrap-vue-next";
+import { BLink, BButton } from "bootstrap-vue-next";
 
 export default {
   name: "CalculatorComp",
@@ -158,8 +158,6 @@ export default {
     GradeScaleRow,
     BButton,
     BLink,
-    BDropdown,
-    BDropdownItem,
   },
   setup() {
     const calculatorStore = useCalculatorStore();

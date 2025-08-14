@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import { watch } from 'vue';
+import { watch } from "vue";
 import SectionHeader from "@/components/section/header.vue";
 import GradeConversionCalculator from "@/components/convert/calculator.vue";
 import { useWorkflowStateStore } from "@/stores/state";
@@ -168,6 +168,15 @@ export default {
       );
     },
   },
+  mounted() {
+    watch(
+      () => this.calculatorStore.selectedScale,
+      (newValue, oldValue) => {
+        this.loadPreviousScales(newValue);
+      }
+    );
+    this.loadPreviousScales(this.calculatorStore.selectedScale);
+  },
   methods: {
     loadPreviousScales: function (scale) {
       this.getConversionScales(scale)
@@ -198,14 +207,6 @@ export default {
         this.appState.reviewConversion();
       }
     },
-  },
-  mounted() {
-    watch(
-      () => this.calculatorStore.selectedScale, (newValue, oldValue) => {
-        this.loadPreviousScales(newValue);
-      }
-    );
-    this.loadPreviousScales(this.calculatorStore.selectedScale);
   },
 };
 </script>
