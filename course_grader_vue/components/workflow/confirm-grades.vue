@@ -76,6 +76,10 @@
     :graderoster="appState.graderoster"
   />
 
+  <div v-if="appState.graderoster.is_writing_section">
+    <strong>Writing Section:</strong> {{ writingSectionText() }}
+  </div>
+
   <table v-if="appState.graderoster.students" class="table table-striped">
     <thead class="table-body-secondary">
       <tr>
@@ -94,10 +98,6 @@
       </tr>
     </tbody>
   </table>
-
-  <div v-if="appState.graderoster.is_writing_section">
-    <strong>Writing Section:</strong> {{ writingSectionText() }}
-  </div>
 
   <ImportConversions :submissions="appState.graderoster.submissions" />
 </template>

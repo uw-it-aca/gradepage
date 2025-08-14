@@ -21,6 +21,10 @@
     <SectionHeader :section="section" />
   </div>
   <template v-if="appState.graderoster">
+    <div v-if="appState.graderoster.is_writing_section">
+      <strong>Writing Section:</strong> {{ writingSectionText() }}
+    </div>
+
     <table v-if="appState.graderoster.students" class="table table-striped">
       <thead class="table-body-secondary">
         <tr>
@@ -46,10 +50,6 @@
       <strong>Review:</strong>
       All grades will be submitted to the Office of the University Registrar as
       displayed above.
-    </div>
-
-    <div v-if="appState.graderoster.is_writing_section">
-      <strong>Writing Section:</strong> {{ writingSectionText() }}
     </div>
   </div>
 

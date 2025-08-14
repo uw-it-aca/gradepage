@@ -28,6 +28,10 @@
     :saved-grade-warning="hasSubmittedAndSavedGrades"
   />
 
+  <div v-if="appState.graderoster.is_writing_section">
+    <strong>Writing Section:</strong> {{ writingSectionText() }}
+  </div>
+
   <template v-if="appState.graderoster">
     <table v-if="appState.graderoster.students" class="table table-striped">
       <thead class="table-body-secondary">
@@ -50,11 +54,6 @@
     <div v-else-if="!errorResponse">Loading roster...</div>
 
     <div class="d-flex justify-content-between mb-5">
-      <div class="w-75">
-        <div v-if="appState.graderoster.is_writing_section">
-          <strong>Writing Section:</strong> {{ writingSectionText() }}
-        </div>
-      </div>
       <div class="w-25 text-end">
         <span class="fw-bold me-1">Status:</span>
         <span v-if="gradesRemainingText" aria-live="polite"
