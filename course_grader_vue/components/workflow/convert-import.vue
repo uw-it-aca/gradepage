@@ -1,28 +1,8 @@
 <template>
-  <h1 class="fs-1 fw-bold">Convert Grades</h1>
+  <h1 class="fs-1 fw-bold">Convert Final Scores to Grade Points</h1>
   <div class="d-flex justify-content-between align-items-end mb-5">
     <SectionHeader :section="section" />
-    <div>
-      <BDropdown
-        id="import-scale-selector"
-        size="sm"
-        text="Choose Grade Scale"
-        variant="outline-primary"
-        class=""
-        toggle-class="rounded-2"
-      >
-        <BDropdownItemButton
-          v-for="(scale, index) in calculatorStore.availableScales"
-          :key="index"
-          :value="scale"
-          @click.prevent="calculatorStore.setScale(scale)"
-          >{{ gettext("conversion_scale_" + scale) }}
-        </BDropdownItemButton>
-      </BDropdown>
-    </div>
   </div>
-
-  <p>Convert Final Score to Grade Points</p>
 
   <div v-if="courseGradingSchemes.length" class="mb-4">
     <label for="course-scale-select" class="d-block">
@@ -104,7 +84,7 @@
 </template>
 
 <script>
-import { watch } from 'vue';
+import { watch } from "vue";
 import SectionHeader from "@/components/section/header.vue";
 import GradeConversionCalculator from "@/components/convert/calculator.vue";
 import { useWorkflowStateStore } from "@/stores/state";
@@ -168,6 +148,15 @@ export default {
       );
     },
   },
+  mounted() {
+    watch(
+      () => this.calculatorStore.selectedScale,
+      (newValue, oldValue) => {
+        this.loadPreviousScales(newValue);
+      }
+    );
+    this.loadPreviousScales(this.calculatorStore.selectedScale);
+  },
   methods: {
     loadPreviousScales: function (scale) {
       this.getConversionScales(scale)
@@ -198,14 +187,6 @@ export default {
         this.appState.reviewConversion();
       }
     },
-  },
-  mounted() {
-    watch(
-      () => this.calculatorStore.selectedScale, (newValue, oldValue) => {
-        this.loadPreviousScales(newValue);
-      }
-    );
-    this.loadPreviousScales(this.calculatorStore.selectedScale);
   },
 };
 </script>

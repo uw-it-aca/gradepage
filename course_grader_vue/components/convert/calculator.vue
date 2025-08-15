@@ -26,10 +26,17 @@
   </div>-->
 
   <div class="row">
-    <div class="col-6">
+    <div class="col-9">
       <div v-if="!calculatorStore.isFixedScale">
+        <p>
+          To use the conversion calculator, enter minimum percentages and
+          equivalent class grades in two or more rows in the calculator, and
+          click
+          <strong>Apply to Grade Scale</strong>. The calculator fills in the
+          rest of the grade scale.
+        </p>
         <div class="d-flex justify-content-between">
-          <h4 id="grade_conversion_header">Conversion calculator</h4>
+          <h4>Conversion calculator</h4>
           <div class="text-end">
             <BButton
               title="Reset the grade conversion calculator"
@@ -86,40 +93,46 @@
             </template>
           </tbody>
         </table>
-
-        <p>
-          To use the conversion calculator, enter minimum percentages and
-          equivalent class grades in two or more rows in the calculator, and
-          click
-          <strong>Apply</strong>. The calculator fills in the rest of the grade
-          point scale.
-        </p>
       </div>
       <div v-else>
-        <span>
+        <p>
           {{ gettext("calculator_min_" + calculatorStore.selectedScale) }}
-        </span>
+        </p>
       </div>
 
-    </div>
-    <div class="col-6">
       <div
         id="conversion_grade_scale_container"
         class="mb-5"
         aria-labelledby="grade_scale_header"
       >
         <div class="d-flex justify-content-between">
-          <h4 id="grade_scale_header" class="">
+          <h4>
             {{ gettext("conversion_scale_" + calculatorStore.selectedScale) }}
           </h4>
-          <span>
+          <div class="text-end">
+            <BDropdown
+              size="sm"
+              text="Choose Grade Scale"
+              class="d-inline-block"
+              variant="outline-primary"
+              toggle-class="rounded-2"
+            >
+              <BDropdownItemButton
+                v-for="(scale, index) in calculatorStore.availableScales"
+                :key="index"
+                :value="scale"
+                @click.prevent="calculatorStore.setScale(scale)"
+              >{{ gettext("conversion_scale_" + scale) }}
+              </BDropdownItemButton>
+            </BDropdown>
+
             <BButton
-              variant="outline-primary rounded-2"
+              variant="outline-primary rounded-2 ms-2"
               size="sm"
               @click.prevent="calculatorStore.resetScaleValues()"
               >Clear scale</BButton
             >
-          </span>
+          </div>
         </div>
 
         <table class="table">
@@ -141,6 +154,7 @@
           </tbody>
         </table>
       </div>
+      <!-- END: calculator layout -->
     </div>
   </div>
 </template>
@@ -149,7 +163,7 @@
 import { useCalculatorStore } from "@/stores/calculator";
 import CalculatorRow from "@/components/convert/calculator-row.vue";
 import GradeScaleRow from "@/components/convert/grade-scale-row.vue";
-import { BLink, BButton, BDropdown, BDropdownItem } from "bootstrap-vue-next";
+import { BLink, BButton } from "bootstrap-vue-next";
 
 export default {
   name: "CalculatorComp",
@@ -158,8 +172,6 @@ export default {
     GradeScaleRow,
     BButton,
     BLink,
-    BDropdown,
-    BDropdownItem,
   },
   setup() {
     const calculatorStore = useCalculatorStore();
