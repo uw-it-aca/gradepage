@@ -3,8 +3,14 @@ import { formatLongDateTime } from "@/utils/dates";
 const incompleteBlocklist = [gettext("x_no_grade_now"), "N", "CR"];
 
 function normalizeGrade(grade) {
-  grade = grade.trim();
-  if (grade.match(/^(?:n|nc|p|h|hw|f|hp|i|cr)$/i)) {
+  try {
+    grade = grade.toString().trim();
+  } catch (error) {
+    grade = "";
+  }
+  if (grade === "") {
+    // pass
+  } else if (grade.match(/^(?:n|nc|p|h|hw|f|hp|i|cr)$/i)) {
     grade = grade.toUpperCase();
   } else if (grade.match(/^x/i)) {
     grade = gettext("x_no_grade_now");
