@@ -88,9 +88,14 @@ export const useGradeStore = defineStore("grade", {
             this.gradeChoices[student.student_id]
           );
 
+          if (error) {
+            console.log("error_grade: " + error);
+          }
           if (error === "") {
+            console.log("valid_grade: " + imported_grade);
             valid_grade_count += 1;
           } else if (!isNaN(imported_grade)) {
+            console.log("valid_percentage: " + imported_grade);
             valid_percentage_count += 1;
           }
 
