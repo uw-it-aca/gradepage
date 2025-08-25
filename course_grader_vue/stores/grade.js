@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { validateGrade } from "@/utils/grade";
+import { normalizeGrade, validateGrade } from "@/utils/grade";
 
 export const useGradeStore = defineStore("grade", {
   state: () => {
@@ -81,15 +81,16 @@ export const useGradeStore = defineStore("grade", {
         ) {
           grade_count += 1;
 
+          let imported_grade = normalizeGrade(student.imported_grade);
           error = validateGrade(
-            student.imported_grade,
+            imported_grade,
             student.is_incomplete,
             this.gradeChoices[student.student_id]
           );
 
           if (error === "") {
             valid_grade_count += 1;
-          } else if (!isNaN(student.imported_grade)) {
+          } else if (!isNaN(imported_grade)) {
             valid_percentage_count += 1;
           }
 
