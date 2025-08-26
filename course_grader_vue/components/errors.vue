@@ -1,7 +1,7 @@
 <template>
   <template v-if="errorResponse.status === 404">
     <div id="404-error">
-      <h1 class="fs-1 fw-bold">Error: 404</h1>
+      <h1 class="fs-1 fw-bold">Error 404</h1>
       <p>{{ errorText }}</p>
       <p>Some things you may want to try:</p>
       <ul>
@@ -18,7 +18,7 @@
   </template>
   <template v-else-if="errorResponse.status === 401">
     <div id="401-error">
-      <h1 class="fs-1 fw-bold">Error: 401</h1>
+      <h1 class="fs-1 fw-bold">Error 401</h1>
       <p>{{ errorText }}</p>
       <p>Some things you may want to try:</p>
       <ul>
@@ -35,7 +35,7 @@
   </template>
   <template v-else-if="errorResponse.status === 500">
     <div id="500-error">
-      <h1 class="fs-1 fw-bold">Error: 500</h1>
+      <h1 class="fs-1 fw-bold">Error 500</h1>
       <h2>There was a problem retrieving grade information:</h2>
       <p>{{ errorText }}</p>
 
@@ -55,7 +55,7 @@
   </template>
   <template v-else>
     <div id="543-error">
-      <h1 class="fs-1 fw-bold">Error: 543</h1>
+      <h1 class="fs-1 fw-bold">Error 543</h1>
       <h2>There was a problem retrieving grade information:</h2>
       <p>{{ errorText }}</p>
 

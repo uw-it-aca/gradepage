@@ -2,7 +2,6 @@
   <Errors v-if="errorResponse" :error-response="errorResponse" />
 
   <template v-if="isLoading">
-    <!-- please wait.. submitting -->
     <BAlert variant="success" :model-value="true" class="small">
       <span
         class="spinner-border spinner-border-sm me-1"
@@ -17,9 +16,10 @@
     <template v-else>Review Grades</template>
   </h1>
 
-  <div class="mb-5">
+  <div v-if="!errorResponse" class="mb-5">
     <SectionHeader :section="section" />
   </div>
+
   <template v-if="appState.graderoster">
     <div v-if="appState.graderoster.is_writing_section">
       <strong>Writing Section:</strong> {{ writingSectionText() }}
@@ -45,15 +45,14 @@
     </table>
   </template>
 
-  <div class="mb-5">
-    <div>
-      <strong>Review:</strong>
-      All grades will be submitted to the Office of the University Registrar as
-      displayed above.
-    </div>
-  </div>
-
   <template v-if="!isLoading && !errorResponse">
+    <div class="mb-5">
+      <div>
+        <strong>Review:</strong>
+        All grades will be submitted to the Office of the University Registrar
+        as displayed above.
+      </div>
+    </div>
     <div v-if="section" class="text-end text-nowrap">
       <BButton
         :title="reviewBackTitle"
