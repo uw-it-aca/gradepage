@@ -74,7 +74,10 @@ function formatGradingStatus(data) {
 }
 
 function formatErrorStatus(error) {
-  return error.error ? error.error : gettext("Error retrieving grading status");
+  let str = error.error;
+  return str
+    ? str.charAt(0).toUpperCase() + str.slice(1)
+    : gettext("Error retrieving grading status");
 }
 
 function scrollToTop() {
