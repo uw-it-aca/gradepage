@@ -163,7 +163,7 @@ export default {
         this.getSectionStatus(this.section.status_url)
           .then((data) => {
             // Secondary status overrules the prop
-            this.secondaryStatus = data.section.grading_status;
+            this.secondaryStatus = data.grading_status;
           })
           .catch((error) => {
             this.errorStatus = error.data;
