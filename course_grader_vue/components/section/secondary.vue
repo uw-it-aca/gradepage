@@ -1,7 +1,7 @@
 <template>
   <div :aria-labelledby="sectionNameId">
     <div class="d-flex align-items-center">
-      <template v-if="section.section_url && routableSection">
+      <template v-if="routableSection">
         <BLink :href="section.section_url" :title="routerLinkTitle">
           <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
         </BLink>
@@ -121,7 +121,9 @@ export default {
     },
     routableSection() {
       return (
-        this.errorStatus && this.errorStatus.status === 404) ? false : true;
+        this.section.section_url &&
+        !(this.errorStatus && this.errorStatus.status === 404)
+      ) ? true : false;
     },
     routerLinkTitle() {
       let status = (this.secondaryStatus !== null)
