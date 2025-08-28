@@ -1,7 +1,7 @@
 <template>
   <div class="" :aria-labelledby="sectionNameId">
     <div class="d-flex align-items-center">
-      <template v-if="section.section_url">
+      <template v-if="routableSection">
         <BLink :href="section.section_url" :title="routerLinkTitle">
           <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
         </BLink>
@@ -134,6 +134,12 @@ export default {
         return this.formatGradingStatus(this.gradingStatus);
       }
       return "";
+    },
+    routableSection() {
+      return (
+        this.section.section_url &&
+        !(this.errorStatus && this.errorStatus.status === 404)
+      ) ? true : false;
     },
     routerLinkTitle() {
       return this.gradingStatus ? this.formatLinkTitle(this.gradingStatus) : "";
