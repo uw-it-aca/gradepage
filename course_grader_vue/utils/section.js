@@ -38,16 +38,16 @@ function formatGradingStatus(data) {
   } else if (data.submitted_count) {
     if (data.submitted_date) {
       if (data.accepted_date) {
-        let submitted_date_str = formatLongDateTime(data.submitted_date);
         base =
           ngettext(
             "%(submitted_count)s grade submitted on ",
             "%(submitted_count)s grades submitted on ",
             data.submitted_count
-          ) + submitted_date_str;
+          ) + formatLongDateTime(data.submitted_date);
       } else {
         if (data.status_code !== "200") {
-          return gettext("There was an error submitting grades");
+          return gettext("There was an error submitting grades on ") +
+            formatLongDateTime(data.submitted_date);
         } else {
           base = ngettext(
             "%(submitted_count)s grade submission in progress",
