@@ -61,7 +61,7 @@
             </span>
           </li>
         </ul>
-        <div v-if="submission.accepted_date" class="fst-italic small ms-4">
+        <div v-if="graderoster.submissions[0].accepted_date" class="fst-italic small ms-4">
           Submitted grades may differ from official final grade.
           <BLink :href="gradingResourcesURL" target="_blank" rel="noopener"
             >Learn why</BLink
