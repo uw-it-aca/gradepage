@@ -17,6 +17,16 @@
       </div>
     </div>
   </template>
+  <template v-else-if="hasGradeError">
+    <div class="d-flex align-items-center">
+      <div v-if="student.grade_status" class="small">
+        {{ student.grade_status }}
+      </div>
+      <div>
+        <div>&nbsp;</div>
+      </div>
+    </div>
+  </template>
   <template v-else>
     <template v-if="student.has_incomplete">
       <div class="d-flex align-items-center">
@@ -51,9 +61,6 @@
         </div>
       </template>
     </template>
-    <div v-if="hasGradeError" class="small">
-      Submitted with error: {{ student.grade_status }}
-    </div>
   </template>
 </template>
 
@@ -76,17 +83,12 @@ export default {
         : "Withdrawn";
     },
     hasGradeError() {
-      return this.student.grade_status_code === null ||
+      return this.student.date_graded && (
+        this.student.grade_status_code === null ||
         this.student.grade_status_code === "" ||
         this.student.grade_status_code === "200" ||
         this.student.grade_status_code === "220"
-        ? false
-        : true;
-    },
-    hasChangedGrade() {
-      return (
-        this.student.date_graded && this.student.grade_status_code === "220"
-      );
+      ) ? false : true;
     },
   },
 };
