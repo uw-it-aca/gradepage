@@ -18,10 +18,6 @@
           <div>
             <div class="fw-bold ms-4">
               Course sections submitted.
-              <!--
-              {{ graderoster.submissions.length }} of
-              {{ graderoster.linked_section_count }}
-              -->
             </div>
             <div class="fst-italic small ms-4">
               Submitted grades may differ from official final grade.
@@ -46,7 +42,7 @@
               <span v-if="submission.section_id"
                 >Section {{ submission.section_id }}:
               </span>
-              <span v-html="gradesSubmittedText(submission)"></span>
+              <span v-html="formatGradingStatus(submission, true)"></span>
             </li>
           </ul>
         </BCollapse>
@@ -56,7 +52,8 @@
         <ul class="list-unstyled m-0">
           <li>
             <i class="bi bi-check-circle-fill text-success me-2"></i>
-            <span v-html="gradesSubmittedText(graderoster.submissions[0])">
+            <span
+              v-html="formatGradingStatus(graderoster.submissions[0], true)">
             </span>
           </li>
         </ul>
@@ -95,7 +92,7 @@
 
 <script>
 import { BCard, BLink, BButton, BCollapse } from "bootstrap-vue-next";
-import { gradesSubmittedText } from "@/utils/grade";
+import { formatGradingStatus } from "@/utils/section";
 
 export default {
   name: "SectionGradingStatus",
@@ -118,7 +115,7 @@ export default {
   },
   setup() {
     return {
-      gradesSubmittedText,
+      formatGradingStatus,
     };
   },
   data() {

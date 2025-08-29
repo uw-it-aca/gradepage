@@ -14,7 +14,7 @@ function formatLinkTitle(data) {
   }
 }
 
-function formatGradingStatus(data) {
+function formatGradingStatus(data, richtext=false) {
   var base;
 
   if (data.grading_status) {
@@ -37,17 +37,25 @@ function formatGradingStatus(data) {
     }
   } else if (data.submitted_count) {
     if (data.submitted_date) {
+      data.long_submitted_date = formatLongDateTime(data.submitted_date);
       if (data.accepted_date) {
-        base =
-          ngettext(
-            "%(submitted_count)s grade submitted on ",
-            "%(submitted_count)s grades submitted on ",
+        if (richtext) {
+          base = ngettext(
+            "<strong>One grade submitted</strong> by <strong>%(submitted_by)s</strong> on %(long_submitted_date)s.",
+            "<strong>%(submitted_count)s grades submitted</strong> by <strong>%(submitted_by)s</strong> on %(long_submitted_date)s.",
             data.submitted_count
-          ) + formatLongDateTime(data.submitted_date);
+          );
+        } else {
+          base = ngettext(
+            "%(submitted_count)s grade submitted on %(long_submitted_date)s",
+            "%(submitted_count)s grades submitted on %(long_submitted_date)s",
+            data.submitted_count);
+        }
       } else {
         if (data.status_code !== "200") {
-          return gettext("There was an error submitting grades on ") +
-            formatLongDateTime(data.submitted_date);
+          base = gettext(
+            "There was an error submitting grades on %(long_submitted_date)s"
+          );
         } else {
           base = ngettext(
             "%(submitted_count)s grade submission in progress",
@@ -64,7 +72,7 @@ function formatGradingStatus(data) {
       );
     }
   } else if (!data.grading_period_open) {
-    return gettext("No submission information");
+    return gettext("No grades were submitted for this section");
   }
 
   if (base !== undefined) {
