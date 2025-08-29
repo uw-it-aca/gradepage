@@ -112,7 +112,6 @@ import { useWorkflowStateStore } from "@/stores/state";
 import { BAlert, BLink, BButton } from "bootstrap-vue-next";
 import { getGraderoster } from "@/utils/data";
 import {
-  gradesSubmittedText,
   writingSectionText,
 } from "@/utils/grade";
 import { ref } from "vue";
@@ -141,7 +140,6 @@ export default {
       appState,
       getGraderoster,
       showSectionOptions,
-      gradesSubmittedText,
       writingSectionText,
     };
   },
