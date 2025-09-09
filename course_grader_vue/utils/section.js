@@ -82,6 +82,12 @@ function formatGradingStatus(data, richtext=false) {
 }
 
 function formatErrorStatus(error) {
+  let base;
+  if (error.status === 404) {
+    base = "This section cannot be graded in GradePage (%(error)s)";
+    return interpolate(base, error, true);
+  }
+
   let str = error.error;
   return str
     ? str.charAt(0).toUpperCase() + str.slice(1)
