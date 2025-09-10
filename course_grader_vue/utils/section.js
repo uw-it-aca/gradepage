@@ -81,15 +81,18 @@ function formatGradingStatus(data, richtext=false) {
 }
 
 function formatErrorStatus(error) {
-  var base;
+  let base, errstr = error.error;
+
   if (error.status === 404) {
-    base = "Grades for this section cannot be submittted in GradePage: %(error)s";
-  } else if (error.status === 500) {
-    base = "There was an error retrieving grading status: %(error)s";
+    base = "Grades for this section cannot be submittted in GradePage: %(msg)s";
   } else {
-    return gettext("There was an error retrieving grading status");
+    base = "There was an error retrieving grading status: %(msg)s";
   }
-  return interpolate(base, error, true);
+
+  if (errstr) {
+    errstr = errstr.charAt(0).toUpperCase() + errstr.slice(1);
+  }
+  return interpolate(base, {msg: errstr}, true);
 }
 
 function scrollToTop() {
