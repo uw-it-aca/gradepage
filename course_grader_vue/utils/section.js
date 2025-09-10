@@ -16,7 +16,6 @@ function formatLinkTitle(data) {
 
 function formatGradingStatus(data, richtext=false) {
   var base;
-
   if (data.grading_status) {
     return data.grading_status;
   }
@@ -82,16 +81,15 @@ function formatGradingStatus(data, richtext=false) {
 }
 
 function formatErrorStatus(error) {
-  let base;
+  var base;
   if (error.status === 404) {
-    base = "This section cannot be graded in GradePage (%(error)s)";
-    return interpolate(base, error, true);
+    base = "Grades for this section cannot be submittted in GradePage: %(error)s";
+  } else if (error.status === 500) {
+    base = "There was an error retrieving grading status: %(error)s";
+  } else {
+    return gettext("There was an error retrieving grading status");
   }
-
-  let str = error.error;
-  return str
-    ? str.charAt(0).toUpperCase() + str.slice(1)
-    : gettext("Error retrieving grading status");
+  return interpolate(base, error, true);
 }
 
 function scrollToTop() {
