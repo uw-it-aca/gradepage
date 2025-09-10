@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     loadGraderoster: function () {
-      if (this.section.graderoster_url) {
+      if (this.section.graderoster_url && !this.errorResponse) {
         this.isLoading = true;
 
         this.gradeStore.$reset();
