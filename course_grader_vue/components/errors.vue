@@ -84,6 +84,8 @@
 </template>
 
 <script>
+import { formatErrorStatus } from "@/utils/section";
+
 export default {
   name: "ErrorsComp",
   props: {
@@ -92,10 +94,15 @@ export default {
       required: true,
     },
   },
+  setup() {
+    return {
+      formatErrorStatus,
+    };
+  },
   computed: {
     errorText() {
       return this.errorResponse.error
-        ? this.errorResponse.error
+        ? this.formatErrorStatus(this.errorResponse)
         : this.errorResponse;
     },
   },
