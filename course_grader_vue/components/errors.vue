@@ -34,7 +34,6 @@
   <template v-else-if="errorResponse.status === 500">
     <div id="500-error">
       <h1 class="fs-1 fw-bold">Error 500</h1>
-      <h2>There was a problem retrieving grade information:</h2>
       <p><strong>{{ errorText }}</strong></p>
 
       <p>
@@ -54,7 +53,6 @@
   <template v-else>
     <div id="543-error">
       <h1 class="fs-1 fw-bold">Error 543</h1>
-      <h2>There was a problem retrieving grade information:</h2>
       <p>{{ errorText }}</p>
 
       <p>
