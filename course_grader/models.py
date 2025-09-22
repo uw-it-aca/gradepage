@@ -49,17 +49,6 @@ class SubmittedGradeRosterManager(models.Manager):
                 break
         return latest_rosters
 
-    def resubmit_failed(self):
-        return  # TODO: Only the latest submission
-        compare_dt = datetime.now(timezone.utc) - timedelta(minutes=10)
-        fails = super().get_queryset().filter(
-            Q(status_code__isnull=False) | Q(submitted_date__lt=compare_dt),
-            accepted_date__isnull=True
-        ).order_by("submitted_date")
-
-        for roster in fails:
-            roster.submit()
-
     def get_status_by_term(self, term):
         return super().get_queryset().filter(
                 term_id=term.term_label()
