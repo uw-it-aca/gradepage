@@ -128,12 +128,12 @@ LOGGING = {
     },
     'formatters': {
         'course_grader': {
-            'format': '%(levelname)-4s %(asctime)s %(user)s %(actas)s %(message)s [%(name)s]',
-            'datefmt': '[%Y-%m-%d %H:%M:%S]',
+            'format': '%(levelname)-4s %(user)s %(actas)s %(asctime)s %(message)s [%(name)s]',
+            'datefmt': '[%d/%b/%Y:%H:%M:%S %z]',
         },
         'restclients_timing': {
-            'format': '%(levelname)-4s restclients_timing %(module)s %(asctime)s %(message)s [%(name)s]',
-            'datefmt': '[%Y-%m-%d %H:%M:%S]',
+            'format': '%(levelname)-4s restclients_timing %(asctime)s %(module)s %(message)s [%(name)s]',
+            'datefmt': '[%d/%b/%Y:%H:%M:%S %z]',
         },
     },
     'handlers': {
