@@ -4,7 +4,11 @@
       <div v-if="errorResponse">
         <Errors :error-response="errorResponse" />
       </div>
-      <div v-if="isLoading">Loading grade roster state...</div>
+      <template v-if="isLoading">
+        <div class="text-center">
+          <BSpinner role="status" label="Loading grade roster" />
+        </div>
+      </template>
       <div v-else>
         <template v-if="appState.editingGrades">
           <EditGrades :section="section" />
@@ -40,6 +44,7 @@ import ReviewConversion from "@/components/workflow/review-conversion.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
 import { getSection, getGraderoster } from "@/utils/data";
+import { BSpinner } from "bootstrap-vue-next";
 
 export default {
   name: "SectionPage",
@@ -51,6 +56,7 @@ export default {
     ConvertImport,
     ReviewConversion,
     Errors,
+    BSpinner,
   },
   setup() {
     const appState = useWorkflowStateStore();

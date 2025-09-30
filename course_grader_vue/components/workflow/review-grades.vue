@@ -21,7 +21,7 @@
   </div>
 
   <template v-if="appState.graderoster">
-    <div v-if="appState.graderoster.is_writing_section">
+    <div v-if="appState.graderoster.is_writing_section" class="mb-3">
       <strong>Writing Section:</strong> {{ writingSectionText() }}
     </div>
 
