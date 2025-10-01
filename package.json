@@ -29,7 +29,6 @@
     "bootstrap-vue-next": "^0.40.5",
     "dayjs": "^1.11.18",
     "i": "^0.3.7",
-    "jquery": "^3.7.1",
     "pinia": "^3.0.3",
     "regenerator-runtime": "^0.14.1",
     "solstice-theme": "github:uw-it-aca/solstice-theme#1.0.6",
