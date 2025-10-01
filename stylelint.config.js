@@ -11,12 +11,8 @@ export default {
       rules: {
         "scss/no-global-function-names": null,
         "no-invalid-position-at-import-rule": null,
-        "scss/at-import-partial-extension": [
-          "never",
-          {
-            severity: "warning",
-          },
-        ],
+        "scss/load-partial-extension": "never",
+        "custom-property-empty-line-before": "never",
       },
     },
   ],
