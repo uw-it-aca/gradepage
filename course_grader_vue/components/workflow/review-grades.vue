@@ -128,7 +128,7 @@ export default {
             this.errorResponse = error.data;
             this.isLoading = false;
           });
-      }, 2000);
+      }, 500);
     },
   },
 };

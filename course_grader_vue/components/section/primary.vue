@@ -2,8 +2,12 @@
   <div class="" :aria-labelledby="sectionNameId">
     <div class="d-flex align-items-center">
       <template v-if="routableSection">
-        <BLink :href="section.section_url" :title="routerLinkTitle">
-          <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
+        <BLink
+          :href="section.section_url"
+          :title="routerLinkTitle"
+          class="fs-4"
+        >
+          <div :id="sectionNameId">{{ section.display_name }}</div>
         </BLink>
       </template>
       <template v-else>
@@ -21,10 +25,14 @@
       </div>
     </div>
 
-    <div v-if="isLoading">Loading primary grading status text...</div>
+    <template v-if="isLoading">
+      <div class="fs-6">
+        <BPlaceholder animation="glow" cols="2" variant="secondary-subtle" />
+      </div>
+    </template>
     <template v-else>
       <div
-        class="d-flex"
+        class="d-flex fs-6"
         :class="!gradesAccepted ? 'text-body' : 'text-secondary'"
         v-html="gradingStatusText"
       ></div>
@@ -69,7 +77,7 @@ import {
   formatErrorStatus,
   formatLinkTitle,
 } from "@/utils/section";
-import { BPlaceholder, BLink, BBadge } from "bootstrap-vue-next";
+import { BLink, BBadge, BPlaceholder } from "bootstrap-vue-next";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
 
@@ -136,10 +144,10 @@ export default {
       return "";
     },
     routableSection() {
-      return (
-        this.section.section_url &&
+      return this.section.section_url &&
         !(this.errorStatus && this.errorStatus.status === 404)
-      ) ? true : false;
+        ? true
+        : false;
     },
     routerLinkTitle() {
       return this.gradingStatus ? this.formatLinkTitle(this.gradingStatus) : "";
@@ -180,7 +188,7 @@ export default {
           })
           .catch((error) => {
             this.errorStatus = error.data;
-          })
+          });
       }
       this.isLoading = false;
     },

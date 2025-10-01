@@ -36,10 +36,10 @@
     <table v-if="appState.graderoster.students" class="table table-striped">
       <thead class="table-body-secondary">
         <tr>
-          <th scope="col">Student</th>
+          <th scope="col" style="width: 35%">Student</th>
           <th scope="col">Section</th>
           <th scope="col">Credits</th>
-          <th scope="col">Grade</th>
+          <th scope="col" style="width: 45%">Grade</th>
         </tr>
       </thead>
       <tbody>

@@ -6,7 +6,34 @@
     <template #content>
       <h1 class="fs-1 fw-bold mb-4">{{ selectedTermName }}</h1>
 
-      <template v-if="isLoading"> Loading section list... </template>
+      <template v-if="isLoading">
+        <div role="status">
+          <span class="visually-hidden">Loading courses...</span>
+        </div>
+        <ul class="list-unstyled" aria-hidden="true">
+          <li
+            v-for="index in 10"
+            :key="index"
+            class="border-bottom"
+            :class="index == 1 ? 'pb-4 pt-0' : 'py-4'"
+          >
+            <div class="fs-4">
+              <BPlaceholder
+                animation="glow"
+                cols="1"
+                variant="secondary-subtle"
+              />
+            </div>
+            <div class="fs-6">
+              <BPlaceholder
+                animation="glow"
+                cols="2"
+                variant="secondary-subtle"
+              />
+            </div>
+          </li>
+        </ul>
+      </template>
       <template v-else-if="errorResponse">
         <Errors :error-response="errorResponse" />
       </template>
@@ -43,7 +70,7 @@ import PrimarySection from "@/components/section/primary.vue";
 import Errors from "@/components/errors.vue";
 import { useContextStore } from "@/stores/context";
 import { getSections } from "@/utils/data";
-import { BPlaceholder } from "bootstrap-vue-next";
+import { BPlaceholder, BSpinner } from "bootstrap-vue-next";
 
 export default {
   name: "TermPage",
@@ -51,6 +78,7 @@ export default {
     Layout,
     PrimarySection,
     Errors,
+    BSpinner,
     BPlaceholder,
   },
   setup() {
@@ -69,7 +97,7 @@ export default {
       sectionsURL: this.contextStore.context.sections_url,
       errorResponse: null,
       sections: [],
-      base_timeout: 250,
+      base_timeout: 500,
     };
   },
   computed: {
@@ -119,7 +147,7 @@ export default {
           .finally(() => {
             this.isLoading = false;
           });
-      }, 2000);
+      }, 500);
     },
   },
 };
