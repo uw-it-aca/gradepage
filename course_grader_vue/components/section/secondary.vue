@@ -2,8 +2,12 @@
   <div :aria-labelledby="sectionNameId">
     <div class="d-flex align-items-center">
       <template v-if="routableSection">
-        <BLink :href="section.section_url" :title="routerLinkTitle">
-          <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
+        <BLink
+          :href="section.section_url"
+          :title="routerLinkTitle"
+          class="fs-4"
+        >
+          <div :id="sectionNameId">{{ section.display_name }}</div>
         </BLink>
       </template>
       <template v-else>
@@ -20,7 +24,9 @@
         >
       </div>
     </div>
-    <div v-if="isLoading">Loading secondary grading status text...</div>
+    <template v-if="isLoading">
+      <BPlaceholder animation="glow" cols="2" variant="secondary-subtle" />
+    </template>
     <template v-else>
       <div
         class="d-flex"
@@ -39,7 +45,6 @@
           {{ formatLongDateTime(gradingStatus.submitted_date) }} will stand.
         </div>
       </div>
-
     </template>
   </div>
 </template>
@@ -120,14 +125,16 @@ export default {
       return "";
     },
     routableSection() {
-      return (
-        this.section.section_url &&
+      return this.section.section_url &&
         !(this.errorStatus && this.errorStatus.status === 404)
-      ) ? true : false;
+        ? true
+        : false;
     },
     routerLinkTitle() {
-      let status = (this.secondaryStatus !== null)
-        ? this.secondaryStatus : this.gradingStatus;
+      let status =
+        this.secondaryStatus !== null
+          ? this.secondaryStatus
+          : this.gradingStatus;
 
       if (status) {
         return this.formatLinkTitle(status);
@@ -135,8 +142,10 @@ export default {
       return "";
     },
     gradesAccepted() {
-      let status = (this.secondaryStatus !== null)
-        ? this.secondaryStatus : this.gradingStatus;
+      let status =
+        this.secondaryStatus !== null
+          ? this.secondaryStatus
+          : this.gradingStatus;
 
       if (status) {
         return status.accepted_date !== null;
@@ -144,8 +153,10 @@ export default {
       return false;
     },
     savedGradeWarning() {
-      let status = (this.secondaryStatus !== null)
-        ? this.secondaryStatus : this.gradingStatus;
+      let status =
+        this.secondaryStatus !== null
+          ? this.secondaryStatus
+          : this.gradingStatus;
 
       if (status) {
         return (

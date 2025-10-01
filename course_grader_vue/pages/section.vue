@@ -4,7 +4,72 @@
       <div v-if="errorResponse">
         <Errors :error-response="errorResponse" />
       </div>
-      <div v-if="isLoading">Loading grade roster state...</div>
+      <template v-if="isLoading">
+        <div role="status">
+          <span class="visually-hidden">Loading grade roster...</span>
+        </div>
+        <div aria-hidden="true">
+          <h1 class="fs-1 fw-bold">
+            <BPlaceholder
+              animation="glow"
+              cols="2"
+              variant="secondary-subtle"
+            />
+          </h1>
+          <h2 class="fs-2 m-0 me-3 mb-5">
+            <BPlaceholder
+              animation="glow"
+              cols="3"
+              variant="secondary-subtle"
+            />
+          </h2>
+          <table class="table table-striped">
+            <thead class="table-body-secondary">
+              <tr>
+                <th scope="col" style="width: 35%">Student</th>
+                <th scope="col">Section</th>
+                <th scope="col">Credits</th>
+                <th scope="col" style="width: 45%">Grade</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="index in 5" :key="index">
+                <td>
+                  <div class="fs-4">
+                    <BPlaceholder
+                      animation="glow"
+                      cols="9"
+                      variant="secondary-subtle"
+                    />
+                  </div>
+                  <div>
+                    <BPlaceholder
+                      animation="glow"
+                      cols="5"
+                      variant="secondary-subtle"
+                    />
+                  </div>
+                </td>
+                <td valign="middle">
+                  <BPlaceholder
+                    animation="glow"
+                    cols="2"
+                    variant="secondary-subtle"
+                  />
+                </td>
+                <td valign="middle">
+                  <BPlaceholder
+                    animation="glow"
+                    cols="4"
+                    variant="secondary-subtle"
+                  />
+                </td>
+                <td>&nbsp;</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </template>
       <div v-else>
         <template v-if="appState.editingGrades">
           <EditGrades :section="section" />
@@ -40,6 +105,7 @@ import ReviewConversion from "@/components/workflow/review-conversion.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
 import { getSection, getGraderoster } from "@/utils/data";
+import { BPlaceholder } from "bootstrap-vue-next";
 
 export default {
   name: "SectionPage",
@@ -51,6 +117,7 @@ export default {
     ConvertImport,
     ReviewConversion,
     Errors,
+    BPlaceholder,
   },
   setup() {
     const appState = useWorkflowStateStore();
@@ -94,7 +161,7 @@ export default {
               this.isLoading = false;
               console.log("done loading grade roster...");
             });
-        }, 2000);
+        }, 500);
       } else {
         this.isLoading = false;
       }

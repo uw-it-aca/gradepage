@@ -28,7 +28,7 @@
     :saved-grade-warning="hasSubmittedAndSavedGrades"
   />
 
-  <div v-if="appState.graderoster.is_writing_section">
+  <div v-if="appState.graderoster.is_writing_section" class="mb-3">
     <strong>Writing Section:</strong> {{ writingSectionText() }}
   </div>
 
@@ -36,10 +36,10 @@
     <table v-if="appState.graderoster.students" class="table table-striped">
       <thead class="table-body-secondary">
         <tr>
-          <th scope="col">Student</th>
+          <th scope="col" style="width: 35%">Student</th>
           <th scope="col">Section</th>
           <th scope="col">Credits</th>
-          <th scope="col">Grade</th>
+          <th scope="col" style="width: 45%">Grade</th>
         </tr>
       </thead>
       <tbody>
@@ -53,7 +53,7 @@
     </table>
     <div v-else-if="!errorResponse">Loading roster...</div>
 
-    <div class="d-flex justify-content-between mb-5">
+    <div class="d-flex justify-content-end mb-5">
       <div class="w-25 text-end">
         <span class="fw-bold me-1">Status:</span>
         <span v-if="gradesRemainingText" aria-live="polite"
@@ -96,9 +96,7 @@ import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
 import { updateGraderoster, clearSavedGrades } from "@/utils/data";
 import { scrollToTop } from "@/utils/section";
-import {
-  writingSectionText,
-} from "@/utils/grade";
+import { writingSectionText } from "@/utils/grade";
 import { BAlert, BButton } from "bootstrap-vue-next";
 
 export default {
