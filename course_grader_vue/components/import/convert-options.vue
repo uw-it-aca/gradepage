@@ -7,8 +7,8 @@
     class="d-grid gap-2"
   >
     <p>
-      The Office of the University Registrar requires submitted grades to
-      follow official formatting.
+      The Office of the University Registrar requires submitted grades to follow
+      official formatting.
     </p>
     <p>Please select a scale to use:</p>
 

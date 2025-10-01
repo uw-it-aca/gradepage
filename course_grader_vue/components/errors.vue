@@ -2,39 +2,41 @@
   <template v-if="errorResponse.status === 404">
     <div id="404-error">
       <h1 class="fs-1 fw-bold">Error 404</h1>
-      <p><strong>{{ errorText }}</strong></p>
+      <p>
+        <strong>{{ errorText }}</strong>
+      </p>
       <p>Some things you may want to try:</p>
       <ul>
         <li>
           Make sure you are logged into this service with the appropriate UW
           NetID.
         </li>
-        <li>
-          Contact help@uw.edu if you have questions or need help.
-        </li>
+        <li>Contact help@uw.edu if you have questions or need help.</li>
       </ul>
     </div>
   </template>
   <template v-else-if="errorResponse.status === 401">
     <div id="401-error">
       <h1 class="fs-1 fw-bold">Error 401</h1>
-      <p><strong>{{ errorText }}</strong></p>
+      <p>
+        <strong>{{ errorText }}</strong>
+      </p>
       <p>Some things you may want to try:</p>
       <ul>
         <li>
           Make sure you are logged into this service with the appropriate UW
           NetID.
         </li>
-        <li>
-          Contact help@uw.edu if you have questions or need help.
-        </li>
+        <li>Contact help@uw.edu if you have questions or need help.</li>
       </ul>
     </div>
   </template>
   <template v-else-if="errorResponse.status === 500">
     <div id="500-error">
       <h1 class="fs-1 fw-bold">Error 500</h1>
-      <p><strong>{{ errorText }}</strong></p>
+      <p>
+        <strong>{{ errorText }}</strong>
+      </p>
 
       <p>
         The GradePage support team has been alerted of this issue and are
@@ -58,8 +60,8 @@
       <p>
         To correct this issue,
         <strong>
-          please contact <a href="mailto:help@uw.edu">help@uw.edu</a>
-        </strong>.
+          please contact <a href="mailto:help@uw.edu">help@uw.edu</a> </strong
+        >.
       </p>
       <ul>
         <li>

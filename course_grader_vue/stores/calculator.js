@@ -130,7 +130,7 @@ export const useCalculatorStore = defineStore("calculator", {
     initializeCalculator(data) {
       if (data) {
         if (data.calculator_values.length) {
-          this.calculatorValues = data.calculator_values.map(cv => ({
+          this.calculatorValues = data.calculator_values.map((cv) => ({
             grade: cv.grade,
             percentage: cv.percentage,
             gradeError: "",
@@ -140,8 +140,8 @@ export const useCalculatorStore = defineStore("calculator", {
           this.resetCalculatorValues();
         }
         this.scaleValues = data.grade_scale
-          .filter(gs => gs.min_percentage !== null)
-          .map(gs => ({
+          .filter((gs) => gs.min_percentage !== null)
+          .map((gs) => ({
             grade: gs.grade,
             minPercentage: gs.min_percentage,
             minPercentageError: "",
@@ -316,7 +316,8 @@ export const useCalculatorStore = defineStore("calculator", {
 
       // Remove any rows with empty percentages below the lowest calculator
       // grade, except for the last (0.0) row
-      lowestCalcGrade = this.calculatorValues[this.calculatorValues.length - 1].grade;
+      lowestCalcGrade =
+        this.calculatorValues[this.calculatorValues.length - 1].grade;
       for (let i = this.scaleValues.length - 2; i >= 0; i--) {
         if (this.scaleValues[i].grade === lowestCalcGrade) {
           break;

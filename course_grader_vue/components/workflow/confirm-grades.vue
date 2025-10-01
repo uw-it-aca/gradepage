@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <Errors v-if="errorResponse" :error-response="errorResponse" />
 
@@ -111,9 +112,7 @@ import Errors from "@/components/errors.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { BAlert, BLink, BButton } from "bootstrap-vue-next";
 import { getGraderoster } from "@/utils/data";
-import {
-  writingSectionText,
-} from "@/utils/grade";
+import { writingSectionText } from "@/utils/grade";
 import { ref } from "vue";
 
 export default {

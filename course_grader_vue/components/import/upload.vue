@@ -239,10 +239,14 @@ export default {
     return {
       file: null,
       errorResponse: null,
-      importHelpURL: "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034603",
-      importConvertURL: "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034606",
-      percentageConvertURL: "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034606#convert",
-      csvFormatUrl: "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034606#format_gen",
+      importHelpURL:
+        "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034603",
+      importConvertURL:
+        "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034606",
+      percentageConvertURL:
+        "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034606#convert",
+      csvFormatUrl:
+        "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034606#format_gen",
     };
   },
   computed: {
@@ -250,12 +254,16 @@ export default {
       return this.file === null;
     },
     missingHeaderGrade() {
-      return this.errorResponse &&
-        this.errorResponse.error === "Missing header: grade";
+      return (
+        this.errorResponse &&
+        this.errorResponse.error === "Missing header: grade"
+      );
     },
     missingHeaderStudent() {
-      return this.errorResponse &&
-        this.errorResponse.error === "Missing header: student";
+      return (
+        this.errorResponse &&
+        this.errorResponse.error === "Missing header: student"
+      );
     },
     fileLimitExceeded() {
       return this.errorResponse && this.errorResponse.status === 413;

@@ -49,7 +49,7 @@
         @click="saveGrades"
         >Import Grades</BButton
       >
-      <div style="margin-top:10px">
+      <div style="margin-top: 10px">
         Individual student grades can be adjusted in next step.
       </div>
     </div>

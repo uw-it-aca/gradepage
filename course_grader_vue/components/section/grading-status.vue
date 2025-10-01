@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <template v-if="graderoster.submissions.length">
     <BCard bg-variant="body-tertiary" class="border-0 mb-4">
@@ -16,9 +17,7 @@
         <!-- primary section with more than one linked section -->
         <div class="d-flex justify-content-between">
           <div>
-            <div class="fw-bold ms-4">
-              Course sections submitted.
-            </div>
+            <div class="fw-bold ms-4">Course sections submitted.</div>
             <div class="fst-italic small ms-4">
               Submitted grades may differ from official final grade.
               <BLink :href="gradingResourcesURL" target="_blank" rel="noopener"
@@ -38,9 +37,14 @@
               v-for="(submission, index) in graderoster.submissions"
               :key="index"
             >
-              <i v-if="submission.accepted_date"
-                class="bi bi-check-circle-fill text-success me-2"></i>
-              <i v-else class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+              <i
+                v-if="submission.accepted_date"
+                class="bi bi-check-circle-fill text-success me-2"
+              ></i>
+              <i
+                v-else
+                class="bi bi-exclamation-triangle-fill text-warning me-2"
+              ></i>
               <span v-if="submission.section_id"
                 >Section {{ submission.section_id }}:
               </span>
@@ -53,15 +57,24 @@
         <!-- primary section with zero or one linked section, or a linked section -->
         <ul class="list-unstyled m-0">
           <li>
-            <i v-if="graderoster.submissions[0].accepted_date"
-              class="bi bi-check-circle-fill text-success me-2"></i>
-            <i v-else class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+            <i
+              v-if="graderoster.submissions[0].accepted_date"
+              class="bi bi-check-circle-fill text-success me-2"
+            ></i>
+            <i
+              v-else
+              class="bi bi-exclamation-triangle-fill text-warning me-2"
+            ></i>
             <span
-              v-html="formatGradingStatus(graderoster.submissions[0], true)">
+              v-html="formatGradingStatus(graderoster.submissions[0], true)"
+            >
             </span>
           </li>
         </ul>
-        <div v-if="graderoster.submissions[0].accepted_date" class="fst-italic small ms-4">
+        <div
+          v-if="graderoster.submissions[0].accepted_date"
+          class="fst-italic small ms-4"
+        >
           Submitted grades may differ from official final grade.
           <BLink :href="gradingResourcesURL" target="_blank" rel="noopener"
             >Learn why</BLink

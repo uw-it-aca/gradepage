@@ -14,16 +14,15 @@
         toggle-class="rounded-2"
       >
         <template #button-content> View Scale </template>
-        <template>
-          <BDropdownItem
-            v-for="(submission, index) in submissionsWithImportConversions"
-            :key="index"
-            :value="submission.grade_import.import_conversion"
-          >
-            <i class="me-2 text-body-tertiary"></i>
-            Section {{ submission.section_id }}
-          </BDropdownItem>
-        </template>
+
+        <BDropdownItem
+          v-for="(submission, index) in submissionsWithImportConversions"
+          :key="index"
+          :value="submission.grade_import.import_conversion"
+        >
+          <i class="me-2 text-body-tertiary"></i>
+          Section {{ submission.section_id }}
+        </BDropdownItem>
       </BDropdown>
     </div>
     <div v-else>
@@ -50,8 +49,10 @@
           </tr>
           <tr>
             <td>
-              &lt; {{
-                importConversionRows[importConversionRows.length - 1].min_percentage
+              &lt;
+              {{
+                importConversionRows[importConversionRows.length - 1]
+                  .min_percentage
               }}&percnt;
             </td>
             <td>{{ selectedImportConversion.lowest_valid_grade }}</td>
@@ -68,11 +69,7 @@
 </template>
 
 <script>
-import {
-  BLink,
-  BDropdown,
-  BDropdownItem,
-} from "bootstrap-vue-next";
+import { BLink, BDropdown, BDropdownItem } from "bootstrap-vue-next";
 
 export default {
   name: "ImportConversions",
@@ -98,23 +95,24 @@ export default {
   computed: {
     submissionsWithImportConversions() {
       return this.submissions.filter(
-        submission => (
+        (submission) =>
           submission.grade_import !== null &&
           submission.grade_import.import_conversion !== null
-        )
       );
     },
     importConversionRows() {
       if (this.selectedImportConversion !== null) {
         return this.selectedImportConversion.grade_scale.filter(
-           row => row.min_percentage !== null);
+          (row) => row.min_percentage !== null
+        );
       }
+      return [];
     },
   },
   methods: {
     showImportConversion: function () {
-      this.selectedImportConversion = this.submissionsWithImportConversions[
-        0].grade_import.import_conversion;
+      this.selectedImportConversion =
+        this.submissionsWithImportConversions[0].grade_import.import_conversion;
     },
     hideImportConversion: function () {
       this.selectedImportConversion = null;

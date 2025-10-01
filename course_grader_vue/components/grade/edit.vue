@@ -2,7 +2,9 @@
   <div class="d-flex">
     <!-- grade text input container - custom bootstrap -->
     <div class="dropdown w-100 me-3">
-      <label :for="`grade-${student.item_id}`" class="form-label visually-hidden"
+      <label
+        :for="`grade-${student.item_id}`"
+        class="form-label visually-hidden"
         >Enter grade
       </label>
       <input

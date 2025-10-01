@@ -14,7 +14,7 @@ function formatLinkTitle(data) {
   }
 }
 
-function formatGradingStatus(data, richtext=false) {
+function formatGradingStatus(data, richtext = false) {
   var base;
   if (data.grading_status) {
     return data.grading_status;
@@ -48,7 +48,8 @@ function formatGradingStatus(data, richtext=false) {
           base = ngettext(
             "%(submitted_count)s grade submitted on %(long_submitted_date)s",
             "%(submitted_count)s grades submitted on %(long_submitted_date)s",
-            data.submitted_count);
+            data.submitted_count
+          );
         }
       } else {
         if (data.status_code !== "200") {
@@ -81,7 +82,8 @@ function formatGradingStatus(data, richtext=false) {
 }
 
 function formatErrorStatus(error) {
-  let base, errstr = error.error;
+  let base,
+    errstr = error.error;
 
   if (error.status === 404) {
     base = "Grades for this section cannot be submittted in GradePage: %(msg)s";
@@ -92,7 +94,7 @@ function formatErrorStatus(error) {
   if (errstr) {
     errstr = errstr.charAt(0).toUpperCase() + errstr.slice(1);
   }
-  return interpolate(base, {msg: errstr}, true);
+  return interpolate(base, { msg: errstr }, true);
 }
 
 function scrollToTop() {
@@ -102,9 +104,4 @@ function scrollToTop() {
   });
 }
 
-export {
-  formatLinkTitle,
-  formatGradingStatus,
-  formatErrorStatus,
-  scrollToTop,
-};
+export { formatLinkTitle, formatGradingStatus, formatErrorStatus, scrollToTop };

@@ -83,12 +83,13 @@ export default {
         : "Withdrawn";
     },
     hasGradeError() {
-      return this.student.date_graded && (
-        this.student.grade_status_code === null ||
-        this.student.grade_status_code === "" ||
-        this.student.grade_status_code === "200" ||
-        this.student.grade_status_code === "220"
-      ) ? false : true;
+      return this.student.date_graded &&
+        (this.student.grade_status_code === null ||
+          this.student.grade_status_code === "" ||
+          this.student.grade_status_code === "200" ||
+          this.student.grade_status_code === "220")
+        ? false
+        : true;
     },
   },
 };
