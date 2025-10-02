@@ -112,8 +112,10 @@ export default {
       importSource: "canvas",
       errorResponse: null,
       isLoading: true,
-      finalGradeOverrideURL: "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034568",
-      gradePostingPolicyURL: "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034569",
+      finalGradeOverrideURL:
+        "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034568",
+      gradePostingPolicyURL:
+        "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034569",
     };
   },
   computed: {

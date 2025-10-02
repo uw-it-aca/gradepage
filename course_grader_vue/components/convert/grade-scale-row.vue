@@ -9,10 +9,7 @@
           >Enter grade</label
         >
         <div class="input-group has-validation">
-          <span
-            :id="`ge-addon2-${index}`"
-            class="input-group-text"
-          >&ge;</span>
+          <span :id="`ge-addon2-${index}`" class="input-group-text">&ge;</span>
           <input
             :id="`min-percentage-${index}`"
             type="text"
@@ -25,10 +22,9 @@
             aria-describedby="percent-addon2"
             @change="minPercentageChanged($event.target.value)"
           />
-          <span
-            :id="`percent-addon2-${index}`"
-            class="input-group-text"
-          >&percnt;</span>
+          <span :id="`percent-addon2-${index}`" class="input-group-text"
+            >&percnt;</span
+          >
           <span class="invalid-feedback">
             {{ rowData.minPercentageError }}
           </span>
@@ -88,6 +84,7 @@ export default {
           true
         );
       }
+      return "";
     },
     gradeScaleTitle() {
       return interpolate(

@@ -122,7 +122,7 @@
                 :key="index"
                 :value="scale"
                 @click.prevent="calculatorStore.setScale(scale)"
-              >{{ gettext("conversion_scale_" + scale) }}
+                >{{ gettext("conversion_scale_" + scale) }}
               </BDropdownItemButton>
             </BDropdown>
 

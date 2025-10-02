@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <div class="" :aria-labelledby="sectionNameId">
     <div class="d-flex align-items-center">

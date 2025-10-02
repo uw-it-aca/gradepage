@@ -124,7 +124,9 @@ function duplicateCodeText() {
 }
 
 function writingSectionText() {
-  return gettext("Writing credit automatically given to all students with a passing grade in this course.");
+  return gettext(
+    "Writing credit automatically given to all students with a passing grade in this course."
+  );
 }
 
 export {

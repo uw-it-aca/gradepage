@@ -70,7 +70,7 @@ import PrimarySection from "@/components/section/primary.vue";
 import Errors from "@/components/errors.vue";
 import { useContextStore } from "@/stores/context";
 import { getSections } from "@/utils/data";
-import { BPlaceholder, BSpinner } from "bootstrap-vue-next";
+import { BPlaceholder } from "bootstrap-vue-next";
 
 export default {
   name: "TermPage",
@@ -78,7 +78,6 @@ export default {
     Layout,
     PrimarySection,
     Errors,
-    BSpinner,
     BPlaceholder,
   },
   setup() {

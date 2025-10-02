@@ -8,7 +8,7 @@ export const useGradeStore = defineStore("grade", {
       gradeStatus: {
         missing: new Set(),
         invalid: new Set(),
-        saved: new Set()
+        saved: new Set(),
       },
       gradeData: {},
       gradeChoices: {},
