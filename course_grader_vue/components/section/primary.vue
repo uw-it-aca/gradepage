@@ -53,12 +53,12 @@
 
   <ul
     v-if="section.secondary_sections && section.secondary_sections.length"
-    class="list-unstyled ms-5"
+    class="list-unstyled ms-3"
   >
     <li
       v-for="(secondary, index) in section.secondary_sections"
       :key="secondary.section_id"
-      class="py-4"
+      class="py-2"
     >
       <SecondarySection
         :section="secondary"

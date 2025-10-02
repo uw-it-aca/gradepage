@@ -15,7 +15,7 @@
             v-for="index in 10"
             :key="index"
             class="border-bottom"
-            :class="index == 1 ? 'pb-4 pt-0' : 'py-4'"
+            :class="index == 1 ? 'pb-2 pt-0' : 'p2-4'"
           >
             <div class="fs-4">
               <BPlaceholder
@@ -44,7 +44,7 @@
               v-for="(section, index) in sections"
               :key="section.section_id"
               class="border-bottom"
-              :class="index == 0 ? 'pb-4 pt-0' : 'py-4'"
+              :class="index == 0 ? 'pb-2 pt-0' : 'py-2'"
             >
               <PrimarySection
                 :section="section"
