@@ -85,7 +85,10 @@ function formatErrorStatus(error) {
   let base,
     errstr = error.error;
 
-  if (error.status === 404) {
+  if (error.status === 543 || error.status === 404) {
+    if (errstr.inludes("wrong secondary section type")) {
+      errstr = "wrong secondary section type";
+    }
     base = "Grades for this section cannot be submitted in GradePage: %(msg)s";
   } else {
     base = "There was an error retrieving grading status: %(msg)s";
