@@ -85,7 +85,7 @@ function formatErrorStatus(error) {
   let base,
     errstr = error.error;
 
-  if (error.status === 543 or error.status === 404) {
+  if (error.status === 543 || error.status === 404) {
     if (errstr.inludes("wrong secondary section type")) {
       errstr = "wrong secondary section type";
     }
