@@ -15,7 +15,7 @@
             v-for="index in 10"
             :key="index"
             class="border-bottom"
-            :class="index == 1 ? 'pb-2 pt-0' : 'p2-4'"
+            :class="index == 1 ? 'pb-2 pt-0' : 'py-2'"
           >
             <div class="fs-4">
               <BPlaceholder
