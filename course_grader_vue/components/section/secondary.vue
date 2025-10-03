@@ -127,7 +127,7 @@ export default {
     routableSection() {
       return (
         this.section.section_url &&
-        !(this.errorStatus && this.errorStatus.status === 404)
+        !(this.errorStatus && this.errorStatus.status === 543)
       ) ? true : false;
     },
     routerLinkTitle() {
