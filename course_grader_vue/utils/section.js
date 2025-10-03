@@ -86,7 +86,7 @@ function formatErrorStatus(error) {
     errstr = error.error;
 
   if (error.status === 404) {
-    base = "Grades for this section cannot be submittted in GradePage: %(msg)s";
+    base = "Grades for this section cannot be submitted in GradePage: %(msg)s";
   } else {
     base = "There was an error retrieving grading status: %(msg)s";
   }

@@ -145,10 +145,10 @@ export default {
       return "";
     },
     routableSection() {
-      return this.section.section_url &&
+      return (
+        this.section.section_url &&
         !(this.errorStatus && this.errorStatus.status === 404)
-        ? true
-        : false;
+      ) ? true : false;
     },
     routerLinkTitle() {
       return this.gradingStatus ? this.formatLinkTitle(this.gradingStatus) : "";
