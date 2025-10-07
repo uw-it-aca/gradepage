@@ -48,7 +48,7 @@ class GradeRosterExportTest(TestCase):
             b'COURSE PREFIX AND NUMBER (AND SECTION):,,,\n'
             b'"TRAIN 101 A",,,\n,,,\n'
             b'QUARTER AND YEAR:,,,\nSpring 2013,,,\n'
-            b'CAMPUS:,,,\nseattle,,,\n,,,\n,,,\n,,,\n'
+            b'CAMPUS:,,,\nSeattle,,,\n,,,\n,,,\n,,,\n'
             b'STUDENT NUMBER,"STUDENT NAME (LAST, FIRST)",GRADE FROM,GRADE TO'
             b'\n'
             b'000000,"AVERAGE, J",4.0,\n'
