@@ -15,7 +15,6 @@ from course_grader.views.api.graderoster import GradeRosterExport
 class GradeRosterExportTest(TestCase):
     def test_create_response(self):
         view = GradeRosterExport()
-
         (section, instructor) = section_from_param(
             '2013-spring-TRAIN-101-A-9136CCB8F66711D5BE060004AC494FFE')
         view.section = section
@@ -47,7 +46,7 @@ class GradeRosterExportTest(TestCase):
             b'"Jamesy McJamesy",javerage@uw.edu,,\n,,,\n'
             b'COURSE PREFIX AND NUMBER (AND SECTION):,,,\n'
             b'"TRAIN 101 A",,,\n,,,\n'
-            b'QUARTER AND YEAR:,,,\nSpring 2013,,,\n'
+            b'QUARTER AND YEAR:,,,\nSpring 2013,,,\n,,,\n'
             b'CAMPUS:,,,\nSeattle,,,\n,,,\n,,,\n,,,\n'
             b'STUDENT NUMBER,"STUDENT NAME (LAST, FIRST)",GRADE FROM,GRADE TO'
             b'\n'
