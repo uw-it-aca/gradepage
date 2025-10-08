@@ -450,6 +450,7 @@ class GradeRosterExport(GradeRoster):
             "user_email": "{}@uw.edu".format(self.user.uwnetid),
             "quarter": self.section.term.quarter.title(),
             "year": self.section.term.year,
+            "campus": self.section.course_campus,
             "curriculum_abbr": self.section.curriculum_abbr,
             "course_number": self.section.course_number,
             "section_id": self.section.section_id,
