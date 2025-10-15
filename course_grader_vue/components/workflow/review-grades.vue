@@ -19,6 +19,7 @@
   <div v-if="!errorResponse" class="mb-5">
     <SectionHeader :section="section" />
   </div>
+  <div>Please review grades and submit below.</div>
 
   <template v-if="appState.graderoster">
     <div v-if="appState.graderoster.is_writing_section" class="mb-3">
