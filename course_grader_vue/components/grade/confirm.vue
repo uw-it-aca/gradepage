@@ -9,9 +9,7 @@
   </template>
   <template v-else-if="student.date_withdrawn">
     <div class="d-flex align-items-center">
-      <div class="border fs-2 fw-bold me-2 text-center">
-        {{ withdrawnLabel }}
-      </div>
+      <div class="border fs-2 fw-bold me-2 text-center">Withdrawn</div>
       <div>
         <div>&nbsp;</div>
       </div>
@@ -35,7 +33,7 @@
         </div>
         <div>
           <div>Incomplete (Default: {{ student.grade }})</div>
-          <div v-if="student.has_writing_credit">Writing</div>
+          <div v-if="student.has_writing_credit">Writing Credit</div>
         </div>
       </div>
     </template>
@@ -56,7 +54,7 @@
             {{ student.grade }}
           </div>
           <div>
-            <div v-if="student.has_writing_credit">Writing</div>
+            <div v-if="student.has_writing_credit">Writing Credit</div>
           </div>
         </div>
       </template>
@@ -77,11 +75,6 @@ export default {
     return {};
   },
   computed: {
-    withdrawnLabel() {
-      return this.student.grade !== null
-        ? "Withdrawn " + "(" + this.student.grade + ")"
-        : "Withdrawn";
-    },
     hasGradeError() {
       return this.student.date_graded &&
         (this.student.grade_status_code === null ||

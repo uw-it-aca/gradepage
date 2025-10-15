@@ -32,7 +32,6 @@ class SubmittedGradeRosterManager(models.Manager):
                 kwargs["instructor_id"] = instructor.uwregid
 
         models = super().get_queryset().filter(*args, **kwargs).order_by(
-                F("secondary_section_id").asc(nulls_first=True),
                 F("submitted_date").desc()
             )
 
