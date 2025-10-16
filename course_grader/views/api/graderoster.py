@@ -337,7 +337,7 @@ class GradeRoster(GradeFormHandler):
                 data["has_duplicate_codes"] = True
 
             if is_submitted:
-                if has_incomplete and grade.lower() == "i":
+                if has_incomplete and (grade == "i" or grade == "I"):
                     grade = ""
 
                 if item.date_graded is not None:
