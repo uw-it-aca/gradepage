@@ -90,7 +90,7 @@ def graderoster_for_section(section, instructor, requestor,
         submission = model.json_data()
         submission["submission_id"] = model.submission_id()
         submission["grade_import"] = grade_imp
-        submission["submitted_by"] = people[model.submitted_by],
+        submission["submitted_by"] = people[model.submitted_by]
 
         if secondary_section is not None:
             submission["secondary_section"] = secondary_section

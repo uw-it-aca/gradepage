@@ -138,9 +138,8 @@ def graderoster_status_params(graderoster,
             submitted_by = submission["submitted_by"]
             accepted_date = submission["accepted_date"]
             data["status_code"] = submission["status_code"]
-            data["submitted_date"] = submitted_date.isoformat()
-            data["accepted_date"] = accepted_date.isoformat() if (
-                accepted_date is not None) else None
+            data["submitted_date"] = submitted_date
+            data["accepted_date"] = accepted_date
             data["submitted_by"] = person_display_name(submitted_by)
             if include_grade_imports:
                 grade_import = submission["grade_import"]
