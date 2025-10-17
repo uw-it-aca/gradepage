@@ -160,8 +160,8 @@ class GradeRoster(GradeFormHandler):
         if error is not None:
             return error
 
-        section_id = kwargs.get("section_id")
-        saved_grades = self.saved_grades(section_id)
+        grades_section_id = kwargs.get("section_id")
+        saved_grades = self.saved_grades(grades_section_id)
         secondary_section = getattr(self.graderoster, "secondary_section",
                                     None)
 
@@ -202,7 +202,7 @@ class GradeRoster(GradeFormHandler):
 
             model.save()
             try:
-                model.submit(section_id)
+                model.submit(grades_section_id)
             except DataFailureException as ex:
                 (status, msg) = self.data_failure_error(ex)
                 return self.error_response(status, msg)
@@ -212,7 +212,7 @@ class GradeRoster(GradeFormHandler):
             self.graderoster = graderoster_for_section(
                 self.section, self.instructor, self.user)
 
-        kwargs["saved_grades"] = self.saved_grades(section_id)
+        kwargs["saved_grades"] = self.saved_grades(grades_section_id)
 
         content = self.response_content(**kwargs)
         content["graderoster"]["is_submission_confirmation"] = True
