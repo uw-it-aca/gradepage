@@ -102,12 +102,16 @@ def graderoster_for_section(section, instructor, requestor,
             root = etree.fromstring(latest_submission.document.strip())
 
             live_graderoster = GradeRoster.from_xhtml(
-                root, section=section, instructor=people[instructor_id])
+                root,
+                section=section,
+                instructor=people[latest_submission.submitted_by])
             live_graderoster.submissions = []
 
         except etree.XMLSyntaxError as ex:
-            url = GradeRoster(section=section,
-                              instructor=instructor).graderoster_label()
+            url = GradeRoster(
+                    section=section,
+                    instructor=people[latest_submission.submitted_by]
+                ).graderoster_label()
             raise DataFailureException(url, latest_submission.status_code, ex)
 
     if live_graderoster is None:

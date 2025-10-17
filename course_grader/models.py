@@ -114,7 +114,7 @@ class SubmittedGradeRoster(models.Model):
         except Exception as ex:
             logger.error(
                 f"PUT graderoster failed: {ex}, Section: {self.section_id}, "
-                f"Secondary section: {self.secondary_section_id},"
+                f"Secondary section: {self.secondary_section_id}, "
                 f"Instructor: {self.instructor_id}, "
                 f"Submitter: {self.submitted_by}")
             self.status_code = getattr(ex, "status", 500)
