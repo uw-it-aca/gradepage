@@ -134,12 +134,10 @@ def graderoster_status_params(graderoster,
             submission = graderoster.submissions.get(section.section_id, None)
 
         if submission is not None:
-            submitted_date = submission["submitted_date"]
             submitted_by = submission["submitted_by"]
-            accepted_date = submission["accepted_date"]
             data["status_code"] = submission["status_code"]
-            data["submitted_date"] = submitted_date
-            data["accepted_date"] = accepted_date
+            data["submitted_date"] = submission["submitted_date"]
+            data["accepted_date"] = submission["accepted_date"]
             data["submitted_by"] = person_display_name(submitted_by)
             if include_grade_imports:
                 grade_import = submission["grade_import"]

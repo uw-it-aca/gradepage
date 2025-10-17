@@ -294,8 +294,9 @@ class GradeRoster(GradeFormHandler):
 
         for submission in getattr(self.graderoster, "submissions", []):
             sid = None
-            if submission.submission_id != self.graderoster.section.section_id:
-                sid = submission.submission_id
+            if (submission["submission_id"] !=
+                    self.graderoster.section.section_id):
+                sid = submission["submission_id"]
 
             submission_status = graderoster_status_params(
                 self.graderoster,
