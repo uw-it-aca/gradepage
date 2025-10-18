@@ -50,14 +50,12 @@ def graderoster_for_section(section, instructor, requestor,
 
     # Look for submission receipts in the SubmittedGradeRoster table
     people = {instructor.uwregid: instructor}
-    submissions = []
-    latest_submission = None
-    for model in SubmittedGradeRoster.objects.get_by_section(
-            section, instructor, secondary_section=secondary_section):
+    submitted_graderosters = SubmittedGradeRoster.objects.get_by_section(
+        section, instructor, secondary_section=secondary_section)
+    model_submissions = []
 
-        if latest_submission is None:
-            latest_submission = model
-
+    for model in submitted_graderosters:
+        # Extend the basic model data with person and grade import objects
         instructor_id = model.instructor_id
         if instructor_id not in people:
             people[instructor_id] = person_from_regid(instructor_id)
@@ -86,7 +84,6 @@ def graderoster_for_section(section, instructor, requestor,
                 logger.info(f"GradeImport FOUND, section_id: "
                             f"{grade_imp.section_id}")
 
-        # Extend the basic model data with person and grade import objects
         submission = model.json_data()
         submission["submission_id"] = model.submission_id()
         submission["grade_import"] = grade_imp
@@ -95,10 +92,12 @@ def graderoster_for_section(section, instructor, requestor,
         if secondary_section is not None:
             submission["secondary_section"] = secondary_section
 
-        submissions.append(submission)
+        model_submissions.append(submission)
 
-    if live_graderoster is None and latest_submission is not None:
+    if live_graderoster is None:
         try:
+            latest_submission = submitted_graderosters.pop(0)
+
             root = etree.fromstring(latest_submission.document.strip())
 
             live_graderoster = GradeRoster.from_xhtml(
@@ -107,6 +106,15 @@ def graderoster_for_section(section, instructor, requestor,
                 instructor=people[latest_submission.submitted_by])
             live_graderoster.submissions = []
 
+        except IndexError:
+            if is_grading_period_past(section.term):
+                raise ReceiptNotFound()
+            else:
+                if submitted_graderosters_only:
+                    raise ReceiptNotFound()
+                else:
+                    raise GradingPeriodNotOpen()
+
         except etree.XMLSyntaxError as ex:
             url = GradeRoster(
                     section=section,
@@ -114,17 +122,7 @@ def graderoster_for_section(section, instructor, requestor,
                 ).graderoster_label()
             raise DataFailureException(url, latest_submission.status_code, ex)
 
-    if live_graderoster is None:
-        if is_grading_period_past(section.term):
-            raise ReceiptNotFound()
-        else:
-            if submitted_graderosters_only:
-                raise ReceiptNotFound()
-            else:
-                raise GradingPeriodNotOpen()
-
-    # Merge any remaining receipts together, if they have a submission_id
-    for submission in submissions:
+    for submission in model_submissions:
         live_graderoster.submissions.append(submission)
 
     return live_graderoster
