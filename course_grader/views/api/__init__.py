@@ -129,18 +129,20 @@ def graderoster_status_params(graderoster,
 
     section = graderoster.section
     if hasattr(graderoster, "submissions"):
-        submission = graderoster.submissions.get(secondary_section_id, None)
+        submission = None
+        if secondary_section_id is not None:
+            submission = next((s for s in graderoster.submissions if (
+                s["submission_id"] == secondary_section_id)), None)
+
         if submission is None:
-            submission = graderoster.submissions.get(section.section_id, None)
+            submission = next((s for s in graderoster.submissions if (
+                s["submission_id"] == section.section_id)), None)
 
         if submission is not None:
-            submitted_date = submission["submitted_date"]
             submitted_by = submission["submitted_by"]
-            accepted_date = submission["accepted_date"]
             data["status_code"] = submission["status_code"]
-            data["submitted_date"] = submitted_date.isoformat()
-            data["accepted_date"] = accepted_date.isoformat() if (
-                accepted_date is not None) else None
+            data["submitted_date"] = submission["submitted_date"]
+            data["accepted_date"] = submission["accepted_date"]
             data["submitted_by"] = person_display_name(submitted_by)
             if include_grade_imports:
                 grade_import = submission["grade_import"]

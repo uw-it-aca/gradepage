@@ -19,7 +19,8 @@ logger = getLogger(__name__)
 
 
 class SubmittedGradeRosterManager(models.Manager):
-    def get_by_section(self, section, instructor, secondary_section=None):
+    def get_by_section(self, section, instructor, secondary_section=None,
+                       include_document=False):
         kwargs = {"section_id": section.section_label()}
         if secondary_section is not None:
             args = (
@@ -31,13 +32,16 @@ class SubmittedGradeRosterManager(models.Manager):
             if section.is_independent_study:
                 kwargs["instructor_id"] = instructor.uwregid
 
-        models = super().get_queryset().filter(*args, **kwargs).order_by(
+        query = super().get_queryset().filter(*args, **kwargs).order_by(
                 F("submitted_date").desc()
             )
 
+        if not include_document:
+            query.defer("document")
+
         seen_rosters = set()
         latest_rosters = []
-        for sgr in models:
+        for sgr in query:
             sid = sgr.secondary_section_id if (
                 sgr.secondary_section_id) else sgr.section_id
             if sid not in seen_rosters:
@@ -110,6 +114,7 @@ class SubmittedGradeRoster(models.Model):
         except Exception as ex:
             logger.error(
                 f"PUT graderoster failed: {ex}, Section: {self.section_id}, "
+                f"Secondary section: {self.secondary_section_id}, "
                 f"Instructor: {self.instructor_id}, "
                 f"Submitter: {self.submitted_by}")
             self.status_code = getattr(ex, "status", 500)
@@ -125,6 +130,20 @@ class SubmittedGradeRoster(models.Model):
         Grade.objects.delete_by_section_id(grades_section_id)
 
         notify_grade_submitters(graderoster, self.submitted_by)
+
+    def json_data(self):
+        return {
+            "section_id": self.section_id,
+            "secondary_section_id": self.secondary_section_id,
+            "instructor_id": self.instructor_id,
+            "term_id": self.term_id,
+            "submitted_date": self.submitted_date.isoformat() if (
+                self.submitted_date is not None) else None,
+            "submitted_by": self.submitted_by,
+            "accepted_date": self.accepted_date.isoformat() if (
+                self.accepted_date is not None) else None,
+            "status_code": self.status_code,
+        }
 
 
 class GradeManager(models.Manager):
@@ -179,11 +198,8 @@ class Grade(models.Model):
             "import_grade": self.import_grade,
             "is_override_grade": self.is_override_grade,
             "comment": self.comment,
-            "last_modified": (
-                self.last_modified.isoformat()
-                if (self.last_modified is not None)
-                else None
-            ),
+            "last_modified": self.last_modified.isoformat() if (
+                self.last_modified is not None) else None,
             "modified_by": self.modified_by,
         }
 

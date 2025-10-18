@@ -160,8 +160,8 @@ class GradeRoster(GradeFormHandler):
         if error is not None:
             return error
 
-        section_id = kwargs.get("section_id")
-        saved_grades = self.saved_grades(section_id)
+        grades_section_id = kwargs.get("section_id")
+        saved_grades = self.saved_grades(grades_section_id)
         secondary_section = getattr(self.graderoster, "secondary_section",
                                     None)
 
@@ -202,7 +202,7 @@ class GradeRoster(GradeFormHandler):
 
             model.save()
             try:
-                model.submit(section_id)
+                model.submit(grades_section_id)
             except DataFailureException as ex:
                 (status, msg) = self.data_failure_error(ex)
                 return self.error_response(status, msg)
@@ -212,7 +212,7 @@ class GradeRoster(GradeFormHandler):
             self.graderoster = graderoster_for_section(
                 self.section, self.instructor, self.user)
 
-        kwargs["saved_grades"] = self.saved_grades(section_id)
+        kwargs["saved_grades"] = self.saved_grades(grades_section_id)
 
         content = self.response_content(**kwargs)
         content["graderoster"]["is_submission_confirmation"] = True
@@ -292,13 +292,18 @@ class GradeRoster(GradeFormHandler):
         secondary_section = getattr(self.graderoster, "secondary_section",
                                     None)
 
-        submissions = getattr(self.graderoster, "submissions", {})
-        for key in sorted(submissions.keys()):
-            sid = key if key != self.graderoster.section.section_id else None
+        for submission in getattr(self.graderoster, "submissions", []):
+            sid = None
+            if (submission["submission_id"] !=
+                    self.graderoster.section.section_id):
+                sid = submission["submission_id"]
+
             submission_status = graderoster_status_params(
-                self.graderoster, secondary_section_id=sid,
+                self.graderoster,
+                secondary_section_id=sid,
                 include_grade_imports=True)
             submission_status["section_id"] = sid
+
             if (submission_status["accepted_date"] is None and
                     submission_status["status_code"] == "200"):
                 data["has_inprogress_submissions"] = True
