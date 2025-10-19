@@ -6,7 +6,7 @@
       </div>
       <div>
         <div>Incomplete (Default: {{ student.saved_grade.grade }})</div>
-        <div v-if="student.saved_grade.is_writing">Writing Credit</div>
+        <div v-if="student.saved_grade.is_writing">Writing&nbsp;Credit</div>
       </div>
     </div>
   </template>
@@ -18,7 +18,7 @@
         </div>
         <div>
           <div>(No grade now)</div>
-          <div v-if="student.saved_grade.is_writing">Writing Credit</div>
+          <div v-if="student.saved_grade.is_writing">Writing&nbsp;Credit</div>
         </div>
       </div>
     </template>
@@ -27,7 +27,7 @@
         <div class="border fs-2 fw-bold me-2 text-center" style="width: 50px">
           {{ student.saved_grade.grade }}
         </div>
-        <div v-if="student.saved_grade.is_writing">Writing Credit</div>
+        <div v-if="student.saved_grade.is_writing">Writing&nbsp;Credit</div>
       </div>
     </template>
   </template>
