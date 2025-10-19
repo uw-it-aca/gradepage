@@ -89,9 +89,6 @@ def graderoster_for_section(section, instructor, requestor,
         submission["grade_import"] = grade_imp
         submission["submitted_by"] = people[model.submitted_by]
 
-        if secondary_section is not None:
-            submission["secondary_section"] = secondary_section
-
         model_submissions.append(submission)
 
     if live_graderoster is None:
