@@ -77,7 +77,7 @@ class ViewAPIFunctionsTest(TestCase):
         user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
         graderoster = get_graderoster(section, user, requestor=user)
 
-        p = graderoster_status_params(graderoster, section.section_id)
+        p = graderoster_status_params(graderoster)
         self.assertEqual(p['unsubmitted_count'], 994)
         self.assertEqual(p['submitted_count'], 3)
         self.assertEqual(p['grade_import'], None)
@@ -87,14 +87,13 @@ class ViewAPIFunctionsTest(TestCase):
         user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
         graderoster = get_graderoster(section, user, requestor=user)
 
-        p = graderoster_status_params(graderoster, section.section_id)
+        p = graderoster_status_params(graderoster)
         self.assertEqual(p['unsubmitted_count'], 0)
         self.assertEqual(p['submitted_count'], 2)
         self.assertEqual(p['grade_import'], None)
         self.assertEqual(p['deadline_warning'], False)
 
-        p = graderoster_status_params(graderoster, section.section_id,
-                                      include_grade_imports=True)
+        p = graderoster_status_params(graderoster, include_grade_imports=True)
         self.assertEqual(p['unsubmitted_count'], 0)
         self.assertEqual(p['submitted_count'], 2)
         self.assertEqual(p['grade_import'], None)
