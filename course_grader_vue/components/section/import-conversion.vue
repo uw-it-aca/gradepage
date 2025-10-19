@@ -13,8 +13,6 @@
         class="float-end d-inline-block"
         toggle-class="rounded-2"
       >
-        <template #button-content> View Scale </template>
-
         <BDropdownItem
           v-for="(submission, index) in submissionsWithImportConversions"
           :key="index"
