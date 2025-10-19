@@ -11,7 +11,8 @@
       </div>
       <div
         v-if="
-          graderoster.is_primary_section && graderoster.linked_section_count > 1
+          graderoster.is_primary_section &&
+          graderoster.linked_section_count > 1
         "
       >
         <!-- primary section with more than one linked section -->

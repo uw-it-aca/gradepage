@@ -107,7 +107,7 @@
             disabled
             checked
           />
-          <label class="form-check-label">Writing Credit</label>
+          <label class="form-check-label">Writing&nbsp;Credit</label>
         </div>
         <div v-else class="form-check">
           <input
@@ -122,7 +122,7 @@
             :for="`writing-${student.item_id}`"
             :title="inputWritingTitle"
             class="form-check-label"
-            >Writing Credit</label
+            >Writing&nbsp;Credit</label
           >
         </div>
       </div>

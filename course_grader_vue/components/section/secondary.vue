@@ -25,7 +25,9 @@
       </div>
     </div>
     <template v-if="isLoading">
-      <BPlaceholder animation="glow" cols="2" variant="secondary-subtle" />
+      <div class="fs-6">
+        <BPlaceholder animation="glow" cols="2" variant="secondary-subtle" />
+      </div>
     </template>
     <template v-else>
       <div

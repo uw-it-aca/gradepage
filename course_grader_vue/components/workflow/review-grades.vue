@@ -117,10 +117,9 @@ export default {
       this.appState.editGrades();
     },
     submitGrades: function () {
-      this.isLoading = true;
       this.scrollToTop();
-
       setTimeout(() => {
+        this.isLoading = true;
         this.submitGraderoster(this.section.graderoster_url, {})
           .then((data) => {
             this.appState.setGraderoster(data.graderoster);
