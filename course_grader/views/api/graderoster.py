@@ -293,9 +293,16 @@ class GradeRoster(GradeFormHandler):
                                     None)
 
         for submission in getattr(self.graderoster, "submissions", []):
+            sid = None
+            if (submission["submission_id"] !=
+                    self.graderoster.section.section_id):
+                sid = submission["submission_id"]
+
             submission_status = graderoster_status_params(
-                self.graderoster, submission.get("submission_id"),
+                self.graderoster,
+                secondary_section_id=sid,
                 include_grade_imports=True)
+            submission_status["section_id"] = sid
 
             if (submission_status["accepted_date"] is None and
                     submission_status["status_code"] == "200"):
@@ -566,8 +573,7 @@ class GradeRosterStatus(GradeFormHandler):
         section = self.section
         if section.is_primary_section and not section.allows_secondary_grading:
             # Handle secondary sections in this request if appropriate
-            data.update(graderoster_status_params(
-                self.graderoster, section.section_id))
+            data.update(graderoster_status_params(self.graderoster))
             data["secondary_sections"] = []
             for linked_url in section.linked_section_urls:
                 try:
@@ -578,10 +584,9 @@ class GradeRosterStatus(GradeFormHandler):
         elif (not section.is_primary_section and
                 not section.allows_secondary_grading):
             data.update(graderoster_status_params(
-                self.graderoster, section.section_id))
+                self.graderoster, secondary_section_id=section.section_id))
         else:
-            data.update(graderoster_status_params(
-                self.graderoster, section.section_id))
+            data.update(graderoster_status_params(self.graderoster))
 
         if not self.submitted_graderosters_only:
             data["saved_count"] = Grade.objects.get_by_section_id_and_person(
@@ -599,7 +604,7 @@ class GradeRosterStatus(GradeFormHandler):
 
         data = section_status_params(section, self.instructor)
         data.update(graderoster_status_params(
-            self.graderoster, secondary_section_id))
+            self.graderoster, secondary_section_id=secondary_section_id))
 
         data["section_id"] = clean_section_id(section_id)
         data["section_url"] = url_for_section(section_id)

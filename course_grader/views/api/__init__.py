@@ -97,12 +97,13 @@ def item_is_submitted(item):
 
 
 def graderoster_status_params(graderoster,
-                              submitted_section_id,
+                              secondary_section_id=None,
                               include_grade_imports=False):
     total_count = 0
     submitted_count = 0
     for item in graderoster.items:
-        if submitted_section_id != item.section_id:
+        if (secondary_section_id is not None and
+                secondary_section_id != item.section_id):
             continue
 
         if item.is_auditor or item.date_withdrawn:
@@ -128,12 +129,17 @@ def graderoster_status_params(graderoster,
 
     section = graderoster.section
     if hasattr(graderoster, "submissions"):
-        submission = next((s for s in graderoster.submissions if (
-            s["submission_id"] == submitted_section_id)), None)
+        submission = None
+        if secondary_section_id is not None:
+            submission = next((s for s in graderoster.submissions if (
+                s["submission_id"] == secondary_section_id)), None)
+
+        if submission is None:
+            submission = next((s for s in graderoster.submissions if (
+                s["submission_id"] == section.section_id)), None)
 
         if submission is not None:
             submitted_by = submission["submitted_by"]
-            data["section_id"] = submission["submission_id"]
             data["status_code"] = submission["status_code"]
             data["submitted_date"] = submission["submitted_date"]
             data["accepted_date"] = submission["accepted_date"]

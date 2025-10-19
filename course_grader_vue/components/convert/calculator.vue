@@ -49,7 +49,7 @@
             <BButton
               title="Create grade scale"
               size="sm"
-              variant="primary rounded-2 ms-2"
+              variant="outline-primary rounded-2 ms-2"
               @click="calculatorStore.calculateScale()"
             >
               Apply to Grade Scale
