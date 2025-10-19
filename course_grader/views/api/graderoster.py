@@ -302,7 +302,7 @@ class GradeRoster(GradeFormHandler):
                 self.graderoster,
                 secondary_section_id=sid,
                 include_grade_imports=True)
-            submission_status["section_id"] = sid
+            submission_status["section_id"] = submission["submission_id"]
 
             if (submission_status["accepted_date"] is None and
                     submission_status["status_code"] == "200"):
