@@ -12,22 +12,24 @@
         no-caret
         class="float-end d-inline-block"
         toggle-class="rounded-2"
+        text="Select a conversion scale"
       >
-        <BDropdownItem
+        <BDropdownItemButton
           v-for="(submission, index) in submissionsWithImportConversions"
           :key="index"
           :value="submission.grade_import.import_conversion"
+          @click.prevent="showImportConversion(submission)"
         >
           <i class="me-2 text-body-tertiary"></i>
           Section {{ submission.section_id }}
-        </BDropdownItem>
+        </BDropdownItemButton>
       </BDropdown>
     </div>
     <div v-else>
       Grades calculated using a grade conversion scale.
       <BLink
         title="Show the grade conversion scale that was used"
-        @click.prevent="showImportConversion()"
+        @click.prevent="showImportConversion(submissionsWithImportConversions[0])"
         >View scale
       </BLink>
     </div>
@@ -67,7 +69,7 @@
 </template>
 
 <script>
-import { BLink, BDropdown, BDropdownItem } from "bootstrap-vue-next";
+import { BLink, BDropdown, BDropdownItem, BDropdownItemButton } from "bootstrap-vue-next";
 
 export default {
   name: "ImportConversions",
@@ -75,6 +77,7 @@ export default {
     BLink,
     BDropdown,
     BDropdownItem,
+    BDropdownItemButton,
   },
   props: {
     submissions: {
@@ -108,9 +111,8 @@ export default {
     },
   },
   methods: {
-    showImportConversion: function () {
-      this.selectedImportConversion =
-        this.submissionsWithImportConversions[0].grade_import.import_conversion;
+    showImportConversion: function (submission) {
+      this.selectedImportConversion = submission.grade_import.import_conversion;
     },
     hideImportConversion: function () {
       this.selectedImportConversion = null;
