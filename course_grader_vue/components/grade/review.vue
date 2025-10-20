@@ -67,7 +67,6 @@ export default {
     hasChangedGrade() {
       return (
         this.student.date_graded &&
-        this.student.grade_status_code === "220" &&
         (this.student.grade !== this.student.saved_grade.grade ||
           this.student.has_incomplete !==
             this.student.saved_grade.is_incomplete ||
