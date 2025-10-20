@@ -9,13 +9,9 @@
         </span>
         Otherwise, the most recent grade submission will stand.
       </div>
-      <div
-        v-if="
-          graderoster.is_primary_section &&
-          graderoster.linked_section_count > 1
-        "
-      >
-        <!-- primary section with more than one linked section -->
+      <div v-if="graderoster.submissions.length > 1">
+        <!-- A primary section with more than one linked section, but only use
+        the collapsible display when there are multiple submissions -->
         <div class="d-flex justify-content-between">
           <div>
             <div class="fw-bold ms-4">Course sections submitted.</div>
@@ -55,7 +51,8 @@
         </BCollapse>
       </div>
       <div v-else>
-        <!-- primary section with zero or one linked section, or a linked section -->
+        <!-- primary section with zero or one linked section, or a linked
+        section, with one displayed submission -->
         <ul class="list-unstyled m-0">
           <li>
             <i
