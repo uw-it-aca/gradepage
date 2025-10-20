@@ -6,18 +6,16 @@
         Select a grade conversion scale to view:
       </label>
       <BDropdown
-        v-model="selectedImportConversion"
         size="sm"
-        variant="outline-secondary"
-        no-caret
+        text="Select a conversion scale to view"
         class="float-end d-inline-block"
+        variant="outline-secondary"
         toggle-class="rounded-2"
-        text="Select a conversion scale"
       >
         <BDropdownItemButton
           v-for="(submission, index) in submissionsWithImportConversions"
           :key="index"
-          :value="submission.grade_import.import_conversion"
+          :value="submission"
           @click.prevent="showImportConversion(submission)"
         >
           <i class="me-2 text-body-tertiary"></i>
