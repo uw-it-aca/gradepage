@@ -186,9 +186,11 @@ export default {
           })
           .catch((error) => {
             this.errorStatus = error.data;
+          })
+          .finally(() => {
+            this.isLoading = false;
           });
       }
-      this.isLoading = false;
     },
   },
 };
