@@ -21,10 +21,12 @@ logger = getLogger(__name__)
 class SubmittedGradeRosterManager(models.Manager):
     def get_by_section(self, section, instructor, secondary_section=None,
                        include_document=False):
+        secondary_label = None
         kwargs = {"section_id": section.section_label()}
         if secondary_section is not None:
+            secondary_label = secondary_section.section_label()
             args = (
-                Q(secondary_section_id=secondary_section.section_label()) |
+                Q(secondary_section_id=secondary_label) |
                 Q(secondary_section_id__isnull=True),
             )
         else:
@@ -47,9 +49,12 @@ class SubmittedGradeRosterManager(models.Manager):
             if sid not in seen_rosters:
                 latest_rosters.append(sgr)
                 seen_rosters.add(sid)
-            # Nothing after the latest primary section submission
-            if not sgr.secondary_section_id:
+            # Nothing after the latest primary section submission, or the
+            # latest matching secondary section submission
+            if (sgr.secondary_section_id is None or
+                    sgr.secondary_section_id == secondary_label):
                 break
+
         return latest_rosters
 
     def get_status_by_term(self, term):
