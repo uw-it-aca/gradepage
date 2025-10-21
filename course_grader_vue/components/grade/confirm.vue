@@ -32,7 +32,7 @@
           I
         </div>
         <div>
-          <div>Incomplete (Default: {{ student.grade }})</div>
+          <div>Default grade: {{ student.grade }}</div>
           <div v-if="student.has_writing_credit">Writing&nbsp;Credit</div>
         </div>
       </div>

@@ -107,9 +107,9 @@ function validateGrade(grade, incomplete, choices) {
 function priorGradeText(student) {
   var priorGrade;
   if (student.no_grade_now) {
-    priorGrade = "X (No grade now)";
+    priorGrade = gettext("x_no_grade_now");
   } else if (student.has_incomplete) {
-    priorGrade = "Incomplete (Default " + student.grade + ")";
+    priorGrade = "Incomplete (Default grade: " + student.grade + ")";
   } else {
     priorGrade = student.grade;
     if (student.has_writing_credit) {
