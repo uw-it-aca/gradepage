@@ -5,7 +5,7 @@
         I
       </div>
       <div>
-        <div>Incomplete (Default: {{ student.saved_grade.grade }})</div>
+        <div>Default grade: {{ student.saved_grade.grade }}</div>
         <div v-if="student.saved_grade.is_writing">Writing&nbsp;Credit</div>
       </div>
     </div>
