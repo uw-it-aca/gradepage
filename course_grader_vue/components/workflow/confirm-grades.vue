@@ -58,10 +58,10 @@
         >Change Grades</BButton
       >
       <BLink
-        v-else
         class="btn btn-outline-primary btn-sm rounded-2 me-2"
         :href="section.export_url"
-        >Download Change of Grade</BLink
+        title="Download grades formatted for Change of Grades"
+        >Download Grades</BLink
       >
       <BLink
         class="btn btn-outline-primary btn-sm rounded-2"
