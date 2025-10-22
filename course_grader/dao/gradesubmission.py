@@ -50,6 +50,14 @@ def submit_grades(model):
 
         try:
             idx = graderoster.items.index(item)
+
+            # Capture the submitted grade for logging
+            submitted_grade = format_logged_grade(graderoster.items[idx])
+
+            graderoster.items[idx].grade = item.grade
+            graderoster.items[idx].no_grade_now = item.no_grade_now
+            graderoster.items[idx].has_incomplete = item.has_incomplete
+            graderoster.items[idx].has_writing_credit = item.has_writing_credit
             graderoster.items[idx].status_code = item.status_code
             graderoster.items[idx].status_message = item.status_message
             graderoster.items[idx].date_graded = item.date_graded
@@ -57,16 +65,18 @@ def submit_grades(model):
             graderoster.items[idx].grade_submitter_source = (
                 item.grade_submitter_source)
 
-            logged_grade = format_logged_grade(graderoster.items[idx])
-            if logged_grade is not None:
+            if submitted_grade is not None:
                 logger.info((
                     "Grade submitted, Student: {student}, Section: "
-                    "{section_id}, Grade: {grade}, Code: {status_code}, "
+                    "{section_id}, Submitted grade: {submitted_grade}, "
+                    "Returned grade: {returned_grade}, Code: {status_code}, "
                     "Message: {message}").format(
                         student=graderoster.items[idx].student_label(
                             separator="-"),
                         section_id=logged_section_id,
-                        grade=logged_grade,
+                        submitted_grade=submitted_grade,
+                        returned_grade=format_logged_grade(
+                            graderoster.items[idx]),
                         status_code=graderoster.items[idx].status_code,
                         message=graderoster.items[idx].status_message))
 
