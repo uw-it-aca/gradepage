@@ -155,7 +155,7 @@ export default {
     },
     gradesAccepted() {
       return this.gradingStatus
-        ? this.gradingStatus.accepted_date !== null
+        ? (this.gradingStatus.accepted_date && this.gradingStatus.accepted_date != null)
         : false;
     },
     savedGradeWarning() {

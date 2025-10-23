@@ -44,10 +44,9 @@ def submit_grades(model):
     # item. To create a saved graderoster receipt, merge the returned
     # graderoster into the submitted graderoster, to capture both the
     # submitted grade and the returned status code/message for each item.
-    ret_graderoster_dict = {}
-    for item in ret_graderoster.items:
-        key = item.student_label(separator="-")
-        ret_graderoster_dict[key] = item
+    ret_graderoster_dict = {
+        i.student_label(separator="-"): i for i in ret_graderoster.items
+    }
 
     for item in graderoster.items:
         key = item.student_label(separator="-")
@@ -72,10 +71,6 @@ def submit_grades(model):
             continue
 
         # Update the graderoster with data returned from PUT
-        # item.grade = ret_item.grade
-        # item.no_grade_now = ret_item.no_grade_now
-        # item.has_incomplete = ret_item.has_incomplete
-        # item.has_writing_credit = ret_item.has_writing_credit
         item.status_code = ret_item.status_code
         item.status_message = ret_item.status_message
         item.date_graded = ret_item.date_graded

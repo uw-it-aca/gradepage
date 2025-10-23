@@ -142,7 +142,7 @@ export default {
   },
   methods: {
     loadGraderoster: function () {
-      if (this.section.graderoster_url && !this.errorResponse) {
+      if (this.section && this.section.graderoster_url) {
         this.isLoading = true;
 
         this.gradeStore.$reset();
@@ -159,7 +159,6 @@ export default {
             })
             .finally(() => {
               this.isLoading = false;
-              console.log("done loading grade roster...");
             });
         }, 500);
       } else {
