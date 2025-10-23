@@ -1,7 +1,7 @@
 <template>
   <template v-if="errorResponse.status === 404">
     <div id="404-error">
-      <h1 class="fs-1 fw-bold">Error 404</h1>
+      <h1 class="fs-1 fw-bold">Not Found</h1>
       <p>
         <strong>{{ errorText }}</strong>
       </p>
@@ -17,7 +17,7 @@
   </template>
   <template v-else-if="errorResponse.status === 401">
     <div id="401-error">
-      <h1 class="fs-1 fw-bold">Error 401</h1>
+      <h1 class="fs-1 fw-bold">Not Authorized</h1>
       <p>
         <strong>{{ errorText }}</strong>
       </p>
@@ -33,7 +33,7 @@
   </template>
   <template v-else-if="errorResponse.status === 500">
     <div id="500-error">
-      <h1 class="fs-1 fw-bold">Error 500</h1>
+      <h1 class="fs-1 fw-bold">Server Error</h1>
       <p>
         <strong>{{ errorText }}</strong>
       </p>
@@ -54,8 +54,11 @@
   </template>
   <template v-else>
     <div id="543-error">
-      <h1 class="fs-1 fw-bold">Error 543</h1>
-      <p>{{ errorText }}</p>
+      <h1 class="fs-1 fw-bold">Problem retrieving grading information</h1>
+
+      <p>
+        <strong>{{ errorText }}</strong>
+      </p>
 
       <p>
         To correct this issue,
@@ -67,13 +70,6 @@
         <li>
           Include a screenshot, or paste the error text into your email so that
           we can quickly diagnose the issue.
-          <ul>
-            <li>
-              The error text to paste into your email to us is: <br />{{
-                errorText
-              }}
-            </li>
-          </ul>
         </li>
       </ul>
     </div>
