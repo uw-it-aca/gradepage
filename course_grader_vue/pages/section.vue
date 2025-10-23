@@ -86,7 +86,7 @@
         <template v-else-if="appState.reviewingConversion">
           <ReviewConversion :section="section" />
         </template>
-        <template v-else>
+        <template v-else-if="!errorResponse">
           {{ loadGraderoster() }}
         </template>
       </div>
@@ -156,6 +156,7 @@ export default {
             })
             .catch((error) => {
               this.errorResponse = error.data;
+
             })
             .finally(() => {
               this.isLoading = false;
