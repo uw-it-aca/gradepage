@@ -150,8 +150,11 @@ export default {
           : this.gradingStatus;
 
       if (status) {
-        return status.accepted_date && status.accepted_date !== null &&
-          status.submitted_count && status.submitted_count > 0;
+        return (
+          status.accepted_date &&
+          status.accepted_date !== null &&
+          status.submitted_count > 0
+        );
       }
       return false;
     },

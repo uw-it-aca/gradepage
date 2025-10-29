@@ -154,9 +154,14 @@ export default {
       return this.gradingStatus ? this.formatLinkTitle(this.gradingStatus) : "";
     },
     gradesAccepted() {
-      return this.gradingStatus
-        ? (this.gradingStatus.accepted_date && this.gradingStatus.accepted_date != null)
-        : false;
+      if (this.gradingStatus) {
+        return (
+          this.gradingStatus.accepted_date &&
+          this.gradingStatus.accepted_date != null &&
+          this.gradingStatus.submitted_count > 0
+        );
+      }
+      return false;
     },
     savedGradeWarning() {
       if (this.gradingStatus) {
