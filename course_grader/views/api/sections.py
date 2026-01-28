@@ -78,9 +78,7 @@ class Sections(RESTDispatch):
                     # Suppress status request from client
                     data["status_url"] = None
 
-                if section.current_enrollment > 0:
-                    primary_sections[section.primary_section_label()].append(
-                        data)
+                primary_sections[section.primary_section_label()].append(data)
 
             elif (section.is_primary_section and
                     not section.is_independent_study):
