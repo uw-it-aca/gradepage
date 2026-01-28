@@ -29,24 +29,21 @@ def section_from_url(url):
 def section_from_param(param):
     instructor_reg_id = None
     try:
-        (year, quarter, curriculum_abbr, course_number, section_id,
+        (year, quarter, curr_abbr, course_num, section_id,
             instructor_reg_id) = param.split("-", 5)
     except ValueError:
         try:
-            (year, quarter, curriculum_abbr, course_number,
+            (year, quarter, curr_abbr, course_num,
                 section_id) = param.split("-", 4)
         except ValueError:
-            raise InvalidSection("Invalid section ID: {}".format(param))
+            raise InvalidSection(f"Invalid section ID: {param}")
 
-    section_label = (
-        "{year},{quarter},{curr_abbr},{course_num}/{section_id}").format(
-            year=year, quarter=quarter, curr_abbr=curriculum_abbr,
-            course_num=course_number, section_id=section_id)
+    section_label = f"{year},{quarter},{curr_abbr},{course_num}/{section_id}"
 
     try:
         validate_section_label(section_label)
     except InvalidSectionID as ex:
-        raise InvalidSection("Invalid section ID: {}".format(param))
+        raise InvalidSection(f"Invalid section ID: {param}")
 
     section = section_from_label(section_label)
 
@@ -67,8 +64,8 @@ def section_display_name(section, instructor=None):
                      section.section_id])
 
     if instructor is not None:
-        name = "{name} ({instructor})".format(
-            name=name, instructor=person_display_name(instructor))
+        display_name = person_display_name(instructor)
+        name = f"{name} ({display_name})"
 
     return name
 
@@ -102,10 +99,10 @@ def all_gradable_sections(person, term):
         try:
             section = section_from_url(section_ref.url)
         except Exception as ex:
-            logger.error("SKIP section for grading: {}".format(ex))
+            logger.error(f"SKIP section for grading: {ex}")
             continue
 
-        if section.current_enrollment == 0:
+        if section.is_primary_section and section.current_enrollment == 0:
             # Zero enrollment
             continue
 
@@ -118,7 +115,7 @@ def all_gradable_sections(person, term):
             for instructor in instructors:
                 if (instructor == person or
                         section.is_grade_submission_delegate(person)):
-                    url = "{}|{}".format(section_ref.url, instructor.uwregid)
+                    url = f"{section_ref.url}|{instructor.uwregid}"
                     gradable_section = copy.deepcopy(section)
                     gradable_section.grading_instructor = instructor
                     gradable_sections[url] = gradable_section
@@ -140,7 +137,7 @@ def all_gradable_sections(person, term):
                         primary_instructors[primary_url] = get_section_by_url(
                             primary_url).get_instructors()
                     except Exception as ex:
-                        logger.error("SKIP section for grading: {}".format(ex))
+                        logger.error(f"SKIP section for grading: {ex}")
                         continue
 
             if (section.is_instructor(person) or (
