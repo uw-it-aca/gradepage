@@ -576,11 +576,8 @@ class GradeRosterStatus(GradeFormHandler):
             data.update(graderoster_status_params(self.graderoster))
             data["secondary_sections"] = []
             for linked_url in section.linked_section_urls:
-                try:
-                    secondary_data = self.secondary_section_status(linked_url)
-                    data["secondary_sections"].append(secondary_data)
-                except NoGradableStudents:
-                    pass
+                secondary_data = self.secondary_section_status(linked_url)
+                data["secondary_sections"].append(secondary_data)
         elif (not section.is_primary_section and
                 not section.allows_secondary_grading):
             data.update(graderoster_status_params(
@@ -589,8 +586,12 @@ class GradeRosterStatus(GradeFormHandler):
             data.update(graderoster_status_params(self.graderoster))
 
         if not self.submitted_graderosters_only:
-            data["saved_count"] = Grade.objects.get_by_section_id_and_person(
-                section_id, self.user.uwregid).count()
+            if data["grading_period_open"]:
+                saved_count = Grade.objects.get_by_section_id_and_person(
+                    section_id, self.user.uwregid).count()
+            else:
+                saved_count = 0
+            data["saved_count"] = saved_count
 
         return self.json_response({"grading_status": data})
 
@@ -615,8 +616,11 @@ class GradeRosterStatus(GradeFormHandler):
         if self.submitted_graderosters_only:
             data["status_url"] = url_for_grading_status(section_id)
         else:
-            data["status_url"] = None
-            data["saved_count"] = Grade.objects.get_by_section_id_and_person(
-                section_id, self.user.uwregid).count()
+            if data["grading_period_open"]:
+                saved_count = Grade.objects.get_by_section_id_and_person(
+                    section_id, self.user.uwregid).count()
+            else:
+                saved_count = 0
+            data["saved_count"] = saved_count
 
         return data
