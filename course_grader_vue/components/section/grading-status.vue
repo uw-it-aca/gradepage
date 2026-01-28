@@ -98,7 +98,10 @@
       <div class="d-flex justify-content-between">
         <div class="fw-bold">
           <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
-          No grades were submitted for this section.
+          <span v-if="graderoster.is_grading_period_open">
+            This section has no enrollments.
+          </span>
+          <span v-else>No grades were submitted for this section.</span>
         </div>
       </div>
     </BCard>

@@ -71,8 +71,12 @@ function formatGradingStatus(data, richtext = false) {
         data.submitted_count
       );
     }
-  } else if (!data.grading_period_open) {
-    return gettext("No grades were submitted for this section");
+  } else {
+    if (data.grading_period_open) {
+      return gettext("This section has no enrollments");
+    } else {
+      return gettext("No grades were submitted for this section");
+    }
   }
 
   if (base !== undefined) {
