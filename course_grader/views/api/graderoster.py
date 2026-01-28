@@ -285,6 +285,7 @@ class GradeRoster(GradeFormHandler):
                 "failed_submission_count": 0,
                 "has_inprogress_submissions": False,
                 "has_saved_grades": False,
+                "is_grading_period_open": grading_period_open,
                 "gradable_student_count": 0,
                 "graded_count": 0,
                 "ungraded_count": 0}
