@@ -102,7 +102,7 @@ def all_gradable_sections(person, term):
             logger.error(f"SKIP section for grading: {ex}")
             continue
 
-        if section.is_primary_section and section.current_enrollment == 0:
+        if section.current_enrollment == 0:
             # Zero enrollment
             continue
 
