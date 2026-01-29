@@ -81,7 +81,8 @@
     <strong>Writing Section:</strong> {{ writingSectionText() }}
   </div>
 
-  <table v-if="appState.graderoster.students" class="table table-striped">
+  <table v-if="appState.graderoster.students && appState.graderoster.students.length"
+    class="table table-striped">
     <thead class="table-body-secondary">
       <tr>
         <th scope="col">Student</th>
