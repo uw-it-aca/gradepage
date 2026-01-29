@@ -92,8 +92,9 @@
       </div>
     </BCard>
   </template>
+
   <!-- No submitted grades, and grading period closed -->
-  <template v-else-if="!graderoster.gradable_student_count">
+  <template v-if="!graderoster.gradable_student_count">
     <BCard bg-variant="body-tertiary" class="border-0 mb-4">
       <div class="d-flex justify-content-between">
         <div class="fw-bold">
