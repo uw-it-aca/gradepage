@@ -73,7 +73,7 @@ function formatGradingStatus(data, richtext = false) {
     }
   } else {
     if (data.grading_period_open) {
-      return gettext("This section has no enrollments");
+      return gettext("No grades to submit for this section");
     } else {
       return gettext("No grades were submitted for this section");
     }
