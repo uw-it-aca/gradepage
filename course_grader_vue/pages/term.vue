@@ -15,7 +15,7 @@
             v-for="index in 10"
             :key="index"
             class="border-bottom"
-            :class="index == 1 ? 'pb-2 pt-0' : 'py-2'"
+            :class="index == 1 ? 'pt-0 pb-2' : 'py-2'"
           >
             <div class="fs-4">
               <BPlaceholder
@@ -44,7 +44,7 @@
               v-for="(section, index) in sections"
               :key="section.section_id"
               class="border-bottom"
-              :class="index == 0 ? 'pb-2 pt-0' : 'py-2'"
+              :class="index == 0 ? 'pt-0 pb-2' : 'py-2'"
             >
               <PrimarySection
                 :section="section"
@@ -65,89 +65,89 @@
 </template>
 
 <script>
-import Layout from "@/layouts/default.vue";
-import PrimarySection from "@/components/section/primary.vue";
-import Errors from "@/components/errors.vue";
-import { useContextStore } from "@/stores/context";
-import { getSections } from "@/utils/data";
-import { BPlaceholder } from "bootstrap-vue-next";
+  import Layout from "@/layouts/default.vue";
+  import PrimarySection from "@/components/section/primary.vue";
+  import Errors from "@/components/errors.vue";
+  import { useContextStore } from "@/stores/context";
+  import { getSections } from "@/utils/data";
+  import { BPlaceholder } from "bootstrap-vue-next";
 
-export default {
-  name: "TermPage",
-  components: {
-    Layout,
-    PrimarySection,
-    Errors,
-    BPlaceholder,
-  },
-  setup() {
-    const contextStore = useContextStore();
-    return {
-      contextStore,
-      getSections,
-    };
-  },
-  data() {
-    return {
-      isLoading: true,
-      currentTerm: this.contextStore.context.terms[0],
-      selectedTerm: null,
-      selectedTermText: this.contextStore.context.page_title,
-      sectionsURL: this.contextStore.context.sections_url,
-      errorResponse: null,
-      sections: [],
-      base_timeout: 500,
-    };
-  },
-  computed: {
-    selectedTermName() {
-      return this.selectedTerm.quarter + " " + this.selectedTerm.year;
+  export default {
+    name: "TermPage",
+    components: {
+      Layout,
+      PrimarySection,
+      Errors,
+      BPlaceholder,
     },
-    isCurrentTermDisplay() {
-      return (
-        this.currentTerm.quarter === this.selectedTerm.quarter &&
-        this.currentTerm.year === this.selectedTerm.year
-      );
+    setup() {
+      const contextStore = useContextStore();
+      return {
+        contextStore,
+        getSections,
+      };
     },
-  },
-  created() {
-    this.updateTerm();
-    this.loadSectionsForTerm();
-  },
-  methods: {
-    selectTerm: function (e) {
-      this.contextStore.selectTerm(e.target.value);
-      window.location.href = this.contextStore.context.terms.find(
-        (t) => t.is_selected
-      ).url;
+    data() {
+      return {
+        isLoading: true,
+        currentTerm: this.contextStore.context.terms[0],
+        selectedTerm: null,
+        selectedTermText: this.contextStore.context.page_title,
+        sectionsURL: this.contextStore.context.sections_url,
+        errorResponse: null,
+        sections: [],
+        base_timeout: 500,
+      };
     },
-    updateTerm: function () {
-      var term;
-      if (this.$route.params.id) {
-        term = this.contextStore.context.terms.find((t) =>
-          t.sections_url.endsWith(this.$route.params.id)
+    computed: {
+      selectedTermName() {
+        return this.selectedTerm.quarter + " " + this.selectedTerm.year;
+      },
+      isCurrentTermDisplay() {
+        return (
+          this.currentTerm.quarter === this.selectedTerm.quarter &&
+          this.currentTerm.year === this.selectedTerm.year
         );
-      }
-      if (!term) {
-        term = this.currentTerm;
-      }
-      this.selectedTerm = term;
+      },
     },
+    created() {
+      this.updateTerm();
+      this.loadSectionsForTerm();
+    },
+    methods: {
+      selectTerm: function (e) {
+        this.contextStore.selectTerm(e.target.value);
+        window.location.href = this.contextStore.context.terms.find(
+          (t) => t.is_selected,
+        ).url;
+      },
+      updateTerm: function () {
+        var term;
+        if (this.$route.params.id) {
+          term = this.contextStore.context.terms.find((t) =>
+            t.sections_url.endsWith(this.$route.params.id),
+          );
+        }
+        if (!term) {
+          term = this.currentTerm;
+        }
+        this.selectedTerm = term;
+      },
 
-    loadSectionsForTerm: function () {
-      setTimeout(() => {
-        this.getSections(this.selectedTerm.sections_url)
-          .then((data) => {
-            this.sections = data.sections;
-          })
-          .catch((error) => {
-            this.errorResponse = error.data;
-          })
-          .finally(() => {
-            this.isLoading = false;
-          });
-      }, 500);
+      loadSectionsForTerm: function () {
+        setTimeout(() => {
+          this.getSections(this.selectedTerm.sections_url)
+            .then((data) => {
+              this.sections = data.sections;
+            })
+            .catch((error) => {
+              this.errorResponse = error.data;
+            })
+            .finally(() => {
+              this.isLoading = false;
+            });
+        }, 500);
+      },
     },
-  },
-};
+  };
 </script>
