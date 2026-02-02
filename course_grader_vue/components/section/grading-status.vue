@@ -93,13 +93,14 @@
     </BCard>
   </template>
 
-  <!-- No submitted grades, and grading period closed -->
+  <!-- If grading is open, section has no students to grade, OR
+       if grading period is closed, no grades were submitted -->
   <template v-if="!graderoster.gradable_student_count">
     <BCard bg-variant="body-tertiary" class="border-0 mb-4">
       <div class="d-flex justify-content-between">
         <div class="fw-bold">
           <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
-          <span v-if="graderoster.is_grading_period_open">
+          <span v-if="graderoster.grading_period_open">
             No grades to submit for this section.
           </span>
           <span v-else>No grades were submitted for this section.</span>
