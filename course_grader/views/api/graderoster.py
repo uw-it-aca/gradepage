@@ -241,6 +241,9 @@ class GradeRoster(GradeFormHandler):
         if saved_grade is None:
             return False
 
+        # TODO: add validation for incomplete when allows_incomplete is False
+        # TODO: add validation for no_grade_now when allows_no_grade_now is False  #noqa
+
         if (saved_grade.is_incomplete and
                 (saved_grade.no_grade_now or saved_grade.grade == "N" or
                     saved_grade.grade == "CR")):
@@ -330,10 +333,9 @@ class GradeRoster(GradeFormHandler):
             grade_choices_index = None
             grade_url = None
             grade = "" if item.no_grade_now is True else item.grade
-            no_grade_now = item.no_grade_now
+            allows_no_grade_now = False if (
+                is_submitted and not item.no_grade_now) else True
             allows_incomplete = item.allows_incomplete
-            has_incomplete = item.has_incomplete
-            has_writing_credit = item.has_writing_credit
             date_graded = None
             saved_grade_data = {}
 
@@ -344,7 +346,7 @@ class GradeRoster(GradeFormHandler):
                 data["has_duplicate_codes"] = True
 
             if is_submitted:
-                if has_incomplete:
+                if item.has_incomplete:
                     if (grade == "i" or grade == "I"):
                         grade = ""
                 else:
@@ -408,11 +410,12 @@ class GradeRoster(GradeFormHandler):
                 "is_submitted": is_submitted,
                 "date_graded": date_graded,
                 "allows_incomplete": allows_incomplete,
-                "has_incomplete": has_incomplete,
+                "has_incomplete": item.has_incomplete,
                 "is_writing_section": not allows_writing_credit,
                 "allows_writing_credit": allows_writing_credit,
-                "has_writing_credit": has_writing_credit,
-                "no_grade_now": no_grade_now,
+                "has_writing_credit": item.has_writing_credit,
+                "allows_no_grade_now": allows_no_grade_now,
+                "no_grade_now": item.no_grade_now,
                 "duplicate_code": item.duplicate_code,
                 "grade": grade,
                 "grade_choices_index": grade_choices_index,
