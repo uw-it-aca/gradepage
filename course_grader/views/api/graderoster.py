@@ -241,8 +241,8 @@ class GradeRoster(GradeFormHandler):
         if saved_grade is None:
             return False
 
-        # TODO: add validation for incomplete when allows_incomplete is False
-        # TODO: add validation for no_grade_now when allows_no_grade_now is False  #noqa
+        # TODO: add validation for incomplete when allows_incomplete is F
+        # TODO: add validation for no_grade_now when allows_no_grade_now is F
 
         if (saved_grade.is_incomplete and
                 (saved_grade.no_grade_now or saved_grade.grade == "N" or
