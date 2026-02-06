@@ -331,6 +331,7 @@ class GradeRoster(GradeFormHandler):
             grade_url = None
             grade = "" if item.no_grade_now is True else item.grade
             no_grade_now = item.no_grade_now
+            allows_incomplete = item.allows_incomplete
             has_incomplete = item.has_incomplete
             has_writing_credit = item.has_writing_credit
             date_graded = None
@@ -343,8 +344,11 @@ class GradeRoster(GradeFormHandler):
                 data["has_duplicate_codes"] = True
 
             if is_submitted:
-                if has_incomplete and (grade == "i" or grade == "I"):
-                    grade = ""
+                if has_incomplete:
+                    if (grade == "i" or grade == "I"):
+                        grade = ""
+                else:
+                    allows_incomplete = False
 
                 if item.date_graded is not None:
                     data["graded_count"] += 1
@@ -403,7 +407,7 @@ class GradeRoster(GradeFormHandler):
                 "date_withdrawn": item.date_withdrawn,
                 "is_submitted": is_submitted,
                 "date_graded": date_graded,
-                "allows_incomplete": item.allows_incomplete,
+                "allows_incomplete": allows_incomplete,
                 "has_incomplete": has_incomplete,
                 "is_writing_section": not allows_writing_credit,
                 "allows_writing_credit": allows_writing_credit,

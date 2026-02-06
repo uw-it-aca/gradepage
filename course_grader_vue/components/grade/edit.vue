@@ -181,13 +181,7 @@ export default {
       return this.incomplete ? "Enter default grade..." : "Enter grade...";
     },
     allowsIncomplete() {
-      if (!this.student.allows_incomplete) {
-        return false;
-      }
-      if (this.student.is_submitted && !this.incomplete) {
-        return false;
-      }
-      return true;
+      return this.student.allows_incomplete;
     },
     inputIncompleteTitle() {
       return interpolate(
