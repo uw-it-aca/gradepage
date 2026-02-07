@@ -335,7 +335,7 @@ class GradeRoster(GradeFormHandler):
             grade = "" if item.no_grade_now is True else item.grade
             allows_no_grade_now = False if (
                 is_submitted and not item.no_grade_now) else True
-            allows_incomplete = item.allows_incomplete
+            allows_incomplete = True  # Do not use item.allows_incomplete
             date_graded = None
             saved_grade_data = {}
 
