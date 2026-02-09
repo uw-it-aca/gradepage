@@ -54,6 +54,9 @@ msgstr "Enter a grade of H, HP, P, or F."
 msgid "grade_invalid_incomplete"
 msgstr "Not a valid default grade for Incomplete."
 
+msgid "grade_invalid_X"
+msgstr "Not allowed for resubmission, enter a valid grade."
+
 msgid "x_no_grade_now"
 msgstr "X (No grade now)"
 

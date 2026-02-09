@@ -36,6 +36,8 @@ function validateGrade(grade, incomplete, choices) {
     return "";
   } else if (grade === "") {
     return "Grade is required.";
+  } else if (grade === gettext("x_no_grade_now")) {
+    return gettext("grade_invalid_X");
   } else if (incomplete && incompleteBlocklist.includes(grade)) {
     return gettext("grade_invalid_incomplete");
   } else {

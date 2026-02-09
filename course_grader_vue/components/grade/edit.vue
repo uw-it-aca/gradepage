@@ -183,6 +183,9 @@ export default {
     allowsIncomplete() {
       return this.student.allows_incomplete;
     },
+    allowsNoGradeNow() {
+      return this.student.allows_no_grade_now;
+    },
     inputIncompleteTitle() {
       return interpolate(
         this.allowsIncomplete
@@ -254,7 +257,14 @@ export default {
     updateGradeChoices: function () {
       var valid = [];
       this.gradeChoices.forEach((gc, idx) => {
-        let grade = idx === 0 && gc === "" ? gettext("x_no_grade_now") : gc;
+        let grade = gc;
+        if (idx === 0 && gc === "") {
+          if (this.allowsNoGradeNow()) {
+            grade = gettext("x_no_grade_now");
+          } else {
+            return;
+          }
+        }
         if (this.incomplete && incompleteBlocklist.includes(grade)) {
           return;
         }
