@@ -84,7 +84,7 @@
             type="checkbox"
             class="form-check-input me-1"
             autocomplete="off"
-            :disabled="!allowsIncomplete"
+            :disabled="!student.allows_incomplete"
             :checked="incomplete"
             @change="incompleteChanged($event.target.checked)"
           />
@@ -180,15 +180,9 @@ export default {
     gradePlaceholder() {
       return this.incomplete ? "Enter default grade..." : "Enter grade...";
     },
-    allowsIncomplete() {
-      return this.student.allows_incomplete;
-    },
-    allowsNoGradeNow() {
-      return this.student.allows_no_grade_now;
-    },
     inputIncompleteTitle() {
       return interpolate(
-        this.allowsIncomplete
+        this.student.allows_incomplete
           ? this.incomplete
             ? "Click to remove Incomplete for %(student_firstname)s %(student_lastname)s"
             : "Click to assign Incomplete for %(student_firstname)s %(student_lastname)s"
@@ -258,8 +252,8 @@ export default {
       var valid = [];
       this.gradeChoices.forEach((gc, idx) => {
         let grade = gc;
-        if (idx === 0 && gc === "") {
-          if (this.allowsNoGradeNow()) {
+        if (idx === 0 && grade === "") {
+          if (this.student.allows_no_grade_now) {
             grade = gettext("x_no_grade_now");
           } else {
             return;
