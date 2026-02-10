@@ -302,13 +302,14 @@ export default {
           ? this.student.saved_grade.is_writing
           : this.student.has_writing_credit;
       }
+      this.updateGradeChoices();
 
       if (noGradeNow) {
         this.grade = gettext("x_no_grade_now");
-      } else if (grade === null && !this.incomplete && this.gradeChoices.includes("N")) {
-        this.grade = "N";
       } else if (this.incomplete) {
-        this.grade = normalizeDefaultGrade(this.grade, this.actualChoices);
+        this.grade = normalizeDefaultGrade(grade, this.actualChoices);
+      } else if (grade === null && this.gradeChoices.includes("N")) {
+        this.grade = "N";
       } else {
         this.grade = normalizeGrade(grade);
       }
@@ -318,8 +319,6 @@ export default {
         this.importGrade = this.student.saved_grade.import_grade;
         this.overrideGrade = this.student.saved_grade.is_override_grade;
       }
-
-      this.updateGradeChoices();
       this.updateGradeStatus();
     },
     saveGrade: function () {
