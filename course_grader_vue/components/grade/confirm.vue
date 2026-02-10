@@ -32,7 +32,7 @@
           I
         </div>
         <div>
-          <div>Default grade: {{ student.grade }}</div>
+          <div>Default grade: {{ incompleteDefaultGrade }}</div>
           <div v-if="student.has_writing_credit">Writing&nbsp;Credit</div>
         </div>
       </div>
@@ -75,6 +75,11 @@ export default {
     return {};
   },
   computed: {
+    incompleteDefaultGrade() {
+      return (this.student.is_grad_section)
+        ? "None (Graduate section)"
+        : this.student.grade;
+    },
     hasGradeError() {
       return this.student.date_graded &&
         (this.student.grade_status_code === null ||
