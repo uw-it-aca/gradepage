@@ -306,7 +306,7 @@ export default {
 
       if (noGradeNow) {
         this.grade = gettext("x_no_grade_now");
-      } else if (this.incomplete) {
+      } else if (this.incomplete && this.student.is_grad_section) {
         this.grade = normalizeDefaultGrade(grade, this.actualChoices);
       } else if (grade === null && this.gradeChoices.includes("N")) {
         this.grade = "N";
