@@ -271,7 +271,7 @@ class GradeRoster(GradeFormHandler):
         saved_grades = kwargs.get("saved_grades", {})
         grading_period_open = is_grading_period_open(self.section)
         allows_writing_credit = self.graderoster.allows_writing_credit
-        is_grad_section = (self.section.course_number >= 500)
+        is_grad_section = (int(self.section.course_number) > 499)
         sources = dict(GradeImport.SOURCE_CHOICES)
 
         data = {"section_id": section_id,
