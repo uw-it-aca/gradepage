@@ -302,15 +302,14 @@ export default {
           ? this.student.saved_grade.is_writing
           : this.student.has_writing_credit;
       }
+
       if (noGradeNow) {
         this.grade = gettext("x_no_grade_now");
-      } else if (
-        grade === null &&
-        !this.incomplete &&
-        this.gradeChoices.includes("N")
-      ) {
+      } else if (grade === null && !this.incomplete && this.gradeChoices.includes("N")) {
         this.grade = "N";
-      } else if (grade !== null) {
+      } else if (this.incomplete) {
+        this.grade = normalizeDefaultGrade(this.grade, this.actualChoices);
+      } else {
         this.grade = normalizeGrade(grade);
       }
 

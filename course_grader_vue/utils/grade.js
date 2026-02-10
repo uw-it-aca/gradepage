@@ -23,6 +23,11 @@ function normalizeGrade(grade) {
 }
 
 function normalizeDefaultGrade(grade, choices) {
+  try {
+    grade = grade.toString().trim();
+  } catch (error) {
+    grade = "";
+  }
   if (grade === "" || incompleteBlocklist.includes(grade)) {
     return choices.includes("0.0") ? "0.0" : choices.includes("NC") ? "NC" : "";
   }
