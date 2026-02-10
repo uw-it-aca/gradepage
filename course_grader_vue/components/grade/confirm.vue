@@ -76,9 +76,7 @@ export default {
   },
   computed: {
     incompleteDefaultGrade() {
-      return (this.student.is_grad_section)
-        ? "None (Graduate section)"
-        : this.student.grade;
+      return (this.student.is_grad_section) ? "N/A" : this.student.grade;
     },
     hasGradeError() {
       return this.student.date_graded &&
