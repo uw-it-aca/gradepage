@@ -271,7 +271,6 @@ class GradeRoster(GradeFormHandler):
         saved_grades = kwargs.get("saved_grades", {})
         grading_period_open = is_grading_period_open(self.section)
         allows_writing_credit = self.graderoster.allows_writing_credit
-        is_grad_section = (int(self.section.course_number) > 499)
         sources = dict(GradeImport.SOURCE_CHOICES)
 
         data = {"section_id": section_id,
@@ -337,6 +336,8 @@ class GradeRoster(GradeFormHandler):
             allows_no_grade_now = False if (
                 is_submitted and not item.no_grade_now) else True
             allows_incomplete = True
+            allows_inc_default_grade = (
+                item.student_type == "UNDERGRAD" or not item.student_type)
             date_graded = None
             saved_grade_data = {}
 
@@ -411,8 +412,8 @@ class GradeRoster(GradeFormHandler):
                 "is_submitted": is_submitted,
                 "date_graded": date_graded,
                 "allows_incomplete": allows_incomplete,
+                "allows_inc_default_grade": allows_inc_default_grade,
                 "has_incomplete": item.has_incomplete,
-                "is_grad_section": is_grad_section,
                 "is_writing_section": not allows_writing_credit,
                 "allows_writing_credit": allows_writing_credit,
                 "has_writing_credit": item.has_writing_credit,

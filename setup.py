@@ -41,7 +41,7 @@ setup(
     description='UW application that supports online grade submission',
     long_description=README,
     url='https://github.com/uw-it-aca/gradepage',
-    author="UW-IT Student & Educational Technology Services",
+    author="UWIT Student & Educational Technology Services",
     author_email="aca-it@uw.edu",
     classifiers=[
         'Environment :: Web Environment',
