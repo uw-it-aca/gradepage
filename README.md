@@ -7,7 +7,7 @@ UW grade submission app
 
 ## System Requirements
 
-- Python (3.10+)
+- Python (3.12)
 - Docker
 - Node
 
@@ -27,11 +27,11 @@ UW grade submission app
 
 Clone the repository
 
-        $ git clone git@github.com:uw-it-aca/compass.git
+        $ git clone git@github.com:uw-it-aca/gradepage.git gradepage
 
 Go to your working directory
 
-        $ cd compass
+        $ cd gradepage
 
 Copy the sample .env file so that your environment can be run.
 
