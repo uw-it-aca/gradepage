@@ -248,8 +248,8 @@ class GradeRoster(GradeFormHandler):
             if (saved_grade.no_grade_now or saved_grade.grade == "N" or
                     saved_grade.grade == "CR"):
                 return False
-            elif ((item.student_type == "UNDERGRAD" or
-                    not item.student_type) and saved_grade.grade == ""):
+            elif (item.student_type == "UNDERGRAD" and (
+                    saved_grade.grade == "" or saved_grade.grade is None)):
                 return False
             return item.allows_incomplete
 
@@ -337,8 +337,7 @@ class GradeRoster(GradeFormHandler):
             allows_no_grade_now = False if (
                 is_submitted and not item.no_grade_now) else True
             allows_incomplete = True
-            allows_inc_default_grade = (
-                item.student_type == "UNDERGRAD" or not item.student_type)
+            allows_inc_default_grade = (item.student_type == "UNDERGRAD")
             date_graded = None
             saved_grade_data = {}
 
