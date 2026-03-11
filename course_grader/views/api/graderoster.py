@@ -148,7 +148,10 @@ class GradeRoster(GradeFormHandler):
                 continue
 
             student_id = item.student_label(separator="-")
-            if not self.validate_grade(item, saved_grades.get(student_id)):
+            if self.validate_grade(item, saved_grades.get(student_id)):
+                item.grade_status = None
+            else:
+                item.grade_status = 409
                 status = 409
 
         kwargs["saved_grades"] = saved_grades
@@ -185,7 +188,9 @@ class GradeRoster(GradeFormHandler):
                 item.has_incomplete = saved_grade.is_incomplete
                 item.has_writing_credit = saved_grade.is_writing
                 item.grade_submitter_person = self.user
+                item.grade_status = None
             else:
+                item.grade_status = 409
                 status = 409
 
         if status == 200 and gradable_count:
@@ -245,11 +250,9 @@ class GradeRoster(GradeFormHandler):
             return item.allows_no_grade_now
 
         if saved_grade.is_incomplete:
-            if (saved_grade.no_grade_now or saved_grade.grade == "N" or
-                    saved_grade.grade == "CR"):
-                return False
-            elif (item.student_type == "UNDERGRAD" and (
-                    saved_grade.grade == "" or saved_grade.grade is None)):
+            if (item.student_type == "UNDERGRAD" or not item.student_type) and (  # noqa
+                    saved_grade.no_grade_now or saved_grade.grade == "N" or
+                    saved_grade.grade == "CR" or not saved_grade.grade):
                 return False
             return item.allows_incomplete
 
@@ -337,7 +340,8 @@ class GradeRoster(GradeFormHandler):
             allows_no_grade_now = False if (
                 is_submitted and not item.no_grade_now) else True
             allows_incomplete = True
-            allows_inc_default_grade = (item.student_type == "UNDERGRAD")
+            allows_inc_default_grade = (
+                item.student_type == "UNDERGRAD" or not item.student_type)
             date_graded = None
             saved_grade_data = {}
 
