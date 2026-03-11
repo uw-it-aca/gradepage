@@ -148,10 +148,7 @@ class GradeRoster(GradeFormHandler):
                 continue
 
             student_id = item.student_label(separator="-")
-            if self.validate_grade(item, saved_grades.get(student_id)):
-                item.grade_status = None
-            else:
-                item.grade_status = 409
+            if not self.validate_grade(item, saved_grades.get(student_id)):
                 status = 409
 
         kwargs["saved_grades"] = saved_grades
@@ -190,7 +187,6 @@ class GradeRoster(GradeFormHandler):
                 item.grade_submitter_person = self.user
                 item.grade_status = None
             else:
-                item.grade_status = 409
                 status = 409
 
         if status == 200 and gradable_count:
@@ -246,15 +242,17 @@ class GradeRoster(GradeFormHandler):
         if saved_grade is None:
             return False
 
+        is_submitted = item_is_submitted(item)
         if saved_grade.no_grade_now:
-            return item.allows_no_grade_now
+            return False if (is_submitted and not item.no_grade_now) else True
 
         if saved_grade.is_incomplete:
             if (item.student_type == "UNDERGRAD" or not item.student_type) and (  # noqa
                     saved_grade.no_grade_now or saved_grade.grade == "N" or
-                    saved_grade.grade == "CR" or not saved_grade.grade):
+                    saved_grade.grade == "CR" or saved_grade.grade == ""):
                 return False
-            return item.allows_incomplete
+            return False if (
+                is_submitted and not item.has_incomplete) else True
 
         for choice in item.grade_choices:
             if (choice is not None and choice != "" and
