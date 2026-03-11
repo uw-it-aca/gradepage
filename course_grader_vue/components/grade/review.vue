@@ -2,10 +2,10 @@
   <template v-if="student.saved_grade.is_incomplete">
     <div class="d-flex align-items-center">
       <div class="border fs-2 fw-bold me-2 text-center" style="width: 50px">
-        I
+        Inc
       </div>
       <div>
-        <div>Default grade: {{ student.saved_grade.grade }}</div>
+        <div>Default grade: {{ incompleteDefaultGrade }}</div>
         <div v-if="student.saved_grade.is_writing">Writing&nbsp;Credit</div>
       </div>
     </div>
@@ -56,6 +56,10 @@ export default {
     };
   },
   computed: {
+    incompleteDefaultGrade() {
+      return this.student.allows_inc_default_grade
+        ? this.student.saved_grade.grade : "N/A";
+    },
     hasGradeError() {
       return this.student.grade_status_code === null ||
         this.student.grade_status_code === "" ||

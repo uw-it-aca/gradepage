@@ -60,6 +60,12 @@ msgstr "Not allowed for resubmission, enter a valid grade."
 msgid "x_no_grade_now"
 msgstr "X (No grade now)"
 
+msgid "grade_required"
+msgstr "Grade is required."
+
+msgid "default_grade_required"
+msgstr "Default grade is required for Incomplete."
+
 msgid "conversion_scale_ug"
 msgstr "Undergraduate Scale (4.0-0.7)"
 
