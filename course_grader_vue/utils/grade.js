@@ -34,17 +34,24 @@ function normalizeDefaultGrade(grade, choices) {
   return grade;
 }
 
-function validateGrade(grade, incomplete, choices) {
+function validateGrade(student, grade, incomplete, choices) {
   var is_hypenated, is_cnc, is_hhppf, is_undergrad_numeric, is_grad_numeric;
 
-  if (choices.includes(grade)) {
+  if (incomplete) {
+    if (student.allows_inc_default_grade) {
+      if (incompleteBlocklist.includes(grade)) {
+        return gettext("grade_invalid_incomplete");
+      } else if (grade === "") {
+        return gettext("default_grade_required")
+      }
+    }
+    return "";
+  } else if (choices.includes(grade)) {
     return "";
   } else if (grade === "") {
-    return "Grade is required.";
+    return gettext("grade_required");
   } else if (grade === gettext("x_no_grade_now")) {
     return gettext("grade_invalid_X");
-  } else if (incomplete && incompleteBlocklist.includes(grade)) {
-    return gettext("grade_invalid_incomplete");
   } else {
     is_hypenated = choices.includes("N");
     is_cnc = choices.includes("NC");
@@ -106,7 +113,7 @@ function validateGrade(grade, incomplete, choices) {
       // H/HP/P/F
       return gettext("grade_invalid_H_HP_P_F");
     } else {
-      return "Enter a valid grade";
+      return gettext("Enter a valid grade");
     }
   }
 }

@@ -57,7 +57,12 @@
 
       <div v-else>
         <div v-if="incomplete" class="form-text">
-          Student will receive default grade
+          <span v-if="student.allows_inc_default_grade">
+            Student will receive default grade.
+          </span>
+          <span v-else>
+            Default grade not required for this student.
+          </span>
         </div>
         <div v-if="importSource" class="imported-grade small">
           {{ importSource }} grade: {{ importGrade }}
@@ -348,7 +353,7 @@ export default {
     },
     updateGradeStatus: function () {
       this.gradeError = this.gradeStore.validate(
-        this.student.student_id,
+        this.student,
         this.grade,
         this.incomplete,
         this.writing,

@@ -68,8 +68,7 @@
       :model-value="true"
       variant="danger"
       class="small"
-      ><i class="bi-exclamation-octagon-fill me-1"></i>Unable to submit because
-      there are
+      ><i class="bi-exclamation-octagon-fill me-1"></i> Unable to submit because there are errors:
       <span v-if="gradesRemainingText">{{ gradesRemainingText }} </span></BAlert
     >
 

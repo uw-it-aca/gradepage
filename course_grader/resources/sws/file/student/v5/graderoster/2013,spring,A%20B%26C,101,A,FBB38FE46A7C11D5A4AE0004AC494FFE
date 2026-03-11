@@ -46,7 +46,7 @@
           <span class="student_number">1033334</span></div>
           <div>
           Student Type:
-          <span class="student_type"></span></div>
+          <span class="student_type">UNDERGRAD</span></div>
           <div>
           Student Credits:
           <span class="student_credits"> 3.0</span></div>
@@ -104,7 +104,7 @@
           <span class="student_number">1033374</span></div>
           <div>
           Student Type:
-          <span class="student_type"></span></div>
+          <span class="student_type">GRADUATE</span></div>
           <div>
           Student Credits:
           <span class="student_credits"> 3.0</span></div>
@@ -162,7 +162,7 @@
           <span class="student_number">1033134</span></div>
           <div>
           Student Type:
-          <span class="student_type"></span></div>
+          <span class="student_type">UNDERGRAD</span></div>
           <div>
           Student Credits:
           <span class="student_credits"> 3.0</span></div>
@@ -220,7 +220,7 @@
           <span class="student_number">1033149</span></div>
           <div>
           Student Type:
-          <span class="student_type"></span></div>
+          <span class="student_type">GRADUATE</span></div>
           <div>
           Student Credits:
           <span class="student_credits"> 3.0</span></div>

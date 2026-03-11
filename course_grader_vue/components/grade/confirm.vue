@@ -29,7 +29,7 @@
     <template v-if="student.has_incomplete">
       <div class="d-flex align-items-center">
         <div class="border fs-2 fw-bold me-2 text-center" style="width: 50px">
-          I
+          Inc
         </div>
         <div>
           <div>Default grade: {{ incompleteDefaultGrade }}</div>

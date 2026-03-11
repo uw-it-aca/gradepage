@@ -237,22 +237,23 @@ class GradeRoster(GradeFormHandler):
         content = self.response_content(**kwargs)
         return self.json_response(content)
 
-    def validate_grade(self, graderoster_item, saved_grade):
+    def validate_grade(self, item, saved_grade):
         if saved_grade is None:
             return False
 
-        # TODO: add validation for incomplete when allows_incomplete is F
-        # TODO: add validation for no_grade_now when allows_no_grade_now is F
-
-        if (saved_grade.is_incomplete and
-                (saved_grade.no_grade_now or saved_grade.grade == "N" or
-                    saved_grade.grade == "CR")):
-            return False
-
         if saved_grade.no_grade_now:
-            return True
+            return item.allows_no_grade_now
 
-        for choice in graderoster_item.grade_choices:
+        if saved_grade.is_incomplete:
+            if (saved_grade.no_grade_now or saved_grade.grade == "N" or
+                    saved_grade.grade == "CR"):
+                return False
+            elif ((item.student_type == "UNDERGRAD" or
+                    not item.student_type) and saved_grade.grade == ""):
+                return False
+            return item.allows_incomplete
+
+        for choice in item.grade_choices:
             if (choice is not None and choice != "" and
                     choice == saved_grade.grade):
                 return True

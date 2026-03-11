@@ -40,9 +40,9 @@ env:
 # defined in the "deploy" job
 on:
   push:
-    branches: [main, master, qa, develop, feature/vue]
+    branches: [main, qa, develop, feature/vue]
   pull_request:
-    branches: [main, master, qa, develop, feature/vue]
+    branches: [main, qa, develop, feature/vue]
     types: [opened, reopened, synchronize]
 
 jobs:
@@ -130,6 +130,7 @@ jobs:
           python -m pip install --upgrade pip coverage coveralls==3.3.1
           coverage combine
           coveralls
+        continue-on-error: true
 
       - name: Push Image to Repository
         if: github.event_name == 'push'
@@ -154,7 +155,7 @@ jobs:
 
       - name: Deployment Pipeline
         if: >-
-          contains(fromJSON('["main", "master", "develop", "qa"]'),
+          contains(fromJSON('["main", "develop", "qa"]'),
             needs.context.outputs.git_repo_branch)
         uses: uw-it-aca/actions/cicd-deploy@main
         with:

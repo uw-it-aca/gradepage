@@ -39,16 +39,19 @@ export const useGradeStore = defineStore("grade", {
     addSaved(studentId) {
       this.gradeStatus.saved.add(studentId);
     },
-    validate(studentId, grade, incomplete, writing, choices) {
-      let error = validateGrade(grade, incomplete, choices);
+    validate(student, grade, incomplete, writing, choices) {
+      let error = validateGrade(student, grade, incomplete, choices),
+        studentId = student.student_id;
 
       this.gradeStatus.missing.delete(studentId);
       this.gradeStatus.invalid.delete(studentId);
 
-      if (grade === "") {
-        this.gradeStatus.missing.add(studentId);
-      } else if (error !== "") {
-        this.gradeStatus.invalid.add(studentId);
+      if (error !== "") {
+        if (grade === "") {
+          this.gradeStatus.missing.add(studentId);
+        } else {
+          this.gradeStatus.invalid.add(studentId);
+        }
       }
 
       this.gradeData[studentId] = {
