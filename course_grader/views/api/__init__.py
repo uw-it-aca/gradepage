@@ -93,7 +93,8 @@ def item_is_submitted(item):
     # existence of a grade
     return (item.date_graded is not None or
             item.grade is not None or
-            item.no_grade_now)
+            item.no_grade_now or
+            item.has_incomplete)
 
 
 def graderoster_status_params(graderoster,
