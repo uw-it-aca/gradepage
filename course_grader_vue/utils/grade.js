@@ -22,7 +22,10 @@ function normalizeGrade(grade) {
   return grade;
 }
 
-function normalizeDefaultGrade(grade, choices) {
+function normalizeDefaultGrade(grade, choices, allows_inc_default_grade) {
+  if (!allows_inc_default_grade) {
+    return "";
+  }
   try {
     grade = grade.toString().trim();
   } catch (error) {

@@ -17,6 +17,7 @@
         :value="grade"
         :aria-controls="`grade-${student.item_id}-menu`"
         data-bs-toggle="dropdown"
+        :disabled="incomplete && !student.allows_inc_default_grade"
         required
         @change="gradeChanged($event.target.value)"
         @keydown.tab.exact="false"
@@ -274,8 +275,9 @@ export default {
     incompleteChanged: function (checked) {
       this.incomplete = checked;
       this.updateGradeChoices();
-      if (checked && this.student.allows_inc_default_grade) {
-        this.grade = normalizeDefaultGrade(this.grade, this.actualChoices);
+      if (checked) {
+        this.grade = normalizeDefaultGrade(
+          this.grade, this.actualChoices, this.student.allows_inc_default_grade);
       }
       this.saveGrade();
     },
@@ -311,8 +313,9 @@ export default {
 
       if (noGradeNow) {
         this.grade = gettext("x_no_grade_now");
-      } else if (this.incomplete && this.student.allows_inc_default_grade) {
-        this.grade = normalizeDefaultGrade(grade, this.actualChoices);
+      } else if (this.incomplete) {
+        this.grade = normalizeDefaultGrade(
+          grade, this.actualChoices, this.student.allows_inc_default_grade);
       } else if (grade === null && this.actualChoices.includes("N")) {
         this.grade = "N";
       } else {
