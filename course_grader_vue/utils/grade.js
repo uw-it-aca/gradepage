@@ -123,7 +123,10 @@ function priorGradeText(student) {
   if (student.no_grade_now) {
     priorGrade = gettext("x_no_grade_now");
   } else if (student.has_incomplete) {
-    priorGrade = "Incomplete (Default grade: " + student.grade + ")";
+    priorGrade = "Incomplete";
+    if (student.allows_inc_default_grade) {
+      priorGrade += (" (Default grade: " + student.grade + ")");
+    }
   } else {
     priorGrade = student.grade;
     if (student.has_writing_credit) {
