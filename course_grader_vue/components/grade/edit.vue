@@ -274,7 +274,7 @@ export default {
     incompleteChanged: function (checked) {
       this.incomplete = checked;
       this.updateGradeChoices();
-      if (checked) {
+      if (checked && this.student.allows_inc_default_grade) {
         this.grade = normalizeDefaultGrade(this.grade, this.actualChoices);
       }
       this.saveGrade();
