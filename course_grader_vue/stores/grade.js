@@ -86,8 +86,9 @@ export const useGradeStore = defineStore("grade", {
 
           let imported_grade = normalizeGrade(student.imported_grade);
           error = validateGrade(
+            student,
             imported_grade,
-            student.is_incomplete,
+            false, // Ignore student.is_incomplete for importing grades
             this.gradeChoices[student.student_id]
           );
 
