@@ -153,8 +153,6 @@ externalSecrets:
     - name: test.gradepage.uw.edu-ic-certs
       externalKey: gradepage/test/ic-certs
       data:
-        - name: test.gradepage.uw.edu-ic.cert
-          property: test.gradepage.uw.edu-ic.cert
         - name: test-client.gradepage.uw.edu-ic.cert
           property: test-client.gradepage.uw.edu-ic.cert
         - name: test-client.gradepage.uw.edu-ic.key
@@ -210,10 +208,6 @@ environmentVariablesSecrets:
     name: STORAGE_PROJECT_ID
     secretName: test.gradepage.uw.edu-shared-secrets
     secretKey: storage-project-id
-  samlSPCert:
-    name: SP_CERT
-    secretName: test.gradepage.uw.edu-ic-certs
-    secretKey: test.gradepage.uw.edu-ic.cert
   samlIDPCert:
     name: IDP_CERT
     secretName: test.gradepage.uw.edu-uw-idp-cert
