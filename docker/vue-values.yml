@@ -153,8 +153,6 @@ externalSecrets:
     - name: vue.gradepage.uw.edu-ic-certs
       externalKey: gradepage/test/ic-certs
       data:
-#        - name: vue.gradepage.uw.edu-ic.cert
-#          property: vue.gradepage.uw.edu-ic.cert
         - name: test-client.gradepage.uw.edu-ic.cert
           property: test-client.gradepage.uw.edu-ic.cert
         - name: test-client.gradepage.uw.edu-ic.key
@@ -210,10 +208,6 @@ environmentVariablesSecrets:
     name: STORAGE_PROJECT_ID
     secretName: vue.gradepage.uw.edu-shared-secrets
     secretKey: storage-project-id
-#  samlSPCert:
-#    name: SP_CERT
-#    secretName: vue.gradepage.uw.edu-ic-certs
-#    secretKey: vue.gradepage.uw.edu-ic.cert
   samlIDPCert:
     name: IDP_CERT
     secretName: vue.gradepage.uw.edu-uw-idp-cert

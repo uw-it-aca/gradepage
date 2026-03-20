@@ -159,8 +159,6 @@ externalSecrets:
     - name: gradepage.uw.edu-ic-certs
       externalKey: gradepage/prod/ic-certs
       data:
-        - name: gradepage.uw.edu-ic.cert
-          property: gradepage.uw.edu-ic.cert
         - name: client.gradepage.uw.edu-ic.cert
           property: client.gradepage.uw.edu-ic.cert
         - name: client.gradepage.uw.edu-ic.key
@@ -212,10 +210,6 @@ environmentVariablesSecrets:
     name: STORAGE_PROJECT_ID
     secretName: gradepage.uw.edu-shared-secrets
     secretKey: storage-project-id
-  samlSPCert:
-    name: SP_CERT
-    secretName: gradepage.uw.edu-ic-certs
-    secretKey: gradepage.uw.edu-ic.cert
   samlIDPCert:
     name: IDP_CERT
     secretName: gradepage.uw.edu-uw-idp-cert
