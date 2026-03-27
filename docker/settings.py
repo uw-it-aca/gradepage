@@ -32,7 +32,7 @@ if os.getenv('ENV', 'localdev') == 'localdev':
     PAST_TERMS_VIEWABLE = 1
     MEDIA_ROOT = os.getenv('IMPORT_DATA_ROOT', os.path.join(BASE_DIR, 'csv'))
     VITE_MANIFEST_PATH = os.path.join(
-        BASE_DIR, 'static', '.vite', 'manifest.json'
+        BASE_DIR, 'course_grader', 'static', '.vite', 'manifest.json'
     )
     LOCALE_PATHS = [os.path.join(BASE_DIR, 'course_grader', 'locale')]
 
