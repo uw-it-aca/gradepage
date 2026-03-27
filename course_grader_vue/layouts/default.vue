@@ -31,7 +31,7 @@
 
     <template #navigation>
       <ul class="navbar-nav text-white me-auto mb-2 mb-xl-0">
-        <li class="nav-item me-5">
+        <!-- <li class="nav-item me-5">
           <BLink
             class="nav-link text-white px-0"
             :class="matchedTerm(currentTerm.id) ? 'active' : ''"
@@ -39,7 +39,7 @@
           >
             {{ currentTerm.quarter }} {{ currentTerm.year }}
           </BLink>
-        </li>
+        </li> -->
         <li class="nav-item dropdown">
           <a
             class="nav-link dropdown-toggle text-white px-0"
@@ -49,7 +49,7 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            Previous Terms
+            {{ selectedTerm.quarter }} {{ selectedTerm.year }}
           </a>
           <ul class="dropdown-menu">
             <template
@@ -57,9 +57,8 @@
               :key="index"
             >
               <li>
-                <BDropdownItem v-if="index != 0"
+                <BDropdownItem
                   ><BLink
-                    class=""
                     :class="matchedTerm(term.id) ? 'bg-opacity-10' : ''"
                     :href="term.url"
                     >{{ term.quarter }} {{ term.year }}</BLink
@@ -175,7 +174,10 @@ export default {
       return this.contextStore.context;
     },
     currentTerm() {
-      return this.contextStore.context.terms[0];
+      return this.context.terms[0];
+    },
+    selectedTerm() {
+      return this.context.terms.find(term => this.matchedTerm(term.id));
     },
   },
   created: function () {
