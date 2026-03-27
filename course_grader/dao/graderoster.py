@@ -104,6 +104,7 @@ def graderoster_for_section(section, instructor, requestor,
                 root,
                 section=section,
                 instructor=people[latest_submission.submitted_by])
+            live_graderoster.secondary_section = secondary_section
             live_graderoster.submissions = []
 
         except IndexError:
