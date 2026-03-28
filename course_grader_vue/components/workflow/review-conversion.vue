@@ -1,6 +1,4 @@
 <template>
-  <Errors v-if="errorResponse" :error-response="errorResponse" />
-
   <template v-if="isLoading">
     <BAlert variant="success" :model-value="true" class="small">
       <span
@@ -59,7 +57,6 @@
 <script>
 import SectionHeader from "@/components/section/header.vue";
 import Student from "@/components/student.vue";
-import Errors from "@/components/errors.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useCalculatorStore } from "@/stores/calculator";
 import { BButton } from "bootstrap-vue-next";
@@ -69,7 +66,6 @@ export default {
   components: {
     SectionHeader,
     Student,
-    Errors,
     BButton,
   },
   props: {

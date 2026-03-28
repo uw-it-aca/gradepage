@@ -2,7 +2,7 @@
   <Layout :page-title="pageTitle">
     <template #content>
       <div v-if="errorResponse">
-        <Errors :error-response="errorResponse" />
+        <Errors :section="section" :error-response="errorResponse" />
       </div>
       <template v-if="isLoading">
         <div role="status">
@@ -156,7 +156,6 @@ export default {
             })
             .catch((error) => {
               this.errorResponse = error.data;
-
             })
             .finally(() => {
               this.isLoading = false;

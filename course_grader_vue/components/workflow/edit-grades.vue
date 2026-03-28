@@ -1,6 +1,4 @@
 <template>
-  <Errors v-if="errorResponse" :error-response="errorResponse" />
-
   <h1 class="fs-1 fw-bold">
     <template v-if="appState.graderoster.has_successful_submissions"
       >Change Grades</template
@@ -89,7 +87,6 @@
 import SectionHeader from "@/components/section/header.vue";
 import SectionGradingStatus from "@/components/section/grading-status.vue";
 import Student from "@/components/student.vue";
-import Errors from "@/components/errors.vue";
 import GradeImportOptions from "@/components/import/source-options.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { useGradeStore } from "@/stores/grade";
@@ -104,7 +101,6 @@ export default {
     SectionGradingStatus,
     GradeImportOptions,
     Student,
-    Errors,
     BAlert,
     BButton,
   },
