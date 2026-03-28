@@ -91,6 +91,16 @@
 
     <template #main>
       <div class="row mt-2">
+        <div class="col d-flex justify-content-start">
+          <BLink
+            v-if="isSectionPage"
+            :href="selectedTerm.url"
+            class="link-quiet-primary"
+          >
+            <i class="bi bi-arrow-left-circle me-1"></i>
+            Back to {{ selectedTerm.quarter }} {{ selectedTerm.year }}
+          </BLink>
+        </div>
         <div class="col d-flex justify-content-end">
           <ul class="list-inline list-unstyled m-0">
             <li class="list-inline-item me-3">
@@ -163,7 +173,6 @@ export default {
     return {
       appName: "GradePage",
       appRootUrl: "/",
-      selectedRoute: "Spring 2013",
       helpURL:
         "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034603",
       codaURL: "https://coda.uw.edu",
@@ -178,6 +187,9 @@ export default {
     },
     selectedTerm() {
       return this.context.terms.find(term => this.matchedTerm(term.id));
+    },
+    isSectionPage() {
+      return this.$route.path.includes("/section/");
     },
   },
   created: function () {
