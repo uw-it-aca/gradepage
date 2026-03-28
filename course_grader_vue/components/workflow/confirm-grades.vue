@@ -1,7 +1,5 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <Errors v-if="errorResponse" :error-response="errorResponse" />
-
   <!-- grade submission in progress (not yet accepted) -->
   <BAlert
     v-if="appState.graderoster.has_inprogress_submissions"
@@ -109,7 +107,6 @@ import SectionHeader from "@/components/section/header.vue";
 import SectionGradingStatus from "@/components/section/grading-status.vue";
 import ImportConversions from "@/components/section/import-conversion.vue";
 import Student from "@/components/student.vue";
-import Errors from "@/components/errors.vue";
 import { useWorkflowStateStore } from "@/stores/state";
 import { BAlert, BLink, BButton } from "bootstrap-vue-next";
 import { getGraderoster } from "@/utils/data";
@@ -122,7 +119,6 @@ export default {
     SectionGradingStatus,
     ImportConversions,
     Student,
-    Errors,
     BAlert,
     BLink,
     BButton,

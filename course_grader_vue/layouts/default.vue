@@ -93,7 +93,7 @@
       <div class="row mt-2">
         <div class="col d-flex justify-content-start">
           <BLink
-            v-if="isSectionPage"
+            v-if="displayTermNavigationLink"
             :href="selectedTerm.url"
             class="link-quiet-primary"
           ><i class="bi bi-arrow-left-circle me-1"></i>Back to
@@ -183,7 +183,7 @@ export default {
     selectedTerm() {
       return this.context.terms.find(term => this.matchedTerm(term.id));
     },
-    isSectionPage() {
+    displayTermNavigationLink() {
       return this.$route.path.includes("/section/");
     },
   },

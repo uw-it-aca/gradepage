@@ -1,7 +1,10 @@
 <template>
+  <div v-if="section" class="d-flex justify-content-between align-items-end mb-4">
+    <SectionHeader :section="section" />
+  </div>
   <template v-if="errorResponse.status === 404">
     <div id="404-error">
-      <h1 class="fs-1 fw-bold">Not Found</h1>
+      <h1 class="fs-3 fw-bold">Not Found</h1>
       <p>
         <strong>{{ errorText }}</strong>
       </p>
@@ -17,7 +20,7 @@
   </template>
   <template v-else-if="errorResponse.status === 401">
     <div id="401-error">
-      <h1 class="fs-1 fw-bold">Not Authorized</h1>
+      <h1 class="fs-3 fw-bold">Not Authorized</h1>
       <p>
         <strong>{{ errorText }}</strong>
       </p>
@@ -33,7 +36,7 @@
   </template>
   <template v-else-if="errorResponse.status === 500">
     <div id="500-error">
-      <h1 class="fs-1 fw-bold">Server Error</h1>
+      <h1 class="fs-3 fw-bold">Server Error</h1>
       <p>
         <strong>{{ errorText }}</strong>
       </p>
@@ -54,7 +57,7 @@
   </template>
   <template v-else>
     <div id="543-error">
-      <h1 class="fs-1 fw-bold">Problem retrieving grading information</h1>
+      <h1 class="fs-3 fw-bold">Problem retrieving grading information</h1>
 
       <p>
         <strong>{{ errorText }}</strong>
@@ -77,11 +80,20 @@
 </template>
 
 <script>
+import SectionHeader from "@/components/section/header.vue";
 import { formatErrorStatus } from "@/utils/section";
 
 export default {
   name: "ErrorsComp",
+  components: {
+    SectionHeader,
+  },
   props: {
+    section: {
+      type: Object,
+      required: true,
+      default: null,
+    },
     errorResponse: {
       type: Object,
       required: true,
