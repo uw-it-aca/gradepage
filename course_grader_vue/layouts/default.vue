@@ -96,10 +96,8 @@
             v-if="isSectionPage"
             :href="selectedTerm.url"
             class="link-quiet-primary"
-          >
-            <i class="bi bi-arrow-left-circle me-1"></i>
-            Back to {{ selectedTerm.quarter }} {{ selectedTerm.year }}
-          </BLink>
+          ><i class="bi bi-arrow-left-circle me-1"></i>Back to
+          {{ selectedTerm.quarter }} {{ selectedTerm.year }}</BLink>
         </div>
         <div class="col d-flex justify-content-end">
           <ul class="list-inline list-unstyled m-0">
@@ -109,9 +107,7 @@
                 class="link-quiet-primary"
                 target="_blank"
                 rel="noopener"
-              >
-                <i class="bi bi-question-circle me-1"></i>GradePage Help</BLink
-              >
+              ><i class="bi bi-question-circle me-1"></i>GradePage Help</BLink>
             </li>
             <li class="list-inline-item">
               <BLink
@@ -119,9 +115,8 @@
                 class="link-quiet-primary"
                 target="_blank"
                 rel="noopener"
-                ><i class="bi bi-box-arrow-in-up-right me-1"></i>Course
-                Dashboard</BLink
-              >
+              ><i class="bi bi-box-arrow-in-up-right me-1"></i>Course
+              Dashboard</BLink>
             </li>
           </ul>
         </div>
