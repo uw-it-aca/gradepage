@@ -8,13 +8,11 @@
       <p>
         <strong>{{ errorText }}</strong>
       </p>
-      <p>Some things you may want to try:</p>
       <ul>
         <li>
-          Make sure you are logged into this service with the appropriate UW
-          NetID.
+          Contact <a href="mailto:help@uw.edu">help@uw.edu</a> if you have
+          questions or need help.
         </li>
-        <li>Contact help@uw.edu if you have questions or need help.</li>
       </ul>
     </div>
   </template>
@@ -24,13 +22,15 @@
       <p>
         <strong>{{ errorText }}</strong>
       </p>
-      <p>Some things you may want to try:</p>
       <ul>
         <li>
           Make sure you are logged into this service with the appropriate UW
           NetID.
         </li>
-        <li>Contact help@uw.edu if you have questions or need help.</li>
+        <li>
+          Contact <a href="mailto:help@uw.edu">help@uw.edu</a> if you have
+          questions or need help.
+        </li>
       </ul>
     </div>
   </template>
@@ -45,12 +45,11 @@
         The GradePage support team has been alerted of this issue and are
         working to get you back on track.
       </p>
-      <p>You may want to:</p>
       <ul>
         <li>Give us a little time, and try again later.</li>
         <li>
-          Drop us a line at <a href="mailto:help@uw.edu">help@uw.edu</a> and let
-          us know that this has been taking awhile.
+          Drop us a line at <a href="mailto:help@uw.edu">help@uw.edu</a> and
+          let us know that this has been taking awhile.
         </li>
       </ul>
     </div>
@@ -71,8 +70,8 @@
       </p>
       <ul>
         <li>
-          Include a screenshot, or paste the error text into your email so that
-          we can quickly diagnose the issue.
+          Include a screenshot or the error text in your email so that we can
+          quickly diagnose the issue.
         </li>
       </ul>
     </div>
