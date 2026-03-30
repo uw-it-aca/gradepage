@@ -62,7 +62,7 @@ Bill Teacher submitted grades for four students to the Office of the University 
 To view or print a copy of this grade submission for your records, go to: https://localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE
 
 
-To change submitted grades, use the Change of Grade form: https://test.edu/cog.php
+To change submitted grades after the grade submission deadline, use the Change of Grade form: https://test.edu/cog.php
 
 """)
         self.assertEqual(html, """
@@ -72,7 +72,7 @@ To change submitted grades, use the Change of Grade form: https://test.edu/cog.p
 <p><a href="https://localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE">View or print a copy of this grade submission for your records.</a></p>
 
 
-<p>To change submitted grades, use the <a href="https://test.edu/cog.php">Change of Grade</a> form.</p>
+<p>To change submitted grades after the grade submission deadline, use the <a href="https://test.edu/cog.php">Change of Grade</a> form.</p>
 
 """)
 
@@ -87,19 +87,19 @@ To change submitted grades, use the Change of Grade form: https://test.edu/cog.p
         self.assertEqual(text, """
 Bill Teacher unsuccessfully submitted grades for four students to the Office of the University Registrar on August 27 at  5:01 PM UTC.  There was a problem processing these grades and they have not been submitted.
 
-For more information, view the grade submission receipt: https://localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE
+For more information, view the grade submission confirmation: https://localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE
 
 
-To change submitted grades, use the Change of Grade form: https://test.edu/cog.php
+To change submitted grades after the grade submission deadline, use the Change of Grade form: https://test.edu/cog.php
 
 """)
         self.assertEqual(html, """
 <p>Bill Teacher unsuccessfully submitted grades for four students to the Office of the University Registrar on August 27 at  5:01 PM UTC.  There was a problem processing these grades and they have not been submitted.</p>
 
-<p>For more information, see the <a href="https://localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE">grade submission receipt</a>.</p>
+<p>For more information, see the <a href="https://localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE">grade submission confirmation</a>.</p>
 
 
-<p>To change submitted grades, use the <a href="https://test.edu/cog.php">Change of Grade</a> form.</p>
+<p>To change submitted grades after the grade submission deadline, use the <a href="https://test.edu/cog.php">Change of Grade</a> form.</p>
 
 """)
 
@@ -115,19 +115,19 @@ To change submitted grades, use the Change of Grade form: https://test.edu/cog.p
         self.assertEqual(text, """
 Bill Teacher submitted grades for four students to the Office of the University Registrar on August 27 at  5:01 PM UTC.  These grades have been successfully processed and will be available to the students via MyUW.
 
-However, one grade failed to be submitted successfully.  For more information, see the grade submission receipt: https://localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE
+However, one grade failed to be submitted successfully.  For more information, see the grade submission confirmation: https://localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE
 
 
-To change submitted grades, use the Change of Grade form: https://test.edu/cog.php
+To change submitted grades after the grade submission deadline, use the Change of Grade form: https://test.edu/cog.php
 
 """)
         self.assertEqual(html, """
 <p>Bill Teacher submitted grades for four students to the Office of the University Registrar on August 27 at  5:01 PM UTC.  These grades have been successfully processed and will be available to the students via MyUW.
 </p>
 
-<p>However, one grade failed to be submitted successfully.  For more information, see the <a href="https://localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE">grade submission receipt</a>.</p>
+<p>However, one grade failed to be submitted successfully.  For more information, see the <a href="https://localhost/section/2013-summer-CSS-161-A-FBB38FE46A7C11D5A4AE0004AC494FFE">grade submission confirmation</a>.</p>
 
 
-<p>To change submitted grades, use the <a href="https://test.edu/cog.php">Change of Grade</a> form.</p>
+<p>To change submitted grades after the grade submission deadline, use the <a href="https://test.edu/cog.php">Change of Grade</a> form.</p>
 
 """)
