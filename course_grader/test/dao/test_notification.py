@@ -39,14 +39,35 @@ class NotificationDAOFunctionsTest(TestCase):
         self.assertEqual(len(self.section.get_instructors()), 2)
         self.assertEqual(len(graderoster_people(self.graderoster)), 3)
 
+    def test_ignored_recipients(self):
+        with override_settings(EMAIL_IGNORE_USERS=""):
+            self.assertEqual(ignored_recipients(), {""})
+
+        with override_settings(EMAIL_IGNORE_USERS="a,b,c"):
+            self.assertEqual(ignored_recipients(), {"a", "b", "c"})
+
+        with override_settings(EMAIL_IGNORE_USERS="a, b, c"):
+            self.assertEqual(ignored_recipients(), {"a", "b", "c"})
+
+        with override_settings(EMAIL_IGNORE_USERS=None):
+            self.assertEqual(ignored_recipients(), {""})
+
     def test_create_recipient_list(self):
-        people = graderoster_people(self.graderoster)
-        r = create_recipient_list(people)
-        self.assertEqual(len(r), 3)
-        r.sort()
-        self.assertEqual(r[0], 'bill@uw.edu')
-        self.assertEqual(r[1], 'fred@uw.edu')
-        self.assertEqual(r[2], 'james@uw.edu')
+        with override_settings(EMAIL_IGNORE_USERS=""):
+            people = graderoster_people(self.graderoster)
+            r = create_recipient_list(people)
+            self.assertEqual(len(r), 3)
+            r.sort()
+            self.assertEqual(r[0], 'bill@uw.edu')
+            self.assertEqual(r[1], 'fred@uw.edu')
+            self.assertEqual(r[2], 'james@uw.edu')
+
+        with override_settings(EMAIL_IGNORE_USERS="fred,james,lisa,mary"):
+            people = graderoster_people(self.graderoster)
+            r = create_recipient_list(people)
+            self.assertEqual(len(r), 1)
+            r.sort()
+            self.assertEqual(r[0], 'bill@uw.edu')
 
     def test_create_message_success(self):
         for item in self.graderoster.items:
