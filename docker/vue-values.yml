@@ -130,6 +130,8 @@ externalSecrets:
           property: email-host
         - name: email-noreply-address
           property: email-noreply-address
+        - name: email-ignore-users
+          property: email-ignore-users
         - name: registrar-support-email
           property: registrar-support-email
         - name: registrar-support-phone
@@ -196,6 +198,10 @@ environmentVariablesSecrets:
     name: EMAIL_NOREPLY_ADDRESS
     secretName: vue.gradepage.uw.edu-shared-secrets
     secretKey: email-noreply-address
+  emailIgnoreUsers:
+    name: EMAIL_IGNORE_USERS
+    secretName: vue.gradepage.uw.edu-shared-secrets
+    secretKey: email-ignore-users
   safeEmailRecipient:
     name: SAFE_EMAIL_RECIPIENT
     secretName: vue.gradepage.uw.edu-secrets
