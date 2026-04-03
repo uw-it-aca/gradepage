@@ -8,10 +8,10 @@ RUN apt-get update && apt-get install libpq-dev gettext -y
 
 USER acait
 
-ADD --chown=acait:acait . /app/
-ADD --chown=acait:acait docker/ /app/project/
+COPY --chown=acait:acait . /app/
+COPY --chown=acait:acait docker/ /app/project/
 
-ADD --chown=acait:acait docker/app_start.sh /scripts
+COPY --chown=acait:acait docker/app_start.sh /scripts
 RUN chmod u+x /scripts/app_start.sh
 
 RUN /app/bin/pip install -r requirements.txt
@@ -22,11 +22,11 @@ FROM node:20 AS node-base
 FROM ubuntu:24.04 AS node-bundler
 COPY --from=node-base / /
 
-ADD ./package.json /app/
+COPY ./package.json /app/
 WORKDIR /app/
 RUN npm install .
 
-ADD . /app/
+COPY . /app/
 
 ARG VUE_DEVTOOLS
 ENV VUE_DEVTOOLS=$VUE_DEVTOOLS

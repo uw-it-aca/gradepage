@@ -16,10 +16,20 @@ from logging import getLogger
 logger = getLogger(__name__)
 
 
+def ignored_recipients():
+    ignore_str = getattr(settings, "EMAIL_IGNORE_USERS", "")
+    try:
+        return set([s.strip() for s in ignore_str.split(",")])
+    except AttributeError:
+        return {""}
+
+
 def create_recipient_list(people):
     recipients = []
+    ignored_netids = ignored_recipients()
     for person in people.values():
-        recipients.append(f"{person.uwnetid}@uw.edu")
+        if person.uwnetid not in ignored_netids:
+            recipients.append(f"{person.uwnetid}@uw.edu")
     return recipients
 
 
