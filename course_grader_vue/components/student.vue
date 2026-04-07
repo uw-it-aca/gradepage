@@ -44,10 +44,13 @@ import GradeReview from "@/components/grade/review.vue";
 import GradeImport from "@/components/grade/import.vue";
 import GradeConfirm from "@/components/grade/confirm.vue";
 import { useWorkflowStateStore } from "@/stores/state";
+import { BPopover, BBadge } from "bootstrap-vue-next";
 
 export default {
   name: "StudentComp",
   components: {
+    BPopover,
+    BBadge,
     GradeEdit,
     GradeReview,
     GradeConfirm,

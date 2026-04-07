@@ -118,6 +118,7 @@
 
 <script>
 import { BCard, BLink, BButton, BCollapse } from "bootstrap-vue-next";
+import { vBToggle } from "bootstrap-vue-next/directives/BToggle";
 import { formatGradingStatus } from "@/utils/section";
 
 export default {
@@ -139,6 +140,9 @@ export default {
       default: false,
     },
   },
+  directives: {
+      'b-toggle': vBToggle,
+    },
   setup() {
     return {
       formatGradingStatus,
