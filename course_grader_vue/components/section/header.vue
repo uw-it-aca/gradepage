@@ -30,12 +30,13 @@
 </template>
 
 <script>
-import { BPlaceholder } from "bootstrap-vue-next";
+import { BPlaceholder, BBadge } from "bootstrap-vue-next";
 
 export default {
   name: "SectionHeader",
   components: {
     BPlaceholder,
+    BBadge,
   },
   props: {
     section: {

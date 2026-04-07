@@ -22,7 +22,7 @@
       rel="noopener"
       title="Information on assigning and submitting grades"
     >
-      <i class="bi bi-question-circle me-2 text-body-tertiary"></i>
+      <i class="bi bi-question-circle text-body-tertiary me-2"></i>
       GradePage Help
     </BDropdownItem>
   </BDropdown>
@@ -62,66 +62,70 @@
 </template>
 
 <script>
-import CanvasGrades from "@/components/import/canvas.vue";
-import UploadGrades from "@/components/import/upload.vue";
-import {
-  BDropdown,
-  BDropdownDivider,
-  BDropdownItem,
-  BDropdownItemButton,
-  BModal,
-} from "bootstrap-vue-next";
-import { useWorkflowStateStore } from "@/stores/state";
-import { ref } from "vue";
-
-export default {
-  components: {
-    CanvasGrades,
-    UploadGrades,
+  import CanvasGrades from "@/components/import/canvas.vue";
+  import UploadGrades from "@/components/import/upload.vue";
+  import {
     BDropdown,
     BDropdownDivider,
     BDropdownItem,
     BDropdownItemButton,
     BModal,
-  },
-  props: {
-    section: {
-      type: Object,
-      required: true,
+  } from "bootstrap-vue-next";
+  import { vBModal } from "bootstrap-vue-next/directives/BModal";
+  import { useWorkflowStateStore } from "@/stores/state";
+  import { ref } from "vue";
+
+  export default {
+    components: {
+      CanvasGrades,
+      UploadGrades,
+      BDropdown,
+      BDropdownDivider,
+      BDropdownItem,
+      BDropdownItemButton,
+      BModal,
     },
-    expectedGradeCount: {
-      type: Number,
-      required: true,
+    props: {
+      section: {
+        type: Object,
+        required: true,
+      },
+      expectedGradeCount: {
+        type: Number,
+        required: true,
+      },
     },
-  },
-  setup() {
-    const showImportOptions = ref(false);
-    const appState = useWorkflowStateStore();
-    return {
-      showImportOptions,
-      appState,
-    };
-  },
-  data() {
-    return {
-      canvasModalOpen: false,
-      uploadComponentKey: 0,
-      importHelpURL:
-        "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034603",
-    };
-  },
-  methods: {
-    showCanvasModal() {
-      this.appState.resetGradeImport();
-      this.canvasModalOpen = true;
+    directives: {
+      "b-modal": vBModal,
     },
-    hideCanvasModal() {
-      this.canvasModalOpen = false;
+    setup() {
+      const showImportOptions = ref(false);
+      const appState = useWorkflowStateStore();
+      return {
+        showImportOptions,
+        appState,
+      };
     },
-    showUploadModal() {
-      this.appState.resetGradeImport();
-      this.uploadComponentKey += 1;
+    data() {
+      return {
+        canvasModalOpen: false,
+        uploadComponentKey: 0,
+        importHelpURL:
+          "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034603",
+      };
     },
-  },
-};
+    methods: {
+      showCanvasModal() {
+        this.appState.resetGradeImport();
+        this.canvasModalOpen = true;
+      },
+      hideCanvasModal() {
+        this.canvasModalOpen = false;
+      },
+      showUploadModal() {
+        this.appState.resetGradeImport();
+        this.uploadComponentKey += 1;
+      },
+    },
+  };
 </script>
