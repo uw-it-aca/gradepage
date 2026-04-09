@@ -16,7 +16,7 @@
         :user-override="context.override_user"
       >
         <button
-          class="btn btn-link btn-sm text-danger p-0 m-0 border-0"
+          class="btn btn-link btn-sm text-danger m-0 border-0 p-0"
           value="Clear override"
           @click="clearUserOverride()"
         >
@@ -30,19 +30,10 @@
     </template>
 
     <template #navigation>
-      <ul class="navbar-nav text-white me-auto mb-2 mb-xl-0">
-        <!-- <li class="nav-item me-5">
-          <BLink
-            class="nav-link text-white px-0"
-            :class="matchedTerm(currentTerm.id) ? 'active' : ''"
-            :href="'/term/' + currentTerm.id"
-          >
-            {{ currentTerm.quarter }} {{ currentTerm.year }}
-          </BLink>
-        </li> -->
+      <ul class="navbar-nav mb-md-0 me-auto mb-2">
         <li class="nav-item dropdown">
           <a
-            class="nav-link dropdown-toggle text-white px-0"
+            class="nav-link dropdown-toggle text-white"
             :class="!matchedTerm(currentTerm.id) ? 'active' : ''"
             href="#"
             role="button"
@@ -69,6 +60,27 @@
           </ul>
         </li>
       </ul>
+      <ul class="navbar-nav mb-md-0 mb-2">
+        <li class="list-inline-item">
+          <BLink
+            :href="codaURL"
+            class="nav-link text-white"
+            target="_blank"
+            rel="noopener"
+            ><i class="bi bi-box-arrow-in-up-right me-1"></i>Course
+            Dashboard</BLink
+          >
+        </li>
+        <li class="list-inline-item me-3">
+          <BLink
+            :href="helpURL"
+            class="nav-link text-white"
+            target="_blank"
+            rel="noopener"
+            ><i class="bi bi-question-circle me-1"></i>Help</BLink
+          >
+        </li>
+      </ul>
     </template>
 
     <!-- TODO: hide system messages if empty -->
@@ -76,7 +88,7 @@
       <div class="row">
         <div class="col">
           <ul
-            class="list-unstyled py-2 m-0 text-center text-info-emphasis small"
+            class="list-unstyled text-info-emphasis small m-0 py-2 text-center"
           >
             <li
               v-for="(message, index) in window.gradepage.messages"
@@ -90,39 +102,14 @@
     </template>
 
     <template #main>
-      <div class="row mt-2">
-        <div class="col d-flex justify-content-start">
-          <BLink
-            v-if="displayTermNavigationLink"
-            :href="selectedTerm.url"
-            class="link-quiet-primary"
-          ><i class="bi bi-arrow-left-circle me-1"></i>Back to
-          {{ selectedTerm.quarter }} {{ selectedTerm.year }}</BLink>
-        </div>
-        <div class="col d-flex justify-content-end">
-          <ul class="list-inline list-unstyled m-0">
-            <li class="list-inline-item me-3">
-              <BLink
-                :href="helpURL"
-                class="link-quiet-primary"
-                target="_blank"
-                rel="noopener"
-              ><i class="bi bi-question-circle me-1"></i>GradePage Help</BLink>
-            </li>
-            <li class="list-inline-item">
-              <BLink
-                :href="codaURL"
-                class="link-quiet-primary"
-                target="_blank"
-                rel="noopener"
-              ><i class="bi bi-box-arrow-in-up-right me-1"></i>Course
-              Dashboard</BLink>
-            </li>
-          </ul>
-        </div>
-      </div>
       <div class="row my-5">
         <div class="col">
+          <div v-if="displayTermNavigationLink" class="col mb-2">
+            <BLink :href="selectedTerm.url" class="link-quiet-primary"
+              ><i class="bi bi-arrow-left-circle me-1"></i>Back to
+              {{ selectedTerm.quarter }} {{ selectedTerm.year }}</BLink
+            >
+          </div>
           <slot name="content"></slot>
         </div>
       </div>
@@ -132,97 +119,97 @@
 </template>
 
 <script>
-import { useContextStore } from "@/stores/context";
-import { clearOverride } from "@/utils/data";
-import { BLink, BDropdownItem } from "bootstrap-vue-next";
-import { STopbarNeo, SProfile, SColorMode } from "solstice-vue";
+  import { useContextStore } from "@/stores/context";
+  import { clearOverride } from "@/utils/data";
+  import { BLink, BDropdownItem } from "bootstrap-vue-next";
+  import { STopbarNeo, SProfile, SColorMode } from "solstice-vue";
 
-export default {
-  name: "GradepageApp",
-  components: {
-    BLink,
-    BDropdownItem,
-    STopbarNeo,
-    SProfile,
-    SColorMode,
-  },
-  props: {
-    pageTitle: {
-      type: String,
-      required: true,
+  export default {
+    name: "GradepageApp",
+    components: {
+      BLink,
+      BDropdownItem,
+      STopbarNeo,
+      SProfile,
+      SColorMode,
     },
-    termUrl: {
-      type: String,
-      default: null,
+    props: {
+      pageTitle: {
+        type: String,
+        required: true,
+      },
+      termUrl: {
+        type: String,
+        default: null,
+      },
     },
-  },
-  setup() {
-    const contextStore = useContextStore();
+    setup() {
+      const contextStore = useContextStore();
 
-    return {
-      contextStore,
-      clearOverride,
-    };
-  },
-  data() {
-    return {
-      appName: "GradePage",
-      appRootUrl: "/",
-      helpURL:
-        "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034603",
-      codaURL: "https://coda.uw.edu",
-    };
-  },
-  computed: {
-    context() {
-      return this.contextStore.context;
+      return {
+        contextStore,
+        clearOverride,
+      };
     },
-    currentTerm() {
-      return this.context.terms[0];
+    data() {
+      return {
+        appName: "GradePage",
+        appRootUrl: "/",
+        helpURL:
+          "https://uwconnect.uw.edu/it?id=kb_article_view&sysparm_article=KB0034603",
+        codaURL: "https://coda.uw.edu",
+      };
     },
-    selectedTerm() {
-      return this.context.terms.find(term => this.matchedTerm(term.id));
+    computed: {
+      context() {
+        return this.contextStore.context;
+      },
+      currentTerm() {
+        return this.context.terms[0];
+      },
+      selectedTerm() {
+        return this.context.terms.find((term) => this.matchedTerm(term.id));
+      },
+      displayTermNavigationLink() {
+        return this.$route.path.includes("/section/");
+      },
     },
-    displayTermNavigationLink() {
-      return this.$route.path.includes("/section/");
+    created: function () {
+      // constructs page title in the following format "Page Title - AppName"
+      document.title = this.pageTitle + " - " + this.appName;
     },
-  },
-  created: function () {
-    // constructs page title in the following format "Page Title - AppName"
-    document.title = this.pageTitle + " - " + this.appName;
-  },
-  methods: {
-    matchedTerm: function (id) {
-      return (
-        this.$route.path.includes("/term/" + id) ||
-        this.$route.path.includes("/section/" + id)
-      );
+    methods: {
+      matchedTerm: function (id) {
+        return (
+          this.$route.path.includes("/term/" + id) ||
+          this.$route.path.includes("/section/" + id)
+        );
+      },
+      clearUserOverride: function () {
+        this.clearOverride(this.context.clear_override_url)
+          .then((data) => {})
+          .catch((error) => {})
+          .finally(() => {
+            window.location.href = this.context.clear_override_url;
+          });
+      },
     },
-    clearUserOverride: function () {
-      this.clearOverride(this.context.clear_override_url)
-        .then((data) => {})
-        .catch((error) => {})
-        .finally(() => {
-          window.location.href = this.context.clear_override_url;
-        });
-    },
-  },
-};
+  };
 </script>
 
 <style lang="scss" scoped>
-.chevron .bi-chevron-right {
-  display: inline-block;
-  transition: transform 0.35s ease;
-  transform-origin: 0.5em 50%;
-  font-weight: bolder;
-}
+  .chevron .bi-chevron-right {
+    display: inline-block;
+    transition: transform 0.35s ease;
+    transform-origin: 0.5em 50%;
+    font-weight: bolder;
+  }
 
-.chevron[aria-expanded="true"] .bi-chevron-right {
-  transform: rotate(90deg);
-}
+  .chevron[aria-expanded="true"] .bi-chevron-right {
+    transform: rotate(90deg);
+  }
 
-.bi-chevron-right::after {
-  font-weight: bolder !important;
-}
+  .bi-chevron-right::after {
+    font-weight: bolder !important;
+  }
 </style>
