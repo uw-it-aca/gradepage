@@ -40,9 +40,9 @@ env:
 # defined in the "deploy" job
 on:
   push:
-    branches: [main, qa, develop, feature/vue]
+    branches: [main, qa, develop, feature/eval-me]
   pull_request:
-    branches: [main, qa, develop, feature/vue]
+    branches: [main, qa, develop, feature/eval-me]
     types: [opened, reopened, synchronize]
 
 jobs:
@@ -165,14 +165,14 @@ jobs:
           gh_auth_token: ${{ secrets.GH_AUTH_TOKEN }}
 
       - name: Deploy Evaluation Branch
-        if: needs.context.outputs.git_repo_branch == 'feature/vue'
+        if: needs.context.outputs.git_repo_branch == 'feature/eval-me'
         uses: uw-it-aca/actions/cicd-deploy@main
         with:
           release_name: ${{ env.RELEASE_NAME }}
           commit_hash: ${{ needs.context.outputs.commit_hash }}
           git_repo_branch: ${{ needs.context.outputs.git_repo_branch }}
           gh_auth_token: ${{ secrets.GH_AUTH_TOKEN }}
-          app_instance: vue
+          app_instance: eval-me
 
       - name: 'Surface context from executed build step'
         id: context
