@@ -81,7 +81,7 @@
       </div>
     </BCard>
   </template>
-  <!-- Grades submitted outside of GradePage -->
+  <!-- Grades submitted, but no information about the submission -->
   <template v-else-if="graderoster.has_successful_submissions">
     <BCard bg-variant="body-tertiary" class="border-0 mb-4">
       <div class="d-flex justify-content-between">
@@ -158,8 +158,8 @@ export default {
     unknownSubmissionText() {
       return interpolate(
         ngettext(
-          "One grade submitted outside of GradePage.",
-          "%(graded_count)s grades submitted outside of GradePage.",
+          "One grade submitted, but submission information is not available.",
+          "%(graded_count)s grades submitted, but submission information is not available.",
           this.graderoster.graded_count
         ),
         this.graderoster,
