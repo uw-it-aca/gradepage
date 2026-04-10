@@ -1,0 +1,203 @@
+<!-- eslint-disable vue/no-v-html -->
+<template>
+  <div class="" :aria-labelledby="sectionNameId">
+    <div class="d-flex align-items-center">
+      <template v-if="routableSection">
+        <BLink
+          :href="section.section_url"
+          :title="routerLinkTitle"
+          class="fs-4"
+        >
+          <div :id="sectionNameId">{{ section.display_name }}</div>
+        </BLink>
+      </template>
+      <template v-else>
+        <div :id="sectionNameId" class="fs-4">{{ section.display_name }}</div>
+      </template>
+      <div class="ms-2">
+        <BBadge
+          v-if="gradesAccepted"
+          pill
+          bg-variant="success-subtle"
+          text-variant="success-emphasis"
+          class="fw-semibold me-1"
+          >submitted</BBadge
+        >
+      </div>
+    </div>
+
+    <template v-if="isLoading">
+      <div class="fs-6">
+        <BPlaceholder animation="glow" cols="2" variant="secondary-subtle" />
+      </div>
+    </template>
+    <template v-else>
+      <div
+        class="d-flex fs-6"
+        :class="!gradesAccepted ? 'text-body' : 'text-secondary'"
+        v-html="gradingStatusText"
+      ></div>
+
+      <div v-if="savedGradeWarning" class="mt-2">
+        <div class="fw-bold">
+          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i
+          >Resubmit to make any changes official.
+        </div>
+        <div class="text-secondary small">
+          Otherwise, the most recent grade submission on
+          {{ formatLongDateTime(gradingStatus.submitted_date) }} will stand.
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <ul
+    v-if="section.secondary_sections && section.secondary_sections.length"
+    class="list-unstyled ms-3"
+  >
+    <li
+      v-for="(secondary, index) in section.secondary_sections"
+      :key="secondary.section_id"
+      class="py-2"
+    >
+      <SecondarySection
+        :section="secondary"
+        :grading-status="secondaryStatus[index]"
+        :timeout="index * base_timeout"
+      ></SecondarySection>
+    </li>
+  </ul>
+</template>
+
+<script>
+import SecondarySection from "@/components/section/secondary.vue";
+import { getSectionStatus } from "@/utils/data";
+import { formatLongDateTime } from "@/utils/dates";
+import {
+  formatGradingStatus,
+  formatErrorStatus,
+  formatLinkTitle,
+} from "@/utils/section";
+import { BLink, BBadge, BPlaceholder } from "bootstrap-vue-next";
+import { useWorkflowStateStore } from "@/stores/state";
+import { useGradeStore } from "@/stores/grade";
+
+export default {
+  name: "SectionPrimary",
+  components: {
+    SecondarySection,
+    BPlaceholder,
+    BLink,
+    BBadge,
+  },
+  props: {
+    section: {
+      type: Object,
+      required: true,
+    },
+    timeout: {
+      type: Number,
+      required: true,
+    },
+  },
+  setup() {
+    const appState = useWorkflowStateStore();
+    const gradeStore = useGradeStore();
+
+    return {
+      getSectionStatus,
+      formatGradingStatus,
+      formatErrorStatus,
+      formatLinkTitle,
+      formatLongDateTime,
+      appState,
+      gradeStore,
+    };
+  },
+  data() {
+    return {
+      gradingStatus: null,
+      secondaryStatus: [],
+      errorStatus: null,
+      sectionNameId: "section-name-" + this.section.section_id,
+      isLoading: true,
+      base_timeout: 250,
+    };
+  },
+  computed: {
+    gradingStatusText() {
+      if (this.section.grading_status) {
+        //console.debug(
+        //  "primary.vue, section.grading_status: " + this.section.grading_status
+        //);
+        return this.section.grading_status;
+      } else if (this.errorStatus) {
+        //console.debug(
+        //  "primary.vue, errorStatus: " + JSON.stringify(this.errorStatus)
+        //);
+        return this.formatErrorStatus(this.errorStatus);
+      } else if (this.gradingStatus) {
+        //console.debug(
+        //  "primary.vue, gradingStatus: " + JSON.stringify(this.gradingStatus)
+        //);
+        return this.formatGradingStatus(this.gradingStatus);
+      }
+      return "";
+    },
+    routableSection() {
+      return (
+        this.section.section_url &&
+        !(this.errorStatus && this.errorStatus.status === 543)
+      ) ? true : false;
+    },
+    routerLinkTitle() {
+      return this.gradingStatus ? this.formatLinkTitle(this.gradingStatus) : "";
+    },
+    gradesAccepted() {
+      if (this.gradingStatus) {
+        return (
+          this.gradingStatus.accepted_date &&
+          this.gradingStatus.accepted_date != null &&
+          this.gradingStatus.submitted_count > 0
+        );
+      }
+      return false;
+    },
+    savedGradeWarning() {
+      if (this.gradingStatus) {
+        return (
+          this.gradingStatus.grading_period_open &&
+          this.gradingStatus.accepted_date !== null &&
+          this.gradingStatus.saved_count > 0
+        );
+      }
+      return false;
+    },
+  },
+  created() {
+    setTimeout(() => {
+      this.loadGradingStatus();
+    }, this.timeout);
+  },
+  methods: {
+    loadGradingStatus: function () {
+      if (this.section.status_url) {
+        this.isLoading = true;
+
+        this.getSectionStatus(this.section.status_url)
+          .then((data) => {
+            this.gradingStatus = data.grading_status;
+
+            if (data.grading_status.hasOwnProperty("secondary_sections")) {
+              this.secondaryStatus = data.grading_status.secondary_sections;
+            }
+          })
+          .catch((error) => {
+            this.errorStatus = error.data;
+          });
+      }
+      this.isLoading = false;
+    },
+  },
+};
+</script>

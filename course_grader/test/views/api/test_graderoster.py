@@ -1,4 +1,4 @@
-# Copyright 2025 UW-IT, University of Washington
+# Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -15,7 +15,6 @@ from course_grader.views.api.graderoster import GradeRosterExport
 class GradeRosterExportTest(TestCase):
     def test_create_response(self):
         view = GradeRosterExport()
-
         (section, instructor) = section_from_param(
             '2013-spring-TRAIN-101-A-9136CCB8F66711D5BE060004AC494FFE')
         view.section = section
@@ -33,14 +32,23 @@ class GradeRosterExportTest(TestCase):
                          'attachment; filename="2013-spring-TRAIN-101-A.csv"')
 
         self.assertEqual(response.content, (
-            b',,,\nStudent Grade Change List,,,\nINSTRUCTIONS:,,,\nComplete '
-            b'this spreadsheet and upload the file using the UW Registrar\'s '
-            b'Online Change of Grade Request Form.,,,\nhttps://apps.registrar.'
-            b'washington.edu/grade-change/pages/change.php,,,\nDO NOT EMAIL '
-            b'this spreadsheet with student grade information.,,,\n,,,\n'
-            b'INSTRUCTOR NAME AND EMAIL:,,,\n"Jamesy McJamesy",javerage@uw.edu'
-            b',,\n,,,\nCOURSE PREFIX AND NUMBER (AND SECTION):,,,\n"TRAIN 101 '
-            b'A",,,\n,,,\nQUARTER AND YEAR:,,,\nSpring 2013,,,\n,,,\n,,,\n,,,'
-            b'\nSTUDENT NUMBER,"STUDENT NAME (LAST, FIRST)",GRADE FROM,GRADE '
-            b'TO\n000000,"AVERAGE, J",4.0,\n'
+            b',,,\nStudent Grade Change List'
+            b',,,\n'
+            b'INSTRUCTIONS:,,,\n'
+            b'Complete this spreadsheet and upload the file using the '
+            b'Office of the University Registrar\'s Online Change of Grade '
+            b'Request Form.,,,\n'
+            b'https://apps.registrar.washington.edu/grade-change/pages/change.php'  # noqa
+            b',,,\n'
+            b'DO NOT EMAIL this spreadsheet with student grade information.'
+            b',,,\n,,,\n'
+            b'INSTRUCTOR NAME AND EMAIL:,,,\n'
+            b'"Jamesy McJamesy",javerage@uw.edu,,\n,,,\n'
+            b'COURSE PREFIX AND NUMBER (AND SECTION):,,,\n'
+            b'"TRAIN 101 A",,,\n,,,\n'
+            b'QUARTER AND YEAR:,,,\nSpring 2013,,,\n,,,\n'
+            b'CAMPUS:,,,\nSeattle,,,\n,,,\n,,,\n,,,\n'
+            b'STUDENT NUMBER,"STUDENT NAME (LAST, FIRST)",GRADE FROM,GRADE TO'
+            b'\n'
+            b'000000,"AVERAGE, J",4.0,\n'
         ))

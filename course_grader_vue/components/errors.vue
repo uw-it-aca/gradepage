@@ -1,0 +1,114 @@
+<template>
+  <div v-if="section" class="d-flex justify-content-between align-items-end mb-4">
+    <SectionHeader :section="section" />
+  </div>
+  <template v-if="errorResponse.status === 404">
+    <div id="404-error">
+      <h1 class="fs-3 fw-bold">Not Found</h1>
+      <p>
+        <strong>{{ errorText }}</strong>
+      </p>
+      <ul>
+        <li>
+          Contact <a href="mailto:help@uw.edu">help@uw.edu</a> if you have
+          questions or need help.
+        </li>
+      </ul>
+    </div>
+  </template>
+  <template v-else-if="errorResponse.status === 401">
+    <div id="401-error">
+      <h1 class="fs-3 fw-bold">Not Authorized</h1>
+      <p>
+        <strong>{{ errorText }}</strong>
+      </p>
+      <ul>
+        <li>
+          Make sure you are logged into this service with the appropriate UW
+          NetID.
+        </li>
+        <li>
+          Contact <a href="mailto:help@uw.edu">help@uw.edu</a> if you have
+          questions or need help.
+        </li>
+      </ul>
+    </div>
+  </template>
+  <template v-else-if="errorResponse.status === 500">
+    <div id="500-error">
+      <h1 class="fs-3 fw-bold">Server Error</h1>
+      <p>
+        <strong>{{ errorText }}</strong>
+      </p>
+
+      <p>
+        The GradePage support team has been alerted of this issue and are
+        working to get you back on track.
+      </p>
+      <ul>
+        <li>Give us a little time, and try again later.</li>
+        <li>
+          Drop us a line at <a href="mailto:help@uw.edu">help@uw.edu</a> and
+          let us know that this has been taking awhile.
+        </li>
+      </ul>
+    </div>
+  </template>
+  <template v-else>
+    <div id="543-error">
+      <h1 class="fs-3 fw-bold">Problem retrieving grading information</h1>
+
+      <p>
+        <strong>{{ errorText }}</strong>
+      </p>
+
+      <p>
+        To correct this issue,
+        <strong>
+          please contact <a href="mailto:help@uw.edu">help@uw.edu</a> </strong
+        >.
+      </p>
+      <ul>
+        <li>
+          Include a screenshot or the error text in your email so that we can
+          quickly diagnose the issue.
+        </li>
+      </ul>
+    </div>
+  </template>
+</template>
+
+<script>
+import SectionHeader from "@/components/section/header.vue";
+import { formatErrorStatus } from "@/utils/section";
+
+export default {
+  name: "ErrorsComp",
+  components: {
+    SectionHeader,
+  },
+  props: {
+    section: {
+      type: Object,
+      required: true,
+      default: null,
+    },
+    errorResponse: {
+      type: Object,
+      required: true,
+    },
+  },
+  setup() {
+    return {
+      formatErrorStatus,
+    };
+  },
+  computed: {
+    errorText() {
+      return this.errorResponse.error
+        ? this.formatErrorStatus(this.errorResponse)
+        : this.errorResponse;
+    },
+  },
+};
+</script>

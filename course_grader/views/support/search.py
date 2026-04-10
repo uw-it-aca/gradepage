@@ -1,4 +1,4 @@
-# Copyright 2025 UW-IT, University of Washington
+# Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -15,6 +15,7 @@ from restclients_core.exceptions import DataFailureException, InvalidNetID
 from course_grader.models import SubmittedGradeRoster, GradeImport
 from course_grader.dao.person import (
     person_from_netid, person_from_regid, person_display_name)
+from course_grader.dao.term import current_term
 from logging import getLogger
 import re
 
@@ -86,10 +87,8 @@ def grade_imports(request):
     if len(params["errors"]):
         return render(request, template, params)
 
-    grade_imports = GradeImport.objects.filter(*args, **kwargs)
-
     people = {}
-    for grade_import in grade_imports:
+    for grade_import in GradeImport.objects.get_by_search(*args, **kwargs):
         data = grade_import.json_data()
 
         (year, quarter, curriculum_abbr, course_number, section_id,
@@ -197,12 +196,10 @@ def graderosters(request):
     if len(params["errors"]):
         return render(request, template, params)
 
-    graderosters = SubmittedGradeRoster.objects.filter(
-        *args, **kwargs).defer("document")
-
     submitted_dates = {}
     people = {}
-    for graderoster in graderosters:
+    for graderoster in SubmittedGradeRoster.objects.get_by_search(
+            *args, **kwargs):
         if graderoster.secondary_section_id is not None:
             sid = graderoster.secondary_section_id
         else:
@@ -258,7 +255,7 @@ def find_all_terms(terms):
     all_terms.sort(key=lambda t: (t.year, QUARTER_SEQ.index(t.quarter)),
                    reverse=True)
 
-    return all_terms
+    return all_terms if len(all_terms) else [current_term()]
 
 
 def term_from_param(request, all_terms):
@@ -267,9 +264,12 @@ def term_from_param(request, all_terms):
         (year, quarter) = term_id.split("-")
         selected_term = Term(year=int(year), quarter=quarter)
         if selected_term not in all_terms:
-            return all_terms[0]
-    except Exception:
-        return all_terms[0]
+            selected_term = all_terms[0]
+    except ValueError:
+        try:
+            selected_term = all_terms[0]
+        except IndexError:
+            return current_term()
 
     try:
         return get_term_by_year_and_quarter(selected_term.year,

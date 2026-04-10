@@ -1,4 +1,4 @@
-# Copyright 2025 UW-IT, University of Washington
+# Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -44,33 +44,49 @@ def submit_grades(model):
     # item. To create a saved graderoster receipt, merge the returned
     # graderoster into the submitted graderoster, to capture both the
     # submitted grade and the returned status code/message for each item.
-    for item in ret_graderoster.items:
-        if item.status_code is None:
-            continue
+    ret_graderoster_dict = {
+        i.student_label(separator="-"): i for i in ret_graderoster.items
+    }
+
+    for item in graderoster.items:
+        key = item.student_label(separator="-")
+
+        # Capture the submitted grade for logging
+        submitted_grade = format_logged_grade(item)
 
         try:
-            idx = graderoster.items.index(item)
-            graderoster.items[idx].status_code = item.status_code
-            graderoster.items[idx].status_message = item.status_message
-            graderoster.items[idx].date_graded = item.date_graded
-            graderoster.items[idx].grade_document_id = item.grade_document_id
-            graderoster.items[idx].grade_submitter_source = (
-                item.grade_submitter_source)
+            ret_item = ret_graderoster_dict[key]
+        except KeyError:
+            logger.info((
+                "Grade submitted, Student: {student}, Section: "
+                "{section_id}, Submitted grade: {submitted_grade}, "
+                "Returned grade: {returned_grade}, Code: {status_code}, "
+                "Message: {message}").format(
+                    student=key,
+                    section_id=logged_section_id,
+                    submitted_grade=submitted_grade,
+                    returned_grade=None,
+                    status_code=None,
+                    message=None))
+            continue
 
-            logged_grade = format_logged_grade(graderoster.items[idx])
-            if logged_grade is not None:
-                logger.info((
-                    "Grade submitted, Student: {student}, Section: "
-                    "{section_id}, Grade: {grade}, Code: {status_code}, "
-                    "Message: {message}").format(
-                        student=graderoster.items[idx].student_label(
-                            separator="-"),
-                        section_id=logged_section_id,
-                        grade=logged_grade,
-                        status_code=graderoster.items[idx].status_code,
-                        message=graderoster.items[idx].status_message))
+        # Update the graderoster with data returned from PUT
+        item.status_code = ret_item.status_code
+        item.status_message = ret_item.status_message
+        item.date_graded = ret_item.date_graded
+        item.grade_document_id = ret_item.grade_document_id
+        item.grade_submitter_source = ret_item.grade_submitter_source
 
-        except Exception as ex:
-            logger.error("Error logging grade: {}".format(ex))
+        logger.info((
+            "Grade submitted, Student: {student}, Section: "
+            "{section_id}, Submitted grade: {submitted_grade}, "
+            "Returned grade: {returned_grade}, Code: {status_code}, "
+            "Message: {message}").format(
+                student=key,
+                section_id=logged_section_id,
+                submitted_grade=submitted_grade,
+                returned_grade=format_logged_grade(ret_item),
+                status_code=item.status_code,
+                message=item.status_message))
 
     return graderoster

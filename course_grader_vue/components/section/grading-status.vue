@@ -1,0 +1,171 @@
+<!-- eslint-disable vue/no-v-html -->
+<template>
+  <template v-if="graderoster.submissions.length">
+    <BCard bg-variant="body-tertiary" class="border-0 mb-4">
+      <div v-if="savedGradeWarning" class="border-bottom mb-2 pb-2">
+        <span class="fw-bold">
+          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i
+          >Resubmit to make any changes official.
+        </span>
+        Otherwise, the most recent grade submission will stand.
+      </div>
+      <div v-if="graderoster.submissions.length > 1">
+        <!-- A primary section with more than one linked section, but only use
+        the collapsible display when there are multiple submissions -->
+        <div class="d-flex justify-content-between">
+          <div>
+            <div class="fw-bold ms-4">Course sections submitted.</div>
+            <div class="fst-italic small ms-4">
+              Submitted grades may differ from official final grade.
+              <BLink :href="gradingResourcesURL" target="_blank" rel="noopener"
+                >Learn why</BLink
+              >.
+            </div>
+          </div>
+          <div>
+            <BButton v-b-toggle.collapse-1 variant="quiet-primary" size="sm"
+              >Show sections</BButton
+            >
+          </div>
+        </div>
+        <BCollapse id="collapse-1">
+          <ul class="list-unstyled mt-2 ms-4">
+            <li
+              v-for="(submission, index) in graderoster.submissions"
+              :key="index"
+            >
+              <i
+                v-if="submission.accepted_date"
+                class="bi bi-check-circle-fill text-success me-2"
+              ></i>
+              <i
+                v-else
+                class="bi bi-exclamation-triangle-fill text-warning me-2"
+              ></i>
+              <span v-if="submission.section_id"
+                >Section {{ submission.section_id }}:
+              </span>
+              <span v-html="formatGradingStatus(submission, true)"></span>
+            </li>
+          </ul>
+        </BCollapse>
+      </div>
+      <div v-else>
+        <!-- primary section with zero or one linked section, or a linked
+        section, with one displayed submission -->
+        <ul class="list-unstyled m-0">
+          <li>
+            <i
+              v-if="graderoster.submissions[0].accepted_date"
+              class="bi bi-check-circle-fill text-success me-2"
+            ></i>
+            <i
+              v-else
+              class="bi bi-exclamation-triangle-fill text-warning me-2"
+            ></i>
+            <span
+              v-html="formatGradingStatus(graderoster.submissions[0], true)"
+            >
+            </span>
+          </li>
+        </ul>
+        <div
+          v-if="graderoster.submissions[0].accepted_date"
+          class="fst-italic small ms-4"
+        >
+          Submitted grades may differ from official final grade.
+          <BLink :href="gradingResourcesURL" target="_blank" rel="noopener"
+            >Learn why</BLink
+          >.
+        </div>
+      </div>
+    </BCard>
+  </template>
+  <!-- Grades submitted outside of GradePage -->
+  <template v-else-if="graderoster.has_successful_submissions">
+    <BCard bg-variant="body-tertiary" class="border-0 mb-4">
+      <div class="d-flex justify-content-between">
+        <div class="fw-bold">
+          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i
+          ><span v-html="unknownSubmissionText"></span>
+        </div>
+      </div>
+    </BCard>
+  </template>
+  <!-- Grading period is open, section has no students to grade -->
+  <template v-else-if="graderoster.grading_period_open && !graderoster.gradable_student_count">
+    <BCard bg-variant="body-tertiary" class="border-0 mb-4">
+      <div class="d-flex justify-content-between">
+        <div class="fw-bold">
+          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+          <span>No grades to submit for this section.</span>
+        </div>
+      </div>
+    </BCard>
+  </template>
+  <!-- Grading period is closed, no grades were submitted -->
+  <template v-else-if="!graderoster.grading_period_open">
+    <BCard bg-variant="body-tertiary" class="border-0 mb-4">
+      <div class="d-flex justify-content-between">
+        <div class="fw-bold">
+          <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+          <span>No grades were submitted for this section.</span>
+        </div>
+      </div>
+    </BCard>
+  </template>
+</template>
+
+<script>
+import { BCard, BLink, BButton, BCollapse } from "bootstrap-vue-next";
+import { vBToggle } from "bootstrap-vue-next/directives/BToggle";
+import { formatGradingStatus } from "@/utils/section";
+
+export default {
+  name: "SectionGradingStatus",
+  components: {
+    BCard,
+    BLink,
+    BButton,
+    BCollapse,
+  },
+  props: {
+    graderoster: {
+      type: Object,
+      required: true,
+    },
+    savedGradeWarning: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
+  directives: {
+      'b-toggle': vBToggle,
+    },
+  setup() {
+    return {
+      formatGradingStatus,
+    };
+  },
+  data() {
+    return {
+      gradingResourcesURL:
+        "https://registrar.washington.edu/staff-faculty/grading-resources/",
+    };
+  },
+  computed: {
+    unknownSubmissionText() {
+      return interpolate(
+        ngettext(
+          "One grade submitted outside of GradePage.",
+          "%(graded_count)s grades submitted outside of GradePage.",
+          this.graderoster.graded_count
+        ),
+        this.graderoster,
+        true
+      );
+    },
+  },
+};
+</script>

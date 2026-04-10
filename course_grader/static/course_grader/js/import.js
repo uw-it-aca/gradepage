@@ -6,6 +6,7 @@ GradePage.Import = (function ($) {
     var import_data,
         conversion_scale_data = {};
 
+    /* CLEAR */
     function valid_grade(data) {
         var grade = data.imported_grade,
             grade_choices = $("#grade-" + data.item_id).data("grade_choices");
@@ -25,6 +26,7 @@ GradePage.Import = (function ($) {
         return false;
     }
 
+    /* CLEAR */
     function valid_percentage(data) {
         return !isNaN(data.imported_grade);
     }
@@ -40,17 +42,20 @@ GradePage.Import = (function ($) {
         $("#gp-import-modal").modal({backdrop: "static"});
     }
 
+    /* CLEAR */
     function update_graderoster() {
         $("#gp-import-modal").on("hidden.bs.modal", GradePage.GradeRoster.initialize);
         $("#gp-import-modal").modal("hide");
     }
 
+    /* CLEAR */
     function remove_auto_import() {
         if (window.gradepage.hasOwnProperty("auto_import")) {
             delete window.gradepage.auto_import;
         }
     }
 
+    /* CLEAR */
     function save_grades(ev) {
         var url = window.gradepage.import_url + "/" + import_data.grade_import.id,
             converted_grade_data = {},
@@ -88,6 +93,7 @@ GradePage.Import = (function ($) {
         });
     }
 
+    /* CLEAR */
     function update_prior_scale_selector(data) {
         var template = Handlebars.compile($("#convert-optgroup-tmpl").html());
 
@@ -101,6 +107,7 @@ GradePage.Import = (function ($) {
         conversion_scale_data[data.scale] = data;
     }
 
+    /* CLEAR */
     function load_prior_scales(ev, data) {
         if (conversion_scale_data.hasOwnProperty(data.scale)) {
             update_prior_scale_selector(conversion_scale_data[data.scale]);
@@ -118,6 +125,7 @@ GradePage.Import = (function ($) {
         }
     }
 
+    /* CLEAR */
     function initialize_calculator(opts) {
         return $("#grade-calculator-container").off()
             .on("saveGradeConversion", draw_review_grades)
@@ -126,6 +134,7 @@ GradePage.Import = (function ($) {
             .grade_conversion_calculator(opts);
     }
 
+    /* CLEAR */
     function select_previous_scale() {
         /*jshint validthis: true */
         var selected = $(this).val(),
@@ -159,6 +168,7 @@ GradePage.Import = (function ($) {
         $("#select-previous-scale").val("0");
     }
 
+    /* CLEAR */
     function select_course_scale() {
         /*jshint validthis: true */
         var selected = $(this).val(),
@@ -179,6 +189,7 @@ GradePage.Import = (function ($) {
         $("#select-course-scale").val("0");
     }
 
+    /* CLEAR */
     function draw_conversion_calculator(opts) {
         var template = Handlebars.compile($("#convert-tmpl").html());
 
@@ -197,6 +208,7 @@ GradePage.Import = (function ($) {
         }
     }
 
+    /* CLEAR */
     function draw_review_grades(ev, data) {
         var template = Handlebars.compile($("#confirm-tmpl").html()),
             students = import_data.grade_import.students,
@@ -241,6 +253,7 @@ GradePage.Import = (function ($) {
         $("button.gp-btn-convert-save").click(data, save_grades);
     }
 
+    /* CLEAR */
     function initialize_conversion() {
         /*jshint validthis: true */
         var scale = $(this).attr("id").replace(/^gp-convert-scale-/, "");
@@ -255,6 +268,7 @@ GradePage.Import = (function ($) {
         $("#gp-import-modal").modal("hide");
     }
 
+    /* CLEAR */
     function update_upload_form() {
         var filename = $("#gp-import-file").val();
         if (filename) {
@@ -264,6 +278,7 @@ GradePage.Import = (function ($) {
         }
     }
 
+    /* CLEAR */
     function draw_upload_prompt(data) {
         var template = Handlebars.compile($("#upload-tmpl").html());
 
@@ -282,6 +297,7 @@ GradePage.Import = (function ($) {
         update_upload_form();
     }
 
+    /* CLEAR */
     function draw_upload_error(xhr, filename) {
         var data = {};
         try {
@@ -296,6 +312,7 @@ GradePage.Import = (function ($) {
         draw_upload_prompt(data);
     }
 
+    /* CLEAR */
     function draw_import_success(data) {
         var template = Handlebars.compile($("#import-tmpl").html()),
             students = data.grade_import.students,
@@ -368,6 +385,7 @@ GradePage.Import = (function ($) {
         //$("#gp-import-modal").modal("show");
     }
 
+    /* CLEAR */
     function create_upload(ev) {
         var formData = new FormData(),
             filename = $("#gp-import-file").val().split('\\').pop();
@@ -391,6 +409,7 @@ GradePage.Import = (function ($) {
         });
     }
 
+    /* CLEAR */
     function create_import(source, source_id) {
         var post_data = {"source": source};
         if (source_id) {
@@ -420,6 +439,7 @@ GradePage.Import = (function ($) {
         });
     }
 
+    /* CLEAR */
     function select_import() {
         /*jshint validthis: true */
         var source = $(this).val(),
@@ -434,6 +454,7 @@ GradePage.Import = (function ($) {
         }
     }
 
+    /* CLEAR */
     function auto_import() {
         if (window.gradepage.hasOwnProperty("auto_import")) {
             create_import(window.gradepage.auto_import.source,

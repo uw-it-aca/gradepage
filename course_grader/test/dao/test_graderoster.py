@@ -1,4 +1,4 @@
-# Copyright 2025 UW-IT, University of Washington
+# Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -52,12 +52,6 @@ class GraderosterDAOFunctionsTest(TestCase):
         self.assertEqual(len(gr.items), 2)
         self.assertFalse(hasattr(gr, 'submission_id'))
 
-        # Test handing of etree.XMLSyntaxError
-        model.document = '<' + model.document
-        model.save()
-        self.assertRaises(DataFailureException, graderoster_for_section,
-                          section, user, user)
-
     def test_submitted_only_graderoster_for_section(self):
         section = get_section_by_label('2013,spring,TRAIN,101/B')
         user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
@@ -83,7 +77,15 @@ class GraderosterDAOFunctionsTest(TestCase):
         gr = graderoster_for_section(
             section, user, user, submitted_graderosters_only=True)
         self.assertEqual(len(gr.items), 2)
-        self.assertEqual(gr.submission_id, 'B')
+        self.assertEqual(len(gr.submissions), 1)
+        self.assertEqual(gr.submissions[0]["submission_id"], 'B')
+
+        # Test handing of etree.XMLSyntaxError
+        model.document = '<' + model.document
+        model.save()
+        self.assertRaises(
+            DataFailureException, graderoster_for_section,
+            section, user, user, submitted_graderosters_only=True)
 
     def test_graderoster_not_permitted(self):
         section = get_section_by_label('2013,spring,TRAIN,100/AA')

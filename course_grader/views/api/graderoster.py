@@ -1,12 +1,10 @@
-# Copyright 2025 UW-IT, University of Washington
+# Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
 from django.conf import settings
 from django.template.context_processors import csrf
 from django.template.loader import render_to_string
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
 from course_grader.models import SubmittedGradeRoster, Grade, GradeImport
 from course_grader.dao.graderoster import graderoster_for_section
@@ -23,6 +21,7 @@ from course_grader.views import (
 from course_grader.views.api import (
     GradeFormHandler, graderoster_status_params, item_is_submitted,
     sorted_students, sorted_grades)
+from course_grader.views.decorators import xhr_login_required
 from course_grader.exceptions import *
 from userservice.user import UserService
 from restclients_core.exceptions import DataFailureException
@@ -36,8 +35,7 @@ import re
 logger = getLogger(__name__)
 
 
-@method_decorator(login_required, name='dispatch')
-@method_decorator(never_cache, name='dispatch')
+@method_decorator(xhr_login_required, name='dispatch')
 class GradeRoster(GradeFormHandler):
     def _authorize(self, request, *args, **kwargs):
         try:
@@ -63,10 +61,10 @@ class GradeRoster(GradeFormHandler):
             if section.is_primary_section and section.allows_secondary_grading:
                 raise SecondaryGradingEnabled()
 
-            if (re.match(r"(PATCH|PUT|POST)", request.method)):
+            if (re.match(r"(PATCH|PUT|POST|DELETE)", request.method)):
                 self.valid_user_override()
 
-            if (re.match(r"(GET|PUT|POST)", request.method)):
+            if (re.match(r"(GET|PUT|POST|DELETE)", request.method)):
                 submitted_graderosters_only = kwargs.get(
                     "submitted_graderosters_only", False)
                 self.graderoster = graderoster_for_section(
@@ -74,18 +72,21 @@ class GradeRoster(GradeFormHandler):
                     submitted_graderosters_only=submitted_graderosters_only)
 
         except (InvalidUser, GradingNotPermitted, OverrideNotPermitted) as ex:
-            logger.info("Grading for {} not permitted for {}".format(
-                section_id, UserService().get_original_user()))
-            return self.error_response(403, "{}".format(ex))
+            user = UserService().get_original_user()
+            logger.info(f"Grading for {section_id} not permitted for {user}")
+            return self.error_response(401, f"{ex}")
         except (SecondaryGradingEnabled, GradingPeriodNotOpen,
                 InvalidTerm, InvalidSection, MissingInstructorParam) as ex:
-            return self.error_response(400, "{}".format(ex))
+            return self.error_response(400, f"{ex}")
         except ReceiptNotFound as ex:
-            return self.error_response(404, "{}".format(ex))
+            return self.error_response(404, f"{ex}")
         except DataFailureException as ex:
-            logger.info("GET graderoster error: {}".format(ex))
+            logger.info(f"GET graderoster error: {ex}")
             (status, msg) = self.data_failure_error(ex)
             return self.error_response(status, msg)
+        except Exception as ex:
+            logger.info(f"GET graderoster error: {ex}")
+            return self.error_response(500, f"{ex.__class__.__name__}: {ex}")
 
     def get(self, request, *args, **kwargs):
         error = self._authorize(request, *args, **kwargs)
@@ -111,8 +112,7 @@ class GradeRoster(GradeFormHandler):
             grade_data = json.loads(request.body)
             grade = self.save_grade(section_id, grade_data)
         except Exception as ex:
-            logger.error(
-                "PATCH grade failed for {}: {}".format(section_id, ex))
+            logger.error(f"PATCH grade failed for {section_id}: {ex}")
             return self.error_response(500)
 
         # PATCH does not return a full graderoster resource
@@ -126,29 +126,29 @@ class GradeRoster(GradeFormHandler):
         section_id = kwargs.get("section_id")
         saved_grades = {}
         try:
-            for data in json.loads(request.body):
+            grade_data = json.loads(request.body)
+            for data in grade_data.get("grades"):
                 grade = self.save_grade(section_id, data)
                 saved_grades[data["student_id"]] = grade
 
         except Exception as ex:
-            logger.error("PUT grade failed for {} {}".format(section_id, ex))
+            logger.error(f"PUT grade failed for {section_id}: {ex}")
             return self.error_response(500)
 
         secondary_section = getattr(self.graderoster, "secondary_section",
                                     None)
+
         status = 200
         for item in self.graderoster.items:
             if (secondary_section is not None and
                     secondary_section.section_id != item.section_id):
                 continue
 
-            if (item_is_submitted(item) or item.is_auditor or
-                    item.date_withdrawn is not None):
+            if (item.is_auditor or item.date_withdrawn is not None):
                 continue
 
             student_id = item.student_label(separator="-")
-            if not self.validate_grade(item,
-                                       saved_grades.get(student_id, None)):
+            if not self.validate_grade(item, saved_grades.get(student_id)):
                 status = 409
 
         kwargs["saved_grades"] = saved_grades
@@ -160,25 +160,24 @@ class GradeRoster(GradeFormHandler):
         if error is not None:
             return error
 
-        section_id = kwargs.get("section_id")
-        saved_grades = self.saved_grades(section_id)
+        grades_section_id = kwargs.get("section_id")
+        saved_grades = self.saved_grades(grades_section_id)
         secondary_section = getattr(self.graderoster, "secondary_section",
                                     None)
 
         status = 200
-        unsubmitted_count = 0
+        gradable_count = 0
         for item in self.graderoster.items:
             if (secondary_section is not None and
                     secondary_section.section_id != item.section_id):
                 continue
 
-            if (item_is_submitted(item) or item.is_auditor or
-                    item.date_withdrawn is not None):
+            if (item.is_auditor or item.date_withdrawn is not None):
                 continue
 
-            unsubmitted_count += 1
+            gradable_count += 1
             student_id = item.student_label(separator="-")
-            saved_grade = saved_grades.get(student_id, None)
+            saved_grade = saved_grades.get(student_id)
             if self.validate_grade(item, saved_grade):
                 item.no_grade_now = saved_grade.no_grade_now
                 item.grade = "" if (
@@ -186,10 +185,11 @@ class GradeRoster(GradeFormHandler):
                 item.has_incomplete = saved_grade.is_incomplete
                 item.has_writing_credit = saved_grade.is_writing
                 item.grade_submitter_person = self.user
+                item.grade_status = None
             else:
                 status = 409
 
-        if status == 200 and unsubmitted_count:
+        if status == 200 and gradable_count:
             section = self.graderoster.section
             model = SubmittedGradeRoster(
                 section_id=section.section_label(),
@@ -202,30 +202,59 @@ class GradeRoster(GradeFormHandler):
                 model.secondary_section_id = secondary_section.section_label()
 
             model.save()
-            model.submit()
+            try:
+                model.submit(grades_section_id)
+            except DataFailureException as ex:
+                (status, msg) = self.data_failure_error(ex)
+                return self.error_response(status, msg)
+            except Exception as ex:
+                return self.error_response(500, ex)
 
             self.graderoster = graderoster_for_section(
                 self.section, self.instructor, self.user)
 
-        kwargs["saved_grades"] = saved_grades
+        kwargs["saved_grades"] = self.saved_grades(grades_section_id)
 
         content = self.response_content(**kwargs)
         content["graderoster"]["is_submission_confirmation"] = True
         return self.json_response(content, status=status)
 
-    def validate_grade(self, graderoster_item, saved_grade):
+    def delete(self, request, *args, **kwargs):
+        error = self._authorize(request, *args, **kwargs)
+        if error is not None:
+            return error
+
+        section_id = kwargs.get("section_id")
+
+        try:
+            Grade.objects.get_by_section_id_and_person(
+                section_id, self.user.uwregid).delete()
+            logger.info(f"Grades cleared for {section_id}")
+        except Exception as ex:
+            logger.error(f"DELETE grades failed for {section_id}: {ex}")
+            return self.error_response(500)
+
+        kwargs["saved_grades"] = {}
+        content = self.response_content(**kwargs)
+        return self.json_response(content)
+
+    def validate_grade(self, item, saved_grade):
         if saved_grade is None:
             return False
 
-        if (saved_grade.is_incomplete and
-                (saved_grade.no_grade_now or saved_grade.grade == "N" or
-                    saved_grade.grade == "CR")):
-            return False
-
+        is_submitted = item_is_submitted(item)
         if saved_grade.no_grade_now:
-            return True
+            return False if (is_submitted and not item.no_grade_now) else True
 
-        for choice in graderoster_item.grade_choices:
+        if saved_grade.is_incomplete:
+            if (item.student_type == "UNDERGRAD" or not item.student_type) and (  # noqa
+                    saved_grade.no_grade_now or saved_grade.grade == "N" or
+                    saved_grade.grade == "CR" or saved_grade.grade == ""):
+                return False
+            return False if (
+                is_submitted and not item.has_incomplete) else True
+
+        for choice in item.grade_choices:
             if (choice is not None and choice != "" and
                     choice == saved_grade.grade):
                 return True
@@ -237,7 +266,6 @@ class GradeRoster(GradeFormHandler):
         for grade in Grade.objects.get_by_section_id_and_person(
                 section_id, self.user.uwregid):
             grade_lookup[grade.student_label] = grade
-
         return grade_lookup
 
     def response_content(self, **kwargs):
@@ -249,6 +277,8 @@ class GradeRoster(GradeFormHandler):
 
         data = {"section_id": section_id,
                 "section_name": section_display_name(self.section),
+                "is_primary_section": self.section.is_primary_section,
+                "linked_section_count": 0,
                 "students": [],
                 "import_choices": [],
                 "grade_choices": [],
@@ -259,27 +289,30 @@ class GradeRoster(GradeFormHandler):
                 "has_failed_submissions": False,
                 "failed_submission_count": 0,
                 "has_inprogress_submissions": False,
-                "has_grade_imports": False,
-                "has_csv_import": False,
-                "grade_import_count": 0}
+                "has_saved_grades": False,
+                "grading_period_open": grading_period_open,
+                "gradable_student_count": 0,
+                "graded_count": 0,
+                "ungraded_count": 0}
 
         secondary_section = getattr(self.graderoster, "secondary_section",
                                     None)
 
-        submissions = getattr(self.graderoster, "submissions", {})
-        for key in sorted(submissions.keys()):
-            sid = key if key != self.graderoster.section.section_id else None
+        for submission in getattr(self.graderoster, "submissions", []):
+            sid = None
+            if (submission["submission_id"] !=
+                    self.graderoster.section.section_id):
+                sid = submission["submission_id"]
+
             submission_status = graderoster_status_params(
-                self.graderoster, secondary_section_id=sid)
-            submission_status["section_id"] = sid
-            if submission_status["accepted_date"] is None:
+                self.graderoster,
+                secondary_section_id=sid,
+                include_grade_imports=True)
+            submission_status["section_id"] = submission["submission_id"]
+
+            if (submission_status["accepted_date"] is None and
+                    submission_status["status_code"] == "200"):
                 data["has_inprogress_submissions"] = True
-            if submission_status["grade_import"] is not None:
-                data["has_grade_imports"] = True
-                data["grade_import_count"] += 1
-                if (submission_status.get("grade_import").get(
-                        "source") == GradeImport.CSV_SOURCE):
-                    data["has_csv_import"] = True
             data["submissions"].append(submission_status)
 
         if grading_period_open:
@@ -288,6 +321,7 @@ class GradeRoster(GradeFormHandler):
                     data["import_choices"].append({"value": choice[0],
                                                    "label": choice[1]})
 
+        linked_section_ids = set()
         grade_lookup = {}
         for item in sorted_students(self.graderoster.items):
             if (secondary_section is not None and
@@ -301,42 +335,48 @@ class GradeRoster(GradeFormHandler):
             grade_choices_index = None
             grade_url = None
             grade = "" if item.no_grade_now is True else item.grade
-            no_grade_now = item.no_grade_now
-            has_incomplete = item.has_incomplete
-            has_writing_credit = item.has_writing_credit
+            allows_no_grade_now = False if (
+                is_submitted and not item.no_grade_now) else True
+            allows_incomplete = True
+            allows_inc_default_grade = (
+                item.student_type == "UNDERGRAD" or not item.student_type)
             date_graded = None
-            withdrawn_week = None
-            import_source = None
-            import_grade = None
-            is_override_grade = False
+            saved_grade_data = {}
+
+            if data["is_primary_section"] and item.section_id != section_id:
+                linked_section_ids.add(item.section_id)
 
             if item.duplicate_code is not None:
                 data["has_duplicate_codes"] = True
 
             if is_submitted:
-                if has_incomplete and grade.lower() == "i":
-                    grade = ""
+                if item.has_incomplete:
+                    if (grade == "i" or grade == "I"):
+                        grade = ""
+                else:
+                    allows_incomplete = False
 
                 if item.date_graded is not None:
+                    data["graded_count"] += 1
+                    data["has_successful_submissions"] = True
                     date = datetime.strptime(item.date_graded, "%Y-%m-%d")
                     date_graded = date.strftime("%m/%d/%Y")
 
                 if item.status_code is not None:
-                    if item.status_code == "200":
+                    if item.status_code.startswith("2"):  # 2xx status
                         data["has_successful_submissions"] = True
                     else:
                         data["has_failed_submissions"] = True
                         data["failed_submission_count"] += 1
 
-            elif item.date_withdrawn:
-                if grade is not None:
-                    m = re.match(r"^W(?P<week>[\d])$", grade)
-                    if m is not None and m.group("week"):
-                        withdrawn_week = m.group("week")
-                    grade = ""
+            elif item.date_withdrawn is None and not item.is_auditor:
+                data["ungraded_count"] += 1
 
-            elif grading_period_open and not item.is_auditor:
+            if (grading_period_open and not item.is_auditor and
+                    item.date_withdrawn is None):
                 grade_url = url_for_graderoster(section_id)
+                if grade_url:
+                    data["gradable_student_count"] += 1
 
                 # Use an existing grade_choices list, or add this one
                 grade_choices_csv = ",".join(item.grade_choices)
@@ -348,19 +388,16 @@ class GradeRoster(GradeFormHandler):
                     grade_choices_index = len(data["grade_choices"]) - 1
                     grade_lookup[grade_choices_csv] = grade_choices_index
 
-                # Use saved grade data if it exists
+                # Add saved grade data if it exists
                 try:
                     saved_grade = saved_grades[student_id]
-                    grade = saved_grade.grade
+                    saved_grade_data = saved_grade.json_data()
                     if saved_grade.no_grade_now is True:
-                        grade = ""
-                    no_grade_now = saved_grade.no_grade_now
-                    has_incomplete = saved_grade.is_incomplete
-                    has_writing_credit = saved_grade.is_writing
-                    if saved_grade.import_grade is not None:
-                        import_source = sources[saved_grade.import_source]
-                        import_grade = saved_grade.import_grade
-                        is_override_grade = saved_grade.is_override_grade
+                        saved_grade_data["grade"] = ""
+                    if saved_grade.import_source is not None:
+                        saved_grade_data["import_source"] = (
+                            sources[saved_grade.import_source])
+                    data["has_saved_grades"] = True
                 except KeyError:
                     pass
 
@@ -373,32 +410,31 @@ class GradeRoster(GradeFormHandler):
                 "student_credits": item.student_credits,
                 "section_id": item.section_id,
                 "is_auditor": item.is_auditor,
-                "is_withdrawn": item.date_withdrawn is not None,
-                "withdrawn_week": withdrawn_week,
+                "date_withdrawn": item.date_withdrawn,
+                "is_submitted": is_submitted,
                 "date_graded": date_graded,
-                "allows_incomplete": (item.allows_incomplete and
-                                      not is_submitted),
-                "has_incomplete": has_incomplete,
+                "allows_incomplete": allows_incomplete,
+                "allows_inc_default_grade": allows_inc_default_grade,
+                "has_incomplete": item.has_incomplete,
                 "is_writing_section": not allows_writing_credit,
-                "allows_writing_credit": (allows_writing_credit and
-                                          not is_submitted),
-                "has_writing_credit": has_writing_credit,
-                "no_grade_now": no_grade_now,
+                "allows_writing_credit": allows_writing_credit,
+                "has_writing_credit": item.has_writing_credit,
+                "allows_no_grade_now": allows_no_grade_now,
+                "no_grade_now": item.no_grade_now,
                 "duplicate_code": item.duplicate_code,
                 "grade": grade,
                 "grade_choices_index": grade_choices_index,
                 "grade_url": grade_url,
+                "grade_status_code": item.status_code,
                 "grade_status": item.status_message,
-                "import_source": import_source,
-                "import_grade": import_grade,
-                "is_override_grade": is_override_grade,
+                "saved_grade": saved_grade_data,
             }
             data["students"].append(student_data)
 
+        data["linked_section_count"] = len(linked_section_ids)
         return {"graderoster": data}
 
 
-@method_decorator(never_cache, name="dispatch")
 class GradeRosterExport(GradeRoster):
     def get(self, request, *args, **kwargs):
         start_time = time.time()
@@ -432,6 +468,7 @@ class GradeRosterExport(GradeRoster):
             "user_email": "{}@uw.edu".format(self.user.uwnetid),
             "quarter": self.section.term.quarter.title(),
             "year": self.section.term.year,
+            "campus": self.section.course_campus,
             "curriculum_abbr": self.section.curriculum_abbr,
             "course_number": self.section.course_number,
             "section_id": self.section.section_id,
@@ -446,11 +483,8 @@ class GradeRosterExport(GradeRoster):
             saved_grade = ""
             if student.get("is_auditor"):
                 grade = "Auditor"
-            elif student.get("is_withdrawn"):
-                grade = "Withdrawn"
-                if student.get("withdrawn_week"):
-                    grade = "Withdrawn week {}".format(
-                        student.get("withdrawn_week"))
+            elif student.get("date_withdrawn"):
+                grade = "Withdrawn ({})".format(student.get("grade", ""))
             else:
                 grade = student.get("grade", "")
                 if student.get("no_grade_now"):
@@ -486,7 +520,6 @@ class GradeRosterExport(GradeRoster):
         return response
 
 
-@method_decorator(never_cache, name='dispatch')
 class GradeRosterStatus(GradeFormHandler):
     def get(self, request, *args, **kwargs):
         try:
@@ -497,7 +530,7 @@ class GradeRosterStatus(GradeFormHandler):
                 self.user = person_from_request(request)
                 self.submitted_graderosters_only = True
             except InvalidUser as ex:
-                return self.error_response(403, "Invalid user: {}".format(ex))
+                return self.error_response(401, "Invalid user: {}".format(ex))
             except DataFailureException as ex:
                 logger.info("GET person error: {}".format(ex))
                 (status, msg) = self.data_failure_error(ex)
@@ -531,7 +564,7 @@ class GradeRosterStatus(GradeFormHandler):
         except GradingNotPermitted as ex:
             logger.info("Grading status for {} not permitted for {}".format(
                 ex.section, ex.person))
-            return self.error_response(403, "{}".format(ex))
+            return self.error_response(401, "{}".format(ex))
         except (InvalidSection, InvalidUser, MissingInstructorParam) as ex:
             return self.error_response(400, "{}".format(ex))
         except (GradingPeriodNotOpen, SecondaryGradingEnabled,
@@ -544,6 +577,9 @@ class GradeRosterStatus(GradeFormHandler):
             logger.info("GET graderoster error: {}".format(ex))
             (status, msg) = self.data_failure_error(ex)
             return self.error_response(status, msg)
+        except Exception as ex:
+            logger.info("GET graderoster error: {}".format(ex))
+            return self.error_response(500, f'{ex.__class__.__name__}: {ex}')
 
         data = section_status_params(self.section, self.instructor)
 
@@ -561,6 +597,14 @@ class GradeRosterStatus(GradeFormHandler):
                 self.graderoster, secondary_section_id=section.section_id))
         else:
             data.update(graderoster_status_params(self.graderoster))
+
+        if not self.submitted_graderosters_only:
+            if data["grading_period_open"]:
+                saved_count = Grade.objects.get_by_section_id_and_person(
+                    section_id, self.user.uwregid).count()
+            else:
+                saved_count = 0
+            data["saved_count"] = saved_count
 
         return self.json_response({"grading_status": data})
 
@@ -585,6 +629,11 @@ class GradeRosterStatus(GradeFormHandler):
         if self.submitted_graderosters_only:
             data["status_url"] = url_for_grading_status(section_id)
         else:
-            data["status_url"] = None
+            if data["grading_period_open"]:
+                saved_count = Grade.objects.get_by_section_id_and_person(
+                    section_id, self.user.uwregid).count()
+            else:
+                saved_count = 0
+            data["saved_count"] = saved_count
 
         return data

@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "editorconfig.editorconfig",
+    "ms-python.black-formatter",
+    "ms-python.python",
+    "batisteo.vscode-django",
+    "vue.volar",
+    "oxc.oxc-vscode",
+  ],
+}

@@ -1,0 +1,79 @@
+<template>
+  <td scope="row">
+    <div class="fs-4">
+      {{ student.student_lastname }}, {{ student.student_firstname }}
+    </div>
+    <div>
+      {{ student.student_number }}
+      <template v-if="student.duplicate_code">
+        <BBadge
+          :id="student.student_number"
+          variant="secondary"
+          pill
+          class="text-secondary-emphasis bg-secondary-subtle fw-normal"
+          >Duplicate Code: {{ student.duplicate_code }}</BBadge
+        >
+        <BPopover :target="student.student_number">
+          <span class="fw-bold">Duplicate Code:</span> Student dropped this
+          section, and re-added.
+        </BPopover>
+      </template>
+    </div>
+  </td>
+  <td valign="middle">{{ student.section_id }}</td>
+  <td valign="middle">{{ student.student_credits }}</td>
+  <td>
+    <template v-if="appState.editingGrades && student.grade_url">
+      <GradeEdit :student="student" :grade-choices="gradeChoices" />
+    </template>
+    <template v-else-if="appState.reviewingGrades && student.grade_url">
+      <GradeReview :student="student" />
+    </template>
+    <template v-else-if="appState.reviewingConversion">
+      <GradeImport :student="student" />
+    </template>
+    <template v-else>
+      <GradeConfirm :student="student" />
+    </template>
+  </td>
+</template>
+
+<script>
+import GradeEdit from "@/components/grade/edit.vue";
+import GradeReview from "@/components/grade/review.vue";
+import GradeImport from "@/components/grade/import.vue";
+import GradeConfirm from "@/components/grade/confirm.vue";
+import { useWorkflowStateStore } from "@/stores/state";
+import { BPopover, BBadge } from "bootstrap-vue-next";
+
+export default {
+  name: "StudentComp",
+  components: {
+    BPopover,
+    BBadge,
+    GradeEdit,
+    GradeReview,
+    GradeConfirm,
+    GradeImport,
+  },
+  props: {
+    student: {
+      type: Object,
+      required: true,
+    },
+  },
+  setup() {
+    const appState = useWorkflowStateStore();
+    return {
+      appState,
+    };
+  },
+  computed: {
+    gradeChoices() {
+      return this.appState.graderoster.grade_choices[
+        this.student.grade_choices_index
+      ];
+    },
+  },
+};
+</script>

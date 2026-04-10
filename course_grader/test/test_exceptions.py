@@ -1,4 +1,4 @@
-# Copyright 2025 UW-IT, University of Washington
+# Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -73,7 +73,7 @@ class ExceptionsTest(TestCase):
         try:
             raise GradesNotSubmitted()
         except GradesNotSubmitted as ex:
-            self.assertEqual(str(ex), "No grades were submitted")
+            self.assertEqual(str(ex), "No grades were submitted or changed")
 
     def test_InvalidCSV(self):
         try:

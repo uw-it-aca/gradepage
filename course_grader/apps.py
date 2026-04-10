@@ -1,10 +1,15 @@
-# Copyright 2025 UW-IT, University of Washington
+# Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
 from django.apps import AppConfig
+from django.contrib.staticfiles.apps import StaticFilesConfig
 from restclients_core.dao import MockDAO
 import os
+
+
+class CourseGraderFilesConfig(StaticFilesConfig):
+    ignore_patterns = ['CVS', '*~']
 
 
 class CourseGraderConfig(AppConfig):
