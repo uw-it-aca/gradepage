@@ -1,32 +1,14 @@
-# Copyright 2025 UW-IT, University of Washington
+# Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.conf import settings
-from userservice.user import UserService
-from course_grader.dao.person import person_from_user, person_display_name
+from course_grader.dao.term import current_term
+from course_grader.dao.message import get_messages_for_term
+from restclients_core.exceptions import DataFailureException
 
 
-def user(request):
+def persistent_messages(request):
     try:
-        user_fullname = person_display_name(person_from_user())
-    except Exception as ex:
-        user_fullname = None
-
-    user_service = UserService()
-    return {
-        "user_login": user_service.get_user(),
-        "user_fullname": user_fullname,
-        "override_user": user_service.get_override_user(),
-    }
-
-
-def has_less_compiled(request):
-    """ See if django-compressor is being used to precompile less
-    """
-    key = getattr(settings, "COMPRESS_PRECOMPILERS", None)
-    return {"has_less_compiled": key != ()}
-
-
-def debug_mode(request):
-    return {"debug_mode": settings.DEBUG}
+        return get_messages_for_term(current_term())
+    except DataFailureException:
+        pass

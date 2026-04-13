@@ -3,54 +3,26 @@ from google.oauth2 import service_account
 import os
 
 INSTALLED_APPS += [
+    'course_grader.apps.CourseGraderFilesConfig',
     'course_grader.apps.CourseGraderConfig',
     'supporttools',
     'userservice',
     'persistent_message',
     'rc_django',
-    'grade_conversion_calculator',
     'django.contrib.humanize',
-    'django_user_agents',
-    'compressor',
 ]
+
+INSTALLED_APPS.remove('django.contrib.staticfiles')
 
 MIDDLEWARE += [
     'userservice.user.UserServiceMiddleware',
-    'django_user_agents.middleware.UserAgentMiddleware',
+    'course_grader.log.UserLoggingMiddleware',
 ]
 
 TEMPLATES[0]['OPTIONS']['context_processors'] += [
     'supporttools.context_processors.supportools_globals',
-    'course_grader.context_processors.user',
-    'course_grader.context_processors.has_less_compiled',
-    'course_grader.context_processors.debug_mode',
+    'course_grader.context_processors.persistent_messages',
 ]
-
-COMPRESS_ROOT = '/static/'
-
-STATICFILES_FINDERS += (
-    'compressor.finders.CompressorFinder',
-)
-
-COMPRESS_PRECOMPILERS = (
-    ('text/less', 'lessc {infile} {outfile}'),
-    ('text/x-sass', 'pyscss {infile} > {outfile}'),
-    ('text/x-scss', 'pyscss {infile} > {outfile}'),
-)
-
-COMPRESS_CSS_FILTERS = [
-    'compressor.filters.css_default.CssAbsoluteFilter',
-    'compressor.filters.cssmin.CSSMinFilter'
-]
-
-COMPRESS_JS_FILTERS = [
-    'compressor.filters.jsmin.JSMinFilter',
-]
-
-COMPRESS_OFFLINE = True
-COMPRESS_OFFLINE_CONTEXT = {
-    'wrapper_template': 'persistent_message/manage_wrapper.html',
-}
 
 if os.getenv('ENV', 'localdev') == 'localdev':
     DEBUG = True
@@ -58,7 +30,12 @@ if os.getenv('ENV', 'localdev') == 'localdev':
     GRADEPAGE_ADMIN_GROUP = 'u_test_group'
     CURRENT_DATETIME_OVERRIDE = '2013-06-17 10:00:00'
     PAST_TERMS_VIEWABLE = 1
-    MEDIA_ROOT = os.getenv('IMPORT_DATA_ROOT', '/app/csv')
+    MEDIA_ROOT = os.getenv('IMPORT_DATA_ROOT', os.path.join(BASE_DIR, 'csv'))
+    VITE_MANIFEST_PATH = os.path.join(
+        BASE_DIR, 'course_grader', 'static', '.vite', 'manifest.json'
+    )
+    LOCALE_PATHS = [os.path.join(BASE_DIR, 'course_grader', 'locale')]
+
 else:
     GRADEPAGE_SUPPORT_GROUP = os.getenv('SUPPORT_GROUP', 'u_acadev_gradepage_support')
     GRADEPAGE_ADMIN_GROUP = os.getenv('ADMIN_GROUP', 'u_acadev_gradepage_admins')
@@ -72,22 +49,27 @@ else:
                 'bucket_name': os.getenv('STORAGE_BUCKET_NAME', ''),
                 'location': os.path.join(os.getenv('STORAGE_DATA_ROOT', '')),
                 'credentials': service_account.Credentials.from_service_account_file(
-                    '/gcs/credentials.json'),
-            }
+                    '/gcs/credentials.json'
+                ),
+            },
         },
         'staticfiles': {
             'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
         },
     }
     CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('CLUSTER_CNAME')]
+    VITE_MANIFEST_PATH = os.path.join(os.sep, 'static', '.vite', 'manifest.json')
 
-ALLOW_GRADE_SUBMISSION_OVERRIDE = (os.getenv('ENV', 'localdev') != 'prod')
+ALLOW_GRADE_SUBMISSION_OVERRIDE = os.getenv('ENV', 'localdev') != 'prod'
 USERSERVICE_VALIDATION_MODULE = 'course_grader.dao.person.is_netid'
 USERSERVICE_OVERRIDE_AUTH_MODULE = 'course_grader.views.support.can_override_user'
 RESTCLIENTS_ADMIN_AUTH_MODULE = 'course_grader.views.support.can_proxy_restclient'
-PERSISTENT_MESSAGE_AUTH_MODULE = 'course_grader.views.support.can_manage_persistent_messages'
+PERSISTENT_MESSAGE_AUTH_MODULE = (
+    'course_grader.views.support.can_manage_persistent_messages'
+)
 
 EMAIL_NOREPLY_ADDRESS = os.getenv('EMAIL_NOREPLY_ADDRESS')
+EMAIL_IGNORE_USERS = os.getenv('EMAIL_IGNORE_USERS')
 GRADEPAGE_HOST = 'https://' + os.getenv('CLUSTER_CNAME', 'localhost')
 SUBMISSION_DEADLINE_WARNING_HOURS = 41
 GRADE_RETENTION_YEARS = 5
@@ -115,16 +97,16 @@ LOGGING = {
     'disable_existing_loggers': False,
     'filters': {
         'add_user': {
-            '()': 'course_grader.log.UserFilter'
+            '()': 'course_grader.log.UserFilter',
         },
         'stdout_stream': {
             '()': 'django.utils.log.CallbackFilter',
-            'callback': lambda record: record.levelno < logging.WARNING
+            'callback': lambda record: record.levelno < logging.WARNING,
         },
         'stderr_stream': {
             '()': 'django.utils.log.CallbackFilter',
-            'callback': lambda record: record.levelno > logging.INFO
-        }
+            'callback': lambda record: record.levelno > logging.INFO,
+        },
     },
     'formatters': {
         'course_grader': {
@@ -181,7 +163,7 @@ LOGGING = {
         },
         '': {
             'handlers': ['stdout', 'stderr'],
-            'level': 'INFO' if os.getenv('ENV', 'localdev') == 'prod' else 'DEBUG'
-        }
-    }
+            'level': 'INFO' if os.getenv('ENV', 'localdev') == 'prod' else 'DEBUG',
+        },
+    },
 }

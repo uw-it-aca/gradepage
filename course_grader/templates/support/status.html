@@ -9,11 +9,11 @@
         Current Time: {{ current_datetime|date:"D, M j Y g:i A T" }}<br/>
         Grading Period Open: {{ grading_period_open|date:"D, M j Y g:i A T" }}<br/>
         Grade Submission Deadline: {{ grade_submission_deadline|date:"D, M j Y g:i A T" }}<br/>
-        Sections submitted: {{ graderosters|length }}
+        Sections submitted: {{ graderoster_count }}
     </div>
 </div>
 
-{% if graderosters|length %}
+{% if graderoster_count %}
 <div id="submission-chart"></div>
 <div style="float:right;">
     <a href="{% url 'term-submissions' term_id %}" class="btn btn-primary btn-small" style="font-size:.75em;"><i class="fa fa-download"></i>&nbsp;CSV for {{ selected_quarter }} {{ selected_year }}</a>

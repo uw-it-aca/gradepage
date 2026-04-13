@@ -51,6 +51,7 @@ GradePage.GradeRoster = (function ($) {
         return false;
     };
 
+    /* CLEAR */
     function grade_input_selector() {
         return (window.gradepage.is_desktop) ? "input.gp-grade-input"
                                              : "select.gp-grade-select";
@@ -71,6 +72,7 @@ GradePage.GradeRoster = (function ($) {
         }
     }
 
+    /* CLEAR */
     function valid_grade(input) {
         input.closest(".form-group").removeClass("has-error");
         input.removeAttr("aria-invalid");
@@ -78,6 +80,7 @@ GradePage.GradeRoster = (function ($) {
         $("#" + status_id).children(".gp-invalid-grade").empty();
     }
 
+    /* CLEAR */
     function invalid_grade(input, txt) {
         input.closest(".form-group").addClass("has-error");
         input.attr("aria-invalid", "true");
@@ -85,6 +88,7 @@ GradePage.GradeRoster = (function ($) {
         $("#" + status_id).children(".gp-invalid-grade").text(txt);
     }
 
+    /* CLEAR */
     function normalize_grade(grade) {
         grade = $.trim(grade);
         if (grade.match(/^(?:n|nc|p|h|hw|f|hp|i|cr)$/i)) {
@@ -99,6 +103,7 @@ GradePage.GradeRoster = (function ($) {
         return grade;
     }
 
+    /* CLEAR */
     function validate_grade(input) {
         var is_incomplete, is_valid, is_hypenated, is_cnc, is_hhppf,
             is_undergrad_numeric, is_grad_numeric, text,
@@ -187,6 +192,7 @@ GradePage.GradeRoster = (function ($) {
         return is_valid;
     }
 
+    /* CLEAR */
     function validate_all_grades() {
         /*jshint validthis: true */
         var counts = { missing_count: 0, invalid_count: 0 };
@@ -209,6 +215,7 @@ GradePage.GradeRoster = (function ($) {
         $("span.gp-roster-grades-left").html(remaining_template(counts));
     }
 
+    /* CLEAR */
     function save_grade() {
         /*jshint validthis: true */
         var input_id = $(this).attr("id"), item_id, student_id,
@@ -282,6 +289,7 @@ GradePage.GradeRoster = (function ($) {
         }
     }
 
+    /* CLEAR */
     function decorate_writing_input(el) {
         var title_base;
         if (el.is(":checked")) {
@@ -292,12 +300,14 @@ GradePage.GradeRoster = (function ($) {
         el.parent().attr("title", interpolate(title_base, el.data(), true));
     }
 
+    /* CLEAR */
     function update_writing() {
         /*jshint validthis: true */
         decorate_writing_input($(this));
         save_grade.call($(this));
     }
 
+    /* CLEAR */
     function decorate_incomplete_input(el) {
         /*jshint validthis: true */
         var wrapper = el.closest(".gp-inc-wrapper"),
@@ -332,18 +342,21 @@ GradePage.GradeRoster = (function ($) {
         }
     }
 
+    /* CLEAR */
     function update_incomplete() {
         /*jshint validthis: true */
         decorate_incomplete_input($(this));
         save_grade.call($(this));
     }
 
+    /* CLEAR */
     function select_grade(ev, ui) {
         /*jshint validthis: true */
         $(this).val(ui.item.value);
         save_grade.call($(this));
     }
 
+    /* CLEAR */
     function loading_graderoster() {
         $(".gp-save-status").empty();
         var template = Handlebars.compile($("#loading-tmpl").html());
@@ -355,16 +368,19 @@ GradePage.GradeRoster = (function ($) {
         $("#graderoster-content").html(template());
     }
 
+    /* CLEAR */
     function open_autocomplete() {
         /*jshint validthis: true */
         $(this).attr("ac_state", "open");
     }
 
+    /* CLEAR */
     function close_autocomplete() {
         /*jshint validthis: true */
         $(this).attr("ac_state", "closed");
     }
 
+    /* CLEAR */
     function create_autocomplete() {
         /*jshint validthis: true */
         if ($(this).attr("ac_state") === undefined) {
@@ -388,6 +404,7 @@ GradePage.GradeRoster = (function ($) {
             .css("position", (ev.type === "focus") ? "absolute" : "");
     }
 
+    /* CLEAR */
     function create_grade_select() {
         /*jshint validthis: true */
         var i,
@@ -410,6 +427,7 @@ GradePage.GradeRoster = (function ($) {
         $(this).change(save_grade);
     }
 
+    /* CLEAR */
     function toggle_view_scale(ev) {
         /*jshint validthis: true */
         var submissions = $(this).data("submissions"),
@@ -436,6 +454,7 @@ GradePage.GradeRoster = (function ($) {
         }
     }
 
+    /* CLEAR */
     function select_view_scale() {
         /*jshint validthis: true */
         var submissions = $(this).data("submissions"),
@@ -444,6 +463,7 @@ GradePage.GradeRoster = (function ($) {
                  .show();
     }
 
+    /* CLEAR */
     function draw_submitted_graderoster(data) {
         /*jshint validthis: true */
         var template = Handlebars.compile($("#confirmation-tmpl").html());
@@ -470,6 +490,7 @@ GradePage.GradeRoster = (function ($) {
         $(window).on("scroll", show_fixed_header);
     }
 
+    /* CLEAR */
     function draw_editable_graderoster(data) {
         var graderoster = data.graderoster,
             template = Handlebars.compile($("#edit-tmpl").html()),
@@ -548,6 +569,7 @@ GradePage.GradeRoster = (function ($) {
         GradePage.Import.auto_import();
     }
 
+    /* CLEAR */
     function draw_graderoster(data) {
         var unsubmitted = $.grep(data.graderoster.students, function (e) {
             return e.grade_url !== null;
@@ -560,6 +582,7 @@ GradePage.GradeRoster = (function ($) {
         }
     }
 
+    /* CLEAR */
     function draw_graderoster_error(xhr) {
         var data, template, source;
         try {
@@ -578,6 +601,7 @@ GradePage.GradeRoster = (function ($) {
         }
     }
 
+    /* CLEAR */
     function initialize() {
         if (window.gradepage.graderoster_url) {
             incomplete_blocklist = [gettext("x_no_grade_now"), "N", "CR"];
@@ -591,6 +615,7 @@ GradePage.GradeRoster = (function ($) {
         }
     }
 
+    /* CLEAR */
     function submit_grades() {
         $.ajax({
             url: window.gradepage.graderoster_url,
@@ -606,6 +631,7 @@ GradePage.GradeRoster = (function ($) {
         });
     }
 
+    /* CLEAR */
     function draw_review_graderoster(data) {
         var template = Handlebars.compile($("#review-tmpl").html());
         Handlebars.registerPartial("student", $("#student-tmpl").html());
@@ -619,6 +645,7 @@ GradePage.GradeRoster = (function ($) {
         $(window).on("scroll", show_fixed_header);
     }
 
+    /* CLEAR */
     function review_grades() {
         /*jshint validthis: true */
         var put_data = [];

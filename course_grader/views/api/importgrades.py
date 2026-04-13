@@ -1,19 +1,18 @@
-# Copyright 2025 UW-IT, University of Washington
+# Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
 from django.core.files.storage import default_storage
-from course_grader.models import GradeImport, ImportConversion
+from course_grader.models import GradeImport
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import all_viewable_terms
 from course_grader.dao.section import (
     section_from_param, is_grader_for_section, section_display_name,
     section_url_token)
 from course_grader.dao.graderoster import graderoster_for_section
+from course_grader.views.decorators import xhr_login_required
 from course_grader.views.api import GradeFormHandler, sorted_students
 from course_grader.views import clean_section_id
 from course_grader.exceptions import *
@@ -28,7 +27,7 @@ import re
 logger = getLogger(__name__)
 
 
-@method_decorator(login_required, name="dispatch")
+@method_decorator(xhr_login_required, name="dispatch")
 class ImportGrades(GradeFormHandler):
     def _authorize(self, request, *args, **kwargs):
         try:
@@ -54,23 +53,23 @@ class ImportGrades(GradeFormHandler):
             if section.is_primary_section and section.allows_secondary_grading:
                 raise SecondaryGradingEnabled()
 
-            if "PUT" == request.method:
+            if "PUT" == request.method or "POST" == request.method:
                 self.valid_user_override()
 
             self.graderoster = graderoster_for_section(
                 self.section, self.instructor, self.user)
 
         except (InvalidUser, GradingNotPermitted, OverrideNotPermitted) as ex:
-            logger.info("Grading for {} not permitted for {}".format(
-                section_id, UserService().get_original_user()))
-            return self.error_response(403, "{}".format(ex))
+            user = UserService().get_original_user()
+            logger.info(f"Grading for {section_id} not permitted for {user}")
+            return self.error_response(401, "{}".format(ex))
         except (SecondaryGradingEnabled, GradingPeriodNotOpen,
                 InvalidTerm) as ex:
             return self.error_response(400, "{}".format(ex))
         except InvalidSection as ex:
             return self.error_response(404, "{}".format(ex))
         except DataFailureException as ex:
-            logger.info("GET graderoster error: {}".format(ex))
+            logger.info(f"GET graderoster error: {ex}")
             (status, msg) = self.data_failure_error(ex)
             return self.error_response(status, msg)
 
@@ -100,18 +99,15 @@ class ImportGrades(GradeFormHandler):
         try:
             grade_import = GradeImport.objects.get(pk=import_id)
             put_data = json.loads(request.body)
+            conversion_data = put_data.get("conversion_scale", None)
+            grade_import.save_conversion_data(conversion_data)
 
         except GradeImport.DoesNotExist:
             return self.error_response(404, "Import not found")
         except Exception as ex:
+            logger.error(f"PUT import error for {section_id}: {ex}, "
+                         f"data: {put_data}")
             return self.error_response(400, "Invalid import")
-
-        conversion_data = put_data.get("conversion_scale", None)
-        try:
-            grade_import.save_conversion_data(conversion_data)
-        except Exception as ex:
-            logger.error("PUT import error for {}: {}".format(
-                section_id, ex))
 
         import_data = grade_import.json_data()
         converted_grades = put_data.get("converted_grades", {})
@@ -122,8 +118,7 @@ class ImportGrades(GradeFormHandler):
                     secondary_section.section_id != item.section_id):
                 continue
 
-            if (item.date_graded is not None or item.is_auditor or
-                    item.date_withdrawn is not None):
+            if (item.is_auditor or item.date_withdrawn is not None):
                 continue
 
             # Find the grade data for each graderoster item
@@ -158,8 +153,8 @@ class ImportGrades(GradeFormHandler):
             source = data.get("source", None)
             source_id = data.get("source_id", None)
         except Exception as ex:
-            logger.error("POST import failed for {}: {}".format(
-                self.section.section_label(), ex))
+            label = self.section.section_label()
+            logger.error(f"POST import failed for {label}: {ex}")
             return self.error_response(400, "Invalid import")
 
         grade_import = GradeImport(
@@ -172,8 +167,8 @@ class ImportGrades(GradeFormHandler):
         try:
             grade_import.grades_for_section(self.section, self.instructor)
         except Exception as ex:
-            logger.error("POST import failed for {}: {}".format(
-                self.section.section_label(), ex))
+            label = self.section.section_label()
+            logger.error(f"POST import failed for {label}: {ex}")
             return self.error_response(500, "{}".format(ex))
 
         return self.response_content(grade_import)
@@ -201,16 +196,17 @@ class ImportGrades(GradeFormHandler):
                 g["student_number"] == item.student_number)), None)
 
             if grade is not None:
-                item_id = "-".join([grade_import.section_id,
-                                    item.student_label(separator="-")])
+                student_id = item.student_label(separator="-")
+                item_id = "-".join([grade_import.section_id, student_id])
                 grade["item_id"] = clean_section_id(item_id)
+                grade["student_id"] = student_id
                 grade["section_id"] = self.section.section_id
                 grade["student_firstname"] = item.student_first_name
                 grade["student_lastname"] = item.student_surname
                 grade["student_reg_id"] = item.student_uwregid
                 grade["student_number"] = item.student_number
                 grade["is_auditor"] = item.is_auditor
-                grade["is_withdrawn"] = item.date_withdrawn is not None
+                grade["date_withdrawn"] = item.date_withdrawn
                 return_data["students"].append(grade)
 
         return self.json_response({"grade_import": return_data})
@@ -238,8 +234,9 @@ class UploadGrades(ImportGrades):
             grade_import.grades_for_section(
                 self.section, self.instructor, fileobj=uploaded_file)
         except Exception as ex:
-            logger.error("POST upload {} failed for {}: {}".format(
-                uploaded_file.name, self.section.section_label(), ex))
+            label = self.section.section_label()
+            logger.error(
+                f"POST upload {uploaded_file.name} failed for {label}: {ex}")
             return self.error_response(400, "{}".format(ex))
 
         return self.response_content(grade_import)

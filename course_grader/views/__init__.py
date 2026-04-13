@@ -1,4 +1,4 @@
-# Copyright 2025 UW-IT, University of Washington
+# Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -18,12 +18,11 @@ def clean_section_id(section_id):
 
 
 def url_for_term(term):
-    return "{path}?term={year}-{quarter}".format(
-        path=reverse("home"), year=term.year, quarter=term.quarter)
+    return f"/term/{term.year}-{term.quarter}"
 
 
 def url_for_section(section_id):
-    return reverse("section", kwargs={"url_token": section_id})
+    return reverse("section-page", kwargs={"section_id": section_id})
 
 
 def url_for_graderoster(section_id):

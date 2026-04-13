@@ -1,9 +1,9 @@
-# Copyright 2025 UW-IT, University of Washington
+# Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
 from django.db import models
-from django.db.models import Q
+from django.db.models import F, Q
 from restclients_core.exceptions import DataFailureException
 from uw_sws_graderoster.models import GradingScale
 from course_grader.dao.gradesubmission import submit_grades
@@ -19,44 +19,73 @@ logger = getLogger(__name__)
 
 
 class SubmittedGradeRosterManager(models.Manager):
-    def get_by_section(self, section, instructor, secondary_section=None):
-        kwargs = {'section_id': section.section_label()}
+    def get_by_section(self, section, instructor, secondary_section=None,
+                       include_document=False):
+        secondary_label = None
+        kwargs = {"section_id": section.section_label()}
         if secondary_section is not None:
-            args = (Q(secondary_section_id=secondary_section.section_label()) |
-                    Q(secondary_section_id__isnull=True),)
+            secondary_label = secondary_section.section_label()
+            args = (
+                Q(secondary_section_id=secondary_label) |
+                Q(secondary_section_id__isnull=True),
+            )
         else:
             args = ()
             if section.is_independent_study:
-                kwargs['instructor_id'] = instructor.uwregid
+                kwargs["instructor_id"] = instructor.uwregid
 
-        return super().get_queryset().filter(*args, **kwargs).order_by(
-            'secondary_section_id')
+        query = super().get_queryset().filter(*args, **kwargs).order_by(
+                F("submitted_date").desc()
+            )
 
-    def resubmit_failed(self):
-        compare_dt = datetime.now(timezone.utc) - timedelta(minutes=10)
-        fails = super().get_queryset().filter(
-            Q(status_code__isnull=False) | Q(submitted_date__lt=compare_dt),
-            accepted_date__isnull=True,
-        ).order_by('submitted_date')
+        if not include_document:
+            query.defer("document")
 
-        for roster in fails:
-            roster.submit()
+        seen_rosters = set()
+        latest_rosters = []
+        for sgr in query:
+            sid = sgr.secondary_section_id if (
+                sgr.secondary_section_id) else sgr.section_id
+            if sid not in seen_rosters:
+                latest_rosters.append(sgr)
+                seen_rosters.add(sid)
+            # Nothing after the latest primary section submission, or the
+            # latest matching secondary section submission
+            if (sgr.secondary_section_id is None or
+                    sgr.secondary_section_id == secondary_label):
+                break
+
+        return latest_rosters
 
     def get_status_by_term(self, term):
         return super().get_queryset().filter(
-            term_id=term.term_label()
-        ).order_by('submitted_date').values(
-            'section_id', 'secondary_section_id', 'submitted_date',
-            'submitted_by', 'status_code')
+                term_id=term.term_label()
+            ).order_by(
+                F("submitted_date").asc()
+            ).values(
+                "section_id",
+                "secondary_section_id",
+                "submitted_date",
+                "submitted_by",
+                "status_code",
+            )
 
     def get_all_terms(self):
         return super().get_queryset().values_list(
-            'term_id', flat=True).distinct()
+                "term_id", flat=True
+            ).distinct()
+
+    def get_by_search(self, *args, **kwargs):
+        return super().get_queryset().filter(*args, **kwargs).order_by(
+                F("section_id").asc(),
+                F("secondary_section_id").asc(nulls_first=True),
+                F("submitted_date").desc()
+            ).defer("document")
 
 
 class SubmittedGradeRoster(models.Model):
-    """ Represents a submitted graderoster document.
-    """
+    """Represents a submitted graderoster document."""
+
     section_id = models.CharField(max_length=100)
     secondary_section_id = models.CharField(max_length=100, null=True)
     instructor_id = models.CharField(max_length=32)
@@ -84,24 +113,42 @@ class SubmittedGradeRoster(models.Model):
         else:
             return self.section_id.split("/")[-1]
 
-    def submit(self):
+    def submit(self, grades_section_id):
         try:
             graderoster = submit_grades(self)
         except Exception as ex:
-            logger.error((
-                "PUT graderoster failed: {}, Section: {}, "
-                "Instructor: {}").format(
-                    ex, self.section_id, self.instructor_id))
+            logger.error(
+                f"PUT graderoster failed: {ex}, Section: {self.section_id}, "
+                f"Secondary section: {self.secondary_section_id}, "
+                f"Instructor: {self.instructor_id}, "
+                f"Submitter: {self.submitted_by}")
             self.status_code = getattr(ex, "status", 500)
             self.save()
-            return
+            raise
 
         self.status_code = 200
         self.accepted_date = datetime.now(timezone.utc)
         self.document = graderoster.xhtml()
         self.save()
 
+        # Delete any saved grades for this section
+        Grade.objects.delete_by_section_id(grades_section_id)
+
         notify_grade_submitters(graderoster, self.submitted_by)
+
+    def json_data(self):
+        return {
+            "section_id": self.section_id,
+            "secondary_section_id": self.secondary_section_id,
+            "instructor_id": self.instructor_id,
+            "term_id": self.term_id,
+            "submitted_date": self.submitted_date.isoformat() if (
+                self.submitted_date is not None) else None,
+            "submitted_by": self.submitted_by,
+            "accepted_date": self.accepted_date.isoformat() if (
+                self.accepted_date is not None) else None,
+            "status_code": self.status_code,
+        }
 
 
 class GradeManager(models.Manager):
@@ -109,10 +156,14 @@ class GradeManager(models.Manager):
         return super().get_queryset().filter(
             section_id=section_id, modified_by=person_id)
 
+    def delete_by_section_id(self, section_id):
+        super().get_queryset().filter(section_id=section_id).delete()
+        logger.info(f"Deleted saved grades for {section_id}")
+
 
 class Grade(models.Model):
-    """ Represents a saved grade.
-    """
+    """Represents a saved grade."""
+
     section_id = models.CharField(max_length=100)
     student_reg_id = models.CharField(max_length=32)
     duplicate_code = models.CharField(max_length=15, default="")
@@ -140,32 +191,38 @@ class Grade(models.Model):
             return self.student_reg_id
 
     def json_data(self):
-        return {"section_id": self.section_id,
-                "student_reg_id": self.student_reg_id,
-                "duplicate_code": self.duplicate_code,
-                "grade": self.grade,
-                "no_grade_now": self.no_grade_now,
-                "is_writing": self.is_writing,
-                "is_incomplete": self.is_incomplete,
-                "import_source": self.import_source,
-                "import_grade": self.import_grade,
-                "is_override_grade": self.is_override_grade,
-                "comment": self.comment,
-                "last_modified": self.last_modified.isoformat() if (
-                    self.last_modified is not None) else None,
-                "modified_by": self.modified_by}
+        return {
+            "section_id": self.section_id,
+            "student_reg_id": self.student_reg_id,
+            "duplicate_code": self.duplicate_code,
+            "grade": self.grade,
+            "no_grade_now": self.no_grade_now,
+            "is_writing": self.is_writing,
+            "is_incomplete": self.is_incomplete,
+            "import_source": self.import_source,
+            "import_grade": self.import_grade,
+            "is_override_grade": self.is_override_grade,
+            "comment": self.comment,
+            "last_modified": self.last_modified.isoformat() if (
+                self.last_modified is not None) else None,
+            "modified_by": self.modified_by,
+        }
 
     class Meta:
-        unique_together = ("section_id", "student_reg_id", "duplicate_code",
-                           "modified_by")
+        unique_together = (
+            "section_id",
+            "student_reg_id",
+            "duplicate_code",
+            "modified_by",
+        )
         indexes = [
             models.Index(fields=["section_id", "modified_by"]),
         ]
 
 
 class ImportConversion(models.Model):
-    """ Represents a grade import conversion scale.
-    """
+    """Represents a grade import conversion scale."""
+
     scale = models.CharField(max_length=5, choices=GradingScale.SCALE_CHOICES)
     grade_scale = models.TextField()
     calculator_values = models.TextField(null=True)
@@ -197,7 +254,7 @@ class ImportConversion(models.Model):
 
     @staticmethod
     def decimal_to_percentage(value):
-        return float(Decimal(str(value))*100)
+        return float(Decimal(str(value)) * 100)
 
     @staticmethod
     def leading_zero(value):
@@ -210,13 +267,17 @@ class ImportConversion(models.Model):
         grade_scale = []
         for item in data.get("grading_scheme", []):
             if item["value"] > 0:
-                grade_scale.append({
-                    "grade": ic.leading_zero(item["name"]),
-                    "min_percentage": ic.decimal_to_percentage(item["value"]),
-                })
+                grade_scale.append(
+                    {
+                        "grade": ic.leading_zero(item["name"]),
+                        "min_percentage": ic.decimal_to_percentage(
+                            item["value"]
+                        ),
+                    }
+                )
         grade_scale.sort(key=lambda x: x.get("min_percentage"), reverse=True)
 
-        grades = [x['grade'] for x in grade_scale]
+        grades = [x["grade"] for x in grade_scale]
         ic.scale = GradingScale().is_any_scale(grades)
         if not ic.scale:
             raise InvalidGradingScale()
@@ -232,41 +293,60 @@ class ImportConversion(models.Model):
 
 
 class GradeImportManager(models.Manager):
-    def get_last_import_by_section_id(self, section_id):
-        return super().get_queryset().filter(
-            section_id=section_id,
-            accepted_date__isnull=False,
-            status_code='200'
-        ).order_by('-imported_date')[0:1].get()
+    def get_last_import_by_section_id(self, section_id,
+                                      secondary_section_id=None):
+        args = ()
+        kwargs = {"accepted_date__isnull": False, "status_code": "200"}
+        if secondary_section_id is not None:
+            args = (
+                Q(section_id=section_id) | Q(section_id=secondary_section_id),
+            )
+        else:
+            kwargs["section_id"] = section_id
+
+        return super().get_queryset().filter(*args, **kwargs).order_by(
+            F("imported_date").desc()).first()
 
     def get_imports_by_person(self, person):
         return super().get_queryset().filter(
-            imported_by=person.uwregid,
-            accepted_date__isnull=False,
-            status_code='200'
-        ).order_by('section_id', '-imported_date')
+                imported_by=person.uwregid,
+                accepted_date__isnull=False,
+                status_code="200",
+            ).order_by(
+                F("section_id").asc(),
+                F("imported_date").desc()
+            )
 
     def get_import_sources_by_term(self, term):
         return super().get_queryset().filter(
-            term_id=term.term_label(),
-            accepted_date__isnull=False,
-            status_code='200'
-        ).order_by('imported_date').values(
-            'section_id', 'imported_date', 'source')
+                term_id=term.term_label(),
+                accepted_date__isnull=False,
+                status_code="200",
+            ).order_by(
+                F("imported_date").asc()
+            ).values(
+                "section_id", "imported_date", "source"
+            )
 
     def clear_prior_imports_for_section(self, grade_import):
         super().get_queryset().filter(
-            section_id=grade_import.section_id
-        ).exclude(pk=grade_import.pk).delete()
+                section_id=grade_import.section_id
+            ).exclude(pk=grade_import.pk).delete()
 
     def get_all_terms(self):
         return super().get_queryset().values_list(
-            'term_id', flat=True).distinct()
+            "term_id", flat=True).distinct()
+
+    def get_by_search(self, *args, **kwargs):
+        return super().get_queryset().filter(*args, **kwargs).order_by(
+                F("section_id").asc(),
+                F("imported_date").desc()
+            )
 
 
 class GradeImport(models.Model):
-    """ Represents a grade import.
-    """
+    """Represents a grade import."""
+
     CANVAS_SOURCE = "canvas"
     CATALYST_SOURCE = "catalyst"
     CSV_SOURCE = "csv"
@@ -293,7 +373,8 @@ class GradeImport(models.Model):
     imported_date = models.DateTimeField(auto_now=True)
     imported_by = models.CharField(max_length=32)
     import_conversion = models.ForeignKey(
-        ImportConversion, on_delete=models.CASCADE, null=True)
+        ImportConversion, on_delete=models.CASCADE, null=True
+    )
     accepted_date = models.DateTimeField(null=True)
 
     objects = GradeImportManager()
@@ -311,7 +392,8 @@ class GradeImport(models.Model):
 
         try:
             data = grade_source.grades_for_section(
-                section, instructor, source_id=self.source_id, fileobj=fileobj)
+                section, instructor, source_id=self.source_id, fileobj=fileobj
+            )
 
             self.document = json.dumps(data)
             self.status_code = 200
@@ -327,7 +409,7 @@ class GradeImport(models.Model):
                 scale=data.get("scale"),
                 grade_scale=json.dumps(data.get("grade_scale")),
                 calculator_values=json.dumps(data.get("calculator_values")),
-                lowest_valid_grade=data.get("lowest_valid_grade")
+                lowest_valid_grade=data.get("lowest_valid_grade"),
             )
             import_conversion.save()
             self.import_conversion = import_conversion
@@ -358,27 +440,33 @@ class GradeImport(models.Model):
                 student_reg_id = grade["sis_user_id"]
                 imported_grade = grade["current_score"]
 
-                if ("override_score" in grade and
-                        grade["override_score"] is not None):
+                if (
+                    "override_score" in grade
+                    and grade["override_score"] is not None
+                ):
                     imported_grade = grade["override_score"]
                     is_override_grade = True
 
-                if ("unposted_current_score" in grade and
-                        grade["unposted_current_score"] !=
-                        grade["current_score"]):
+                if (
+                    "unposted_current_score" in grade
+                    and grade["unposted_current_score"]
+                    != grade["current_score"]
+                ):
                     has_unposted_grade = True
 
             if student_reg_id or student_number:
-                grades.append({
-                    "student_reg_id": student_reg_id,
-                    "student_number": student_number,
-                    "imported_grade": imported_grade,
-                    "is_override_grade": is_override_grade,
-                    "has_unposted_grade": has_unposted_grade,
-                    "comment": comment,
-                    "is_incomplete": grade.get("is_incomplete", False),
-                    "is_writing": grade.get("is_writing", False),
-                })
+                grades.append(
+                    {
+                        "student_reg_id": student_reg_id,
+                        "student_number": student_number,
+                        "imported_grade": imported_grade,
+                        "is_override_grade": is_override_grade,
+                        "has_unposted_grade": has_unposted_grade,
+                        "comment": comment,
+                        "is_incomplete": grade.get("is_incomplete", False),
+                        "is_writing": grade.get("is_writing", False),
+                    }
+                )
 
         course_grading_schemes = []
         for scheme in grade_data.get("course_grading_schemes", []):
@@ -388,17 +476,25 @@ class GradeImport(models.Model):
             except InvalidGradingScale:
                 pass
 
-        return {"id": self.pk,
-                "source": self.source,
-                "source_name": dict(self.SOURCE_CHOICES)[self.source],
-                "status_code": self.status_code,
-                "file_name": self.file_name,
-                "file_path": self.file_path,
-                "accepted_date": self.accepted_date.isoformat() if (
-                    self.accepted_date is not None) else None,
-                "imported_date": self.imported_date.isoformat(),
-                "imported_by": self.imported_by,
-                "imported_grades": grades,
-                "import_conversion": self.import_conversion.json_data() if (
-                    self.import_conversion is not None) else None,
-                "course_grading_schemes": course_grading_schemes}
+        return {
+            "id": self.pk,
+            "source": self.source,
+            "source_name": dict(self.SOURCE_CHOICES)[self.source],
+            "status_code": self.status_code,
+            "file_name": self.file_name,
+            "file_path": self.file_path,
+            "accepted_date": (
+                self.accepted_date.isoformat()
+                if (self.accepted_date is not None)
+                else None
+            ),
+            "imported_date": self.imported_date.isoformat(),
+            "imported_by": self.imported_by,
+            "imported_grades": grades,
+            "import_conversion": (
+                self.import_conversion.json_data()
+                if (self.import_conversion is not None)
+                else None
+            ),
+            "course_grading_schemes": course_grading_schemes,
+        }

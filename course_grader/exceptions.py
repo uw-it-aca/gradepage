@@ -1,4 +1,4 @@
-# Copyright 2025 UW-IT, University of Washington
+# Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -69,7 +69,7 @@ class OverrideNotPermitted(Exception):
 
 class GradesNotSubmitted(Exception):
     def __str__(self):
-        return "No grades were submitted"
+        return "No grades were submitted or changed"
 
 
 class InvalidCSV(Exception):

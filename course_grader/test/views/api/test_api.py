@@ -1,4 +1,4 @@
-# Copyright 2025 UW-IT, University of Washington
+# Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -31,11 +31,13 @@ class RestDispatchTest(TestCase):
 
     def test_error_response(self):
         response = RESTDispatch.error_response(400, message='Error')
-        self.assertEqual(response.content, b'{"error": "Error"}')
+        self.assertEqual(response.content,
+                         b'{"status": 400, "error": "Error"}')
         self.assertEqual(response.status_code, 400)
 
         response = RESTDispatch.error_response(500, message=Exception('Error'))
-        self.assertEqual(response.content, b'{"error": "Error"}')
+        self.assertEqual(response.content,
+                         b'{"status": 500, "error": "Error"}')
         self.assertEqual(response.status_code, 500)
 
     def test_json_response(self):
@@ -78,6 +80,7 @@ class ViewAPIFunctionsTest(TestCase):
         p = graderoster_status_params(graderoster)
         self.assertEqual(p['unsubmitted_count'], 994)
         self.assertEqual(p['submitted_count'], 3)
+        self.assertEqual(p['grade_import'], None)
         self.assertEqual(p['deadline_warning'], True)
 
         section = get_section_by_label('2013,spring,TRAIN,101/B')
@@ -87,7 +90,14 @@ class ViewAPIFunctionsTest(TestCase):
         p = graderoster_status_params(graderoster)
         self.assertEqual(p['unsubmitted_count'], 0)
         self.assertEqual(p['submitted_count'], 2)
-        self.assertEqual('deadline_warning' in p, False)
+        self.assertEqual(p['grade_import'], None)
+        self.assertEqual(p['deadline_warning'], False)
+
+        p = graderoster_status_params(graderoster, include_grade_imports=True)
+        self.assertEqual(p['unsubmitted_count'], 0)
+        self.assertEqual(p['submitted_count'], 2)
+        self.assertEqual(p['grade_import'], None)
+        self.assertEqual(p['deadline_warning'], False)
 
     def test_item_is_submitted(self):
         section = get_section_by_label('2013,spring,TRAIN,101/B')

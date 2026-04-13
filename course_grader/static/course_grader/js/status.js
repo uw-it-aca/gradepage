@@ -69,12 +69,12 @@ var AdminSupport = {};
             },
             series: [{
                 type: "area",
-                name: "Submissions",
+                name: "Submitted Sections",
                 data: window.gradepage.charts.submissions.data
             },{
                 type: "line",
-                name: "Catalyst Gradebook Imports",
-                data: window.gradepage.charts.grade_imports.catalyst
+                name: "Resubmitted Sections",
+                data: window.gradepage.charts.resubmissions.data
             },{
                 type: "line",
                 name: "Canvas Gradebook Imports",

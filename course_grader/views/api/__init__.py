@@ -1,4 +1,4 @@
-# Copyright 2025 UW-IT, University of Washington
+# Copyright 2026 UW-IT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -91,14 +91,15 @@ def item_is_submitted(item):
 
     # Old receipts do not include date_graded, so also check for the
     # existence of a grade
-    if (item.date_graded is not None or
-            item.grade is not None or item.no_grade_now):
-        return True
-    else:
-        return False
+    return (item.date_graded is not None or
+            item.grade is not None or
+            item.no_grade_now or
+            item.has_incomplete)
 
 
-def graderoster_status_params(graderoster, secondary_section_id=None):
+def graderoster_status_params(graderoster,
+                              secondary_section_id=None,
+                              include_grade_imports=False):
     total_count = 0
     submitted_count = 0
     for item in graderoster.items:
@@ -115,26 +116,36 @@ def graderoster_status_params(graderoster, secondary_section_id=None):
 
     data = {
         "submitted_count": submitted_count,
-        "unsubmitted_count": total_count - submitted_count
+        "unsubmitted_count": total_count - submitted_count,
+        "submitted_date": None,
+        "submitted_by": None,
+        "accepted_date": None,
+        "grade_import": None,
+        "status_code": None,
+        "deadline_warning": False,
     }
 
     section = graderoster.section
     if hasattr(graderoster, "submissions"):
-        submission = graderoster.submissions.get(secondary_section_id, None)
+        submission = None
+        if secondary_section_id is not None:
+            submission = next((s for s in graderoster.submissions if (
+                s["submission_id"] == secondary_section_id)), None)
+
         if submission is None:
-            submission = graderoster.submissions.get(section.section_id, None)
+            submission = next((s for s in graderoster.submissions if (
+                s["submission_id"] == section.section_id)), None)
 
         if submission is not None:
-            submitted_date = submission["submitted_date"]
             submitted_by = submission["submitted_by"]
-            accepted_date = submission["accepted_date"]
-            grade_import = submission["grade_import"]
-            data["submitted_date"] = submitted_date.isoformat()
-            data["accepted_date"] = accepted_date.isoformat() if (
-                accepted_date is not None) else None
+            data["status_code"] = submission["status_code"]
+            data["submitted_date"] = submission["submitted_date"]
+            data["accepted_date"] = submission["accepted_date"]
             data["submitted_by"] = person_display_name(submitted_by)
-            data["grade_import"] = grade_import.json_data() if (
-                grade_import is not None) else None
+            if include_grade_imports:
+                grade_import = submission["grade_import"]
+                data["grade_import"] = grade_import.json_data() if (
+                    grade_import is not None) else None
 
     if (is_grading_period_open(section) and data["unsubmitted_count"]):
         data["deadline_warning"] = submission_deadline_warning(section.term)
