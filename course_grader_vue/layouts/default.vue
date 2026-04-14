@@ -111,6 +111,12 @@
             >
           </div>
           <slot name="content"></slot>
+          <div class="fixed-bottom m-2 text-end">
+            <BButton href="https://forms.office.com/r/WuVmTbfwqd" size="sm" role="link" target="_blank"
+              ><i class="bi bi-chat-right-text-fill me-2"></i>Send us feedback</BButton
+            >
+          </div>
+          <Feedback v-if="false" />
         </div>
       </div>
     </template>
@@ -119,15 +125,18 @@
 </template>
 
 <script>
+  import Feedback from "@/components/feedback.vue";
   import { useContextStore } from "@/stores/context";
   import { clearOverride } from "@/utils/data";
-  import { BLink, BDropdownItem } from "bootstrap-vue-next";
+  import { BLink, BButton, BDropdownItem } from "bootstrap-vue-next";
   import { STopbarNeo, SProfile, SColorMode } from "solstice-vue";
 
   export default {
     name: "GradepageApp",
     components: {
+      Feedback,
       BLink,
+      BButton,
       BDropdownItem,
       STopbarNeo,
       SProfile,
