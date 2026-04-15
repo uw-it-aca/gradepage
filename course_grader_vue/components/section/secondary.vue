@@ -3,7 +3,6 @@
     <div class="d-flex align-items-center">
       <template v-if="routableSection">
         <BLink
-          :disabled="!section.current_enrollment"
           :href="section.section_url"
           :title="routerLinkTitle"
           class="fs-4"
@@ -130,6 +129,7 @@ export default {
     routableSection() {
       return (
         this.section.section_url &&
+        this.section.current_enrollment > 0 &&
         !(this.errorStatus && this.errorStatus.status === 543)
       ) ? true : false;
     },
