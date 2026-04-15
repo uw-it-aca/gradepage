@@ -127,11 +127,17 @@ export default {
       return "";
     },
     routableSection() {
-      return (
-        this.section.section_url &&
-        this.section.current_enrollment > 0 &&
-        !(this.errorStatus && this.errorStatus.status === 543)
-      ) ? true : false;
+      if (this.section.section_url) {
+        if (this.secondaryStatus) {
+          if (this.secondaryStatus.submitted_count > 0 ||
+              this.secondaryStatus.unsubmitted_count > 0) {
+            return true;
+          }
+        } else if (this.section.current_enrollment > 0) {
+          return true;
+        }
+      }
+      return false;
     },
     routerLinkTitle() {
       let status =
