@@ -256,7 +256,7 @@ class GradeRoster(GradeFormHandler):
             else:  # Not an undergrad
                 # Default grade for incomplete not validated
                 return False if (is_submitted and not (
-                    item.has_incomplete or item.no_grade_now) else True
+                    item.has_incomplete or item.no_grade_now)) else True
 
         for choice in item.grade_choices:
             if (choice is not None and choice != "" and
