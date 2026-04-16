@@ -16,10 +16,10 @@
           <div>
             <div class="fw-bold ms-4">Course sections submitted.</div>
             <div class="fst-italic small ms-4">
-              Submitted grades may differ from official final grade.
-              <BLink :href="gradingResourcesURL" target="_blank" rel="noopener"
-                >Learn why</BLink
-              >.
+              Submitted grades do not reflect changes made outside of
+              GradePage. Visit the <BLink
+                :href="gradingResourcesURL" target="_blank" rel="noopener"
+              >Grade Submission Resources</BLink> page for more info.
             </div>
           </div>
           <div>
@@ -73,10 +73,10 @@
           v-if="graderoster.submissions[0].accepted_date"
           class="fst-italic small ms-4"
         >
-          Submitted grades may differ from official final grade.
-          <BLink :href="gradingResourcesURL" target="_blank" rel="noopener"
-            >Learn why</BLink
-          >.
+          Submitted grades do not reflect changes made outside of
+          GradePage. Visit the <BLink
+            :href="gradingResourcesURL" target="_blank" rel="noopener"
+          >Grade Submission Resources</BLink> page for more info.
         </div>
       </div>
     </BCard>

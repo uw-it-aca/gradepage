@@ -126,19 +126,6 @@ export default {
       }
       return "";
     },
-    routableSection() {
-      if (this.section.section_url) {
-        if (this.secondaryStatus) {
-          if (this.secondaryStatus.submitted_count > 0 ||
-              this.secondaryStatus.unsubmitted_count > 0) {
-            return true;
-          }
-        } else if (this.section.current_enrollment > 0) {
-          return true;
-        }
-      }
-      return false;
-    },
     routerLinkTitle() {
       let status =
         this.secondaryStatus !== null
@@ -187,6 +174,19 @@ export default {
     }, this.timeout);
   },
   methods: {
+    routableSection: function () {
+      if (this.section.section_url) {
+        if (this.secondaryStatus) {
+          if (this.secondaryStatus.submitted_count > 0 ||
+              this.secondaryStatus.unsubmitted_count > 0) {
+            return true;
+          }
+        } else if (this.section.current_enrollment > 0) {
+          return true;
+        }
+      }
+      return false;
+    },
     loadGradingStatus: function () {
       if (this.section.status_url) {
         this.isLoading = true;
@@ -194,6 +194,7 @@ export default {
           .then((data) => {
             // Secondary status overrules the prop
             this.secondaryStatus = data.grading_status;
+            this.routableSection();
           })
           .catch((error) => {
             this.errorStatus = error.data;
