@@ -244,16 +244,19 @@ class GradeRoster(GradeFormHandler):
 
         is_submitted = item_is_submitted(item)
         if saved_grade.no_grade_now:
+            # Changing a regular grade to an X
             return False if (is_submitted and not item.no_grade_now) else True
 
         if saved_grade.is_incomplete:
-            if (item.student_type == "UNDERGRAD" or not item.student_type) and (  # noqa
-                    saved_grade.no_grade_now or saved_grade.grade == "N" or
-                    saved_grade.grade == "CR" or saved_grade.grade == ""):
-                return False
-            elif (is_submitted and not (
-                    item.has_incomplete or item.no_grade_now)):
-                return False
+            if (item.student_type == "UNDERGRAD" or not item.student_type):
+                # Setting unpermitted default grade for Incomplete
+                if (saved_grade.no_grade_now or saved_grade.grade == "N" or
+                        saved_grade.grade == "CR" or saved_grade.grade == ""):
+                    return False
+            else:  # Not an undergrad
+                # Default grade for incomplete not validated
+                return False if (is_submitted and not (
+                    item.has_incomplete or item.no_grade_now) else True
 
         for choice in item.grade_choices:
             if (choice is not None and choice != "" and
