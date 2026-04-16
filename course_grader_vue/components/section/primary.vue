@@ -145,9 +145,8 @@ export default {
       return "";
     },
     routableSection() {
-      return (
-        this.section.section_url &&
-        !(this.errorStatus && this.errorStatus.status === 543)
+      return (this.section.section_url && !(this.errorStatus &&
+        this.errorStatus.error.toLowerCase() === "law school course")
       ) ? true : false;
     },
     routerLinkTitle() {
