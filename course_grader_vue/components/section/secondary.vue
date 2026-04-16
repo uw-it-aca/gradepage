@@ -96,7 +96,6 @@ export default {
       secondaryStatus: null,
       errorStatus: null,
       sectionNameId: "section-name-" + this.section.section_id,
-      routableSection: (this.section.section_url && this.section.current_enrollment > 0),
       isLoading: true,
     };
   },
@@ -127,23 +126,31 @@ export default {
       }
       return "";
     },
+    actualStatus() {
+      return (this.secondaryStatus !== null)
+        ? this.secondaryStatus
+        : this.gradingStatus;
+    },
+    routableSection() {
+      let status = this.actualStatus;
+      if (status) {
+        return (
+          this.section.section_url && (
+            status.submitted_count > 0 || status.unsubmitted_count > 0
+          )
+        ) ? true : false;
+      }
+      return this.section.section_url ? true : false;;
+    },
     routerLinkTitle() {
-      let status =
-        this.secondaryStatus !== null
-          ? this.secondaryStatus
-          : this.gradingStatus;
-
+      let status = this.actualStatus;
       if (status) {
         return this.formatLinkTitle(status);
       }
       return "";
     },
     gradesAccepted() {
-      let status =
-        this.secondaryStatus !== null
-          ? this.secondaryStatus
-          : this.gradingStatus;
-
+      let status = this.actualStatus;
       if (status) {
         return (
           status.accepted_date &&
@@ -154,11 +161,7 @@ export default {
       return false;
     },
     savedGradeWarning() {
-      let status =
-        this.secondaryStatus !== null
-          ? this.secondaryStatus
-          : this.gradingStatus;
-
+      let status = this.actualStatus;
       if (status) {
         return (
           status.grading_period_open &&
@@ -175,13 +178,6 @@ export default {
     }, this.timeout);
   },
   methods: {
-    updateRoutableSection: function () {
-      if (this.section.section_url && this.secondaryStatus) {
-        this.routableSection = (
-          this.secondaryStatus.submitted_count > 0 ||
-          this.secondaryStatus.unsubmitted_count > 0);
-      }
-    },
     loadGradingStatus: function () {
       if (this.section.status_url) {
         this.isLoading = true;
@@ -189,7 +185,6 @@ export default {
           .then((data) => {
             // Secondary status overrules the prop
             this.secondaryStatus = data.grading_status;
-            this.updateRoutableSection();
           })
           .catch((error) => {
             this.errorStatus = error.data;
