@@ -252,7 +252,7 @@ class GradeRoster(GradeFormHandler):
                     saved_grade.grade == "CR" or saved_grade.grade == ""):
                 return False
             elif (is_submitted and not (
-                    item.has_incomplete or item.no_grade_now):
+                    item.has_incomplete or item.no_grade_now)):
                 return False
 
         for choice in item.grade_choices:
