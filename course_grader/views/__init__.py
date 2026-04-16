@@ -68,7 +68,6 @@ def section_status_params(section, instructor):
         "grading_status": None,
         "grading_period_open": grading_period_open,
         "grade_submission_deadline": grading_deadline,
-        "current_enrollment": section.current_enrollment,
     }
 
     if (grading_period_open or is_grading_period_past(section.term)):

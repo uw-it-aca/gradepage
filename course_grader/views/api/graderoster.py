@@ -251,8 +251,9 @@ class GradeRoster(GradeFormHandler):
                     saved_grade.no_grade_now or saved_grade.grade == "N" or
                     saved_grade.grade == "CR" or saved_grade.grade == ""):
                 return False
-            return False if (
-                is_submitted and not item.has_incomplete) else True
+            elif (is_submitted and not (
+                    item.has_incomplete or item.no_grade_now):
+                return False
 
         for choice in item.grade_choices:
             if (choice is not None and choice != "" and
@@ -354,7 +355,7 @@ class GradeRoster(GradeFormHandler):
                     if (grade == "i" or grade == "I"):
                         grade = ""
                 else:
-                    allows_incomplete = False
+                    allows_incomplete = True if item.no_grade_now else False
 
                 if item.date_graded is not None:
                     data["graded_count"] += 1
