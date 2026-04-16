@@ -96,6 +96,7 @@ export default {
       secondaryStatus: null,
       errorStatus: null,
       sectionNameId: "section-name-" + this.section.section_id,
+      routableSection: (this.section.section_url && this.section.current_enrollment > 0),
       isLoading: true,
     };
   },
@@ -174,18 +175,12 @@ export default {
     }, this.timeout);
   },
   methods: {
-    routableSection: function () {
-      if (this.section.section_url) {
-        if (this.secondaryStatus) {
-          if (this.secondaryStatus.submitted_count > 0 ||
-              this.secondaryStatus.unsubmitted_count > 0) {
-            return true;
-          }
-        } else if (this.section.current_enrollment > 0) {
-          return true;
-        }
+    updateRoutableSection: function () {
+      if (this.section.section_url && this.secondaryStatus) {
+        this.routableSection = (
+          this.secondaryStatus.submitted_count > 0 ||
+          this.secondaryStatus.unsubmitted_count > 0);
       }
-      return false;
     },
     loadGradingStatus: function () {
       if (this.section.status_url) {
@@ -194,7 +189,7 @@ export default {
           .then((data) => {
             // Secondary status overrules the prop
             this.secondaryStatus = data.grading_status;
-            this.routableSection();
+            this.updateRoutableSection();
           })
           .catch((error) => {
             this.errorStatus = error.data;
