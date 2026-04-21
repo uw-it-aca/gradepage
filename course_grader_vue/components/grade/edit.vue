@@ -347,7 +347,7 @@ export default {
             this.gradeStore.addSaved(this.student.student_id);
           })
           .catch((err) => {
-            this.gradeError = err.error;
+            this.gradeError = err.data.error;
           })
           .finally(() => {
             this.saveInProgress = false;
