@@ -1,30 +1,4 @@
 <template>
-  <!--<div class="mb-3">
-    <label for="import-scale-selector" class="me-2"
-      >Choose your grade scale:</label
-    >
-    <BDropdown
-      id="import-scale-selector"
-      size="sm"
-      no-caret
-      variant="outline-primary rounded-2"
-      class="d-inline-block"
-      toggle-class="rounded-2"
-    >
-      <template #button-content>
-        {{ gettext("conversion_scale_" + calculatorStore.selectedScale)
-        }}<i class="bi bi-chevron-down ms-1"></i>
-      </template>
-      <BDropdownItem
-        v-for="(scale, index) in calculatorStore.availableScales"
-        :key="index"
-        :value="scale"
-        @click.prevent="calculatorStore.setScale(scale)"
-        >{{ gettext("conversion_scale_" + scale) }}
-      </BDropdownItem>
-    </BDropdown>
-  </div>-->
-
   <div class="row">
     <div class="col-9">
       <div v-if="!calculatorStore.isFixedScale">
@@ -163,7 +137,12 @@
 import { useCalculatorStore } from "@/stores/calculator";
 import CalculatorRow from "@/components/convert/calculator-row.vue";
 import GradeScaleRow from "@/components/convert/grade-scale-row.vue";
-import { BLink, BButton } from "bootstrap-vue-next";
+import {
+  BLink,
+  BButton,
+  BDropdown,
+  BDropdownItemButton
+} from "bootstrap-vue-next";
 
 export default {
   name: "CalculatorComp",
@@ -172,6 +151,8 @@ export default {
     GradeScaleRow,
     BButton,
     BLink,
+    BDropdown,
+    BDropdownItemButton
   },
   setup() {
     const calculatorStore = useCalculatorStore();
