@@ -84,6 +84,7 @@ class HomeView(TemplateView):
         context["override_user"] = user_service.get_override_user()
         context["user_fullname"] = person_display_name(person)
         context["clear_override_url"] = reverse("userservice_override")
+        context["support_url"] = reverse("gradepage-status")
         context["signout_url"] = reverse("saml_logout")
         context["debug_mode"] = settings.DEBUG
 
