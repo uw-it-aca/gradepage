@@ -142,16 +142,15 @@
       </div>
       <div v-else>
         <i class="fas fa-exclamation-circle"></i>
-        <strong>{{ errorResponse.error }}</strong
-        ><br />
-        <small
-          >File: <em>{{ file.name }}</em></small
-        >
-        <ul>
-          <li>Select a different file for import.</li>
-        </ul>
+        <strong>{{ errorResponse.error }}</strong>
+        <div v-if="!uploadNotAllowed">
+          <small>File: <em>{{ file.name }}</em></small>
+          <ul>
+            <li>Select a different file for import.</li>
+          </ul>
+        </div>
       </div>
-      <p>
+      <p v-if="!uploadNotAllowed">
         <BLink
           :href="importHelpURL"
           title="Learn about other options to submit grades on IT Connect"
@@ -267,6 +266,9 @@ export default {
     },
     fileLimitExceeded() {
       return this.errorResponse && this.errorResponse.status === 413;
+    },
+    uploadNotAllowed() {
+      return this.errorResponse && this.errorResponse.status === 401;
     },
     uploadGradesFoundText() {
       return interpolate(
