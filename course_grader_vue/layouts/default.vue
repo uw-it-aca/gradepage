@@ -16,11 +16,19 @@
         :user-override="context.override_user"
       >
         <button
-          class="btn btn-link btn-sm text-danger m-0 border-0 p-0"
+          class="btn btn-link text-warning m-0 border-0 p-0"
           value="Clear override"
           @click="clearUserOverride()"
         >
           Clear override
+        </button> |
+        <button
+          class="btn btn-link text-warning m-0 border-0 p-0"
+          value="Admin"
+          title="Support Tools"
+          @click="window.location.href=context.support_url"
+        >
+          Admin
         </button>
       </SProfile>
       <SProfile v-else :user-netid="context.login_user">
