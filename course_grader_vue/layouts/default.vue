@@ -21,15 +21,14 @@
           @click="clearUserOverride()"
         >
           Clear override
-        </button> |
-        <button
-          class="btn btn-link text-warning m-0 border-0 p-0"
-          value="Admin"
-          title="Support Tools"
-          @click="window.location.href=context.support_url"
-        >
-          Admin
         </button>
+        <span class="text-white"> | </span>
+        <a
+          v-if="context.support_url"
+          :href="context.support_url"
+          title="Support Tools"
+          class="text-warning m-0 border-0 p-0"
+        > Admin </a>
       </SProfile>
       <SProfile v-else :user-netid="context.login_user">
         <a :href="context.signout_url" class="text-white"> Sign out </a>

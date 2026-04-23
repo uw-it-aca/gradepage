@@ -12,6 +12,7 @@ from course_grader.dao.person import person_from_user, person_display_name
 from course_grader.dao.term import term_from_param, all_viewable_terms
 from course_grader.exceptions import InvalidTerm
 from course_grader.views import url_for_term
+from course_grader.views.support import can_override_user
 from userservice.user import UserService
 from restclients_core.exceptions import DataFailureException
 from logging import getLogger
@@ -83,9 +84,11 @@ class HomeView(TemplateView):
         context["login_user"] = user_service.get_original_user()
         context["override_user"] = user_service.get_override_user()
         context["user_fullname"] = person_display_name(person)
-        context["clear_override_url"] = reverse("userservice_override")
-        context["support_url"] = reverse("gradepage-status")
         context["signout_url"] = reverse("saml_logout")
         context["debug_mode"] = settings.DEBUG
+
+        if can_override_user(self.request):
+            context["clear_override_url"] = reverse("userservice_override")
+            context["support_url"] = reverse("gradepage-status")
 
         return context
