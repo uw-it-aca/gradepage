@@ -35,9 +35,9 @@ class GradeRosterExportTest(TestCase):
             b',,,\nStudent Grade Change List'
             b',,,\n'
             b'INSTRUCTIONS:,,,\n'
-            b'Complete this spreadsheet and upload the file using the '
-            b'Office of the University Registrar\'s Online Change of Grade '
-            b'Request Form.,,,\n'
+            b'Add changes in the GRADE TO column. Remove unchanged students '
+            b'before uploading to the Office of the University Registrar\'s '
+            b'Online Change of Grade Request Form.,,,\n'
             b'https://apps.registrar.washington.edu/grade-change/pages/change.php'  # noqa
             b',,,\n'
             b'DO NOT EMAIL this spreadsheet with student grade information.'

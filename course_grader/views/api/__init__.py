@@ -97,6 +97,10 @@ def item_is_submitted(item):
             item.has_incomplete)
 
 
+def item_is_undergraduate(item):
+    return (item.student_type == "UNDERGRAD" or not item.student_type)
+
+
 def graderoster_status_params(graderoster,
                               secondary_section_id=None,
                               include_grade_imports=False):

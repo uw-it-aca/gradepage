@@ -126,29 +126,31 @@ export default {
       }
       return "";
     },
+    actualStatus() {
+      return (this.secondaryStatus !== null)
+        ? this.secondaryStatus
+        : this.gradingStatus;
+    },
     routableSection() {
-      return (
-        this.section.section_url &&
-        !(this.errorStatus && this.errorStatus.status === 543)
-      ) ? true : false;
+      let status = this.actualStatus;
+      if (status) {
+        return (
+          this.section.section_url && (
+            status.submitted_count > 0 || status.unsubmitted_count > 0
+          )
+        ) ? true : false;
+      }
+      return this.section.section_url ? true : false;;
     },
     routerLinkTitle() {
-      let status =
-        this.secondaryStatus !== null
-          ? this.secondaryStatus
-          : this.gradingStatus;
-
+      let status = this.actualStatus;
       if (status) {
         return this.formatLinkTitle(status);
       }
       return "";
     },
     gradesAccepted() {
-      let status =
-        this.secondaryStatus !== null
-          ? this.secondaryStatus
-          : this.gradingStatus;
-
+      let status = this.actualStatus;
       if (status) {
         return (
           status.accepted_date &&
@@ -159,11 +161,7 @@ export default {
       return false;
     },
     savedGradeWarning() {
-      let status =
-        this.secondaryStatus !== null
-          ? this.secondaryStatus
-          : this.gradingStatus;
-
+      let status = this.actualStatus;
       if (status) {
         return (
           status.grading_period_open &&

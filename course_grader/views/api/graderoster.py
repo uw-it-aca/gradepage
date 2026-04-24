@@ -20,7 +20,7 @@ from course_grader.views import (
     url_for_grading_status, url_for_graderoster)
 from course_grader.views.api import (
     GradeFormHandler, graderoster_status_params, item_is_submitted,
-    sorted_students, sorted_grades)
+    item_is_undergraduate, sorted_students, sorted_grades)
 from course_grader.views.decorators import xhr_login_required
 from course_grader.exceptions import *
 from userservice.user import UserService
@@ -179,6 +179,9 @@ class GradeRoster(GradeFormHandler):
             student_id = item.student_label(separator="-")
             saved_grade = saved_grades.get(student_id)
             if self.validate_grade(item, saved_grade):
+                prior_no_grade_now = (
+                    item_is_submitted(item) and item.no_grade_now)
+
                 item.no_grade_now = saved_grade.no_grade_now
                 item.grade = "" if (
                     item.no_grade_now is True) else saved_grade.grade
@@ -186,6 +189,12 @@ class GradeRoster(GradeFormHandler):
                 item.has_writing_credit = saved_grade.is_writing
                 item.grade_submitter_person = self.user
                 item.grade_status = None
+
+                # Set a default grade for non-undergrad incompletes
+                if (item.has_incomplete and prior_no_grade_now and not
+                        item_is_undergraduate(item)):
+                    item.grade = next((x for x in item.grade_choices if (
+                        x in {"0.0", "NC", "F"})), "")
             else:
                 status = 409
 
@@ -244,15 +253,19 @@ class GradeRoster(GradeFormHandler):
 
         is_submitted = item_is_submitted(item)
         if saved_grade.no_grade_now:
+            # Changing a regular grade to an X
             return False if (is_submitted and not item.no_grade_now) else True
 
         if saved_grade.is_incomplete:
-            if (item.student_type == "UNDERGRAD" or not item.student_type) and (  # noqa
-                    saved_grade.no_grade_now or saved_grade.grade == "N" or
-                    saved_grade.grade == "CR" or saved_grade.grade == ""):
-                return False
-            return False if (
-                is_submitted and not item.has_incomplete) else True
+            if item_is_undergraduate(item):
+                # Setting unpermitted default grade for Incomplete
+                if (saved_grade.no_grade_now or saved_grade.grade == "N" or
+                        saved_grade.grade == "CR" or saved_grade.grade == ""):
+                    return False
+            else:  # Not an undergrad
+                # Default grade for incomplete not validated
+                return False if (is_submitted and not (
+                    item.has_incomplete or item.no_grade_now)) else True
 
         for choice in item.grade_choices:
             if (choice is not None and choice != "" and
@@ -338,8 +351,6 @@ class GradeRoster(GradeFormHandler):
             allows_no_grade_now = False if (
                 is_submitted and not item.no_grade_now) else True
             allows_incomplete = True
-            allows_inc_default_grade = (
-                item.student_type == "UNDERGRAD" or not item.student_type)
             date_graded = None
             saved_grade_data = {}
 
@@ -354,7 +365,7 @@ class GradeRoster(GradeFormHandler):
                     if (grade == "i" or grade == "I"):
                         grade = ""
                 else:
-                    allows_incomplete = False
+                    allows_incomplete = True if item.no_grade_now else False
 
                 if item.date_graded is not None:
                     data["graded_count"] += 1
@@ -414,7 +425,7 @@ class GradeRoster(GradeFormHandler):
                 "is_submitted": is_submitted,
                 "date_graded": date_graded,
                 "allows_incomplete": allows_incomplete,
-                "allows_inc_default_grade": allows_inc_default_grade,
+                "allows_inc_default_grade": item_is_undergraduate(item),
                 "has_incomplete": item.has_incomplete,
                 "is_writing_section": not allows_writing_credit,
                 "allows_writing_credit": allows_writing_credit,

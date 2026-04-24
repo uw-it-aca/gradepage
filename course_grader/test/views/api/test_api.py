@@ -123,6 +123,24 @@ class ViewAPIFunctionsTest(TestCase):
         item.no_grade_now = True
         self.assertEqual(item_is_submitted(item), True)
 
+    def test_item_is_undergraduate(self):
+        section = get_section_by_label('2013,spring,TRAIN,101/B')
+        user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
+        graderoster = get_graderoster(section, user, requestor=user)
+        item = graderoster.items[0]
+
+        item.student_type = "UNDERGRAD"
+        self.assertEqual(item_is_undergraduate(item), True)
+
+        item.student_type = "GRADUATE"
+        self.assertEqual(item_is_undergraduate(item), False)
+
+        item.student_type = "MEDICINE"
+        self.assertEqual(item_is_undergraduate(item), False)
+
+        item.student_type = ""
+        self.assertEqual(item_is_undergraduate(item), True)
+
     def test_sorted_students(self):
         section = get_section_by_label('2013,spring,TRAIN,101/A')
         user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')

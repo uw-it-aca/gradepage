@@ -6,7 +6,7 @@
 <p>However, {% if failure_count == 1 %}one grade{% else %}{{ failure_count|apnumber }} grades{% endif %} failed to be submitted successfully.  For more information, see the <a href="{{ section_url }}">grade submission confirmation</a>.</p>
 
 {% if grading_window_open %}
-<p>To change submitted grades, return to the <a href="{{ section_url }}">grade submission confirmation</a>.</p>
+<p>To change submitted grades prior to <strong>{{ grade_submission_deadline }}</strong>, return to the <a href="{{ section_url }}">grade submission confirmation</a>.</p>
 <p>To submit grades for a different class, return to <a href="{{ gradepage_url }}">GradePage</a>.</p>
 <p>All grades must be submitted by <strong>{{ grade_submission_deadline }}</strong>.</p>
 {% else %}

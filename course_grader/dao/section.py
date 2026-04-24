@@ -102,13 +102,10 @@ def all_gradable_sections(person, term):
             logger.error(f"SKIP section for grading: {ex}")
             continue
 
-        if section.current_enrollment == 0:
-            # Zero enrollment
-            continue
-
         instructors = section.get_instructors()
-        if section.is_primary_section and len(instructors) == 0:
-            # Primary section with zero instructors
+        if (section.is_primary_section and (
+                section.current_enrollment == 0 or len(instructors) == 0)):
+            # Primary section with zero instructors or zero enrollments
             continue
 
         if section.is_independent_study:

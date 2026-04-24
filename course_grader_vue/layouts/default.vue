@@ -16,12 +16,19 @@
         :user-override="context.override_user"
       >
         <button
-          class="btn btn-link btn-sm text-danger m-0 border-0 p-0"
+          class="btn btn-link text-warning m-0 border-0 p-0"
           value="Clear override"
           @click="clearUserOverride()"
         >
           Clear override
         </button>
+        <span class="text-white"> | </span>
+        <a
+          v-if="context.support_url"
+          :href="context.support_url"
+          title="Support Tools"
+          class="text-warning m-0 border-0 p-0"
+        > Admin </a>
       </SProfile>
       <SProfile v-else :user-netid="context.login_user">
         <a :href="context.signout_url" class="text-white"> Sign out </a>
@@ -111,6 +118,12 @@
             >
           </div>
           <slot name="content"></slot>
+          <div class="fixed-bottom m-2 text-end">
+            <BButton href="https://forms.office.com/r/WuVmTbfwqd" size="sm" role="link" target="_blank"
+              ><i class="bi bi-chat-right-text-fill me-2"></i>Send us feedback</BButton
+            >
+          </div>
+          <Feedback v-if="false" />
         </div>
       </div>
     </template>
@@ -119,15 +132,18 @@
 </template>
 
 <script>
+  import Feedback from "@/components/feedback.vue";
   import { useContextStore } from "@/stores/context";
   import { clearOverride } from "@/utils/data";
-  import { BLink, BDropdownItem } from "bootstrap-vue-next";
+  import { BLink, BButton, BDropdownItem } from "bootstrap-vue-next";
   import { STopbarNeo, SProfile, SColorMode } from "solstice-vue";
 
   export default {
     name: "GradepageApp",
     components: {
+      Feedback,
       BLink,
+      BButton,
       BDropdownItem,
       STopbarNeo,
       SProfile,

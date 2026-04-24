@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <template v-if="graderoster.submissions.length">
-    <BCard bg-variant="body-tertiary" class="border-0 mb-4">
+    <BCard bg-variant="body-tertiary" class="mb-4 border-0">
       <div v-if="savedGradeWarning" class="border-bottom mb-2 pb-2">
         <span class="fw-bold">
           <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i
@@ -16,10 +16,10 @@
           <div>
             <div class="fw-bold ms-4">Course sections submitted.</div>
             <div class="fst-italic small ms-4">
-              Submitted grades may differ from official final grade.
-              <BLink :href="gradingResourcesURL" target="_blank" rel="noopener"
-                >Learn why</BLink
-              >.
+              Submitted grades do not reflect changes made outside of
+              GradePage. Visit the <BLink
+                :href="gradingResourcesURL" target="_blank" rel="noopener"
+              >Grade Submission Resources</BLink> page for more info.
             </div>
           </div>
           <div>
@@ -29,7 +29,7 @@
           </div>
         </div>
         <BCollapse id="collapse-1">
-          <ul class="list-unstyled mt-2 ms-4">
+          <ul class="list-unstyled ms-4 mt-2">
             <li
               v-for="(submission, index) in graderoster.submissions"
               :key="index"
@@ -73,17 +73,17 @@
           v-if="graderoster.submissions[0].accepted_date"
           class="fst-italic small ms-4"
         >
-          Submitted grades may differ from official final grade.
-          <BLink :href="gradingResourcesURL" target="_blank" rel="noopener"
-            >Learn why</BLink
-          >.
+          Submitted grades do not reflect changes made outside of
+          GradePage. Visit the <BLink
+            :href="gradingResourcesURL" target="_blank" rel="noopener"
+          >Grade Submission Resources</BLink> page for more info.
         </div>
       </div>
     </BCard>
   </template>
   <!-- Grades submitted, but no information about the submission -->
   <template v-else-if="graderoster.has_successful_submissions">
-    <BCard bg-variant="body-tertiary" class="border-0 mb-4">
+    <BCard bg-variant="body-tertiary" class="mb-4 border-0">
       <div class="d-flex justify-content-between">
         <div class="fw-bold">
           <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i
@@ -93,8 +93,12 @@
     </BCard>
   </template>
   <!-- Grading period is open, section has no students to grade -->
-  <template v-else-if="graderoster.grading_period_open && !graderoster.gradable_student_count">
-    <BCard bg-variant="body-tertiary" class="border-0 mb-4">
+  <template
+    v-else-if="
+      graderoster.grading_period_open && !graderoster.gradable_student_count
+    "
+  >
+    <BCard bg-variant="body-tertiary" class="mb-4 border-0">
       <div class="d-flex justify-content-between">
         <div class="fw-bold">
           <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
@@ -105,7 +109,7 @@
   </template>
   <!-- Grading period is closed, no grades were submitted -->
   <template v-else-if="!graderoster.grading_period_open">
-    <BCard bg-variant="body-tertiary" class="border-0 mb-4">
+    <BCard bg-variant="body-tertiary" class="mb-4 border-0">
       <div class="d-flex justify-content-between">
         <div class="fw-bold">
           <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
@@ -117,55 +121,55 @@
 </template>
 
 <script>
-import { BCard, BLink, BButton, BCollapse } from "bootstrap-vue-next";
-import { vBToggle } from "bootstrap-vue-next/directives/BToggle";
-import { formatGradingStatus } from "@/utils/section";
+  import { BCard, BLink, BButton, BCollapse } from "bootstrap-vue-next";
+  import { vBToggle } from "bootstrap-vue-next/directives/BToggle";
+  import { formatGradingStatus } from "@/utils/section";
 
-export default {
-  name: "SectionGradingStatus",
-  components: {
-    BCard,
-    BLink,
-    BButton,
-    BCollapse,
-  },
-  props: {
-    graderoster: {
-      type: Object,
-      required: true,
+  export default {
+    name: "SectionGradingStatus",
+    components: {
+      BCard,
+      BLink,
+      BButton,
+      BCollapse,
     },
-    savedGradeWarning: {
-      type: Boolean,
-      required: false,
-      default: false,
+    props: {
+      graderoster: {
+        type: Object,
+        required: true,
+      },
+      savedGradeWarning: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
     },
-  },
-  directives: {
-      'b-toggle': vBToggle,
+    directives: {
+      "b-toggle": vBToggle,
     },
-  setup() {
-    return {
-      formatGradingStatus,
-    };
-  },
-  data() {
-    return {
-      gradingResourcesURL:
-        "https://registrar.washington.edu/staff-faculty/grading-resources/",
-    };
-  },
-  computed: {
-    unknownSubmissionText() {
-      return interpolate(
-        ngettext(
-          "One grade submitted, but submission information is not available.",
-          "%(graded_count)s grades submitted, but submission information is not available.",
-          this.graderoster.graded_count
-        ),
-        this.graderoster,
-        true
-      );
+    setup() {
+      return {
+        formatGradingStatus,
+      };
     },
-  },
-};
+    data() {
+      return {
+        gradingResourcesURL:
+          "https://registrar.washington.edu/staff-faculty/grading-resources/",
+      };
+    },
+    computed: {
+      unknownSubmissionText() {
+        return interpolate(
+          ngettext(
+            "One grade submitted, but submission information is not available.",
+            "%(graded_count)s grades submitted, but submission information is not available.",
+            this.graderoster.graded_count,
+          ),
+          this.graderoster,
+          true,
+        );
+      },
+    },
+  };
 </script>

@@ -6,7 +6,7 @@
 <p><a href="{{ section_url }}">View or print a copy of this grade submission for your records.</a></p>
 
 {% if grading_window_open %}
-<p>To change submitted grades, return to the <a href="{{ section_url }}">grade submission confirmation</a>.</p>
+<p>To change submitted grades prior to <strong>{{ grade_submission_deadline }}</strong>, return to the <a href="{{ section_url }}">grade submission confirmation</a>.</p>
 <p>To submit grades for a different class, return to <a href="{{ gradepage_url }}">GradePage</a>.</p>
 <p>All grades must be submitted by <strong>{{ grade_submission_deadline }}</strong>.</p>
 {% else %}
