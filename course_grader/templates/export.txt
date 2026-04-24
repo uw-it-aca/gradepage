@@ -1,7 +1,7 @@
 ,,,
 Student Grade Change List,,,
 INSTRUCTIONS:,,,
-Complete this spreadsheet and upload the file using the Office of the University Registrar's Online Change of Grade Request Form.,,,
+Add changes in the GRADE TO column. Remove unchanged students before uploading to the Office of the University Registrar's Online Change of Grade Request Form.,,,
 {{ cog_form_url }},,,
 DO NOT EMAIL this spreadsheet with student grade information.,,,
 ,,,
