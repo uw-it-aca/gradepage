@@ -13,7 +13,7 @@ COPY --chown=acait:acait docker/app_start.sh /scripts
 RUN chmod u+x /scripts/app_start.sh
 
 RUN /app/bin/pip install -r requirements.txt
-RUN /app/bin/pip install "psycopg[c,pool]"
+RUN /app/bin/pip install "psycopg[c]"
 
 # latest node + ubuntu
 FROM node:20 AS node-base
