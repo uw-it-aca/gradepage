@@ -57,6 +57,8 @@ else:
             'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
         },
     }
+    DATABASES['default']['CONN_MAX_AGE'] = 60
+    DATABASES['default']['CONN_HEALTH_CHECKS'] = True
     CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('CLUSTER_CNAME')]
     VITE_MANIFEST_PATH = os.path.join(os.sep, 'static', '.vite', 'manifest.json')
 
