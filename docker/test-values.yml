@@ -84,7 +84,7 @@ environmentVariables:
     value: test
 
   - name: PWS_ENV
-    value: EVAL
+    value: PROD
 
   - name: SWS_ENV
     value: EVAL
