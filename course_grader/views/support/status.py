@@ -11,6 +11,7 @@ from uw_sws.models import Term
 from course_grader.models import SubmittedGradeRoster, GradeImport
 from course_grader.dao.term import (
     term_from_param, current_term, current_datetime)
+from course_grader.exceptions import DataFailureException
 from datetime import datetime, timedelta
 from logging import getLogger
 import json
@@ -23,9 +24,9 @@ logger = getLogger(__name__)
 def status(request):
     try:
         curr_term = current_term()
-    except Exception as ex:
-        logger.error("GET current term failed: {}".format(ex))
-        raise
+    except DataFailureException as ex:
+        logger.error(f"GET current term failed: {ex}")
+        return render(request, "503.html", {})
 
     term_id = request.GET.get("term", "").strip()
     try:
