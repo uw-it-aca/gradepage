@@ -7,7 +7,7 @@ from uw_canvas.courses import Courses
 from uw_canvas.enrollments import Enrollments
 from uw_canvas.grading_standards import GradingStandards
 from course_grader.dao.section import section_from_url
-from restclients_core.exceptions import DataFailureException
+from course_grader.exceptions import DataFailureException
 from course_grader.dao.section import section_from_url
 from course_grader.dao import GradeImportSource
 

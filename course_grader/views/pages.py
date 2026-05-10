@@ -10,11 +10,10 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from course_grader.dao.person import person_from_user, person_display_name
 from course_grader.dao.term import term_from_param, all_viewable_terms
-from course_grader.exceptions import InvalidTerm
+from course_grader.exceptions import InvalidTerm, DataFailureException
 from course_grader.views import url_for_term
 from course_grader.views.support import can_override_user
 from userservice.user import UserService
-from restclients_core.exceptions import DataFailureException
 from logging import getLogger
 
 logger = getLogger(__name__)

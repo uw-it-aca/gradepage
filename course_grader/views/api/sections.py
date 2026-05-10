@@ -17,8 +17,8 @@ from course_grader.views import (
 from course_grader.views.decorators import xhr_login_required
 from course_grader.views.rest_dispatch import RESTDispatch
 from course_grader.exceptions import (
-    InvalidUser, InvalidSection, InvalidTerm, MissingInstructorParam)
-from restclients_core.exceptions import DataFailureException
+    InvalidUser, InvalidSection, InvalidTerm, MissingInstructorParam,
+    DataFailureException)
 from logging import getLogger
 import re
 

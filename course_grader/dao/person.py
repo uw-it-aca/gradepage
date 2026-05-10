@@ -8,9 +8,8 @@ provides identity information
 """
 
 from uw_pws import PWS
-from restclients_core.exceptions import (
-    InvalidNetID, InvalidRegID, DataFailureException)
-from course_grader.exceptions import InvalidUser
+from course_grader.exceptions import (
+    InvalidNetID, InvalidRegID, InvalidUser, DataFailureException)
 from userservice.user import UserService
 
 
