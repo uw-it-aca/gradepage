@@ -15,8 +15,10 @@ from course_grader.dao.graderoster import graderoster_for_section
 from course_grader.views.decorators import xhr_login_required
 from course_grader.views.api import GradeFormHandler, sorted_students
 from course_grader.views import clean_section_id
-from course_grader.exceptions import *
-from restclients_core.exceptions import DataFailureException
+from course_grader.exceptions import (
+    InvalidUser, InvalidTerm, InvalidSection, GradingPeriodNotOpen,
+    SecondaryGradingEnabled, GradingNotPermitted, OverrideNotPermitted,
+    DataFailureException)
 from userservice.user import UserService
 from uw_saml.decorators import group_required
 from logging import getLogger

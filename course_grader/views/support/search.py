@@ -11,7 +11,7 @@ from uw_saml.decorators import group_required
 from uw_sws import QUARTER_SEQ
 from uw_sws.term import get_term_by_year_and_quarter
 from uw_sws.models import Term
-from restclients_core.exceptions import DataFailureException, InvalidNetID
+from course_grader.exceptions import DataFailureException, InvalidNetID
 from course_grader.models import SubmittedGradeRoster, GradeImport
 from course_grader.dao.person import (
     person_from_netid, person_from_regid, person_display_name)
@@ -26,7 +26,11 @@ logger = getLogger(__name__)
 @never_cache
 def grade_imports(request):
     all_terms = find_all_terms(GradeImport.objects.get_all_terms())
-    selected_term = term_from_param(request, all_terms)
+
+    try:
+        selected_term = term_from_param(request, all_terms)
+    except DataFailureException as ex:
+        return render(request, "503.html", {})
 
     opt_terms = []
     for opt_term in all_terms:
@@ -124,7 +128,11 @@ def grade_imports(request):
 @never_cache
 def graderosters(request):
     all_terms = find_all_terms(SubmittedGradeRoster.objects.get_all_terms())
-    selected_term = term_from_param(request, all_terms)
+
+    try:
+        selected_term = term_from_param(request, all_terms)
+    except DataFailureException as ex:
+        return render(request, "503.html", {})
 
     opt_terms = []
     for opt_term in all_terms:
@@ -274,6 +282,6 @@ def term_from_param(request, all_terms):
     try:
         return get_term_by_year_and_quarter(selected_term.year,
                                             selected_term.quarter)
-    except Exception as ex:
+    except DataFailureException as ex:
         logger.error("GET term failed: {}".format(ex))
         raise

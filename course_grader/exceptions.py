@@ -6,7 +6,8 @@
 Custom exceptions used by GradePage.
 """
 
-from django.conf import settings
+from restclients_core.exceptions import (
+    InvalidNetID, InvalidRegID, DataFailureException)
 
 
 class InvalidUser(Exception):

@@ -4,11 +4,15 @@
 
 from course_grader.dao.term import current_term
 from course_grader.dao.message import get_messages_for_term
-from restclients_core.exceptions import DataFailureException
+from course_grader.exceptions import DataFailureException
+from logging import getLogger
+
+logger = getLogger(__name__)
 
 
 def persistent_messages(request):
     try:
         return get_messages_for_term(current_term())
-    except DataFailureException:
-        pass
+    except DataFailureException as ex:
+        logger.error(f"Persistent messages failed to load! {ex}")
+        return {"messages": []}

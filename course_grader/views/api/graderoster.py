@@ -22,9 +22,12 @@ from course_grader.views.api import (
     GradeFormHandler, graderoster_status_params, item_is_submitted,
     item_is_undergraduate, sorted_students, sorted_grades)
 from course_grader.views.decorators import xhr_login_required
-from course_grader.exceptions import *
+from course_grader.exceptions import (
+    InvalidUser, InvalidTerm, InvalidSection, InvalidGradingScale,
+    MissingInstructorParam, ReceiptNotFound, GradingPeriodNotOpen,
+    SecondaryGradingEnabled, GradingNotPermitted, OverrideNotPermitted,
+    DataFailureException)
 from userservice.user import UserService
-from restclients_core.exceptions import DataFailureException
 from datetime import datetime
 from logging import getLogger
 import time

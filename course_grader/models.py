@@ -4,11 +4,10 @@
 
 from django.db import models
 from django.db.models import F, Q
-from restclients_core.exceptions import DataFailureException
 from uw_sws_graderoster.models import GradingScale
 from course_grader.dao.gradesubmission import submit_grades
 from course_grader.dao.notification import notify_grade_submitters
-from course_grader.exceptions import InvalidGradingScale
+from course_grader.exceptions import InvalidGradingScale, DataFailureException
 from importlib import import_module
 from datetime import datetime, timedelta, timezone
 from logging import getLogger
