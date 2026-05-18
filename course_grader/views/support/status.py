@@ -84,6 +84,8 @@ def status(request):
         section_id = graderoster["section_id"]
         if (graderoster["secondary_section_id"]):
             section_id += "/" + graderoster["secondary_section_id"]
+        else:
+            section_id += "," + graderoster["instructor_id"]
 
         if section_id in seen_sections:
             resubmitted_idx += 1
