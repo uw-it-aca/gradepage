@@ -64,6 +64,7 @@ class SubmittedGradeRosterManager(models.Manager):
             ).values(
                 "section_id",
                 "secondary_section_id",
+                "instructor_id",
                 "submitted_date",
                 "submitted_by",
                 "status_code",
