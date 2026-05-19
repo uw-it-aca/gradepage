@@ -6,7 +6,7 @@ from django.conf import settings
 from django.utils.timezone import (
     get_default_timezone, localtime, is_naive, make_aware)
 from datetime import datetime
-from uw_sws import SWS_DAO, sws_now
+from uw_sws import SWS_DAO, SWS_TIMEZONE, sws_now
 from abc import ABC, abstractmethod
 
 
