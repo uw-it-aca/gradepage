@@ -13,7 +13,7 @@ from course_grader.dao import SWS_TIMEZONE
 from course_grader.dao.term import (
     term_from_param, current_term, current_datetime)
 from course_grader.exceptions import DataFailureException
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta
 from logging import getLogger
 import json
 
