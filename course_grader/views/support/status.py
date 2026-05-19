@@ -9,6 +9,7 @@ from django.utils import timezone
 from uw_saml.decorators import group_required
 from uw_sws.models import Term
 from course_grader.models import SubmittedGradeRoster, GradeImport
+from course_grader.dao import SWS_TIMEZONE
 from course_grader.dao.term import (
     term_from_param, current_term, current_datetime)
 from course_grader.exceptions import DataFailureException
@@ -45,12 +46,13 @@ def status(request):
     else:
         grading_period_open = selected_term.grading_period_open
 
-    start_date = timezone.make_aware(grading_period_open,
-                                     timezone.get_default_timezone())
+    # Start at midnight
+    grading_period_open = datetime.combine(grading_period_open.date(),
+                                           datetime.time.min())
+    start_date = timezone.make_aware(grading_period_open, SWS_TIMEZONE)
     end_date = timezone.make_aware(selected_term.grade_submission_deadline,
-                                   timezone.get_default_timezone())
-    epoch = timezone.make_aware(datetime(1970, 1, 1),
-                                timezone.get_default_timezone())
+                                   SWS_TIMEZONE)
+    epoch = timezone.make_aware(datetime(1970, 1, 1), SWS_TIMEZONE)
 
     chart_data = {
         "submissions": {
