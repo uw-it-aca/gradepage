@@ -13,7 +13,7 @@ from course_grader.dao import SWS_TIMEZONE
 from course_grader.dao.term import (
     term_from_param, current_term, current_datetime)
 from course_grader.exceptions import DataFailureException
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from logging import getLogger
 import json
 
@@ -48,7 +48,7 @@ def status(request):
 
     # Start at midnight
     grading_period_open = datetime.combine(grading_period_open.date(),
-                                           datetime.time.min())
+                                           datetime.min.time())
     start_date = timezone.make_aware(grading_period_open, SWS_TIMEZONE)
     end_date = timezone.make_aware(selected_term.grade_submission_deadline,
                                    SWS_TIMEZONE)
