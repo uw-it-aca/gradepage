@@ -42,14 +42,16 @@ def status(request):
         selected_term)
 
     if selected_term.quarter == Term.SUMMER:
-        grading_period_open = selected_term.aterm_grading_period_open
+        grading_period_open = timezone.make_aware(
+            selected_term.aterm_grading_period_open, SWS_TIMEZONE)
     else:
-        grading_period_open = selected_term.grading_period_open
+        grading_period_open = timezone.make_aware(
+            selected_term.grading_period_open, SWS_TIMEZONE)
 
     # Start at midnight
-    grading_period_open = datetime.combine(grading_period_open.date(),
-                                           datetime.min.time())
-    start_date = timezone.make_aware(grading_period_open, SWS_TIMEZONE)
+    start_date = datetime.combine(grading_period_open.date(),
+                                  datetime.min.time(),
+                                  tzinfo=SWS_TIMEZONE)
     end_date = timezone.make_aware(selected_term.grade_submission_deadline,
                                    SWS_TIMEZONE)
     epoch = timezone.make_aware(datetime(1970, 1, 1), SWS_TIMEZONE)
@@ -57,7 +59,7 @@ def status(request):
     chart_data = {
         "submissions": {
             "plot_lines": [],
-            "grading_period_open": get_total_milliseconds(start_date - epoch),
+            "chart_start": get_total_milliseconds(start_date - epoch),
             "data": []
         },
         "resubmissions": {
