@@ -18,7 +18,7 @@ var AdminSupport = {};
             title: { text: null },
             xAxis: {
                 type: "datetime",
-                min: window.gradepage.charts.submissions.grading_period_open,
+                min: window.gradepage.charts.submissions.chart_start,
                 minRange: 15 * 60 * 1000,
                 title: { text: null },
                 allowDecimals: false,
