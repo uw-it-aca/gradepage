@@ -22,26 +22,30 @@ lifecycle:
   enabled: true
   preStop:
     enabled: true
+
+readiness:
+  enabled: true
+
+securityPolicy:
+  enabled: true
+
 autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 3
+
 affinity:
    podsSpanNodes: true
 
-targetAverageUtilization: 100
 resources:
   limits:
-    cpu: "500m"
-    memory: "1.0Gi"
+    cpu: 500m
+    memory: 512Mi
   requests:
-    cpu: "50m"
-    memory: "256Mi"
+    cpu: 250m
+    memory: 256Mi
 
-readiness:
-  enabled: true
-securityPolicy:
-  enabled: true
+targetAverageUtilization: 90
 
 externalService:
   enabled: true
