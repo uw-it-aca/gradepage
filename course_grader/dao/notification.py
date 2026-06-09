@@ -28,7 +28,7 @@ def create_recipient_list(people):
     recipients = []
     ignored_netids = ignored_recipients()
     for person in people.values():
-        if person.uwnetid not in ignored_netids:
+        if person.uwnetid and person.uwnetid not in ignored_netids:
             recipients.append(f"{person.uwnetid}@uw.edu")
     return recipients
 
