@@ -29,7 +29,7 @@
     <template v-else-if="appState.reviewingGrades && student.grade_url">
       <GradeReview :student="student" />
     </template>
-    <template v-else-if="appState.reviewingConversion">
+    <template v-else-if="appState.reviewingConversion && student.grade_url">
       <GradeImport :student="student" />
     </template>
     <template v-else>

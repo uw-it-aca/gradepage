@@ -49,7 +49,7 @@
       >
       <div style="margin-top: 10px">
         Student registration status and grading options will be validated
-        upon import and grades can be adjusted in next step.
+        upon import, and grades can be adjusted in next step.
       </div>
     </div>
   </template>

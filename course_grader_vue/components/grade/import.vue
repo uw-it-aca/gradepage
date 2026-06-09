@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- TODO: what is this? -->
     <div v-if="student.is_override_grade" class="small">
       Override grade imported from Canvas Gradebook
     </div>
