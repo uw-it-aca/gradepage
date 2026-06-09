@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <div v-if="isLoading">Loading...</div>
+  <div v-if="isLoading">Importing grades from Canvas...</div>
   <div v-else-if="errorResponse">
     <i class="fas fa-exclamation-circle"></i>
     <strong>{{ errorResponse.error }}</strong>
