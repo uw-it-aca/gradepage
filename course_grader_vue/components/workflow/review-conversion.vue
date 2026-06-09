@@ -48,7 +48,8 @@
         >Import Grades</BButton
       >
       <div style="margin-top: 10px">
-        Individual student grades can be adjusted in next step.
+        Student registration status and grading options will be validated
+        upon import and grades can be adjusted in next step.
       </div>
     </div>
   </template>
