@@ -1,7 +1,9 @@
 <template>
   <template v-if="student.is_auditor">
     <div class="d-flex align-items-center">
-      <div class="border fs-2 fw-bold me-2 text-center">Auditor</div>
+      <div class="border fs-2 fw-bold me-2 text-center" style="width: 140px">
+        Auditor
+      </div>
       <div>
         <div>&nbsp;</div>
       </div>
@@ -9,7 +11,9 @@
   </template>
   <template v-else-if="student.date_withdrawn">
     <div class="d-flex align-items-center">
-      <div class="border fs-2 fw-bold me-2 text-center">Withdrawn</div>
+      <div class="border fs-2 fw-bold me-2 text-center" style="width: 200px">
+        Withdrawn
+      </div>
       <div>
         <div>&nbsp;</div>
       </div>
