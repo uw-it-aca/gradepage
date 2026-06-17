@@ -1,4 +1,4 @@
-# Copyright 2026 UW-IT, University of Washington
+# Copyright 2026 UWIT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -84,11 +84,13 @@ def status(request):
     submitted_idx = 0
     resubmitted_idx = 0
     seen_sections = set()
+    ind_study_nums = ["600", "700", "800"]
     for graderoster in graderosters:
         section_id = graderoster["section_id"]
         if (graderoster["secondary_section_id"]):
-            section_id += "/" + graderoster["secondary_section_id"]
-        else:
+            section_id += "+" + graderoster["secondary_section_id"]
+
+        elif (any(num in section_id for num in ind_study_nums)):
             section_id += "," + graderoster["instructor_id"]
 
         if section_id in seen_sections:
