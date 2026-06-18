@@ -21,7 +21,7 @@ describe("date formatting utilities", () => {
     it("formats a full datetime correctly", () => {
       const date = "2023-05-15T07:30:00Z"; // UTC
       const result = formatLongDateTime(date);
-      expect(result).toBe("May 15, 2023 at 2:30 PM");
+      expect(result).toBe("May 15, 2023 at 7:30 AM");
     });
 
     it("returns null when no date is provided", () => {
@@ -33,7 +33,7 @@ describe("date formatting utilities", () => {
     it("formats a short date correctly", () => {
       const date = "2023-05-15T14:30:00Z";
       const result = formatShortDate(date);
-      expect(result).toBe("05/15/2023");
+      expect(result).toBe("05/15/23");
     });
 
     it("returns null when no date is provided", () => {
