@@ -84,7 +84,7 @@ def status(request):
     submitted_idx = 0
     resubmitted_idx = 0
     seen_sections = set()
-    ind_study_nums = ["600", "700", "800"]
+    ind_study_nums = ["499", "599", "600", "700", "800"]
     for graderoster in graderosters:
         section_id = graderoster["section_id"]
         if (graderoster["secondary_section_id"]):
