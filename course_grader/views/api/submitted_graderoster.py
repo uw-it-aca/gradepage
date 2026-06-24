@@ -49,12 +49,13 @@ class SubmissionsByTerm(RESTDispatch):
         csv.register_dialect("unix_newline", lineterminator="\n")
         writer = csv.writer(response, dialect="unix_newline")
         writer.writerow([
-            "section_id",
-            "secondary_section_id",
-            "submitted_by",
-            "submitted_date",
-            "total_imports",
-            "import_source",
+            "Section ID",
+            "Secondary Section ID",
+            "Instructor ID",
+            "Submitted By",
+            "Submitted Date",
+            "Total Imports",
+            "Import Source",
         ])
 
         for graderoster in graderosters:
@@ -65,6 +66,7 @@ class SubmissionsByTerm(RESTDispatch):
             writer.writerow([
                 graderoster["section_id"],
                 graderoster["secondary_section_id"],
+                graderoster["instructor_id"],
                 graderoster["submitted_by"],
                 graderoster["submitted_date"],
                 import_counts.get(import_section_id, 0),
@@ -113,18 +115,18 @@ class SubmittedGradeRoster(RESTDispatch):
         csv.register_dialect("unix_newline", lineterminator="\n")
         writer = csv.writer(response, dialect="unix_newline")
         writer.writerow([
-            "Student number",
-            "Student name",
+            "Student Number",
+            "Student Name",
             "Course",
             "Section",
             "Credits",
             "Incomplete",
             "Grade",
-            "Writing credit",
-            "Instructor name",
-            "Instructor netid",
-            "Submitter name",
-            "Submitter netid"
+            "Writing Credit",
+            "Instructor Name",
+            "Instructor UWNetid",
+            "Submitter Name",
+            "Submitter UWNetid"
         ])
 
         secondary_section = getattr(graderoster, "secondary_section", None)
