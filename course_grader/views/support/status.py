@@ -84,13 +84,12 @@ def status(request):
     submitted_idx = 0
     resubmitted_idx = 0
     seen_sections = set()
-    ind_study_nums = ["499", "599", "600", "700", "800"]
     for graderoster in graderosters:
         section_id = graderoster["section_id"]
         if (graderoster["secondary_section_id"]):
             section_id += "+" + graderoster["secondary_section_id"]
 
-        elif (any(num in section_id for num in ind_study_nums)):
+        elif (any(num in section_id for num in settings.IND_STUDY_COURSE_NOS)):
             section_id += "," + graderoster["instructor_id"]
 
         if section_id in seen_sections:

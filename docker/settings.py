@@ -83,6 +83,8 @@ COG_FORM_URL = 'https://apps.registrar.washington.edu/grade-change/pages/change.
 SUPPORTTOOLS_PARENT_APP = 'GradePage'
 SUPPORTTOOLS_PARENT_APP_URL = '/'
 
+IND_STUDY_COURSE_NOS = ["499", "599", "600", "601", "700", "750", "800", "801"]
+
 if os.getenv('AUTH', 'NONE') == 'SAML_MOCK':
     MOCK_SAML_ATTRIBUTES = {
         'uwnetid': ['bill'],
