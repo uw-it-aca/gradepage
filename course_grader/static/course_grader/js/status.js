@@ -73,7 +73,7 @@ var AdminSupport = {};
                 data: window.gradepage.charts.submissions.data
             },{
                 type: "line",
-                name: "Resubmitted Sections",
+                name: "Resubmissions",
                 data: window.gradepage.charts.resubmissions.data
             },{
                 type: "line",
