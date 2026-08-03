@@ -1,20 +1,22 @@
 # Copyright 2026 UWIT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
+from logging import getLogger
+
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
-from course_grader.dao.person import person_from_user, person_display_name
-from course_grader.dao.term import term_from_param, all_viewable_terms
-from course_grader.exceptions import InvalidTerm, DataFailureException
+from userservice.user import UserService
+
+from course_grader.dao.person import person_display_name, person_from_user
+from course_grader.dao.term import all_viewable_terms, term_from_param
+from course_grader.exceptions import DataFailureException, InvalidTerm
 from course_grader.views import url_for_term
 from course_grader.views.support import can_override_user
-from userservice.user import UserService
-from logging import getLogger
 
 logger = getLogger(__name__)
 
@@ -72,11 +74,11 @@ class HomeView(TemplateView):
         context["selected_quarter"] = selected_term.get_quarter_display()
         context["selected_year"] = selected_term.year
         context["terms"] = opt_terms
-        context["sections_url"] = reverse(
-            "section-list", kwargs={"term_id": "{year}-{qtr}".format(
-                year=selected_term.year, qtr=selected_term.quarter)})
-        context["page_title"] = "{qtr} {year}".format(
-            qtr=selected_term.get_quarter_display(), year=selected_term.year)
+        context["sections_url"] = reverse("section-list", kwargs={
+            "term_id": f"{selected_term.year}-{selected_term.quarter}"
+        })
+        context["page_title"] = (
+            f"{selected_term.get_quarter_display()} {selected_term.year}")
 
         # User context
         user_service = UserService()

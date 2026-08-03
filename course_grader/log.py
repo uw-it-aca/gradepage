@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from logging import Filter
+
 from asgiref.local import Local
 
 _local = Local()
@@ -24,9 +25,9 @@ class UserLoggingMiddleware:
         try:
             from userservice.user import UserService
             user_service = UserService()
-            setattr(_local, "user", user_service.get_original_user())
-            setattr(_local, "actas", user_service.get_user())
-        except Exception as ex:
+            _local.user = user_service.get_original_user()
+            _local.actas = user_service.get_user()
+        except Exception:
             pass
 
         response = self.get_response(request)

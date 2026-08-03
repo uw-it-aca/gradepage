@@ -2,10 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.http import HttpResponse
-from django.views import View
 import json
 import re
+
+from django.http import HttpResponse
+from django.views import View
 
 timeout_error = ("The request to the student information system has timed "
                  "out. Please try again.")
@@ -19,7 +20,10 @@ class RESTDispatch(View):
         return (status, msg)
 
     @staticmethod
-    def error_response(status, message="", content={}):
+    def error_response(status, message="", content=None):
+        if content is None:
+            content = {}
+
         content["status"] = status
         content["error"] = str(message)
         return HttpResponse(json.dumps(content),

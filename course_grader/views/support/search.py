@@ -2,22 +2,27 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
+import re
+from logging import getLogger
+
 from django.conf import settings
 from django.db.models import Q
-from django.views.decorators.cache import never_cache
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.cache import never_cache
 from uw_saml.decorators import group_required
 from uw_sws import QUARTER_SEQ
-from uw_sws.term import get_term_by_year_and_quarter
 from uw_sws.models import Term
-from course_grader.exceptions import DataFailureException, InvalidNetID
-from course_grader.models import SubmittedGradeRoster, GradeImport
+from uw_sws.term import get_term_by_year_and_quarter
+
 from course_grader.dao.person import (
-    person_from_netid, person_from_regid, person_display_name)
+    person_display_name,
+    person_from_netid,
+    person_from_regid,
+)
 from course_grader.dao.term import current_term
-from logging import getLogger
-import re
+from course_grader.exceptions import DataFailureException, InvalidNetID
+from course_grader.models import GradeImport, SubmittedGradeRoster
 
 logger = getLogger(__name__)
 
@@ -29,7 +34,7 @@ def grade_imports(request):
 
     try:
         selected_term = term_from_param(request, all_terms)
-    except DataFailureException as ex:
+    except DataFailureException:
         return render(request, "503.html", {})
 
     opt_terms = []
@@ -37,8 +42,7 @@ def grade_imports(request):
         opt_terms.append({
             "quarter": opt_term.get_quarter_display(),
             "year": opt_term.year,
-            "value": "{year}-{quarter}".format(
-                year=opt_term.year, quarter=opt_term.quarter),
+            "value": f"{opt_term.year}-{opt_term.quarter}",
             "is_selected": opt_term == selected_term,
         })
 
@@ -95,7 +99,7 @@ def grade_imports(request):
     for grade_import in GradeImport.objects.get_by_search(*args, **kwargs):
         data = grade_import.json_data()
 
-        (year, quarter, curriculum_abbr, course_number, section_id,
+        (_year, _quarter, curriculum_abbr, course_number, section_id,
             instructor_reg_id) = grade_import.section_id.split("-")
 
         if grade_import.imported_by not in people:
@@ -113,8 +117,7 @@ def grade_imports(request):
                 "section_id": grade_import.section_id,
                 "import_id": grade_import.pk})
 
-        data["section_name"] = " ".join([curriculum_abbr, course_number,
-                                         section_id])
+        data["section_name"] = f"{curriculum_abbr} {course_number} {section_id}"
         data["importer_name"] = importer_name
         data["importer_netid"] = people[grade_import.imported_by].uwnetid
         data["instructor_name"] = instructor_name
@@ -131,7 +134,7 @@ def graderosters(request):
 
     try:
         selected_term = term_from_param(request, all_terms)
-    except DataFailureException as ex:
+    except DataFailureException:
         return render(request, "503.html", {})
 
     opt_terms = []
@@ -139,8 +142,7 @@ def graderosters(request):
         opt_terms.append({
             "quarter": opt_term.get_quarter_display(),
             "year": opt_term.year,
-            "value": "{year}-{quarter}".format(
-                year=opt_term.year, quarter=opt_term.quarter),
+            "value": f"{opt_term.year}-{opt_term.quarter}",
             "is_selected": opt_term == selected_term,
         })
 
@@ -214,8 +216,8 @@ def graderosters(request):
             sid = graderoster.section_id
 
         (course_id, section_id) = sid.split("/")
-        (year, quarter, curriculum_abbr, course_number) = course_id.split(",")
-        section_name = " ".join([curriculum_abbr, course_number, section_id])
+        (_year, _quarter, curriculum_abbr, course_number) = course_id.split(",")
+        section_name = f"{curriculum_abbr} {course_number} {section_id}"
 
         if graderoster.instructor_id not in people:
             person = person_from_regid(graderoster.instructor_id)
@@ -283,5 +285,5 @@ def term_from_param(request, all_terms):
         return get_term_by_year_and_quarter(selected_term.year,
                                             selected_term.quarter)
     except DataFailureException as ex:
-        logger.error("GET term failed: {}".format(ex))
+        logger.error(f"GET term failed: {ex}")
         raise

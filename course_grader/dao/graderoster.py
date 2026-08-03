@@ -1,19 +1,25 @@
 # Copyright 2026 UWIT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
+import re
+from logging import getLogger
 
-from uw_sws_graderoster import get_graderoster, DataFailureException
+from lxml import etree
+from uw_sws_graderoster import DataFailureException, get_graderoster
 from uw_sws_graderoster.models import GradeRoster
+
 from course_grader.dao.person import person_from_regid
 from course_grader.dao.section import get_section_by_url, is_grader_for_section
 from course_grader.dao.term import (
-    is_graderoster_available_for_term, is_grading_period_past)
+    is_graderoster_available_for_term,
+    is_grading_period_past,
+)
 from course_grader.exceptions import (
-    GradingNotPermitted, ReceiptNotFound, GradingPeriodNotOpen)
-from course_grader.models import SubmittedGradeRoster, GradeImport
-from lxml import etree
-from logging import getLogger
-import re
+    GradingNotPermitted,
+    GradingPeriodNotOpen,
+    ReceiptNotFound,
+)
+from course_grader.models import GradeImport, SubmittedGradeRoster
 
 logger = getLogger(__name__)
 
@@ -81,8 +87,7 @@ def graderoster_for_section(section, instructor, requestor,
             grade_imp = GradeImport.objects.get_last_import_by_section_id(
                 imp_section_id, imp_secondary_section_id)
             if grade_imp:
-                logger.info(f"GradeImport FOUND, section_id: "
-                            f"{grade_imp.section_id}")
+                logger.info(f"GradeImport FOUND, section_id: {grade_imp.section_id}")
 
         submission = model.json_data()
         submission["submission_id"] = model.submission_id()

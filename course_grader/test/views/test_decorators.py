@@ -2,15 +2,17 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
+from unittest import mock
+
 from django.contrib.auth.models import AnonymousUser, User
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.http import HttpResponse
-from django.test import TestCase, RequestFactory, override_settings
+from django.test import RequestFactory, TestCase, override_settings
 from django.utils.decorators import method_decorator
 from django.views.generic.base import View
 from userservice.user import UserServiceMiddleware
+
 from course_grader.views.decorators import xhr_login_required
-import mock
 
 
 @method_decorator(xhr_login_required, name='dispatch')
@@ -28,7 +30,7 @@ class XHRLoginRequiredDecoratorTest(TestCase):
         UserServiceMiddleware().process_request(self.request)
         get_response = mock.MagicMock()
         middleware = SessionMiddleware(get_response)
-        response = middleware(self.request)
+        _response = middleware(self.request)
         self.request.session.save()
 
         headers = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
@@ -38,7 +40,7 @@ class XHRLoginRequiredDecoratorTest(TestCase):
         UserServiceMiddleware().process_request(self.xhr_request)
         get_response = mock.MagicMock()
         middleware = SessionMiddleware(get_response)
-        response = middleware(self.xhr_request)
+        _response = middleware(self.xhr_request)
         self.xhr_request.session.save()
 
     def test_xhr_login_required_noheader_noauth(self):

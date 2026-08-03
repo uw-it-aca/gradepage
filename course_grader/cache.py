@@ -2,8 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from memcached_clients import RestclientPymemcacheClient
 import re
+
+from memcached_clients import RestclientPymemcacheClient
 
 ONE_MINUTE = 60
 ONE_HOUR = 60 * 60

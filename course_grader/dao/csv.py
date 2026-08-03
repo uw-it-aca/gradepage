@@ -2,15 +2,15 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.core.files.storage import default_storage
-from course_grader.dao import GradeImportSource, current_datetime
-from course_grader.dao.person import person_from_netid
-from course_grader.exceptions import (
-    InvalidCSV, InvalidNetID, DataFailureException)
-from logging import getLogger
-import chardet
 import csv
 import os
+from logging import getLogger
+
+import chardet
+from django.core.files.storage import default_storage
+
+from course_grader.dao import GradeImportSource, current_datetime
+from course_grader.exceptions import InvalidCSV
 
 logger = getLogger(__name__)
 
@@ -120,9 +120,9 @@ class GradeImportCSV(GradeImportSource):
         try:
             self._write_file(section, instructor, fileobj)
         except Exception as ex:
-            logger.error("WRITE upload file {} for {} failed: {}".format(
-                fileobj.name, section.section_label(), ex))
-
+            logger.error(
+                f"WRITE upload file {fileobj.name} for "
+                f"{section.section_label()} failed: {ex}")
         return {"grades": grade_data}
 
     def _write_file(self, section, instructor, fileobj):

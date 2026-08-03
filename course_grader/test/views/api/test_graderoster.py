@@ -2,9 +2,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.test import TestCase, override_settings
+from django.test import TestCase
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
+
 from course_grader.dao.person import person_from_netid
 from course_grader.dao.section import section_from_param
 from course_grader.views.api.graderoster import GradeRosterExport
@@ -38,7 +39,7 @@ class GradeRosterExportTest(TestCase):
             b'Add changes in the GRADE TO column. Remove unchanged students '
             b'before uploading to the Office of the University Registrar\'s '
             b'Online Change of Grade Request Form.,,,\n'
-            b'https://apps.registrar.washington.edu/grade-change/pages/change.php'  # noqa
+            b'https://apps.registrar.washington.edu/grade-change/pages/change.php'
             b',,,\n'
             b'DO NOT EMAIL this spreadsheet with student grade information.'
             b',,,\n,,,\n'

@@ -5,10 +5,11 @@
 from django.test import TestCase, override_settings
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
-from course_grader.dao.person import PWS
+
 from course_grader.dao.graderoster import get_graderoster
-from course_grader.dao.section import get_section_by_label
 from course_grader.dao.notification import *
+from course_grader.dao.person import PWS
+from course_grader.dao.section import get_section_by_label
 
 
 @fdao_sws_override

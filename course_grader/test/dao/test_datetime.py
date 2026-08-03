@@ -2,14 +2,16 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.test import TestCase
-from course_grader.dao import current_datetime, display_datetime, sws_now
 from datetime import datetime, timezone
+
+from django.test import TestCase
+
+from course_grader.dao import current_datetime, display_datetime, sws_now
 
 
 class DateTimeFunctionsTest(TestCase):
     def setUp(self):
-        self.test_dt = datetime(2000, 1, 1, 14, 30)
+        self.test_dt = datetime(2000, 1, 1, 14, 30)  # noqa: DTZ001
 
     def test_current_datetime(self):
         with self.settings(CURRENT_DATETIME_OVERRIDE='2013-05-31 08:00:00'):

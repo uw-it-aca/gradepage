@@ -2,20 +2,21 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.conf import settings
-from django.shortcuts import render
-from django.views.decorators.cache import never_cache
-from django.utils import timezone
-from uw_saml.decorators import group_required
-from uw_sws.models import Term
-from course_grader.models import SubmittedGradeRoster, GradeImport
-from course_grader.dao import SWS_TIMEZONE
-from course_grader.dao.term import (
-    term_from_param, current_term, current_datetime)
-from course_grader.exceptions import DataFailureException
+import json
 from datetime import datetime, timedelta
 from logging import getLogger
-import json
+
+from django.conf import settings
+from django.shortcuts import render
+from django.utils import timezone
+from django.views.decorators.cache import never_cache
+from uw_saml.decorators import group_required
+from uw_sws import SWS_TIMEZONE
+from uw_sws.models import Term
+
+from course_grader.dao.term import current_datetime, current_term, term_from_param
+from course_grader.exceptions import DataFailureException
+from course_grader.models import GradeImport, SubmittedGradeRoster
 
 logger = getLogger(__name__)
 
@@ -32,7 +33,7 @@ def status(request):
     term_id = request.GET.get("term", "").strip()
     try:
         selected_term = term_from_param(term_id)
-    except Exception as ex:
+    except Exception:
         selected_term = curr_term
 
     graderosters = SubmittedGradeRoster.objects.get_status_by_term(
@@ -54,7 +55,7 @@ def status(request):
                                   tzinfo=SWS_TIMEZONE)
     end_date = timezone.make_aware(selected_term.grade_submission_deadline,
                                    SWS_TIMEZONE)
-    epoch = timezone.make_aware(datetime(1970, 1, 1), SWS_TIMEZONE)
+    epoch = timezone.make_aware(datetime(1970, 1, 1), SWS_TIMEZONE)  # noqa: DTZ001
 
     chart_data = {
         "submissions": {

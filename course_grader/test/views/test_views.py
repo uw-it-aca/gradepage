@@ -2,17 +2,18 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.contrib.auth.models import User
+from userservice.user import UserServiceMiddleware
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
-from userservice.user import UserServiceMiddleware
+
 from course_grader.dao.person import PWS
 from course_grader.dao.section import get_section_by_label
 from course_grader.dao.term import get_term_by_year_and_quarter
-from course_grader.views.pages import HomeView
 from course_grader.views import *
+from course_grader.views.pages import HomeView
 
 
 @fdao_sws_override
@@ -69,107 +70,107 @@ class ViewFunctionsTest(TestCase):
     def test_url_for_section(self):
         with self.settings(GRADEPAGE_HOST=''):
             self.assertEqual(
-                url_for_section((
+                url_for_section(
                     '2013-spring-TRAIN-101-A-'
-                    '9136CCB8F66711D5BE060004AC494FFE')), (
+                    '9136CCB8F66711D5BE060004AC494FFE'), (
                     '/section/2013-spring-TRAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE'))
 
             self.assertEqual(
-                url_for_section((
+                url_for_section(
                     '2013-spring-T RAIN-101-A-'
-                    '9136CCB8F66711D5BE060004AC494FFE')), (
+                    '9136CCB8F66711D5BE060004AC494FFE'), (
                     '/section/2013-spring-T%20RAIN-101-A-'
                     '9136CCB8F66711D5BE060004AC494FFE'))
 
         with self.settings(GRADEPAGE_HOST='https://abc.edu'):
             self.assertEqual(
-                url_for_section((
+                url_for_section(
                     '2013-spring-TRAIN-101-A-'
-                    '9136CCB8F66711D5BE060004AC494FFE')), (
+                    '9136CCB8F66711D5BE060004AC494FFE'), (
                     '/section/2013-spring-TRAIN-101-'
                     'A-9136CCB8F66711D5BE060004AC494FFE'))
 
             self.assertEqual(
-                url_for_section((
+                url_for_section(
                     '2013-spring-T RAIN-101-A-'
-                    '9136CCB8F66711D5BE060004AC494FFE')), (
+                    '9136CCB8F66711D5BE060004AC494FFE'), (
                     '/section/2013-spring-T%20RAIN-101-'
                     'A-9136CCB8F66711D5BE060004AC494FFE'))
 
     def test_url_for_grading_status(self):
         with self.settings(GRADEPAGE_HOST=''):
             self.assertEqual(
-                url_for_grading_status((
+                url_for_grading_status(
                     '2013-spring-TRAIN-101-A-'
-                    '9136CCB8F66711D5BE060004AC494FFE')), (
+                    '9136CCB8F66711D5BE060004AC494FFE'), (
                     '/api/v1/grading_status/2013-spring-TRAIN-101-'
                     'A-9136CCB8F66711D5BE060004AC494FFE'))
 
             self.assertEqual(
-                url_for_grading_status((
+                url_for_grading_status(
                     '2013-spring-T RAIN-101-A-'
-                    '9136CCB8F66711D5BE060004AC494FFE')), (
+                    '9136CCB8F66711D5BE060004AC494FFE'), (
                     '/api/v1/grading_status/2013-spring-T%20RAIN-101-'
                     'A-9136CCB8F66711D5BE060004AC494FFE'))
 
         with self.settings(GRADEPAGE_HOST='https://abc.edu'):
             self.assertEqual(
-                url_for_grading_status((
+                url_for_grading_status(
                     '2013-spring-TRAIN-101-A-'
-                    '9136CCB8F66711D5BE060004AC494FFE')), (
+                    '9136CCB8F66711D5BE060004AC494FFE'), (
                     '/api/v1/grading_status/2013-spring-TRAIN-'
                     '101-A-9136CCB8F66711D5BE060004AC494FFE'))
 
             self.assertEqual(
-                url_for_grading_status((
+                url_for_grading_status(
                     '2013-spring-T RAIN-101-A-'
-                    '9136CCB8F66711D5BE060004AC494FFE')), (
+                    '9136CCB8F66711D5BE060004AC494FFE'), (
                     '/api/v1/grading_status/2013-spring-T%20RAIN-'
                     '101-A-9136CCB8F66711D5BE060004AC494FFE'))
 
     def test_url_for_graderoster(self):
         self.assertEqual(
-            url_for_graderoster((
+            url_for_graderoster(
                 '2013-spring-TRAIN-101-A-'
-                '9136CCB8F66711D5BE060004AC494FFE')), (
+                '9136CCB8F66711D5BE060004AC494FFE'), (
                 '/api/v1/graderoster/2013-spring-TRAIN-'
                 '101-A-9136CCB8F66711D5BE060004AC494FFE'))
 
         self.assertEqual(
-            url_for_graderoster((
+            url_for_graderoster(
                 '2013-spring-T RAIN-101-A-'
-                '9136CCB8F66711D5BE060004AC494FFE')), (
+                '9136CCB8F66711D5BE060004AC494FFE'), (
                 '/api/v1/graderoster/2013-spring-T%20RAIN-'
                 '101-A-9136CCB8F66711D5BE060004AC494FFE'))
 
     def test_url_for_import(self):
         self.assertEqual(
-            url_for_import((
+            url_for_import(
                 '2013-spring-TRAIN-101-A-'
-                '9136CCB8F66711D5BE060004AC494FFE')), (
+                '9136CCB8F66711D5BE060004AC494FFE'), (
                 '/api/v1/import/2013-spring-TRAIN-'
                 '101-A-9136CCB8F66711D5BE060004AC494FFE'))
 
         self.assertEqual(
-            url_for_import((
+            url_for_import(
                 '2013-spring-T RAIN-101-A-'
-                '9136CCB8F66711D5BE060004AC494FFE')), (
+                '9136CCB8F66711D5BE060004AC494FFE'), (
                 '/api/v1/import/2013-spring-T%20RAIN-'
                 '101-A-9136CCB8F66711D5BE060004AC494FFE'))
 
     def test_url_for_upload(self):
         self.assertEqual(
-            url_for_upload((
+            url_for_upload(
                 '2013-spring-TRAIN-101-A-'
-                '9136CCB8F66711D5BE060004AC494FFE')), (
+                '9136CCB8F66711D5BE060004AC494FFE'), (
                 '/api/v1/import_file/2013-spring-TRAIN-'
                 '101-A-9136CCB8F66711D5BE060004AC494FFE'))
 
         self.assertEqual(
-            url_for_upload((
+            url_for_upload(
                 '2013-spring-T RAIN-101-A-'
-                '9136CCB8F66711D5BE060004AC494FFE')), (
+                '9136CCB8F66711D5BE060004AC494FFE'), (
                 '/api/v1/import_file/2013-spring-T%20RAIN-'
                 '101-A-9136CCB8F66711D5BE060004AC494FFE'))
 
@@ -182,16 +183,16 @@ class ViewFunctionsTest(TestCase):
 
     def test_url_for_export(self):
         self.assertEqual(
-            url_for_export((
+            url_for_export(
                 '2013-spring-TRAIN-101-A-'
-                '9136CCB8F66711D5BE060004AC494FFE')), (
+                '9136CCB8F66711D5BE060004AC494FFE'), (
                 '/api/v1/export/2013-spring-TRAIN-'
                 '101-A-9136CCB8F66711D5BE060004AC494FFE'))
 
         self.assertEqual(
-            url_for_export((
+            url_for_export(
                 '2013-spring-T RAIN-101-A-'
-                '9136CCB8F66711D5BE060004AC494FFE')), (
+                '9136CCB8F66711D5BE060004AC494FFE'), (
                 '/api/v1/export/2013-spring-T%20RAIN-'
                 '101-A-9136CCB8F66711D5BE060004AC494FFE'))
 
