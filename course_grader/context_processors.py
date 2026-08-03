@@ -2,10 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from course_grader.dao.term import current_term
-from course_grader.dao.message import get_messages_for_term
-from course_grader.exceptions import DataFailureException
 from logging import getLogger
+
+from course_grader.dao.message import get_messages_for_term
+from course_grader.dao.term import current_term
+from course_grader.exceptions import DataFailureException
 
 logger = getLogger(__name__)
 

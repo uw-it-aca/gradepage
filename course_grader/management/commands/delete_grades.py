@@ -2,11 +2,12 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
-from django.utils import timezone
 from dateutil.relativedelta import relativedelta
-from course_grader.models import SubmittedGradeRoster, GradeImport, Grade
+from django.conf import settings
+from django.core.management.base import BaseCommand
+from django.utils import timezone
+
+from course_grader.models import Grade, GradeImport, SubmittedGradeRoster
 
 
 class Command(BaseCommand):

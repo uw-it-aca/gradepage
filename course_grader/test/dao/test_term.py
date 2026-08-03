@@ -4,8 +4,9 @@
 
 from django.test import TestCase
 from uw_sws.util import fdao_sws_override
-from course_grader.dao.term import *
+
 from course_grader.dao.section import get_section_by_label
+from course_grader.dao.term import *
 from course_grader.exceptions import InvalidTerm
 
 

@@ -6,15 +6,20 @@
 This module encapsulates the access of sws term data
 """
 
-from django.conf import settings
-from uw_sws.term import (
-    get_term_by_year_and_quarter, get_term_by_date, get_term_before,
-    get_term_after)
-from course_grader.dao import current_datetime
-from course_grader.exceptions import InvalidTerm
+import re
 from datetime import timedelta
 from logging import getLogger
-import re
+
+from django.conf import settings
+from uw_sws.term import (
+    get_term_after,
+    get_term_before,
+    get_term_by_date,
+    get_term_by_year_and_quarter,
+)
+
+from course_grader.dao import current_datetime
+from course_grader.exceptions import InvalidTerm
 
 logger = getLogger(__name__)
 
@@ -34,7 +39,7 @@ def is_grading_period_past(term):
 
 
 def term_from_param(param):
-    valid = re.compile(r"^2\d{3}-(?:winter|spring|summer|autumn)$", re.I)
+    valid = re.compile(r"^2\d{3}-(?:winter|spring|summer|autumn)$", re.IGNORECASE)
     if not valid.match(param):
         raise InvalidTerm()
     (year, quarter) = param.split("-")
@@ -81,9 +86,5 @@ def is_graderoster_available_for_term(section):
     # Return True if the current date is after term.grade_submission_deadline,
     # but on or before the following term.last_day_instruction
     curr_dt = current_datetime()
-    if (curr_dt > section.term.grade_submission_deadline and
-            curr_dt.date() <= get_term_after(
-                section.term).last_day_instruction):
-        return True
-
-    return False
+    return (curr_dt > section.term.grade_submission_deadline and
+            curr_dt.date() <= get_term_after(section.term).last_day_instruction)

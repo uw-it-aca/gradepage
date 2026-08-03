@@ -5,6 +5,7 @@
 from django.test import TestCase
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
+
 from course_grader.dao.person import PWS
 from course_grader.dao.section import get_section_by_label
 from course_grader.views.api.sections import Section
@@ -17,7 +18,6 @@ class SectionViewTest(TestCase):
         section = get_section_by_label('2013,spring,TRAIN,101/A')
         user = PWS().get_person_by_regid('FBB38FE46A7C11D5A4AE0004AC494FFE')
 
-        kwargs = {"section": section, "instructor": user}
         context = Section().response_content(section, user).get("section")
         self.assertEqual(context["page_title"], "TRAIN 101 A")
         self.assertEqual(context["section_quarter"], "Spring")

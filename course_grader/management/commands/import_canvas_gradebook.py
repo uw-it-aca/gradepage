@@ -2,12 +2,14 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.core.management.base import BaseCommand, CommandError
-from course_grader.dao.section import section_from_param
-from course_grader.dao.canvas import grades_for_section
-from course_grader.exceptions import DataFailureException
-import sys
 import json
+import sys
+
+from django.core.management.base import BaseCommand, CommandError
+
+from course_grader.dao.canvas import grades_for_section
+from course_grader.dao.section import section_from_param
+from course_grader.exceptions import DataFailureException
 
 
 class Command(BaseCommand):

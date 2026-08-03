@@ -2,15 +2,17 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
+import os
+from unittest import mock
+
 from django.test import TestCase, override_settings
-from course_grader.dao.csv import InsensitiveDictReader, GradeImportCSV
-from course_grader.dao.section import get_section_by_label
-from course_grader.dao.person import PWS
-from course_grader.exceptions import InvalidCSV
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
-import mock
-import os
+
+from course_grader.dao.csv import GradeImportCSV, InsensitiveDictReader
+from course_grader.dao.person import PWS
+from course_grader.dao.section import get_section_by_label
+from course_grader.exceptions import InvalidCSV
 
 
 @fdao_sws_override
@@ -40,7 +42,7 @@ class CVSDAOFunctionsTest(TestCase):
         grade_import = GradeImportCSV()
 
         with open(os.path.join(self.resource_path, "test1.csv"), "rb") as fh:
-            r = grade_import.validate(fh)
+            _r = grade_import.validate(fh)
             self.assertEqual(grade_import.has_header, True)
             self.assertEqual(grade_import.dialect.delimiter, ",")
 
@@ -56,13 +58,13 @@ class CVSDAOFunctionsTest(TestCase):
 
         with open(os.path.join(
                 self.resource_path, "large_header.csv"), "rb") as fh:
-            r = grade_import.validate(fh)
+            _r = grade_import.validate(fh)
             self.assertEqual(grade_import.has_header, True)
             self.assertEqual(grade_import.dialect.delimiter, ",")
 
         with open(os.path.join(
                 self.resource_path, "unk_delimiter.csv"), "rb") as fh:
-            r = grade_import.validate(fh)
+            _r = grade_import.validate(fh)
             self.assertEqual(grade_import.has_header, True)
             self.assertEqual(grade_import.dialect.delimiter, ",")
 
@@ -104,13 +106,13 @@ class CVSDAOFunctionsTest(TestCase):
         user = PWS().get_person_by_regid("FBB38FE46A7C11D5A4AE0004AC494FFE")
 
         with open(os.path.join(self.resource_path, "test1.csv"), "rb") as fh:
-            r = GradeImportCSV()._write_file(section, user, fileobj=fh)
+            _r = GradeImportCSV()._write_file(section, user, fileobj=fh)
             mock_open.assert_called_with(
                 "2013-spring/A_B&C-101-A/bill/20130518T081000/test1.csv",
                 mode="w")
 
         with open(os.path.join(self.resource_path, "test2.csv"), "rb") as fh:
-            r = GradeImportCSV()._write_file(section, user, fileobj=fh)
+            _r = GradeImportCSV()._write_file(section, user, fileobj=fh)
             mock_open.assert_called_with(
                 "2013-spring/A_B&C-101-A/bill/20130518T081000/test2.csv",
                 mode="w")

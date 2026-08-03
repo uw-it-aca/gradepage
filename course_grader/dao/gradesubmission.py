@@ -2,12 +2,14 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
+from logging import getLogger
+
+from lxml import etree
 from uw_sws_graderoster import update_graderoster
 from uw_sws_graderoster.models import GradeRoster
-from course_grader.dao.section import section_from_label
+
 from course_grader.dao.person import person_from_regid
-from lxml import etree
-from logging import getLogger
+from course_grader.dao.section import section_from_label
 
 logger = getLogger(__name__)
 
@@ -57,17 +59,11 @@ def submit_grades(model):
         try:
             ret_item = ret_graderoster_dict[key]
         except KeyError:
-            logger.info((
-                "Grade submitted, Student: {student}, Section: "
-                "{section_id}, Submitted grade: {submitted_grade}, "
-                "Returned grade: {returned_grade}, Code: {status_code}, "
-                "Message: {message}").format(
-                    student=key,
-                    section_id=logged_section_id,
-                    submitted_grade=submitted_grade,
-                    returned_grade=None,
-                    status_code=None,
-                    message=None))
+            logger.info(
+                f"Grade submitted, Student: {key}, Section: {logged_section_id}, "
+                f"Submitted grade: {submitted_grade}, Returned grade: None, "
+                f"Code: None, Message: None"
+            )
             continue
 
         # Update the graderoster with data returned from PUT
@@ -77,16 +73,11 @@ def submit_grades(model):
         item.grade_document_id = ret_item.grade_document_id
         item.grade_submitter_source = ret_item.grade_submitter_source
 
-        logger.info((
-            "Grade submitted, Student: {student}, Section: "
-            "{section_id}, Submitted grade: {submitted_grade}, "
-            "Returned grade: {returned_grade}, Code: {status_code}, "
-            "Message: {message}").format(
-                student=key,
-                section_id=logged_section_id,
-                submitted_grade=submitted_grade,
-                returned_grade=format_logged_grade(ret_item),
-                status_code=item.status_code,
-                message=item.status_message))
+        logger.info(
+            f"Grade submitted, Student: {key}, Section: {logged_section_id}, "
+            f"Submitted grade: {submitted_grade}, "
+            f"Returned grade: {format_logged_grade(ret_item)}, "
+            f"Code: {item.status_code}, Message: {item.status_message}"
+        )
 
     return graderoster

@@ -3,6 +3,7 @@
 
 
 from django.test import TestCase
+
 from course_grader.exceptions import *
 
 

@@ -2,19 +2,21 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
+from datetime import datetime
+from unittest import mock
+
 from django.test import TestCase
-from course_grader.models import Grade, GradeImport, ImportConversion
-from course_grader.dao.canvas import grading_scheme_for_course
-from course_grader.dao.section import get_section_by_label
-from course_grader.dao.person import PWS
-from course_grader.exceptions import InvalidGradingScale
 from uw_canvas.courses import Courses
 from uw_canvas.models import CanvasCourse
 from uw_canvas.utilities import fdao_canvas_override
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
-from datetime import datetime
-import mock
+
+from course_grader.dao.canvas import grading_scheme_for_course
+from course_grader.dao.person import PWS
+from course_grader.dao.section import get_section_by_label
+from course_grader.exceptions import InvalidGradingScale
+from course_grader.models import Grade, GradeImport, ImportConversion
 
 
 class GradeTest(TestCase):
@@ -23,7 +25,7 @@ class GradeTest(TestCase):
 
         grade = Grade()
         with self.assertRaises(AttributeError):  # Missing student_reg_id
-            x = grade.student_label
+            _x = grade.student_label
 
         grade = Grade(student_reg_id=uwregid)
         self.assertEqual(
