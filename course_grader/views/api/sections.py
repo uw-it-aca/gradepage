@@ -2,25 +2,40 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.conf import settings
+from logging import getLogger
+
 from django.utils.decorators import method_decorator
+
 from course_grader.dao.person import person_from_user
-from course_grader.dao.term import (
-    term_from_param, all_viewable_terms, is_grading_period_open,
-    is_grading_period_past)
 from course_grader.dao.section import (
-    all_gradable_sections, section_from_param, section_display_name,
-    section_url_token)
+    all_gradable_sections,
+    section_display_name,
+    section_from_param,
+    section_url_token,
+)
+from course_grader.dao.term import (
+    all_viewable_terms,
+    is_grading_period_open,
+    is_grading_period_past,
+    term_from_param,
+)
+from course_grader.exceptions import (
+    DataFailureException,
+    InvalidSection,
+    InvalidTerm,
+    InvalidUser,
+    MissingInstructorParam,
+)
 from course_grader.views import (
-    section_status_params, url_for_term, url_for_graderoster, url_for_import,
-    url_for_export, url_for_upload)
+    section_status_params,
+    url_for_export,
+    url_for_graderoster,
+    url_for_import,
+    url_for_term,
+    url_for_upload,
+)
 from course_grader.views.decorators import xhr_login_required
 from course_grader.views.rest_dispatch import RESTDispatch
-from course_grader.exceptions import (
-    InvalidUser, InvalidSection, InvalidTerm, MissingInstructorParam,
-    DataFailureException)
-from logging import getLogger
-import re
 
 logger = getLogger(__name__)
 
@@ -38,9 +53,9 @@ class Sections(RESTDispatch):
             content = self.response_content(sections=[], **kwargs)
             return self.json_response(content)
         except InvalidTerm as ex:
-            return self.error_response(404, "{}".format(ex))
+            return self.error_response(404, f"{ex}")
         except DataFailureException as ex:
-            logger.error("GET selected term failed: {}".format(ex))
+            logger.error(f"GET selected term failed: {ex}")
             (status, msg) = self.data_failure_error(ex)
             return self.error_response(status, msg)
 
@@ -50,7 +65,7 @@ class Sections(RESTDispatch):
             if (ex.status == 401 or ex.status == 404):
                 sections = []
             else:
-                logger.error("GET gradable sections failed: {}".format(ex))
+                logger.error(f"GET gradable sections failed: {ex}")
                 (status, msg) = self.data_failure_error(ex)
                 return self.error_response(status, msg)
 
@@ -102,17 +117,16 @@ class Section(RESTDispatch):
         try:
             user = person_from_user()
             (section, instructor) = section_from_param(url_token)
-        except InvalidSection as ex:
+        except InvalidSection:
             return self.error_response(404, "Section not found")
-        except MissingInstructorParam as ex:
+        except MissingInstructorParam:
             # MyUW doesn't supply an instructor regid, add the user
             instructor = user
         except DataFailureException as ex:
             if ex.status == 404:
                 return self.error_response(404, "Not found")
             else:
-                logger.error(
-                    "GET section failed: {}, Param: {}".format(ex, url_token))
+                logger.error(f"GET section failed: {ex}, Param: {url_token}")
                 return self.error_response(503)
 
         if (not is_grading_period_open(section) and

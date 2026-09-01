@@ -2,17 +2,18 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.test import TestCase, override_settings
-from course_grader.dao.canvas import (
-    GradeImportCanvas, grading_scheme_for_course)
-from course_grader.dao.person import PWS
-from course_grader.dao.section import get_section_by_label
+from unittest import mock
+
+from django.test import TestCase
 from uw_canvas.courses import Courses
-from uw_canvas.models import CanvasCourse, Assignment
+from uw_canvas.models import CanvasCourse
+from uw_canvas.utilities import fdao_canvas_override
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
-from uw_canvas.utilities import fdao_canvas_override
-import mock
+
+from course_grader.dao.canvas import GradeImportCanvas, grading_scheme_for_course
+from course_grader.dao.person import PWS
+from course_grader.dao.section import get_section_by_label
 
 
 @fdao_sws_override

@@ -5,15 +5,21 @@
 """
 This module encapsulates the access of sws section data
 """
+import copy
+from logging import getLogger
+
+from uw_sws.exceptions import InvalidSectionID
 from uw_sws.models import Section
 from uw_sws.section import (
-    validate_section_label, get_section_by_url, get_section_by_label,
-    get_sections_by_instructor_and_term, get_sections_by_delegate_and_term)
-from uw_sws.exceptions import InvalidSectionID
-from course_grader.dao.person import person_from_regid, person_display_name
+    get_section_by_label,
+    get_section_by_url,
+    get_sections_by_delegate_and_term,
+    get_sections_by_instructor_and_term,
+    validate_section_label,
+)
+
+from course_grader.dao.person import person_display_name, person_from_regid
 from course_grader.exceptions import InvalidSection, MissingInstructorParam
-from logging import getLogger
-import copy
 
 logger = getLogger(__name__)
 
@@ -42,7 +48,7 @@ def section_from_param(param):
 
     try:
         validate_section_label(section_label)
-    except InvalidSectionID as ex:
+    except InvalidSectionID:
         raise InvalidSection(f"Invalid section ID: {param}")
 
     section = section_from_label(section_label)
@@ -60,13 +66,10 @@ def section_url_token(section, instructor):
 
 
 def section_display_name(section, instructor=None):
-    name = " ".join([section.curriculum_abbr, section.course_number,
-                     section.section_id])
-
+    name = f"{section.curriculum_abbr} {section.course_number} {section.section_id}"
     if instructor is not None:
         display_name = person_display_name(instructor)
         name = f"{name} ({display_name})"
-
     return name
 
 

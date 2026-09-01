@@ -2,15 +2,17 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.core.management.base import BaseCommand, CommandError
-from django.utils.timezone import localtime
-from uw_sws_graderoster.models import GradeRoster
-from uw_sws_graderoster import DataFailureException
-from uw_sws.models import Section
-from course_grader.models import SubmittedGradeRoster
-from course_grader.dao.person import person_from_regid
-from lxml import etree
 import csv
+
+from django.core.management.base import BaseCommand
+from django.utils.timezone import localtime
+from lxml import etree
+from uw_sws.models import Section
+from uw_sws_graderoster import DataFailureException
+from uw_sws_graderoster.models import GradeRoster
+
+from course_grader.dao.person import person_from_regid
+from course_grader.models import SubmittedGradeRoster
 
 
 class Command(BaseCommand):
@@ -33,7 +35,7 @@ class Command(BaseCommand):
         term_id = options.get('term_id')
 
         outpath = f'{term_id.replace(",", "-")}-submitted-grades.csv'
-        outfile = open(outpath, 'w')
+        outfile = open(outpath, 'w')  # noqa: SIM115
         csv.register_dialect('unix_newline', lineterminator='\n')
         writer = csv.writer(outfile, dialect='unix_newline')
         writer.writerow([
@@ -54,9 +56,9 @@ class Command(BaseCommand):
             try:
                 root = etree.fromstring(document.strip())
                 submitter = person_from_regid(submitted_by)
-            except etree.XMLSyntaxError as ex:
+            except etree.XMLSyntaxError:
                 continue
-            except DataFailureException as ex:
+            except DataFailureException:
                 continue
 
             graderoster = GradeRoster.from_xhtml(
@@ -69,8 +71,7 @@ class Command(BaseCommand):
                         '%Y-%m-%d %H:%M:%S'),
                     submitter.uwnetid,
                     item.student_number,
-                    ' '.join([item.student_first_name,
-                              item.student_surname]).strip(),
+                    f'{item.student_first_name} {item.student_surname}'.strip(),
                     item.section_id,
                     item.duplicate_code,
                     item.date_withdrawn,

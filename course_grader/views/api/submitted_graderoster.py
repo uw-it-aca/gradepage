@@ -2,21 +2,22 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.conf import settings
-from django.http import HttpResponse
-from django.utils.decorators import method_decorator
-from uw_saml.decorators import group_required
-from course_grader.views.rest_dispatch import RESTDispatch
-from course_grader.models import (
-    GradeImport, SubmittedGradeRoster as SubmittedGradeRosterModel)
-from course_grader.dao.person import person_from_regid, person_display_name
-from course_grader.dao.section import section_from_label
-from course_grader.dao.term import term_from_param
-from uw_sws_graderoster.models import GradeRoster
-from lxml import etree
-from logging import getLogger
 import csv
 import re
+from logging import getLogger
+
+from django.conf import settings
+from django.utils.decorators import method_decorator
+from lxml import etree
+from uw_saml.decorators import group_required
+from uw_sws_graderoster.models import GradeRoster
+
+from course_grader.dao.person import person_display_name, person_from_regid
+from course_grader.dao.section import section_from_label
+from course_grader.dao.term import term_from_param
+from course_grader.models import GradeImport
+from course_grader.models import SubmittedGradeRoster as SubmittedGradeRosterModel
+from course_grader.views.rest_dispatch import RESTDispatch
 
 logger = getLogger(__name__)
 
@@ -29,7 +30,7 @@ class SubmissionsByTerm(RESTDispatch):
 
         try:
             selected_term = term_from_param(term_id)
-        except Exception as ex:
+        except Exception:
             return self.error_response(400, "Invalid Term ID")
 
         graderosters = SubmittedGradeRosterModel.objects.get_status_by_term(
@@ -95,9 +96,8 @@ class SubmittedGradeRoster(RESTDispatch):
 
         except Exception as ex:
             logger.error(
-                "Download failed for graderoster model {}: {}".format(
-                    graderoster_id, ex))
-            return self.error_response(500, "{}".format(ex))
+                f"Download failed for graderoster model {graderoster_id}: {ex}")
+            return self.error_response(500, f"{ex}")
 
         if model.secondary_section_id is not None:
             filename = f"{model.secondary_section_id}-{model.instructor_id}"
@@ -137,12 +137,8 @@ class SubmittedGradeRoster(RESTDispatch):
 
             writer.writerow([
                 item.student_number,
-                "{first_name} {last_name}".format(
-                    first_name=item.student_first_name,
-                    last_name=item.student_surname),
-                "{curr_abbr} {course_num}".format(
-                    curr_abbr=section.curriculum_abbr,
-                    course_num=section.course_number),
+                f"{item.student_first_name} {item.student_surname}",
+                f"{section.curriculum_abbr} {section.course_number}",
                 item.section_id,
                 item.student_credits,
                 "I" if item.has_incomplete else "",
@@ -154,7 +150,7 @@ class SubmittedGradeRoster(RESTDispatch):
                 submitter.uwnetid
             ])
 
-        logger.info("Graderoster downloaded: {}-{}".format(
-            model.section_id, model.instructor_id))
+        logger.info(
+            f"Graderoster downloaded: {model.section_id}-{model.instructor_id}")
 
         return response

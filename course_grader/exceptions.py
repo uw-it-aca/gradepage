@@ -6,8 +6,11 @@
 Custom exceptions used by GradePage.
 """
 
-from restclients_core.exceptions import (
-    InvalidNetID, InvalidRegID, DataFailureException)
+from restclients_core.exceptions import (  # noqa: F401
+    DataFailureException,
+    InvalidNetID,
+    InvalidRegID,
+)
 
 
 class InvalidUser(Exception):
@@ -15,7 +18,7 @@ class InvalidUser(Exception):
         self.identifier = identifier
 
     def __str__(self):
-        return "Invalid identifier '{}'".format(self.identifier)
+        return f"Invalid identifier '{self.identifier}'"
 
 
 class InvalidTerm(Exception):

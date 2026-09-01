@@ -7,10 +7,15 @@ This module encapsulates the interactions with the restclients.pws,
 provides identity information
 """
 
-from uw_pws import PWS
-from course_grader.exceptions import (
-    InvalidNetID, InvalidRegID, InvalidUser, DataFailureException)
 from userservice.user import UserService
+from uw_pws import PWS
+
+from course_grader.exceptions import (
+    DataFailureException,
+    InvalidNetID,
+    InvalidRegID,
+    InvalidUser,
+)
 
 
 def person_from_netid(netid):
@@ -18,7 +23,7 @@ def person_from_netid(netid):
         return PWS().get_person_by_netid(netid)
     except InvalidNetID as ex:
         raise InvalidUser(ex)
-    except AttributeError as ex:
+    except AttributeError:
         raise InvalidUser('')
     except DataFailureException as ex:
         if ex.status == 404:
@@ -59,10 +64,9 @@ def is_netid(username):
             if username.lower() == person.uwnetid:
                 error_msg = None
             else:
-                error_msg = "Current netid: {}, Prior netid: ".format(
-                    person.uwnetid)
+                error_msg = f"Current netid: {person.uwnetid}, Prior netid: "
         except InvalidUser:
             error_msg = "Not a valid UWNetID: "
         except DataFailureException as err:
-            error_msg = "Error ({}) {}: ".format(err.status, err.msg)
+            error_msg = f"Error ({err.status}) {err.msg}: "
     return error_msg

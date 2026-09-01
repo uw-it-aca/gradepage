@@ -2,15 +2,17 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
+from unittest import mock
+
 from django.test import TestCase
 from uw_pws.util import fdao_pws_override
-from uw_sws.util import fdao_sws_override
 from uw_sws.models import Section
+from uw_sws.util import fdao_sws_override
+
 from course_grader.dao.person import PWS
 from course_grader.dao.section import *
 from course_grader.dao.term import term_from_param
 from course_grader.exceptions import InvalidSection, MissingInstructorParam
-import mock
 
 
 @fdao_sws_override
@@ -38,7 +40,7 @@ class SectionDAOFunctionsTest(TestCase):
         person = PWS().get_person_by_netid('javerage')
         term = term_from_param('2013-autumn')
 
-        ret = all_gradable_sections(person, term)
+        _ret = all_gradable_sections(person, term)
         mock_ins_fn.assert_called_with(
             person, term,
             delete_flag=[Section.DELETE_FLAG_ACTIVE,

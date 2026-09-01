@@ -2,13 +2,14 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from django.urls import reverse
-from course_grader.dao import display_datetime
-from course_grader.dao.person import person_display_name
-from course_grader.dao.section import section_url_token, section_display_name
-from course_grader.dao.term import (
-    is_grading_period_open, is_grading_period_past)
 import re
+
+from django.urls import reverse
+
+from course_grader.dao import display_datetime
+from course_grader.dao.person import person_display_name as person_display_name
+from course_grader.dao.section import section_display_name, section_url_token
+from course_grader.dao.term import is_grading_period_open, is_grading_period_past
 
 
 def clean_section_id(section_id):
@@ -72,18 +73,18 @@ def section_status_params(section, instructor):
 
     if (grading_period_open or is_grading_period_past(section.term)):
         if (section.is_primary_section and section.allows_secondary_grading):
-            data["grading_status"] = (
-                "Secondary grading is enabled for this course.")
+            data["grading_status"] = "Secondary grading is enabled for this course."
         else:
             data["section_url"] = url_for_section(section_id)
             data["status_url"] = url_for_grading_status(section_id)
     elif section.is_full_summer_term():
+        open_date = display_datetime(section.term.grading_period_open)
         data["grading_status"] = (
-            "Summer full-term grade submission opens on {}.".format(
-                display_datetime(section.term.grading_period_open)))
+            f"Summer full-term grade submission opens on {open_date}."
+        )
     elif section.is_summer_b_term():
+        open_date = display_datetime(section.term.grading_period_open)
         data["grading_status"] = (
-            "Summer B-term grade submission opens on {}.".format(
-                display_datetime(section.term.grading_period_open)))
-
+            f"Summer B-term grade submission opens on {open_date}."
+        )
     return data

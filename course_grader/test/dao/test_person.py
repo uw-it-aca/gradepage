@@ -5,6 +5,7 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase
 from uw_pws.util import fdao_pws_override
+
 from course_grader.dao.person import *
 from course_grader.exceptions import InvalidUser
 

@@ -4,16 +4,22 @@
 from django.conf import settings
 from django.urls import re_path
 from django.views.generic import TemplateView
-from course_grader.views.pages import HomeView
-from course_grader.views.support.status import status
-from course_grader.views.support.search import graderosters, grade_imports
-from course_grader.views.api.sections import Sections, Section
-from course_grader.views.api.graderoster import (
-    GradeRoster, GradeRosterStatus, GradeRosterExport)
-from course_grader.views.api.importgrades import ImportGrades, UploadGrades
+
 from course_grader.views.api.conversionscales import ConversionScales
+from course_grader.views.api.graderoster import (
+    GradeRoster,
+    GradeRosterExport,
+    GradeRosterStatus,
+)
+from course_grader.views.api.importgrades import ImportGrades, UploadGrades
+from course_grader.views.api.sections import Section, Sections
 from course_grader.views.api.submitted_graderoster import (
-    SubmissionsByTerm, SubmittedGradeRoster)
+    SubmissionsByTerm,
+    SubmittedGradeRoster,
+)
+from course_grader.views.pages import HomeView
+from course_grader.views.support.search import grade_imports, graderosters
+from course_grader.views.support.status import status
 
 urlpatterns = []
 

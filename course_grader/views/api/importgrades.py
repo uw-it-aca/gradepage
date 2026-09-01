@@ -2,29 +2,38 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
+import json
+from logging import getLogger
+
 from django.conf import settings
-from django.utils.decorators import method_decorator
 from django.core.files.storage import default_storage
-from course_grader.models import GradeImport
-from course_grader.dao.person import person_from_user
-from course_grader.dao.term import all_viewable_terms
-from course_grader.dao.section import (
-    section_from_param, is_grader_for_section, section_display_name,
-    section_url_token)
-from course_grader.dao.graderoster import graderoster_for_section
-from course_grader.views.decorators import xhr_login_required
-from course_grader.views.api import GradeFormHandler, sorted_students
-from course_grader.views import clean_section_id
-from course_grader.exceptions import (
-    InvalidUser, InvalidTerm, InvalidSection, GradingPeriodNotOpen,
-    SecondaryGradingEnabled, GradingNotPermitted, OverrideNotPermitted,
-    DataFailureException)
+from django.utils.decorators import method_decorator
 from userservice.user import UserService
 from uw_saml.decorators import group_required
-from logging import getLogger
-import json
-import csv
-import re
+
+from course_grader.dao.graderoster import graderoster_for_section
+from course_grader.dao.person import person_from_user
+from course_grader.dao.section import (
+    is_grader_for_section,
+    section_display_name,
+    section_from_param,
+    section_url_token,
+)
+from course_grader.dao.term import all_viewable_terms
+from course_grader.exceptions import (
+    DataFailureException,
+    GradingNotPermitted,
+    GradingPeriodNotOpen,
+    InvalidSection,
+    InvalidTerm,
+    InvalidUser,
+    OverrideNotPermitted,
+    SecondaryGradingEnabled,
+)
+from course_grader.models import GradeImport
+from course_grader.views import clean_section_id
+from course_grader.views.api import GradeFormHandler, sorted_students
+from course_grader.views.decorators import xhr_login_required
 
 logger = getLogger(__name__)
 
@@ -64,12 +73,12 @@ class ImportGrades(GradeFormHandler):
         except (InvalidUser, GradingNotPermitted, OverrideNotPermitted) as ex:
             user = UserService().get_original_user()
             logger.info(f"Grading for {section_id} not permitted for {user}")
-            return self.error_response(401, "{}".format(ex))
+            return self.error_response(401, f"{ex}")
         except (SecondaryGradingEnabled, GradingPeriodNotOpen,
                 InvalidTerm) as ex:
-            return self.error_response(400, "{}".format(ex))
+            return self.error_response(400, f"{ex}")
         except InvalidSection as ex:
-            return self.error_response(404, "{}".format(ex))
+            return self.error_response(404, f"{ex}")
         except DataFailureException as ex:
             logger.info(f"GET graderoster error: {ex}")
             (status, msg) = self.data_failure_error(ex)
@@ -80,7 +89,7 @@ class ImportGrades(GradeFormHandler):
         if error is not None:
             return error
 
-        section_id = kwargs.get("section_id")
+        _section_id = kwargs.get("section_id")
         import_id = kwargs.get("import_id")
 
         try:
@@ -171,7 +180,7 @@ class ImportGrades(GradeFormHandler):
         except Exception as ex:
             label = self.section.section_label()
             logger.error(f"POST import failed for {label}: {ex}")
-            return self.error_response(500, "{}".format(ex))
+            return self.error_response(500, f"{ex}")
 
         return self.response_content(grade_import)
 
@@ -199,7 +208,7 @@ class ImportGrades(GradeFormHandler):
 
             if grade is not None:
                 student_id = item.student_label(separator="-")
-                item_id = "-".join([grade_import.section_id, student_id])
+                item_id = f"{grade_import.section_id}-{student_id}"
                 grade["item_id"] = clean_section_id(item_id)
                 grade["student_id"] = student_id
                 grade["section_id"] = self.section.section_id
@@ -237,9 +246,8 @@ class UploadGrades(ImportGrades):
                 self.section, self.instructor, fileobj=uploaded_file)
         except Exception as ex:
             label = self.section.section_label()
-            logger.error(
-                f"POST upload {uploaded_file.name} failed for {label}: {ex}")
-            return self.error_response(400, "{}".format(ex))
+            logger.error(f"POST upload {uploaded_file.name} failed for {label}: {ex}")
+            return self.error_response(400, f"{ex}")
 
         return self.response_content(grade_import)
 

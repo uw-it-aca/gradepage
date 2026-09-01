@@ -4,9 +4,12 @@
 
 from django.test import TestCase, override_settings
 from uw_sws.util import fdao_sws_override
-from course_grader.dao.term import current_term
+
 from course_grader.dao.message import (
-    get_open_grading_messages, get_closed_grading_messages)
+    get_closed_grading_messages,
+    get_open_grading_messages,
+)
+from course_grader.dao.term import current_term
 
 
 @fdao_sws_override

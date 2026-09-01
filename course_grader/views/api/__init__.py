@@ -2,16 +2,17 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
+from logging import getLogger
+
 from django.conf import settings
 from userservice.user import UserService
 from uw_sws_graderoster.models import GradingScale
+
 from course_grader.dao.person import person_display_name
-from course_grader.dao.term import (
-    submission_deadline_warning, is_grading_period_open)
-from course_grader.views.rest_dispatch import RESTDispatch
-from course_grader.models import Grade
+from course_grader.dao.term import is_grading_period_open, submission_deadline_warning
 from course_grader.exceptions import OverrideNotPermitted
-from logging import getLogger
+from course_grader.models import Grade
+from course_grader.views.rest_dispatch import RESTDispatch
 
 logger = getLogger(__name__)
 
@@ -69,8 +70,10 @@ class GradeFormHandler(RESTDispatch):
         if grade.is_writing:
             logged_grade += ",W"
 
-        logger.info("Grade {}, Student: {}, Section: {}, Grade: {}".format(
-            action, student_id, section_id, logged_grade))
+        logger.info(
+            f"Grade {action}, Student: {student_id}, Section: {section_id}, "
+            f"Grade: {logged_grade}"
+        )
 
         return grade
 

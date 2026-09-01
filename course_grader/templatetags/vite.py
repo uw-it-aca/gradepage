@@ -2,12 +2,13 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-import os
 import json
+import os
+
 from django import template
 from django.conf import settings
-from django.utils.safestring import mark_safe
 from django.templatetags.static import static
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -67,7 +68,7 @@ def vite_styles(*entries_names):
         </head>
     '''
     _, styles = vite_manifest(entries_names)
-    styles = map(lambda href: static(href), styles)
+    styles = [static(href) for href in styles]
 
     def as_link_tag(href):
         return f'<link rel="stylesheet" href="{href}" />'
@@ -91,7 +92,7 @@ def vite_scripts(*entries_names):
         </body>
     '''
     scripts, _ = vite_manifest(entries_names)
-    scripts = map(lambda src: static(src), scripts)
+    scripts = [static(src) for src in scripts]
 
     def as_script_tag(src):
         return f'<script type="module" src="{src}"></script>'

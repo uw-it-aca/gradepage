@@ -2,17 +2,19 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
+import json
+from datetime import datetime, timezone
+from decimal import Decimal
+from importlib import import_module
+from logging import getLogger
+
 from django.db import models
 from django.db.models import F, Q
 from uw_sws_graderoster.models import GradingScale
+
 from course_grader.dao.gradesubmission import submit_grades
 from course_grader.dao.notification import notify_grade_submitters
-from course_grader.exceptions import InvalidGradingScale, DataFailureException
-from importlib import import_module
-from datetime import datetime, timedelta, timezone
-from logging import getLogger
-from decimal import Decimal
-import json
+from course_grader.exceptions import DataFailureException, InvalidGradingScale
 
 logger = getLogger(__name__)
 
@@ -186,7 +188,7 @@ class Grade(models.Model):
             raise AttributeError("Missing student_reg_id")
 
         if self.duplicate_code is not None and len(self.duplicate_code):
-            return "-".join([self.student_reg_id, self.duplicate_code])
+            return f"{self.student_reg_id}-{self.duplicate_code}"
         else:
             return self.student_reg_id
 
@@ -419,7 +421,7 @@ class GradeImport(models.Model):
     def json_data(self):
         try:
             grade_data = json.loads(self.document)
-        except Exception as ex:
+        except Exception:
             grade_data = {}
 
         grades = []

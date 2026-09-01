@@ -2,24 +2,26 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
+from logging import getLogger
+
 from django.conf import settings
+from django.contrib.humanize.templatetags.humanize import apnumber
 from django.core.mail import EmailMultiAlternatives
 from django.template import loader
-from django.contrib.humanize.templatetags.humanize import apnumber
-from course_grader.dao.section import section_url_token, section_display_name
-from course_grader.dao.term import is_grading_period_open
-from course_grader.dao.person import person_from_regid, person_display_name
+
 from course_grader.dao import current_datetime, display_datetime
+from course_grader.dao.person import person_display_name, person_from_regid
+from course_grader.dao.section import section_display_name, section_url_token
+from course_grader.dao.term import is_grading_period_open
 from course_grader.exceptions import GradesNotSubmitted
-from logging import getLogger
 
 logger = getLogger(__name__)
 
 
 def ignored_recipients():
-    ignore_str = getattr(settings, "EMAIL_IGNORE_USERS", "")
+    ignore_str = settings.EMAIL_IGNORE_USERS
     try:
-        return set([s.strip() for s in ignore_str.split(",")])
+        return {s.strip() for s in ignore_str.split(",")}
     except AttributeError:
         return {""}
 
@@ -129,7 +131,7 @@ def notify_grade_submitters(graderoster, submitter_regid):
         logger.info(f"Submission email not sent: {ex}")
         return
 
-    sender = getattr(settings, "EMAIL_NOREPLY_ADDRESS")
+    sender = settings.EMAIL_NOREPLY_ADDRESS
     recipients = create_recipient_list(people)
 
     message = EmailMultiAlternatives(subject, text_body, sender, recipients)

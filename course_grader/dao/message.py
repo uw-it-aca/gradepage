@@ -2,14 +2,21 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from course_grader.dao import current_datetime, display_datetime
-from course_grader.dao.term import (
-    next_gradable_term, previous_gradable_term, submission_deadline_warning,
-    is_grading_period_open)
 from persistent_message.models import Message
 
+from course_grader.dao import current_datetime, display_datetime
+from course_grader.dao.term import (
+    is_grading_period_open,
+    next_gradable_term,
+    previous_gradable_term,
+    submission_deadline_warning,
+)
 
-def get_open_grading_messages(term, params={}):
+
+def get_open_grading_messages(term, params=None):
+    if params is None:
+        params = {}
+
     tags = ["is_open"]
     rel_grade_submission_deadline = ""
     if submission_deadline_warning(term):
@@ -30,7 +37,10 @@ def get_open_grading_messages(term, params={}):
     return _get_persistent_messages(tags, params)
 
 
-def get_closed_grading_messages(params={}):
+def get_closed_grading_messages(params=None):
+    if params is None:
+        params = {}
+
     prev_term = previous_gradable_term()
     next_term = next_gradable_term()
 
@@ -58,7 +68,10 @@ def get_closed_grading_messages(params={}):
     return _get_persistent_messages(tags, params)
 
 
-def get_messages_for_term(term, params={}):
+def get_messages_for_term(term, params=None):
+    if params is None:
+        params = {}
+
     if is_grading_period_open(term):
         return get_open_grading_messages(term, params)
     else:

@@ -2,19 +2,21 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
+from logging import getLogger
+
 from django.utils.decorators import method_decorator
-from course_grader.views.decorators import xhr_login_required
+
 from course_grader.dao.person import person_from_user
 from course_grader.dao.term import all_viewable_terms
+from course_grader.exceptions import *
 from course_grader.models import GradeImport, ImportConversion
 from course_grader.views.api import GradeFormHandler
-from course_grader.exceptions import *
-from logging import getLogger
+from course_grader.views.decorators import xhr_login_required
 
 logger = getLogger(__name__)
 
 
-@method_decorator(xhr_login_required, name='dispatch')
+@method_decorator(xhr_login_required, name="dispatch")
 class ConversionScales(GradeFormHandler):
     def get(self, request, *args, **kwargs):
         try:
@@ -23,12 +25,12 @@ class ConversionScales(GradeFormHandler):
             self.scale = ImportConversion.valid_scale(
                 kwargs.get("scale", "").strip())
         except InvalidUser as ex:
-            return self.error_response(401, "{}".format(ex))
+            return self.error_response(401, f"{ex}")
         except InvalidGradingScale as ex:
-            return self.error_response(400, "{}".format(ex))
+            return self.error_response(400, f"{ex}")
         except Exception as ex:
-            logger.error("GET terms failed: {}".format(ex))
-            return self.error_response(500, "{}".format(ex))
+            logger.error(f"GET terms failed: {ex}")
+            return self.error_response(500, f"{ex}")
 
         return self.response_content()
 

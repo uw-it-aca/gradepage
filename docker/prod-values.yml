@@ -1,3 +1,12 @@
+gateway:
+  enabled: true
+  hostnames:
+    - gradepage.uw.edu
+  maxRequestSize: 10Mi
+  requestTimeouts:
+    frontEnd: 70s
+    backEnd: 60s
+
 ingress:
   enabled: true
   tls:
@@ -123,13 +132,21 @@ cronjob:
 
 certs:
   mounted: true
-  certPath: /certs/client.gradepage.uw.edu-ic.cert
-  keyPath: /certs/client.gradepage.uw.edu-ic.key
-  secretName: gradepage.uw.edu-ic-certs
+  certPath: /certs/client.gradepage.uw.edu-uwca.cert
+  keyPath: /certs/client.gradepage.uw.edu-uwca.key
+  secretName: gradepage.uw.edu-uwca-certs
+
+mountedSecrets:
+  enabled: true
+  mountPath: /ssl
+  secretName: gradepage.uw.edu-openssl-conf
 
 environmentVariables:
   - name: ENV
     value: prod
+
+  - name: OPENSSL_CONF
+    value: /ssl/openssl.cnf
 
   - name: PWS_ENV
     value: PROD
@@ -201,18 +218,23 @@ externalSecrets:
       data:
         - name: credentials.json
           property: credentials.json
-    - name: gradepage.uw.edu-ic-certs
-      externalKey: gradepage/prod/ic-certs
+    - name: gradepage.uw.edu-uwca-certs
+      externalKey: gradepage/prod/uwca-certs
       data:
-        - name: client.gradepage.uw.edu-ic.cert
-          property: client.gradepage.uw.edu-ic.cert
-        - name: client.gradepage.uw.edu-ic.key
-          property: client.gradepage.uw.edu-ic.key
+        - name: client.gradepage.uw.edu-uwca.cert
+          property: client.gradepage.uw.edu-uwca.cert
+        - name: client.gradepage.uw.edu-uwca.key
+          property: client.gradepage.uw.edu-uwca.key
     - name: gradepage.uw.edu-uw-idp-cert
       externalKey: idp-cert
       data:
         - name: uw-idp-cert
           property: cert
+    - name: gradepage.uw.edu-openssl-conf
+      externalKey: openssl-conf
+      data:
+        - name: openssl.cnf
+          property: openssl.cnf
 
 environmentVariablesSecrets:
   djangoSecret:

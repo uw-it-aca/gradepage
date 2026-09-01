@@ -6,13 +6,12 @@ from django.test import TestCase
 from django.utils import timezone
 from uw_pws.util import fdao_pws_override
 from uw_sws.util import fdao_sws_override
+
+from course_grader.dao.graderoster import DataFailureException, graderoster_for_section
 from course_grader.dao.person import PWS
 from course_grader.dao.section import get_section_by_label
-from course_grader.dao.graderoster import (
-    graderoster_for_section, DataFailureException)
+from course_grader.exceptions import GradingNotPermitted, ReceiptNotFound
 from course_grader.models import SubmittedGradeRoster
-from course_grader.exceptions import (
-    GradingNotPermitted, ReceiptNotFound, GradingPeriodNotOpen)
 
 
 @fdao_sws_override
