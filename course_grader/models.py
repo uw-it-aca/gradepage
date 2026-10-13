@@ -3,7 +3,7 @@
 
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal
 from importlib import import_module
 from logging import getLogger
@@ -129,7 +129,7 @@ class SubmittedGradeRoster(models.Model):
             raise
 
         self.status_code = 200
-        self.accepted_date = datetime.now(timezone.utc)
+        self.accepted_date = datetime.now(UTC)
         self.document = graderoster.xhtml()
         self.save()
 
@@ -415,7 +415,7 @@ class GradeImport(models.Model):
             )
             import_conversion.save()
             self.import_conversion = import_conversion
-        self.accepted_date = datetime.now(timezone.utc)
+        self.accepted_date = datetime.now(UTC)
         self.save()
 
     def json_data(self):

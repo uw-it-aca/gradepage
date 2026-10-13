@@ -387,14 +387,13 @@ class GradeRoster(GradeFormHandler):
                 data["has_duplicate_codes"] = True
 
             if is_submitted:
-                if item.has_incomplete:
-                    if (grade == "i" or grade == "I"):
-                        grade = ""
+                if item.has_incomplete and (grade == "i" or grade == "I"):
+                    grade = ""
 
                 if item.date_graded is not None:
                     data["graded_count"] += 1
                     data["has_successful_submissions"] = True
-                    date = datetime.strptime(item.date_graded, "%Y-%m-%d")  # noqa: DTZ007
+                    date = datetime.strptime(item.date_graded, "%Y-%m-%d")
                     date_graded = date.strftime("%m/%d/%Y")
 
                 if item.status_code is not None:

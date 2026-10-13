@@ -55,7 +55,7 @@ def status(request):
                                   tzinfo=SWS_TIMEZONE)
     end_date = timezone.make_aware(selected_term.grade_submission_deadline,
                                    SWS_TIMEZONE)
-    epoch = timezone.make_aware(datetime(1970, 1, 1), SWS_TIMEZONE)  # noqa: DTZ001
+    epoch = timezone.make_aware(datetime(1970, 1, 1), SWS_TIMEZONE)
 
     chart_data = {
         "submissions": {
