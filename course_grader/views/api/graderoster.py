@@ -290,10 +290,9 @@ class GradeRoster(GradeFormHandler):
                 if (saved_grade.no_grade_now or saved_grade.grade == "N" or
                         saved_grade.grade == "CR" or saved_grade.grade == ""):
                     return False
-            else:  # Not an undergrad
+            else:
                 # Default grade for incomplete not validated
-                return not (is_submitted and not (
-                    item.has_incomplete or item.no_grade_now))
+                return True
 
         for choice in item.grade_choices:
             if (choice is not None and choice != "" and
@@ -388,16 +387,13 @@ class GradeRoster(GradeFormHandler):
                 data["has_duplicate_codes"] = True
 
             if is_submitted:
-                if item.has_incomplete:
-                    if (grade == "i" or grade == "I"):
-                        grade = ""
-                else:
-                    allows_incomplete = bool(item.no_grade_now)
+                if item.has_incomplete and (grade == "i" or grade == "I"):
+                    grade = ""
 
                 if item.date_graded is not None:
                     data["graded_count"] += 1
                     data["has_successful_submissions"] = True
-                    date = datetime.strptime(item.date_graded, "%Y-%m-%d")  # noqa: DTZ007
+                    date = datetime.strptime(item.date_graded, "%Y-%m-%d")
                     date_graded = date.strftime("%m/%d/%Y")
 
                 if item.status_code is not None:
