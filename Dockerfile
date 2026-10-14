@@ -15,7 +15,7 @@ RUN chmod u+x /scripts/app_start.sh
 RUN /app/bin/pip install -r requirements.txt
 
 # latest node + ubuntu
-FROM node:20 AS node-base
+FROM node:24 AS node-base
 FROM ubuntu:24.04 AS node-bundler
 COPY --from=node-base / /
 
