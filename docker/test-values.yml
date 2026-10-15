@@ -32,11 +32,11 @@ affinity:
 
 resources:
   limits:
-    cpu: 500m
-    memory: 512Mi
-  requests:
     cpu: 250m
-    memory: 256Mi
+    memory: 768Mi
+  requests:
+    cpu: 25m
+    memory: 512Mi
 
 targetAverageUtilization: 90
 

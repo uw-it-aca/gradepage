@@ -1,0 +1,78 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gradepage"
+dynamic = ["version"]
+description = "UW application that supports online grade submission"
+readme = "README.md"
+license = "Apache-2.0"
+authors = [
+    {name = "UWIT Student & Educational Technology Services", email = "aca-it@uw.edu"}
+]
+classifiers = [
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+]
+dependencies = [
+    "django~=5.2",
+    "django-userservice~=3.2",
+    "django-storages[google]",
+    "django-supporttools~=3.6",
+    "django-safe-emailbackend~=1.2",
+    "django-persistent-message~=1.3",
+    "uw-django-saml2~=1.8",
+    "uw-memcached-clients~=1.0",
+    "uw-restclients-core~=1.4",
+    "uw-restclients-sws~=2.5",
+    "uw-restclients-pws~=2.1",
+    "uw-restclients-canvas~=1.2",
+    "uw-restclients-graderoster~=1.1",
+    "uw-restclients-django-utils~=2.3",
+    "chardet~=5.0",
+    "psycopg[c]",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+]
+
+[tool.setuptools]
+packages = ["course_grader"]
+include-package-data = true
+
+[tool.setuptools.dynamic]
+version = {file = "course_grader/VERSION"}
+
+[tool.ruff]
+line-length = 88
+exclude = [
+    "course_grader/migrations/*",
+    "course_grader/test/dao/test_notification.py",
+]
+
+[tool.ruff.lint]
+ignore = [
+    "BLE001",  # allow broad Exception catches
+    "RUF012",  # allow mutable class attributes
+    "S110",    # allow try-except-pass for graceful degradation
+]
+
+[tool.coverage.run]
+source = ["gradepage"]
+parallel = true
+omit = [
+     "course_grader/migrations/*",
+     "course_grader/tests/*"
+]
+
+[tool.coverage.paths]
+source = [
+    "course_grader/",
+    "/app/course_grader/",
+]
