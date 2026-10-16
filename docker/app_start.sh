@@ -9,7 +9,7 @@ then
 else
 
   # adjust timeouts to account for slow downstream response
-  DOWNSTREAM_TIMEOUT=300
+  DOWNSTREAM_TIMEOUT=90
 
   export GUNICORN_CMD_ARGS="--timeout $DOWNSTREAM_TIMEOUT"
 
