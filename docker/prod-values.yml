@@ -4,8 +4,8 @@ gateway:
     - gradepage.uw.edu
   maxRequestSize: 20Mi
   requestTimeouts:
-    frontEnd: 200s
-    backEnd: 180s
+    frontEnd: 120s
+    backEnd: 90s
   rateLimit:
     tokens: 10
     tokensPerFill: 10
