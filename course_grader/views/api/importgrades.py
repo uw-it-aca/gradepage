@@ -122,6 +122,8 @@ class ImportGrades(GradeFormHandler):
             return self.error_response(400, "Invalid import")
 
         import_data = grade_import.json_data()
+        grades_by_reg_id = import_data.pop("imported_grades_by_reg_id", {})
+        grades_by_student_number = import_data.pop("imported_grades_by_student_no", {})
         converted_grades = put_data.get("converted_grades", {})
         secondary_section = getattr(self.graderoster, "secondary_section",
                                     None)
@@ -134,9 +136,9 @@ class ImportGrades(GradeFormHandler):
                 continue
 
             # Find the grade data for each graderoster item
-            grade = next((g for g in import_data.get("imported_grades") if (
-                g["student_reg_id"] == item.student_uwregid or
-                g["student_number"] == item.student_number)), None)
+            grade = grades_by_reg_id.get(item.student_uwregid)
+            if grade is None:
+                grade = grades_by_student_number.get(item.student_number)
 
             if grade is not None:
                 grade_data = {
@@ -191,22 +193,21 @@ class ImportGrades(GradeFormHandler):
 
         # Create a new list of imported grades, including only students who are
         # actually on the graderoster
-        imported_grades = return_data.pop("imported_grades", [])
+        grades_by_reg_id = return_data.pop("imported_grades_by_reg_id", {})
+        grades_by_student_number = return_data.pop("imported_grades_by_student_no", {})
         return_data["students"] = []
 
         cp_0 = time.perf_counter()
-        secondary_section = getattr(self.graderoster, "secondary_section",
-                                    None)
+        secondary_section = getattr(self.graderoster, "secondary_section", None)
         for item in sorted_students(self.graderoster.items):
             if (secondary_section is not None and
                     secondary_section.section_id != item.section_id):
                 # Filtering by secondary section
                 continue
 
-            # Find the grade data for each graderoster item
-            grade = next((g for g in imported_grades if (
-                g["student_reg_id"] == item.student_uwregid or
-                g["student_number"] == item.student_number)), None)
+            grade = grades_by_reg_id.get(item.student_uwregid)
+            if grade is None:
+                grade = grades_by_student_number.get(item.student_number)
 
             if grade is not None:
                 student_id = item.student_label(separator="-")
