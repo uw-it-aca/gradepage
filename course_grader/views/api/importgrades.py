@@ -3,6 +3,7 @@
 
 
 import json
+import time
 from logging import getLogger
 
 from django.conf import settings
@@ -193,6 +194,7 @@ class ImportGrades(GradeFormHandler):
         imported_grades = return_data.pop("imported_grades", [])
         return_data["students"] = []
 
+        cp_0 = time.perf_counter()
         secondary_section = getattr(self.graderoster, "secondary_section",
                                     None)
         for item in sorted_students(self.graderoster.items):
@@ -220,6 +222,8 @@ class ImportGrades(GradeFormHandler):
                 grade["date_withdrawn"] = item.date_withdrawn
                 return_data["students"].append(grade)
 
+        cp_1 = time.perf_counter()
+        logger.info(f"ImportGradesView.response_content, time taken: {cp_1 - cp_0}")
         return self.json_response({"grade_import": return_data})
 
 

@@ -4,6 +4,7 @@
 
 import csv
 import os
+import time
 from logging import getLogger
 
 import chardet
@@ -99,7 +100,12 @@ class GradeImportCSV(GradeImportSource):
         All other field names are ignored.
         """
         fileobj = kwargs.get("fileobj")
+
+        cp_0 = time.perf_counter()
         self.validate(fileobj)
+        cp_1 = time.perf_counter()
+        logger.info(f"GradeImportCSV.validate, time taken: {cp_1 - cp_0}")
+
         decoded_file = self.decode_file(fileobj.read()).splitlines()
 
         grade_data = []
@@ -117,12 +123,18 @@ class GradeImportCSV(GradeImportSource):
                     student_data["student_number"]):
                 grade_data.append(student_data)
 
+        cp_2= time.perf_counter()
+        logger.info(f"GradeImportCSV.csv_iteration, time taken: {cp_2 - cp_1}")
+
         try:
             self._write_file(section, instructor, fileobj)
         except Exception as ex:
             logger.error(
                 f"WRITE upload file {fileobj.name} for "
                 f"{section.section_label()} failed: {ex}")
+        cp_3 = time.perf_counter()
+        logger.info(f"GradeImportCSV.write_file, time taken: {cp_3 - cp_2}")
+
         return {"grades": grade_data}
 
     def _write_file(self, section, instructor, fileobj):
