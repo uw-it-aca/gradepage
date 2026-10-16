@@ -3,6 +3,7 @@
 
 
 import json
+import time
 from datetime import UTC, datetime
 from decimal import Decimal
 from importlib import import_module
@@ -403,7 +404,10 @@ class GradeImport(models.Model):
         except DataFailureException as ex:
             self.status_code = ex.status
 
+        cp_0 = time.perf_counter()
         self.save()
+        cp_1 = time.perf_counter()
+        logger.info(f"GradeImport.save_model, time taken: {cp_1 - cp_0}")
 
     def save_conversion_data(self, data):
         if data is not None:
