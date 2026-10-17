@@ -41,6 +41,7 @@ else:
     GRADEPAGE_ADMIN_GROUP = os.getenv('ADMIN_GROUP', 'u_acadev_gradepage_admins')
     RESTCLIENTS_DAO_CACHE_CLASS = 'course_grader.cache.RestClientsCache'
     PAST_TERMS_VIEWABLE = 4
+    CANVAS_PER_PAGE = 100
     STORAGES = {
         'default': {
             'BACKEND': 'storages.backends.gcloud.GoogleCloudStorage',
