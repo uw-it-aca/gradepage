@@ -19,7 +19,7 @@ logger = getLogger(__name__)
 
 class GradeFormHandler(RESTDispatch):
     def valid_user_override(self):
-        if (not getattr(settings, "ALLOW_GRADE_SUBMISSION_OVERRIDE", False) and
+        if (not settings.ALLOW_GRADE_SUBMISSION_OVERRIDE and
                 UserService().get_override_user() is not None):
             raise OverrideNotPermitted()
 

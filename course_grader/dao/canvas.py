@@ -1,6 +1,7 @@
 # Copyright 2026 UWIT, University of Washington
 # SPDX-License-Identifier: Apache-2.0
 
+import time
 
 from django.conf import settings
 from uw_canvas.courses import Courses
@@ -34,13 +35,13 @@ def grading_scheme_for_course(course_id):
 
 class GradeImportCanvas(GradeImportSource):
     def grades_for_section(self, section, instructor, **kwargs):
-        results_per_page = getattr(settings, "CANVAS_PER_PAGE", 200)
         grade_data = {"grades": [], "course_grading_schemes": []}
         course_ids = set()
 
         # Use the canvas section resource, since individual sections
         # may be cross-listed to other courses
-        canvas = Enrollments(per_page=results_per_page)
+        cp_0 = time.perf_counter()
+        canvas = Enrollments(per_page=settings.CANVAS_PER_PAGE)
         if len(section.linked_section_urls):
             enrollments = []
             for url in section.linked_section_urls:
@@ -55,14 +56,21 @@ class GradeImportCanvas(GradeImportSource):
             sis_id = section.canvas_section_sis_id()
             enrollments = canvas.get_enrollments_for_section_by_sis_id(sis_id)
 
+        cp_1 = time.perf_counter()
+        logger.info(f"GradeImportCanvas.get_enrollments, time taken: {cp_1 - cp_0}")
+
         for enrollment in enrollments:
             if enrollment.role == enrollment.STUDENT:
                 grade_data["grades"].append(enrollment.json_data())
                 course_ids.add(enrollment.course_id)
 
+        cp_2 = time.perf_counter()
         for course_id in course_ids:
             grading_scheme = grading_scheme_for_course(course_id)
             if grading_scheme:
                 grade_data["course_grading_schemes"].append(grading_scheme)
+
+        cp_3 = time.perf_counter()
+        logger.info(f"GradeImportCanvas.get_grading_scheme, time taken: {cp_3 - cp_2}")
 
         return grade_data
