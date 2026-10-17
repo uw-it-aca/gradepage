@@ -41,7 +41,6 @@ else:
     GRADEPAGE_ADMIN_GROUP = os.getenv('ADMIN_GROUP', 'u_acadev_gradepage_admins')
     RESTCLIENTS_DAO_CACHE_CLASS = 'course_grader.cache.RestClientsCache'
     PAST_TERMS_VIEWABLE = 4
-    CANVAS_PER_PAGE = 100
     STORAGES = {
         'default': {
             'BACKEND': 'storages.backends.gcloud.GoogleCloudStorage',
@@ -74,6 +73,7 @@ EMAIL_IGNORE_USERS = os.getenv('EMAIL_IGNORE_USERS')
 GRADEPAGE_HOST = 'https://' + os.getenv('CLUSTER_CNAME', 'localhost')
 SUBMISSION_DEADLINE_WARNING_HOURS = 41
 GRADE_RETENTION_YEARS = 5
+CANVAS_PER_PAGE = 100
 
 GRADEPAGE_SUPPORT_EMAIL = os.getenv('GRADEPAGE_SUPPORT_EMAIL', '')
 REGISTRAR_SUPPORT_EMAIL = os.getenv('REGISTRAR_SUPPORT_EMAIL', '')
