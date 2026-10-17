@@ -74,7 +74,6 @@ def create_message(graderoster, submitter):
     else:
         raise GradesNotSubmitted()
 
-    gradepage_host = getattr(settings, "GRADEPAGE_HOST", "http://localhost")
     params = {
         "submitted_by": submitter_name,
         "submitted_date": display_datetime(current_datetime()),
@@ -82,10 +81,10 @@ def create_message(graderoster, submitter):
         "success_count": success_count,
         "failure_count": error_count,
         "section_name": section_name,
-        "gradepage_url": gradepage_host,
-        "section_url": f"{gradepage_host}/section/{section_id}",
+        "gradepage_url": settings.GRADEPAGE_HOST,
+        "section_url": f"{settings.GRADEPAGE_HOST}/section/{section_id}",
         "grading_window_open": is_grading_period_open(section),
-        "cog_form_url": getattr(settings, "COG_FORM_URL", ""),
+        "cog_form_url": settings.COG_FORM_URL,
     }
 
     if params["grading_window_open"]:
