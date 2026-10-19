@@ -3,6 +3,7 @@ gateway:
   hostnames:
     - test.gradepage.uw.edu
   maxRequestSize: 20Mi
+  requestTimeouts:
     frontEnd: 60s
     backEnd: 30s
   rateLimit:
