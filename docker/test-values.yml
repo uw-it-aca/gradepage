@@ -68,7 +68,12 @@ gcsCredentials:
   secretName: test.gradepage.uw.edu-gcs-credentials
 
 cronjob:
-  enabled: false
+  enabled: true
+  jobs:
+    - name: clear-cache
+      schedule: "0 15 * * 1"
+      command: ["/scripts/management_command.sh"]
+      args: ["clear_cache"]
 
 certs:
   mounted: true
