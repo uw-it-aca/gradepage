@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from django.test import TestCase
 
@@ -11,7 +11,7 @@ from course_grader.dao import current_datetime, display_datetime, sws_now
 
 class DateTimeFunctionsTest(TestCase):
     def setUp(self):
-        self.test_dt = datetime(2000, 1, 1, 14, 30)  # noqa: DTZ001
+        self.test_dt = datetime(2000, 1, 1, 14, 30)
 
     def test_current_datetime(self):
         with self.settings(CURRENT_DATETIME_OVERRIDE='2013-05-31 08:00:00'):
@@ -28,7 +28,7 @@ class DateTimeFunctionsTest(TestCase):
                 display_datetime(self.test_dt), 'January 01 at  2:30 PM UTC')
 
             self.assertEqual(
-                display_datetime(self.test_dt.replace(tzinfo=timezone.utc)),
+                display_datetime(self.test_dt.replace(tzinfo=UTC)),
                 'January 01 at  2:30 PM UTC')
 
         with self.settings(TIME_ZONE='America/Los_Angeles'):
@@ -36,5 +36,5 @@ class DateTimeFunctionsTest(TestCase):
                 display_datetime(self.test_dt), 'January 01 at  2:30 PM PST')
 
             self.assertEqual(
-                display_datetime(self.test_dt.replace(tzinfo=timezone.utc)),
+                display_datetime(self.test_dt.replace(tzinfo=UTC)),
                 'January 01 at  6:30 AM PST')

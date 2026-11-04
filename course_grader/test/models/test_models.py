@@ -28,12 +28,10 @@ class GradeTest(TestCase):
             _x = grade.student_label
 
         grade = Grade(student_reg_id=uwregid)
-        self.assertEqual(
-            grade.student_label, 'FBB38FE46A7C11D5A4AE0004AC494FFE')
+        self.assertEqual(grade.student_label, 'FBB38FE46A7C11D5A4AE0004AC494FFE')
 
         grade = Grade(student_reg_id=uwregid, duplicate_code='A')
-        self.assertEqual(
-            grade.student_label, 'FBB38FE46A7C11D5A4AE0004AC494FFE-A')
+        self.assertEqual(grade.student_label, 'FBB38FE46A7C11D5A4AE0004AC494FFE-A')
 
     def test_json_data(self):
         grade = Grade(student_reg_id='B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2',
@@ -46,8 +44,7 @@ class GradeTest(TestCase):
 
         d = grade.json_data()
         self.assertEqual(d['section_id'], '2013-spring-A B&C-101-A')
-        self.assertEqual(d['student_reg_id'],
-                         'B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2')
+        self.assertEqual(d['student_reg_id'], 'B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2B2')
         self.assertEqual(d['duplicate_code'], 'A')
         self.assertEqual(d['grade'], '3.9')
         self.assertEqual(d['is_writing'], False)
@@ -71,7 +68,8 @@ class GradeImportTest(TestCase):
         gi = GradeImport(source=GradeImport.CANVAS_SOURCE)
         gi.grades_for_section(section, user)
         data = gi.json_data()
-        self.assertEqual(len(data['imported_grades']), 1)
+        self.assertEqual(len(data['imported_grades_by_reg_id']), 1)
+        self.assertEqual(len(data['imported_grades_by_student_no']), 0)
         self.assertEqual(len(data['course_grading_schemes']), 0)
 
         gi = GradeImport(source='Bad')

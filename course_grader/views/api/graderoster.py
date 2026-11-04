@@ -290,10 +290,11 @@ class GradeRoster(GradeFormHandler):
                 if (saved_grade.no_grade_now or saved_grade.grade == "N" or
                         saved_grade.grade == "CR" or saved_grade.grade == ""):
                     return False
-            else:  # Not an undergrad
+            else:
                 # Default grade for incomplete not validated
                 return not (is_submitted and not (
                     item.has_incomplete or item.no_grade_now))
+                # return True  # GRADE-513
 
         for choice in item.grade_choices:
             if (choice is not None and choice != "" and
@@ -393,11 +394,14 @@ class GradeRoster(GradeFormHandler):
                         grade = ""
                 else:
                     allows_incomplete = bool(item.no_grade_now)
+                # GRADE-513
+                # if item.has_incomplete and (grade == "i" or grade == "I"):
+                #    grade = ""
 
                 if item.date_graded is not None:
                     data["graded_count"] += 1
                     data["has_successful_submissions"] = True
-                    date = datetime.strptime(item.date_graded, "%Y-%m-%d")  # noqa: DTZ007
+                    date = datetime.strptime(item.date_graded, "%Y-%m-%d")
                     date_graded = date.strftime("%m/%d/%Y")
 
                 if item.status_code is not None:
@@ -513,7 +517,7 @@ class GradeRosterExport(GradeRoster):
             "curriculum_abbr": self.section.curriculum_abbr,
             "course_number": self.section.course_number,
             "section_id": self.section.section_id,
-            "cog_form_url": getattr(settings, "COG_FORM_URL", ""),
+            "cog_form_url": settings.COG_FORM_URL,
         })
         response = self.csv_response(
             content=csv_header, filename=self.section.section_label())

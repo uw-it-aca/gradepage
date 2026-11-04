@@ -3,7 +3,8 @@
 
 
 import json
-from datetime import datetime, timezone
+import time
+from datetime import UTC, datetime
 from decimal import Decimal
 from importlib import import_module
 from logging import getLogger
@@ -129,7 +130,7 @@ class SubmittedGradeRoster(models.Model):
             raise
 
         self.status_code = 200
-        self.accepted_date = datetime.now(timezone.utc)
+        self.accepted_date = datetime.now(UTC)
         self.document = graderoster.xhtml()
         self.save()
 
@@ -403,7 +404,10 @@ class GradeImport(models.Model):
         except DataFailureException as ex:
             self.status_code = ex.status
 
+        cp_0 = time.perf_counter()
         self.save()
+        cp_1 = time.perf_counter()
+        logger.info(f"GradeImport.save_model, time taken: {cp_1 - cp_0}")
 
     def save_conversion_data(self, data):
         if data is not None:
@@ -415,7 +419,7 @@ class GradeImport(models.Model):
             )
             import_conversion.save()
             self.import_conversion = import_conversion
-        self.accepted_date = datetime.now(timezone.utc)
+        self.accepted_date = datetime.now(UTC)
         self.save()
 
     def json_data(self):
@@ -424,7 +428,8 @@ class GradeImport(models.Model):
         except Exception:
             grade_data = {}
 
-        grades = []
+        grades_by_reg_id = {}
+        grades_by_student_number = {}
         for grade in grade_data.get("grades", []):
             student_reg_id = grade.get("student_reg_id")
             student_number = grade.get("student_number")
@@ -456,19 +461,20 @@ class GradeImport(models.Model):
                 ):
                     has_unposted_grade = True
 
-            if student_reg_id or student_number:
-                grades.append(
-                    {
-                        "student_reg_id": student_reg_id,
-                        "student_number": student_number,
-                        "imported_grade": imported_grade,
-                        "is_override_grade": is_override_grade,
-                        "has_unposted_grade": has_unposted_grade,
-                        "comment": comment,
-                        "is_incomplete": grade.get("is_incomplete", False),
-                        "is_writing": grade.get("is_writing", False),
-                    }
-                )
+            imported_grade = {
+                "student_reg_id": student_reg_id,
+                "student_number": student_number,
+                "imported_grade": imported_grade,
+                "is_override_grade": is_override_grade,
+                "has_unposted_grade": has_unposted_grade,
+                "comment": comment,
+                "is_incomplete": grade.get("is_incomplete", False),
+                "is_writing": grade.get("is_writing", False),
+            }
+            if student_reg_id:
+                grades_by_reg_id[student_reg_id] = imported_grade
+            if student_number:
+                grades_by_student_number[student_number] = imported_grade
 
         course_grading_schemes = []
         for scheme in grade_data.get("course_grading_schemes", []):
@@ -485,18 +491,13 @@ class GradeImport(models.Model):
             "status_code": self.status_code,
             "file_name": self.file_name,
             "file_path": self.file_path,
-            "accepted_date": (
-                self.accepted_date.isoformat()
-                if (self.accepted_date is not None)
-                else None
-            ),
+            "accepted_date": self.accepted_date.isoformat() if (
+                self.accepted_date is not None) else None,
             "imported_date": self.imported_date.isoformat(),
             "imported_by": self.imported_by,
-            "imported_grades": grades,
-            "import_conversion": (
-                self.import_conversion.json_data()
-                if (self.import_conversion is not None)
-                else None
-            ),
+            "imported_grades_by_reg_id": grades_by_reg_id,
+            "imported_grades_by_student_no": grades_by_student_number,
+            "import_conversion": self.import_conversion.json_data() if (
+                self.import_conversion is not None) else None,
             "course_grading_schemes": course_grading_schemes,
         }

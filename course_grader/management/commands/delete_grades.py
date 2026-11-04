@@ -39,7 +39,7 @@ class Command(BaseCommand):
 
         # Grade imports
         grade_import_count = GradeImport.objects.filter(
-            imported_date__lt=retention_date).count()
+            imported_date__lt=retention_date).defer("document").count()
 
         if not commit:
             print(f"Grade imports found: {grade_import_count}")

@@ -25,8 +25,8 @@ logger = getLogger(__name__)
 
 
 def submission_deadline_warning(term):
-    hours = getattr(settings, "SUBMISSION_DEADLINE_WARNING_HOURS", 48)
-    warning_start = term.grade_submission_deadline - timedelta(hours=hours)
+    warning_start = term.grade_submission_deadline - timedelta(
+        hours=settings.SUBMISSION_DEADLINE_WARNING_HOURS)
     return (current_datetime() >= warning_start)
 
 
@@ -73,7 +73,7 @@ def previous_gradable_term():
 def all_viewable_terms():
     term = current_term()
     terms = []
-    for i in range(-1, getattr(settings, "PAST_TERMS_VIEWABLE", 4)):
+    for i in range(-1, settings.PAST_TERMS_VIEWABLE):
         terms.append(term)
         term = get_term_before(term)
     return terms

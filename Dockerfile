@@ -21,7 +21,7 @@ COPY --from=node-base / /
 
 COPY ./package.json /app/
 WORKDIR /app/
-RUN npm install .
+RUN npm install -g npm@11 && npm install .
 
 COPY . /app/
 
