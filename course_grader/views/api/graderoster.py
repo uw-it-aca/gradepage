@@ -292,7 +292,9 @@ class GradeRoster(GradeFormHandler):
                     return False
             else:
                 # Default grade for incomplete not validated
-                return True
+                return not (is_submitted and not (
+                    item.has_incomplete or item.no_grade_now))
+                # return True  # GRADE-513
 
         for choice in item.grade_choices:
             if (choice is not None and choice != "" and
@@ -387,8 +389,14 @@ class GradeRoster(GradeFormHandler):
                 data["has_duplicate_codes"] = True
 
             if is_submitted:
-                if item.has_incomplete and (grade == "i" or grade == "I"):
-                    grade = ""
+                if item.has_incomplete:
+                    if (grade == "i" or grade == "I"):
+                        grade = ""
+                else:
+                    allows_incomplete = bool(item.no_grade_now)
+                # GRADE-513
+                # if item.has_incomplete and (grade == "i" or grade == "I"):
+                #    grade = ""
 
                 if item.date_graded is not None:
                     data["graded_count"] += 1
